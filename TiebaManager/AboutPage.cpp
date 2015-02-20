@@ -52,7 +52,9 @@ BOOL CAboutPage::OnInitDialog()
 \r\n\
 不懂正则表达式的自己去百度一下~\r\n\
 \r\n\
-代码只转换了\"'&<>还有空格，其他以网页源码为准，如换行符为<br> (不注意的话会不匹配或匹配太多)"));
+代码只转换了\"'&<>还有空格，其他以网页源码为准，如换行符为<br> (不注意的话会不匹配或匹配太多)\r\n\
+\r\n\
+此程序通过GPL协议开源，你可以在https://github.com/xfgryujk/TiebaManager得到源码，欢迎完善程序"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
