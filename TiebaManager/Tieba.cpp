@@ -28,6 +28,7 @@ using std::queue;
 
 // 贴吧、用户信息
 CString g_forumName;
+CString g_encodedForumName;
 CString g_forumID;
 CString g_cookie;
 CString g_tbs;
@@ -650,7 +651,7 @@ BOOL GetBanTBS(LPCTSTR tid, LPCTSTR userName, get_ip_tbs& result)
 	CString url;
 	url.Format(_T("http://tieba.baidu.com/bawu/filter/get_ip_tbs?type=get_ip_tbs&tid=%s&pid=%s\
 &user_name=%s&post_id=%s&word=%s&fid=%s&can_prison_ip=true&ie=utf-8"), tid, tid, EncodeURI(userName), 
-		tid, EncodeURI(g_forumName), g_forumID);
+		tid, g_encodedForumName, g_forumID);
 	CString src = HTTPGet(url);
 	CStringArray tmp;
 	SplitString(tmp, src, _T(","));
@@ -668,7 +669,7 @@ CString BanID(LPCTSTR userName, LPCTSTR tbs_ban_user)
 {
 	CString data;
 	data.Format(_T("cm=filter_forum_user&user_name=%s&ban_days=%d&word=%s&fid=%s&tbs=%s&ie=utf-8"), 
-		EncodeURI(userName), g_banDuration, EncodeURI(g_forumName), g_forumID, tbs_ban_user);
+		EncodeURI(userName), g_banDuration, g_encodedForumName, g_forumID, tbs_ban_user);
 	CString src = HTTPPost(_T("http://tieba.baidu.com/bawu/cm"), data);
 	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
 		return _T("-1");
@@ -680,7 +681,7 @@ CString BanIP(LPCTSTR ip_int, LPCTSTR tbs_ban_ip, LPCTSTR ip_secure_str)
 {
 	CString data;
 	data.Format(_T("cm=filter_forum_ip&user_ip=%s&ip_secure_str=%s&ban_days=1&word=%s&fid=%s&tbs=%s&ie=utf-8"),
-		ip_int, ip_secure_str, EncodeURI(g_forumName), g_forumID, tbs_ban_ip);
+		ip_int, ip_secure_str, g_encodedForumName, g_forumID, tbs_ban_ip);
 	CString src = HTTPPost(_T("http://tieba.baidu.com/bawu/cm"), data);
 	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
 		return _T("-1");
@@ -690,7 +691,7 @@ CString BanIP(LPCTSTR ip_int, LPCTSTR tbs_ban_ip, LPCTSTR ip_secure_str)
 // 删主题，返回错误代码
 CString DeleteThread(const CString& tid)
 {
-	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/thread/delete"), _T("kw=") + EncodeURI(g_forumName) 
+	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/thread/delete"), _T("kw=") + g_encodedForumName
 		+ _T("&fid=") + g_forumID + _T("&tid=") + tid + _T("&ie=utf-8&tbs=") + g_tbs);
 	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
 		return _T("-1");
@@ -702,7 +703,7 @@ CString DeletePost(LPCTSTR tid, LPCTSTR pid)
 {
 	CString data;
 	data.Format(_T("commit_fr=pb&ie=utf-8&tbs=%s&kw=%s&fid=%s&tid=%s&is_vipdel=0&pid=%s&is_finf=false"), 
-		g_tbs, EncodeURI(g_forumName), g_forumID, tid, pid);
+		g_tbs, g_encodedForumName, g_forumID, tid, pid);
 	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data);
 	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
 		return _T("-1");
@@ -714,7 +715,7 @@ CString DeleteLZL(LPCTSTR tid, LPCTSTR lzlid)
 {
 	CString data;
 	data.Format(_T("ie=utf-8&tbs=%s&kw=%s&fid=%s&tid=%s&pid=%s&is_finf=1"),
-		g_tbs, EncodeURI(g_forumName), g_forumID, tid, lzlid);
+		g_tbs, g_encodedForumName, g_forumID, tid, lzlid);
 	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data);
 	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
 		return _T("-1");

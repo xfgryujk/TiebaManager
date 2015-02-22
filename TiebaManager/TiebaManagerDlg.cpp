@@ -265,7 +265,7 @@ void CTiebaManagerDlg::OnDestroy()
 		gzclose(f);
 	}
 
-	g_stopScanFlag = TRUE;
+	g_stopScanFlag = TRUE; // 实际上线程不会返回？
 }
 
 #pragma region UI
@@ -656,6 +656,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	g_forumName = GetStringBetween(src, FORUM_NAME1_LEFT, FORUM_NAME1_RIGHT, pos);
 	if (g_forumName == _T(""))
 		g_forumName = GetStringBetween(src, FORUM_NAME2_LEFT, FORUM_NAME2_RIGHT, pos);
+	g_encodedForumName = EncodeURI(g_forumName);
 
 	// 取用户名
 	userName = GetStringBetween(src, USER_NAME_LEFT, USER_NAME_RIGHT);
@@ -688,6 +689,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		WriteString(src2, _T("admin.txt"));
 		if (AfxMessageBox(_T("使用当前账号？"), MB_ICONQUESTION | MB_YESNO) == IDNO)
 		{
+			g_cookie = _T(""); // 登录前清除BDUSS避免错误判断登录成功
 			if (CLoginDlg(this).DoModal() == IDOK)
 			{
 				OnBnClickedButton1();
@@ -710,7 +712,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	Log(_T("<font color=green>确认监控贴吧：</font>") + g_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));
 
 
-	/*{ // 测试
+	/*{ // 测试 // 因为获取楼中楼要用fid所以放到这里
 		vector<PostInfo> posts, lzls;
 		GetPosts(_T("3033489261"), _T(""), _T("1"), posts, lzls);
 	}*/

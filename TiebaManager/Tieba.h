@@ -12,6 +12,7 @@ using std::map;
 
 // 贴吧、用户信息
 extern CString g_forumName;
+extern CString g_encodedForumName;
 extern CString g_forumID;
 extern CString g_cookie;
 extern CString g_tbs; // 备用获取tbs地址：http://tieba.baidu.com/dc/common/tbs

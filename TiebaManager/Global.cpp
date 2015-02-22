@@ -147,7 +147,7 @@ CString JSUnescape(const CString& src)
 
 
 // 从HTTP头提取Cookie并修改g_cookie
-void ReceiveCookie(LPCTSTR headers)
+static void ReceiveCookie(LPCTSTR headers)
 {
 	static const wregex cookieExp(_T("Set-Cookie: (.*?)=(.*?);"));
 	for (regex_iterator<LPCTSTR> it(headers, headers + _tcslen(headers), cookieExp), end; it != end; it++)
