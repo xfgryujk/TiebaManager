@@ -160,12 +160,16 @@ void CLoginDlg::OnOK()
 	if (result == NET_TIMEOUT_TEXT)
 	{
 		AfxMessageBox(_T("Á¬½Ó³¬Ê±..."), MB_ICONERROR);
+		OnStnClickedStatic4();
+		m_verifyCodeEdit.SetWindowText(_T(""));
 		return;
 	}
 	if (!StringIncludes(g_cookie, _T("BDUSS=")))
 	{
 		WriteString(result, _T("login.txt"));
 		AfxMessageBox(_T("µÇÂ¼Ê§°Ü£¡"), MB_ICONERROR);
+		OnStnClickedStatic4();
+		m_verifyCodeEdit.SetWindowText(_T(""));
 		return;
 	}
 

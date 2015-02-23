@@ -517,7 +517,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		}
 
 		// 封禁
-		if (g_banID || g_banIP)
+		if (g_banID /*|| g_banIP*/)
 		{
 			auto countIt = g_IDTrigCount.find(op.author);
 			BOOL hasHistory = countIt != g_IDTrigCount.end();
@@ -543,7 +543,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				else
 				{
 					BOOL success = TRUE;
-					if (g_banID) // 封ID
+					//if (g_banID) // 封ID
 					{
 						CString code = BanID(op.author, banTBS.tbs_ban_user);
 						success = code == _T("0");
@@ -555,7 +555,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 							dlg->Log(content, pDocument);
 						}
 					}
-					if (g_banIP) // 封IP
+					/*if (g_banIP) // 封IP
 					{
 						CString code = BanIP(banTBS.ip_int, banTBS.tbs_ban_ip, banTBS.ip_secure_str);
 						success = code == _T("0");
@@ -566,7 +566,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 错误代码：%s(%s)</font><a href=\"BP:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.tid, op.author);
 							dlg->Log(content, pDocument);
 						}
-					}
+					}*/
 					if (success)
 					{
 						sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
@@ -676,17 +676,17 @@ CString BanID(LPCTSTR userName, LPCTSTR tbs_ban_user)
 	return GetStringBetween(src, _T("no\":"), _T(","));
 }
 
-// 封IP，返回错误代码 // 一直失败(错误代码3)，估计接口过期了，有空时再修复
-CString BanIP(LPCTSTR ip_int, LPCTSTR tbs_ban_ip, LPCTSTR ip_secure_str)
+// 封IP，返回错误代码 // 此功能已经下线
+/*CString BanIP(LPCTSTR ip_int, LPCTSTR tbs_ban_ip, LPCTSTR ip_secure_str)
 {
 	CString data;
 	data.Format(_T("cm=filter_forum_ip&user_ip=%s&ip_secure_str=%s&ban_days=1&word=%s&fid=%s&tbs=%s&ie=utf-8"),
 		ip_int, ip_secure_str, g_encodedForumName, g_forumID, tbs_ban_ip);
 	CString src = HTTPPost(_T("http://tieba.baidu.com/bawu/cm"), data);
-	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
+	if (src == NET_TIMEOUT_TEXT *//*|| src == NET_STOP_TEXT*//*)
 		return _T("-1");
 	return GetStringBetween(src, _T("no\":"), _T(","));
-}
+}*/
 
 // 删主题，返回错误代码
 CString DeleteThread(const CString& tid)

@@ -209,7 +209,7 @@ void CSettingDlg::ShowCurrentOptions()
 	m_prefPage.m_scanIntervalEdit.SetWindowText(tmp);		// 扫描间隔
 	m_prefPage.m_banIDCheck.SetCheck(g_banID);				// 封ID
 	m_prefPage.m_banDurationCombo.SetCurSel(g_banDuration == 1 ? 0 : (g_banDuration == 3 ? 1 : 2)); // 封禁时长
-	m_prefPage.m_banIPCheck.SetCheck(g_banIP);				// 封IP
+	//m_prefPage.m_banIPCheck.SetCheck(g_banIP);				// 封IP
 	m_prefPage.OnBnClickedCheck1();
 	tmp.Format(_T("%d"), g_trigCount);
 	m_prefPage.m_trigCountEdit.SetWindowText(tmp);			// 封禁违规次数
@@ -266,7 +266,7 @@ void CSettingDlg::ApplyOptionsInDlg()
 	g_banID = m_prefPage.m_banIDCheck.GetCheck();				// 封ID
 	intBuf = m_prefPage.m_banDurationCombo.GetCurSel();
 	g_banDuration = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);	// 封禁时长
-	g_banIP = m_prefPage.m_banIPCheck.GetCheck();				// 封IP
+	//g_banIP = m_prefPage.m_banIPCheck.GetCheck();				// 封IP
 	m_prefPage.m_trigCountEdit.GetWindowText(strBuf);
 	g_trigCount = _ttoi(strBuf);								// 封禁违规次数
 	g_onlyScanTitle = m_prefPage.m_onlyScanTitleCheck.GetCheck(); // 只扫描标题

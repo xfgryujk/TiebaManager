@@ -13,7 +13,7 @@ CString	g_currentOption;	// 当前方案
 int		g_scanInterval;		// 扫描间隔
 BOOL	g_banID;			// 封ID
 int		g_banDuration;		// 封禁时长
-BOOL	g_banIP;			// 封IP
+BOOL	g_banIP;			// 封IP，此功能已经下线
 int		g_trigCount;		// 封禁违规次数
 BOOL	g_onlyScanTitle;	// 只扫描标题
 float	g_deleteInterval;	// 删帖间隔

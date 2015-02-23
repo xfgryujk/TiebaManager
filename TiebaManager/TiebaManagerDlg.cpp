@@ -487,7 +487,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 			Log(_T("<font color=red>·â½ûÊ§°Ü£¡</font>"));
 		return;
 	}
-	else if (prefix == _T("BP:")) // ·âIP
+	/*else if (prefix == _T("BP:")) // ·âIP
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
@@ -499,7 +499,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 		else
 			Log(_T("<font color=red>·â½ûÊ§°Ü£¡</font>"));
 		return;
-	}
+	}*/
 
 	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }

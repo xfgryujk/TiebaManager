@@ -136,7 +136,7 @@ void AddOperation(const CString& msg, TBObject object, const CString& tid, const
 UINT AFX_CDECL OperateThread(LPVOID mainDlg);
 BOOL GetBanTBS(LPCTSTR tid, LPCTSTR userName, get_ip_tbs& result);
 CString BanID(LPCTSTR userName, LPCTSTR tbs_ban_user);
-CString BanIP(LPCTSTR ip_int, LPCTSTR tbs_ban_ip, LPCTSTR ip_secure_str);
+//CString BanIP(LPCTSTR ip_int, LPCTSTR tbs_ban_ip, LPCTSTR ip_secure_str);
 CString DeleteThread(const CString& tid);
 CString DeletePost(LPCTSTR tid, LPCTSTR pid);
 CString DeleteLZL(LPCTSTR tid, LPCTSTR lzlid);

@@ -26,7 +26,7 @@ extern CString	g_currentOption;	// 当前方案
 extern int		g_scanInterval;		// 扫描间隔
 extern BOOL		g_banID;			// 封ID
 extern int		g_banDuration;		// 封禁时长
-extern BOOL		g_banIP;			// 封IP
+extern BOOL		g_banIP;			// 封IP，此功能已经下线
 extern int		g_trigCount;		// 封禁违规次数
 extern BOOL		g_onlyScanTitle;	// 只扫描标题
 extern float	g_deleteInterval;	// 删帖间隔
