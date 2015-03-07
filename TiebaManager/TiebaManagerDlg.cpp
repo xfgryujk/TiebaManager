@@ -230,7 +230,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 
 	// 测试
 	//vector<ThreadInfo> threads;
-	//GetThreads(_T("cf"), _T("0"), threads);
+	//GetThreads(_T("wow"), _T("0"), threads);
 
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -633,6 +633,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_confirmButton.EnableWindow(FALSE);
 	m_stateStatic.SetWindowText(_T("验证贴吧中"));
 	CString src, src2, userName;
+	std::wcmatch res;
 
 
 	src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=") + EncodeURI(g_forumName));
@@ -642,24 +643,24 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		goto error;
 	}
 
-	// 取贴吧ID
-	int pos = src.Find(_T("PageData.forum"));
-	g_forumID = GetStringBetween(src, FORUM_ID_LEFT, FORUM_ID_RIGHT, pos);
-	if (g_forumID == _T(""))
+	// 采集贴吧信息
+	if (!std::regex_search((LPCTSTR)src, res, FORUM_ID_NAME_REG))
 	{
 		WriteString(src, _T("forum.txt"));
 		AfxMessageBox(_T("贴吧不存在！(也可能是度娘抽了...)"), MB_ICONERROR);
 		goto error;
 	}
 
+	// 取贴吧ID
+	g_forumID = res[3].str().c_str();
+
 	// 取贴吧名
-	g_forumName = GetStringBetween(src, FORUM_NAME1_LEFT, FORUM_NAME1_RIGHT, pos);
-	if (g_forumName == _T(""))
-		g_forumName = GetStringBetween(src, FORUM_NAME2_LEFT, FORUM_NAME2_RIGHT, pos);
+	g_forumName = JSUnescape(res[7].str().c_str());
 	g_encodedForumName = EncodeURI(g_forumName);
 
 	// 取用户名
-	userName = GetStringBetween(src, USER_NAME_LEFT, USER_NAME_RIGHT);
+	if (std::regex_search((LPCTSTR)src, res, USER_NAME_REG))
+		userName = JSUnescape(res[3].str().c_str());
 	if (userName == _T(""))
 	{
 		WriteString(src, _T("forum.txt"));
@@ -682,14 +683,14 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
 		goto error;
 	}
-	pos = src2.Find(_T("图片小编："));
+	int pos1 = src2.Find(_T("图片小编："));
 	int pos2 = src2.Find(_T(">") + userName + _T("<"));
-	if (pos2 == -1 || pos2 >= pos)
+	if (pos2 == -1 || pos2 >= pos1)
 	{
 		WriteString(src2, _T("admin.txt"));
 		if (AfxMessageBox(_T("使用当前账号？"), MB_ICONQUESTION | MB_YESNO) == IDNO)
 		{
-			g_cookie = _T(""); // 登录前清除BDUSS避免错误判断登录成功
+			SetWindowText(_T("贴吧管理器"));
 			if (CLoginDlg(this).DoModal() == IDOK)
 			{
 				OnBnClickedButton1();

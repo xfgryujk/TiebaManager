@@ -20,14 +20,20 @@ extern CString g_tbs; // 备用获取tbs地址：http://tieba.baidu.com/dc/common/tbs
 
 // 采集贴吧用的常量
 #pragma region 用户信息
-const TCHAR FORUM_ID_LEFT[]		= _T("forum_id: \"");
+// 这些格式有些贴吧不同
+/*const TCHAR FORUM_ID_LEFT[]		= _T("forum_id: \"");
 const TCHAR FORUM_ID_RIGHT[]	= _T("\"");
 const TCHAR FORUM_NAME1_LEFT[]	= _T("forum_name: '");
 const TCHAR FORUM_NAME1_RIGHT[] = _T("'");
 const TCHAR FORUM_NAME2_LEFT[]	= _T("\"forum_name\":\"");
 const TCHAR FORUM_NAME2_RIGHT[] = _T("\"");
 const TCHAR USER_NAME_LEFT[]	= _T("\"user_name\": \"");
-const TCHAR USER_NAME_RIGHT[]	= _T("\"");
+const TCHAR USER_NAME_RIGHT[]	= _T("\"");*/
+// 3是fid，7是贴吧名
+const wregex FORUM_ID_NAME_REG(_T("PageData.forum.*?forum_id('|\")?:\\s*('|\")?(\\d+)('|\")?,\
+.*?forum_name('|\")?:\\s*('|\")(.*?)('|\")"));
+// 3是用户名
+const wregex USER_NAME_REG(_T("PageData.*?user_name('|\")?:\\s*('|\")(.*?)('|\")"));
 const TCHAR _TBS_LEFT[]			= _T("PageData.tbs = \"");
 const TCHAR _TBS_RIGHT[]		= _T("\"");
 #pragma endregion

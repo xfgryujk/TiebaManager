@@ -305,12 +305,11 @@ u7ba1\\\\u7406\\\\u5668.zip\",\"server_filename\":\"\\\\u8d34\\\\u5427\\\\u7ba1\
 &num=100&page=1&dir=%2F%E6%88%91%E7%9A%84%E5%88%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7\
 %E7%9B%B8%E5%85%B3&uk=436464474&shareid=497149087"), FALSE);
 	std::wcmatch res;
-	std::regex_search((LPCTSTR)src, res, CHECK_UPDATE_REG);
+	if (!std::regex_search((LPCTSTR)src, res, CHECK_UPDATE_REG))
+		return UPDATE_FAILED_TO_GET_FILE_ID;
 
 	// 文件ID
 	CString fs_id = res[1].str().c_str();
-	if (res.size() < 2 || fs_id == _T(""))
-		return UPDATE_FAILED_TO_GET_FILE_ID;
 
 	// 上传时间戳
 	CString server_ctime = res[2].str().c_str();

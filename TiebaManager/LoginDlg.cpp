@@ -55,6 +55,9 @@ BOOL CLoginDlg::OnInitDialog()
 
 	SetClassLong(m_verifyCodePicture.m_hWnd, GCL_HCURSOR, (LONG)LoadCursor(NULL, IDC_HAND));
 
+	// 登录前清除BDUSS避免错误判断登录成功
+	g_cookie = _T("");
+
 	// 初始化token
 	CString src = HTTPGet(_T("https://passport.baidu.com/v2/api/?getapi&class=login&tpl=mn&tangram=true"));
 	m_token = GetStringBetween(src, _T("token='"), _T("'"));
