@@ -47,7 +47,7 @@ CString GetStringBetween(const CString& src, const CString& left, LPCTSTR right,
 CString GetStringBefore(const CString& src, LPCTSTR right, int startPos = 0);
 BOOL WriteString(const CString& src, LPCTSTR path);
 CString EncodeURI(const CString& src);
-CString EncodeURI_GBK(const CString& src);
+//CString EncodeURI_GBK(const CString& src);
 CString HTMLEscape(const CString& src);
 CString HTMLUnescape(const CString& src);
 CString JSUnescape(const CString& src);
@@ -62,7 +62,7 @@ CString HTTPGet(LPCTSTR URL, BOOL useCookie = TRUE, volatile BOOL* stopFlag = NU
 CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie = TRUE, volatile BOOL* stopFlag = NULL);
 HTTPRequestResult HTTPGetRaw(LPCTSTR URL, BYTE** buffer = NULL, ULONG* size = NULL, BOOL useCookie = TRUE, volatile BOOL* stopFlag = NULL);
 // ¸üÐÂ
-const TCHAR UPDATE_CURRENT_VERSION[] = _T("15-03-07");
+const TCHAR UPDATE_CURRENT_VERSION[] = _T("15-03-21");
 enum CheckUpdateResult { UPDATE_NO_UPDATE, UPDATE_HAS_UPDATE, UPDATE_FAILED_TO_GET_FILE_ID, UPDATE_FAILED_TO_GET_LINK };
 CheckUpdateResult CheckUpdate();
 

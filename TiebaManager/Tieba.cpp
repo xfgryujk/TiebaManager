@@ -253,8 +253,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	// 初始化日志文档
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	CComPtr<IHTMLDocument2> document;
-	//dlg->GetLogDocument(document); // 线程里不能用Write()
-	dlg->GetLogDocumentInThread(document);
+	dlg->GetLogDocument(document);
 	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 
 	// 初始化页数
@@ -484,7 +483,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 	// 初始化日志文档
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	CComPtr<IHTMLDocument2> document;
-	dlg->GetLogDocumentInThread(document);
+	dlg->GetLogDocument(document);
 	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 
 	while (!g_operationQueue.empty() && !g_stopScanFlag)

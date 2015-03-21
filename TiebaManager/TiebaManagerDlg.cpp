@@ -168,7 +168,11 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 
 	// 初始化日志
 	m_logExplorer.Navigate(_T("about:blank"), NULL, NULL, NULL, NULL);
-	GetLogDocument(m_logDocument);
+	do
+	{
+		Delay(1);
+		GetLogDocument(m_logDocument);
+	} while (m_logDocument.p == NULL);
 	WriteDocument(LOG_FRAME, m_logDocument);
 	HWND ExplorerHwnd = m_logExplorer.m_hWnd;
 	EnumChildWindows(ExplorerHwnd, EnumChildProc, (LPARAM)&ExplorerHwnd);
@@ -364,11 +368,12 @@ LRESULT CTiebaManagerDlg::OnTaskBarCreated(WPARAM wParam, LPARAM lParam)
 #pragma endregion
 
 #pragma region 日志
-// 线程里取日志document
-void CTiebaManagerDlg::GetLogDocumentInThread(CComPtr<IHTMLDocument2>& document)
+// 取日志document，为了线程安全不要用m_logExplorer.get_Document()
+void CTiebaManagerDlg::GetLogDocument(CComPtr<IHTMLDocument2>& document)
 {
-	HWND ExplorerHwnd = m_logExplorer.m_hWnd;
-	EnumChildWindows(ExplorerHwnd, EnumChildProc, (LPARAM)&ExplorerHwnd);
+	static HWND ExplorerHwnd = NULL;
+	if (ExplorerHwnd == NULL)
+		EnumChildWindows(m_logExplorer.m_hWnd, EnumChildProc, (LPARAM)&ExplorerHwnd);
 	LRESULT lRes;
 	UINT nMsg = RegisterWindowMessage(_T("WM_HTML_GETOBJECT"));
 	SendMessageTimeout(ExplorerHwnd, nMsg, 0L, 0L, SMTO_ABORTIFHUNG, 1000, (DWORD*)&lRes);
@@ -538,7 +543,7 @@ UINT CTiebaManagerDlg::SaveLogThread(LPVOID _thiz)
 
 		// 取日志HTML
 		CComPtr<IHTMLDocument2> document;
-		thiz->GetLogDocumentInThread(document);
+		thiz->GetLogDocument(document);
 		CComDispatchDriver documentDisp(document);
 		// document.documentElement.outerHTML
 		_variant_t res;
@@ -677,15 +682,18 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	SetWindowText(_T("贴吧管理器 - ") + userName);
 
 	// 验证用户权限
-	src2 = HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(g_forumName), FALSE);
+	// 旧接口
+	//src2 = HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(g_forumName), FALSE);
+	src2 = HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/detailsInfo?word=") + EncodeURI(g_forumName) + _T("&ie=utf-8"), FALSE);
 	if (src2 == NET_TIMEOUT)
 	{
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
 		goto error;
 	}
-	int pos1 = src2.Find(_T("图片小编："));
+	int pos1 = src2.Find(_T(">吧主<span"));
 	int pos2 = src2.Find(_T(">") + userName + _T("<"));
-	if (pos2 == -1 || pos2 >= pos1)
+	int pos3 = src2.Find(_T(">图片小编<span"));
+	if (pos2 == -1 || pos2 <= pos1 || (pos3 != -1 && pos2 >= pos3))
 	{
 		WriteString(src2, _T("admin.txt"));
 		if (AfxMessageBox(_T("使用当前账号？"), MB_ICONQUESTION | MB_YESNO) == IDNO)

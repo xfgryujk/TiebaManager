@@ -57,13 +57,7 @@ public:
 
 public:
 	void Log(LPCTSTR content, CComPtr<IHTMLDocument2>* document = NULL);
-	// »°»’÷ædocument
-	inline void GetLogDocument(CComPtr<IHTMLDocument2>& document)
-	{
-		CComPtr<IDispatch> disp = m_logExplorer.get_Document();
-		disp->QueryInterface(&document);
-	}
-	void GetLogDocumentInThread(CComPtr<IHTMLDocument2>& document);
+	void GetLogDocument(CComPtr<IHTMLDocument2>& document);
 protected:
 	inline static void WriteDocument(const CString& content, CComPtr<IHTMLDocument2>& document);
 	static BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam);

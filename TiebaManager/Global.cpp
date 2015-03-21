@@ -96,10 +96,10 @@ CString EncodeURI(const CString& src)
 }
 
 // URL编码 GBK版
-CString EncodeURI_GBK(const CString& _src)
+/*CString EncodeURI_GBK(const CString& _src)
 {
 	CString result, tmp;
-	CStringA src(_src);
+	CStringA src(_src); // 有些电脑会转码失败？
 	const int len = src.GetLength();
 	for (int i = 0; i < len; i++)
 	{
@@ -107,7 +107,7 @@ CString EncodeURI_GBK(const CString& _src)
 		result += tmp;
 	}
 	return result;
-}
+}*/
 
 // HTML转义
 CString HTMLEscape(const CString& src)
