@@ -684,7 +684,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	// 验证用户权限
 	// 旧接口
 	//src2 = HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(g_forumName), FALSE);
-	src2 = HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/detailsInfo?word=") + EncodeURI(g_forumName) + _T("&ie=utf-8"), FALSE);
+	src2 = HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/detailsInfo?word=") + g_encodedForumName + _T("&ie=utf-8"), FALSE);
 	if (src2 == NET_TIMEOUT)
 	{
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
