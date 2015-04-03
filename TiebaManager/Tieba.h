@@ -62,8 +62,8 @@ const TCHAR THREAD_TITLE_LEFT[] = _T("class=\"j_th_tit\">");
 const TCHAR THREAD_TITLE_RIGHT[] = _T("</a>");
 const TCHAR THREAD_PREVIEW_LEFT[] = _T("threadlist_abs_onlyline\">");
 const TCHAR THREAD_PREVIEW_RIGHT[] = _T("</div>");
-const TCHAR THREAD_AUTHOR_LEFT[] = _T("title=\"主题作者: ");
-const TCHAR THREAD_AUTHOR_RIGHT[] = _T("\"");
+const TCHAR THREAD_AUTHOR_LEFT[] = _T("&quot;author_name&quot;:&quot;");
+const TCHAR THREAD_AUTHOR_RIGHT[] = _T("&quot;");
 #pragma endregion
 #pragma region 帖子列表
 const TCHAR PAGE_COUNT_LEFT[] = _T(",\"total_page\":");

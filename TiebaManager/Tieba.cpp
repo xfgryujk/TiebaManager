@@ -102,7 +102,7 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 		threads[iThreads].reply = GetStringBetween(rawThreads[iRawThreads], THREAD_REPLY_LEFT, THREAD_REPLY_RIGHT);
 		threads[iThreads].title = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
 		threads[iThreads].preview = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT));
-		threads[iThreads].author = GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_LEFT, THREAD_AUTHOR_RIGHT);
+		threads[iThreads].author = JSUnescape(GetStringBefore(rawThreads[iRawThreads], THREAD_AUTHOR_RIGHT));
 
 		//OutputDebugString(_T("\n"));
 		//OutputDebugString(rawThreads[iRawThreads]);
@@ -728,6 +728,8 @@ CString GetTiebaErrorText(const CString& errorCode)
 		return _T("贴子已删");
 	if (errorCode == _T("-1"))
 		return _T("超时");
+	if (errorCode == _T("4"))
+		return _T("参数校验失败");
 	if (errorCode == _T("11"))
 		return _T("度娘抽了");
 	if (errorCode == _T("14") || errorCode == _T("12"))
