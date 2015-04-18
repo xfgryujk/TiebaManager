@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "TiebaManager.h"
 #include "TiebaManagerDlg.h"
+#include "Global.h"
 #include "Setting.h"
 
 #ifdef _DEBUG
@@ -65,6 +66,9 @@ BOOL CTiebaManagerApp::InitInstance()
 	// 例如修改为公司或组织名
 	//SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
 
+
+	// 添加异常处理
+	SetUnhandledExceptionFilter(ExceptionHandler);
 
 	// 防多开
 	if (OpenMutex(MUTEX_ALL_ACCESS, TRUE, _T("TiebaManager")) == NULL)

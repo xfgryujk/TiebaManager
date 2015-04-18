@@ -27,6 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 using std::wregex;
 using std::regex_iterator;
 #import "msscript.ocx" no_namespace
+#include <Dbghelp.h>
 
 
 
@@ -375,4 +376,21 @@ void DoEvents()
 		DispatchMessage(&msg);
 		TranslateMessage(&msg);
 	}
+}
+
+// 异常处理
+LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
+{
+	CFile file;
+	if (file.Open(_T("exception.dmp"), CFile::modeCreate | CFile::modeWrite))
+	{
+		MINIDUMP_EXCEPTION_INFORMATION einfo;
+		einfo.ThreadId = GetCurrentThreadId();
+		einfo.ExceptionPointers = ExceptionInfo;
+		einfo.ClientPointers = FALSE;
+		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpNormal, 
+			&einfo, NULL, NULL);
+	}
+	AfxMessageBox(_T("程序崩溃了，请联系作者帮助调试"), MB_ICONERROR);
+	return EXCEPTION_CONTINUE_SEARCH;
 }
