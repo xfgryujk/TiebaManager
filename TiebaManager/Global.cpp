@@ -135,14 +135,22 @@ CString HTMLUnescape(const CString& src)
 	return result;
 }
 
-// JS反转义，需自行转义双引号
+// JS反转义，自行转义src里的双引号
 CString JSUnescape(const CString& src)
 {
 	CComPtr<IScriptControl> script;
 	if (FAILED(script.CoCreateInstance(__uuidof(ScriptControl))))
 		return _T("");
 	script->PutLanguage("JScript");
-	_variant_t result = script->Eval((LPCTSTR)(_T("\"") + src + _T("\"")));
+	_variant_t result;
+	try
+	{
+		result = script->Eval((LPCTSTR)(_T("\"") + src + _T("\"")));
+	}
+	catch (_com_error&)
+	{
+		return _T("");
+	}
 	return (LPCTSTR)(_bstr_t)result;
 }
 
@@ -388,7 +396,7 @@ LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 		einfo.ThreadId = GetCurrentThreadId();
 		einfo.ExceptionPointers = ExceptionInfo;
 		einfo.ClientPointers = FALSE;
-		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpNormal, 
+		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpWithIndirectlyReferencedMemory,
 			&einfo, NULL, NULL);
 	}
 	AfxMessageBox(_T("程序崩溃了，请联系作者帮助调试"), MB_ICONERROR);

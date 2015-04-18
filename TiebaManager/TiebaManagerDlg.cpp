@@ -235,6 +235,9 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	// 测试
 	//vector<ThreadInfo> threads;
 	//GetThreads(_T("wow"), _T("0"), threads);
+	//g_forumID = _T("309740");
+	//vector<PostInfo> posts, lzls;
+	//GetPosts(_T("3033489261"), _T(""), _T("1"), posts, lzls);
 
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -719,14 +722,6 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_backStageButton.EnableWindow(TRUE);
 	WritePrivateProfileString(_T("Routine"), _T("ForumName"), g_forumName, PROFILE_PATH);
 	Log(_T("<font color=green>确认监控贴吧：</font>") + g_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));
-
-
-	/*{ // 测试 // 因为获取楼中楼要用fid所以放到这里
-		vector<PostInfo> posts, lzls;
-		GetPosts(_T("3033489261"), _T(""), _T("1"), posts, lzls);
-	}*/
-
-
 	return;
 
 error:

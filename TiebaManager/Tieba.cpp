@@ -182,7 +182,11 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 		{
 			lzl.pid = (*it2)[1].str().c_str();
 			lzl.author = JSUnescape((*it2)[2].str().c_str());
-			lzl.content = HTMLUnescape(JSUnescape((*it2)[3].str().c_str()));
+			CString content = (*it2)[3].str().c_str();
+			if (content == _T("\",")) // 内容为空时正则会匹配到这个
+				lzl.content = _T("");
+			else
+				lzl.content = HTMLUnescape(JSUnescape(content));
 			lzls.push_back(lzl);
 		}
 
