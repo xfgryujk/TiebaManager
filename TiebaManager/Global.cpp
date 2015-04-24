@@ -360,6 +360,7 @@ u7ba1\\\\u7406\\\\u5668.zip\",\"server_filename\":\"\\\\u8d34\\\\u5427\\\\u7ba1\
 
 	dlink.Replace(_T("\\/"), _T("/"));
 	ShellExecute(NULL, _T("open"), dlink, NULL, NULL, SW_NORMAL);
+	AfxMessageBox(_T("下载后解压并覆盖旧版本文件，可保留当前设置"), MB_ICONINFORMATION);
 	return UPDATE_HAS_UPDATE;
 }
 

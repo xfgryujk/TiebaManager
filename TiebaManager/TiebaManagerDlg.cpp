@@ -228,7 +228,11 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	if (GetPrivateProfileInt(_T("Routine"), _T("FirstRun"), 1, PROFILE_PATH) != 0)
 	{
 		WritePrivateProfileString(_T("Routine"), _T("FirstRun"), _T("0"), PROFILE_PATH);
-		OnBnClickedButton5();
+		m_settingDlg = new CSettingDlg();
+		m_settingDlg->Create(IDD_SETTING_DIALOG, this);
+		m_settingDlg->m_tab.SetCurSel(6);
+		LRESULT tmp;
+		m_settingDlg->OnTcnSelchangeTab1(NULL, &tmp);
 	}
 
 
