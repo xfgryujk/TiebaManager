@@ -93,7 +93,7 @@ void CPrefPage::OnEnKillfocusEdit1()
 	CString tmp;
 	m_scanIntervalEdit.GetWindowText(tmp);
 	int scanInterval = _ttoi(tmp);
-	if (scanInterval < 0 || scanInterval > 60)
+	if (scanInterval < 0 || scanInterval > 600)
 		m_scanIntervalEdit.SetWindowText(_T("5"));
 }
 
@@ -127,7 +127,7 @@ void CPrefPage::OnEnKillfocusEdit4()
 	CString tmp;
 	m_deleteIntervalEdit.GetWindowText(tmp);
 	float deleteInterval = (float)_ttof(tmp);
-	if (deleteInterval < 0 || deleteInterval > 10)
+	if (deleteInterval < 0 || deleteInterval > 60)
 		m_deleteIntervalEdit.SetWindowText(_T("1.5"));
 }
 

@@ -56,7 +56,9 @@ BOOL CAboutPage::OnInitDialog()
 \r\n\
 此程序通过GPL协议开源，你可以在https://github.com/xfgryujk/TiebaManager得到源码，欢迎完善程序\r\n\
 \r\n\
-对更新日志感兴趣的话看这里https://github.com/xfgryujk/TiebaManager/commits/master"));
+对更新日志感兴趣的话看这里https://github.com/xfgryujk/TiebaManager/commits/master\r\n\
+\r\n\
+我只是提供方便吧务管理贴吧的工具，被用来做拆吧等恶意行为造成的损失本人不负责"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
