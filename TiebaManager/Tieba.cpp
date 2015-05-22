@@ -132,15 +132,21 @@ GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& 
 		posts[iPosts].pid = GetStringBetween(rawPosts[iRawPosts], POST_PID_LEFT, POST_PID_RIGHT);
 		posts[iPosts].floor = GetStringBetween(rawPosts[iRawPosts], POST_FLOOR_LEFT, POST_FLOOR_RIGHT);
 		posts[iPosts].author = JSUnescape(GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_LEFT, POST_AUTHOR_RIGHT));
-		posts[iPosts].content = GetStringBetween(rawPosts[iRawPosts], POST_CONTENT_LEFT, POST_CONTENT_RIGHT);
-		// 去掉首尾空格
-		int left = 0;
-		while (left < posts[iPosts].content.GetLength() && posts[iPosts].content[left] == _T(' '))
+		//posts[iPosts].content = GetStringBetween(rawPosts[iRawPosts], POST_CONTENT_LEFT, POST_CONTENT_RIGHT);
+		
+		int left = rawPosts[iRawPosts].Find(POST_CONTENT_LEFT) + _tcslen(POST_CONTENT_LEFT);
+		left = rawPosts[iRawPosts].Find(_T(">"), left) + 1;
+		// 去掉首空格
+		while (left < rawPosts[iRawPosts].GetLength() && rawPosts[iRawPosts][left] == _T(' '))
 			left++;
-		int right = posts[iPosts].content.GetLength() - 1;
-		while (right >= left && posts[iPosts].content[right] == _T(' '))
+		int right = rawPosts[iRawPosts].Find(POST_CONTENT_RIGHT, left + 1);
+		// CString不支持反向查找字符串？
+		posts[iPosts].content = rawPosts[iRawPosts].Mid(left, right - left);
+		right = ((DWORD)StrRStrI(posts[iPosts].content, NULL, _T("</div>")) - (DWORD)(LPCTSTR)posts[iPosts].content) / sizeof(TCHAR) - 1;
+		// 去掉尾空格
+		while (right >= 0 && posts[iPosts].content[right] == _T(' '))
 			right--;
-		posts[iPosts].content = posts[iPosts].content.Mid(left, right - left + 1);
+		posts[iPosts].content = posts[iPosts].content.Left(right + 1);
 
 		//OutputDebugString(_T("\n"));
 		//OutputDebugString(rawPosts[iRawThreads]);

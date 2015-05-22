@@ -76,8 +76,8 @@ const TCHAR POST_FLOOR_LEFT[] = _T("&quot;post_no&quot;:");
 const TCHAR POST_FLOOR_RIGHT[] = _T(",");
 const TCHAR POST_AUTHOR_LEFT[] = _T("&quot;user_name&quot;:&quot;");
 const TCHAR POST_AUTHOR_RIGHT[] = _T("&quot;");
-const TCHAR POST_CONTENT_LEFT[] = _T("post_content \">");
-const TCHAR POST_CONTENT_RIGHT[] = _T("</div><br></cc>");
+const TCHAR POST_CONTENT_LEFT[] = _T("<cc>");
+const TCHAR POST_CONTENT_RIGHT[] = _T("</cc>");
 #pragma endregion
 #pragma region Â¥ÖÐÂ¥ÁÐ±í
 const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)\\]"));
