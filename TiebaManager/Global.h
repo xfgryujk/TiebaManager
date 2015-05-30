@@ -62,7 +62,7 @@ CString HTTPGet(LPCTSTR URL, BOOL useCookie = TRUE, volatile BOOL* stopFlag = NU
 CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie = TRUE, volatile BOOL* stopFlag = NULL);
 HTTPRequestResult HTTPGetRaw(LPCTSTR URL, BYTE** buffer = NULL, ULONG* size = NULL, BOOL useCookie = TRUE, volatile BOOL* stopFlag = NULL);
 // ¸üÐÂ
-const TCHAR UPDATE_CURRENT_VERSION[] = _T("15-05-23");
+const TCHAR UPDATE_CURRENT_VERSION[] = _T("15-05-30");
 enum CheckUpdateResult { UPDATE_NO_UPDATE, UPDATE_HAS_UPDATE, UPDATE_FAILED_TO_GET_FILE_ID, UPDATE_FAILED_TO_GET_LINK };
 CheckUpdateResult CheckUpdate();
 

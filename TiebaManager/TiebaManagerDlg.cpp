@@ -236,9 +236,18 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	}
 
 
+	// 对付百度显示回复数为0的BUG，十分钟清除一次回复记录
+	SetTimer(0, 10 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
+		{
+			if (!g_briefLog)
+				((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->Log(_T("<font color=green>清除扫描记录</font>"));
+			g_reply.clear();
+		});
+
+
 	// 测试
 	//vector<ThreadInfo> threads;
-	//GetThreads(_T("wow"), _T("0"), threads);
+	//GetThreads(_T("一个极其隐秘只有xfgryujk知道的地方"), _T("0"), threads);
 	//g_forumID = _T("309740");
 	//vector<PostInfo> posts, lzls;
 	//GetPosts(_T("3033489261"), _T(""), _T("1"), posts, lzls);

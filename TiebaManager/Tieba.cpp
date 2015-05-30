@@ -385,9 +385,9 @@ void ScanPost(const ThreadInfo& thread, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocu
 	// 记录历史回复
 	if (res)
 	{
-		if (hasHistoryReply)
+		/*if (hasHistoryReply)
 			historyReplyIt->second = reply;
-		else
+		else*/
 			g_reply[tid] = reply;
 	}
 }

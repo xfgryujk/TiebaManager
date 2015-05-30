@@ -53,7 +53,7 @@ const TCHAR TOPIC_PREVIEW_RIGHT[] = _T("</div>");
 
 // ÆÕÍ¨Ö÷Ìâ
 const TCHAR THREAD_SPLIT[] = _T("data-field='{&quot;author_name&quot;:&quot;");
-const TCHAR THREAD_END[] = _T("<div class=\"clear\">");
+const TCHAR THREAD_END[] = _T("<div id=\"frs_list_pager\"");
 const TCHAR THREAD_TID_LEFT[] = _T("&quot;id&quot;:");
 const TCHAR THREAD_TID_RIGHT[] = _T(",");
 const TCHAR THREAD_REPLY_LEFT[] = _T("&quot;reply_num&quot;:");
