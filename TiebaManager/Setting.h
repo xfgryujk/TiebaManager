@@ -9,7 +9,7 @@ using std::wregex;
 extern CString	PROFILE_PATH;
 const CString	OPTIONS_PATH = _T("Option\\");
 const TCHAR		COOKIE_PATH[] = _T("ck.tb");
-const TCHAR		REPLY_PATH[] = _T("reply.tb");
+const TCHAR		CACHE_PATH[] = _T("cache.tb");
 
 struct RegexText
 {

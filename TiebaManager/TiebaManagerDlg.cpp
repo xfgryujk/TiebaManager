@@ -151,6 +151,20 @@ HCURSOR CTiebaManagerDlg::OnQueryDragIcon()
 }
 #pragma endregion
 
+static inline void ReadIDList(const gzFile& f, set<__int64>& IDList)
+{
+	int size;
+	if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
+	{
+		__int64 id;
+		for (int i = 0; i < size; i++)
+		{
+			gzread(f, &id, sizeof(__int64));
+			IDList.insert(id);
+		}
+	}
+}
+
 // 初始化
 BOOL CTiebaManagerDlg::OnInitDialog()
 {
@@ -205,8 +219,8 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	if (g_autoUpdate)
 		AfxBeginThread(AutoUpdateThread, this);
 
-	// 历史回复
-	f = gzopen_w(REPLY_PATH, "rb");
+	// 历史回复、忽略ID
+	f = gzopen_w(CACHE_PATH, "rb");
 	if (f != NULL)
 	{
 		int size;
@@ -221,6 +235,12 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 				g_reply[tid] = reply;
 			}
 		}
+		ReadIDList(f, g_initIgnoredTID);
+		g_ignoredTID = g_initIgnoredTID;
+		ReadIDList(f, g_initIgnoredPID);
+		g_ignoredPID = g_initIgnoredPID;
+		ReadIDList(f, g_initIgnoredLZLID);
+		g_ignoredLZLID = g_initIgnoredLZLID;
 		gzclose(f);
 	}
 
@@ -256,6 +276,14 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
+static inline void WriteIDList(const gzFile& f, const set<__int64>& IDList)
+{
+	int len = IDList.size();
+	gzwrite(f, &len, sizeof(int)); // 长度
+	for (auto& i : IDList)
+		gzwrite(f, &i, sizeof(__int64)); // ID
+}
+
 // 释放
 void CTiebaManagerDlg::OnDestroy()
 {
@@ -271,8 +299,8 @@ void CTiebaManagerDlg::OnDestroy()
 		gzclose(f);
 	}
 	
-	// 保存历史回复
-	f = gzopen_w(REPLY_PATH, "wb");
+	// 保存历史回复、忽略ID
+	f = gzopen_w(CACHE_PATH, "wb");
 	if (f != NULL)
 	{
 		int len = g_reply.size();
@@ -282,6 +310,9 @@ void CTiebaManagerDlg::OnDestroy()
 			gzwrite(f, &i.first, sizeof(__int64)); // 主题ID
 			gzwrite(f, &i.second, sizeof(int)); // 回复数
 		}
+		WriteIDList(f, g_initIgnoredTID);
+		WriteIDList(f, g_initIgnoredPID);
+		WriteIDList(f, g_initIgnoredLZLID);
 		gzclose(f);
 	}
 

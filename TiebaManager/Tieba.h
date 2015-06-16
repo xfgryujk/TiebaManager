@@ -114,6 +114,9 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 // 扫描 /////////////////////////////////////////////////////////////////////////////////
 extern volatile BOOL g_stopScanFlag;
 extern CWinThread* g_scanThread;
+extern set<__int64> g_initIgnoredTID; // 不删的主题ID(手动忽略)，要写入文件
+extern set<__int64> g_initIgnoredPID; // 不删的帖子ID(手动忽略)，要写入文件
+extern set<__int64> g_initIgnoredLZLID; // 不删的楼中楼ID(手动忽略)，要写入文件
 extern set<__int64> g_ignoredTID; // 不删的主题ID(已扫描)
 extern set<__int64> g_ignoredPID; // 不删的帖子ID(已扫描)
 extern set<__int64> g_ignoredLZLID; // 不删的楼中楼ID(已扫描)

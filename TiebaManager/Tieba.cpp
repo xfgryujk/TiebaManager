@@ -35,6 +35,9 @@ CString g_tbs;
 
 volatile BOOL g_stopScanFlag;
 CWinThread* g_scanThread = NULL;
+set<__int64> g_initIgnoredTID; // 不删的主题ID(手动忽略)，要写入文件
+set<__int64> g_initIgnoredPID; // 不删的帖子ID(手动忽略)，要写入文件
+set<__int64> g_initIgnoredLZLID; // 不删的楼中楼ID(手动忽略)，要写入文件
 set<__int64> g_ignoredTID; // 不删的主题ID(已扫描)
 set<__int64> g_ignoredPID; // 不删的帖子ID(已扫描)
 set<__int64> g_ignoredLZLID; // 不删的楼中楼ID(已扫描)
@@ -518,13 +521,24 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			if (MessageBox(NULL, op.msg + _T("\r\n\r\n作者：") + op.author + _T("\r\n是否处理？"),
 				op.title, MB_ICONQUESTION | MB_YESNO) == IDNO)
 			{
-				if (op.object == TBOBJ_THREAD)
+				switch (op.object)
+				{
+				case TBOBJ_THREAD:
+					g_initIgnoredTID.insert(tid);
 					dlg->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a>"), pDocument);
-				else
+					break;
+				case TBOBJ_POST:
+					g_initIgnoredPID.insert(_ttoi64(op.pid));
 					dlg->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor 
-						+ (op.object == TBOBJ_POST ? _T("楼") : _T("楼回复")), pDocument);
+						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼"), pDocument);
+					break;
+				case TBOBJ_LZL:
+					g_initIgnoredLZLID.insert(_ttoi64(op.pid));
+					dlg->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼回复"), pDocument);
+					break;
+				}
 				continue;
 			}
 		}
