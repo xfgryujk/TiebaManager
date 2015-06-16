@@ -503,6 +503,10 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		g_operationQueue.pop();
 		g_operationQueueLock.Unlock();
 
+		// 没有操作
+		if (!g_delete && !g_banID)
+			continue;
+
 		// 主题已被删
 		__int64 tid = _ttoi64(op.tid);
 		if (g_deletedTID.find(tid) != g_deletedTID.end())
@@ -511,7 +515,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		// 确认是否操作
 		if (g_confirm)
 		{
-			if (MessageBox(NULL, op.msg + _T("\r\n作者：") + op.author + _T("\r\n是否处理？"),
+			if (MessageBox(NULL, op.msg + _T("\r\n\r\n作者：") + op.author + _T("\r\n是否处理？"),
 				op.title, MB_ICONQUESTION | MB_YESNO) == IDNO)
 			{
 				if (op.object == TBOBJ_THREAD)
@@ -526,7 +530,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		}
 
 		// 封禁
-		if (g_banID /*|| g_banIP*/)
+		if (g_banID)
 		{
 			auto countIt = g_IDTrigCount.find(op.author);
 			BOOL hasHistory = countIt != g_IDTrigCount.end();
@@ -551,32 +555,15 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				}
 				else
 				{
-					BOOL success = TRUE;
-					//if (g_banID) // 封ID
+					CString code = BanID(op.author, banTBS.tbs_ban_user);
+					if (code != _T("0"))
 					{
-						CString code = BanID(op.author, banTBS.tbs_ban_user);
-						success = code == _T("0");
-						if (!success)
-						{
-							CString content;
-							content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！\
+						CString content;
+						content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！\
 错误代码：%s(%s)</font><a href=\"BD:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.tid, op.author);
-							dlg->Log(content, pDocument);
-						}
+						dlg->Log(content, pDocument);
 					}
-					/*if (g_banIP) // 封IP
-					{
-						CString code = BanIP(banTBS.ip_int, banTBS.tbs_ban_ip, banTBS.ip_secure_str);
-						success = code == _T("0");
-						if (!success)
-						{
-							CString content;
-							content.Format(_T("<font color=red>封禁 </font>%s<font color=red>IP 失败！\
-错误代码：%s(%s)</font><a href=\"BP:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.tid, op.author);
-							dlg->Log(content, pDocument);
-						}
-					}*/
-					if (success)
+					else
 					{
 						sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
 						if (hasHistory)
@@ -590,6 +577,8 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		}
 
 		// 删帖
+		if (!g_delete)
+			continue;
 		if (op.object == TBOBJ_THREAD) // 主题
 		{
 			CString code = DeleteThread(op.tid);
@@ -684,18 +673,6 @@ CString BanID(LPCTSTR userName, LPCTSTR tbs_ban_user)
 		return _T("-1");
 	return GetStringBetween(src, _T("no\":"), _T(","));
 }
-
-// 封IP，返回错误代码 // 此功能已经下线
-/*CString BanIP(LPCTSTR ip_int, LPCTSTR tbs_ban_ip, LPCTSTR ip_secure_str)
-{
-	CString data;
-	data.Format(_T("cm=filter_forum_ip&user_ip=%s&ip_secure_str=%s&ban_days=1&word=%s&fid=%s&tbs=%s&ie=utf-8"),
-		ip_int, ip_secure_str, g_encodedForumName, g_forumID, tbs_ban_ip);
-	CString src = HTTPPost(_T("http://tieba.baidu.com/bawu/cm"), data);
-	if (src == NET_TIMEOUT_TEXT *//*|| src == NET_STOP_TEXT*//*)
-		return _T("-1");
-	return GetStringBetween(src, _T("no\":"), _T(","));
-}*/
 
 // 删主题，返回错误代码
 CString DeleteThread(const CString& tid)

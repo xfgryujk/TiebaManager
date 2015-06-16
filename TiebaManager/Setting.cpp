@@ -13,13 +13,13 @@ CString	g_currentOption;	// 当前方案
 int		g_scanInterval;		// 扫描间隔
 BOOL	g_banID;			// 封ID
 int		g_banDuration;		// 封禁时长
-BOOL	g_banIP;			// 封IP，此功能已经下线
 int		g_trigCount;		// 封禁违规次数
 BOOL	g_onlyScanTitle;	// 只扫描标题
 float	g_deleteInterval;	// 删帖间隔
 BOOL	g_confirm;			// 操作前提示
 int		g_scanPageCount;	// 扫描最后页数
 BOOL	g_briefLog;			// 只输出删帖封号
+BOOL	g_delete;			// 删帖
 vector<RegexText>	g_keywords;		// 违规内容
 vector<RegexText>	g_blackList;	// 屏蔽用户
 vector<CString>		g_whiteList;	// 信任用户
@@ -83,13 +83,16 @@ void ReadOptions(LPCTSTR path)
 	gzread(f, &g_scanInterval, sizeof(int));	// 扫描间隔
 	gzread(f, &g_banID, sizeof(BOOL));			// 封ID
 	gzread(f, &g_banDuration, sizeof(int));		// 封禁时长
-	gzread(f, &g_banIP, sizeof(BOOL));			// 封IP
+	BOOL banIP;
+	gzread(f, &banIP, sizeof(BOOL));			// 封IP
 	gzread(f, &g_trigCount, sizeof(int));		// 封禁违规次数
 	gzread(f, &g_onlyScanTitle, sizeof(BOOL));	// 只扫描标题
 	gzread(f, &g_deleteInterval, sizeof(float));// 删帖间隔
 	gzread(f, &g_confirm, sizeof(BOOL));		// 操作前提示
 	gzread(f, &g_scanPageCount, sizeof(int));	// 扫描最后页数
 	gzread(f, &g_briefLog, sizeof(BOOL));		// 只输出删帖封号
+	if (gzread(f, &g_delete, sizeof(BOOL)) != sizeof(BOOL))			// 删帖
+		g_delete = TRUE;
 
 	gzclose(f);
 	return;
@@ -101,13 +104,13 @@ UseDefaultOptions:
 	g_scanInterval = 5;			// 扫描间隔
 	g_banID = FALSE;			// 封ID
 	g_banDuration = 1;			// 封禁时长
-	g_banIP = FALSE;			// 封IP
 	g_trigCount = 1;			// 封禁违规次数
 	g_onlyScanTitle = FALSE;	// 只扫描标题
 	g_deleteInterval = 2.0f;	// 删帖间隔
 	g_confirm = TRUE;			// 操作前提示
 	g_scanPageCount = 1;		// 扫描最后页数
 	g_briefLog = FALSE;			// 只输出删帖封号
+	g_delete = TRUE;			// 删帖
 }
 
 static inline void WriteRegexTexts(const gzFile& f, vector<RegexText>& vec)
@@ -156,13 +159,15 @@ void WriteOptions(LPCTSTR path)
 	gzwrite(f, &g_scanInterval, sizeof(int));		// 扫描间隔
 	gzwrite(f, &g_banID, sizeof(BOOL));				// 封ID
 	gzwrite(f, &g_banDuration, sizeof(int));		// 封禁时长
-	gzwrite(f, &g_banIP, sizeof(BOOL));				// 封IP
+	BOOL banIP = FALSE;
+	gzwrite(f, &banIP, sizeof(BOOL));				// 封IP
 	gzwrite(f, &g_trigCount, sizeof(int));			// 封禁违规次数
 	gzwrite(f, &g_onlyScanTitle, sizeof(BOOL));		// 只扫描标题
 	gzwrite(f, &g_deleteInterval, sizeof(float));	// 删帖间隔
 	gzwrite(f, &g_confirm, sizeof(BOOL));			// 操作前提示
 	gzwrite(f, &g_scanPageCount, sizeof(int));		// 扫描最后页数
 	gzwrite(f, &g_briefLog, sizeof(BOOL));			// 只输出删帖封号
+	gzwrite(f, &g_delete, sizeof(BOOL));			// 删帖
 
 	gzclose(f);
 }

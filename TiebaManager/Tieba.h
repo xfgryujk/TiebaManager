@@ -20,15 +20,6 @@ extern CString g_tbs; // 备用获取tbs地址：http://tieba.baidu.com/dc/common/tbs
 
 // 采集贴吧用的常量
 #pragma region 用户信息
-// 这些格式有些贴吧不同
-/*const TCHAR FORUM_ID_LEFT[]		= _T("forum_id: \"");
-const TCHAR FORUM_ID_RIGHT[]	= _T("\"");
-const TCHAR FORUM_NAME1_LEFT[]	= _T("forum_name: '");
-const TCHAR FORUM_NAME1_RIGHT[] = _T("'");
-const TCHAR FORUM_NAME2_LEFT[]	= _T("\"forum_name\":\"");
-const TCHAR FORUM_NAME2_RIGHT[] = _T("\"");
-const TCHAR USER_NAME_LEFT[]	= _T("\"user_name\": \"");
-const TCHAR USER_NAME_RIGHT[]	= _T("\"");*/
 // 3是fid，7是贴吧名
 const wregex FORUM_ID_NAME_REG(_T("PageData.forum.*?forum_id('|\")?:\\s*('|\")?(\\d+)('|\")?,\
 .*?forum_name('|\")?:\\s*('|\")(.*?)('|\")"));
@@ -142,7 +133,6 @@ void AddOperation(const CString& msg, TBObject object, const CString& tid, const
 UINT AFX_CDECL OperateThread(LPVOID mainDlg);
 BOOL GetBanTBS(LPCTSTR tid, LPCTSTR userName, get_ip_tbs& result);
 CString BanID(LPCTSTR userName, LPCTSTR tbs_ban_user);
-//CString BanIP(LPCTSTR ip_int, LPCTSTR tbs_ban_ip, LPCTSTR ip_secure_str);
 CString DeleteThread(const CString& tid);
 CString DeletePost(LPCTSTR tid, LPCTSTR pid);
 CString DeleteLZL(LPCTSTR tid, LPCTSTR lzlid);

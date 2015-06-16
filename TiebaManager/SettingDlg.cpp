@@ -209,7 +209,6 @@ void CSettingDlg::ShowCurrentOptions()
 	m_prefPage.m_scanIntervalEdit.SetWindowText(tmp);		// 扫描间隔
 	m_prefPage.m_banIDCheck.SetCheck(g_banID);				// 封ID
 	m_prefPage.m_banDurationCombo.SetCurSel(g_banDuration == 1 ? 0 : (g_banDuration == 3 ? 1 : 2)); // 封禁时长
-	//m_prefPage.m_banIPCheck.SetCheck(g_banIP);				// 封IP
 	m_prefPage.OnBnClickedCheck1();
 	tmp.Format(_T("%d"), g_trigCount);
 	m_prefPage.m_trigCountEdit.SetWindowText(tmp);			// 封禁违规次数
@@ -220,6 +219,7 @@ void CSettingDlg::ShowCurrentOptions()
 	tmp.Format(_T("%d"), g_scanPageCount);
 	m_prefPage.m_scanPageCountEdit.SetWindowText(tmp);		// 扫描最后页数
 	m_prefPage.m_briefLogCheck.SetCheck(g_briefLog);		// 只输出删帖封号
+	m_prefPage.m_deleteCheck.SetCheck(g_delete);			// 删帖
 
 	// 违规内容
 	m_keywordsPage.m_list.ResetContent();
@@ -266,7 +266,6 @@ void CSettingDlg::ApplyOptionsInDlg()
 	g_banID = m_prefPage.m_banIDCheck.GetCheck();				// 封ID
 	intBuf = m_prefPage.m_banDurationCombo.GetCurSel();
 	g_banDuration = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);	// 封禁时长
-	//g_banIP = m_prefPage.m_banIPCheck.GetCheck();				// 封IP
 	m_prefPage.m_trigCountEdit.GetWindowText(strBuf);
 	g_trigCount = _ttoi(strBuf);								// 封禁违规次数
 	g_onlyScanTitle = m_prefPage.m_onlyScanTitleCheck.GetCheck(); // 只扫描标题
@@ -276,6 +275,7 @@ void CSettingDlg::ApplyOptionsInDlg()
 	m_prefPage.m_scanPageCountEdit.GetWindowText(strBuf);
 	g_scanPageCount = _ttoi(strBuf);							// 扫描最后页数
 	g_briefLog = m_prefPage.m_briefLogCheck.GetCheck();			// 只输出删帖封号
+	g_delete = m_prefPage.m_deleteCheck.GetCheck();				// 删帖
 
 	g_optionsLock.Lock();
 	// 违规内容
@@ -371,8 +371,7 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	m_prefPage.m_banIDCheck.SetCheck(boolBuf);				// 封ID
 	gzread(f, &intBuf, sizeof(int));
 	m_prefPage.m_banDurationCombo.SetCurSel(intBuf == 1 ? 0 : (intBuf == 3 ? 1 : 2)); // 封禁时长
-	gzread(f, &boolBuf, sizeof(BOOL));
-	m_prefPage.m_banIPCheck.SetCheck(boolBuf);				// 封IP
+	gzread(f, &boolBuf, sizeof(BOOL));						// 封IP
 	gzread(f, &intBuf, sizeof(int));
 	strBuf.Format(_T("%d"), intBuf);
 	m_prefPage.m_trigCountEdit.SetWindowText(strBuf);		// 封禁违规次数
@@ -388,6 +387,8 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	m_prefPage.m_scanPageCountEdit.SetWindowText(strBuf);	// 扫描最后页数
 	gzread(f, &boolBuf, sizeof(BOOL));
 	m_prefPage.m_briefLogCheck.SetCheck(boolBuf);			// 只输出删帖封号
+	gzread(f, &boolBuf, sizeof(BOOL));
+	m_prefPage.m_deleteCheck.SetCheck(boolBuf);				// 删帖
 
 	gzclose(f);
 	return;
@@ -400,13 +401,13 @@ UseDefaultOptions:
 	m_prefPage.m_scanIntervalEdit.SetWindowText(_T("5"));	// 扫描间隔
 	m_prefPage.m_banIDCheck.SetCheck(FALSE);				// 封ID
 	m_prefPage.m_banDurationCombo.SetCurSel(0);				// 封禁时长
-	m_prefPage.m_banIPCheck.SetCheck(FALSE);				// 封IP
 	m_prefPage.m_trigCountEdit.SetWindowText(_T("1"));		// 封禁违规次数
 	m_prefPage.m_onlyScanTitleCheck.SetCheck(FALSE);		// 只扫描标题
 	m_prefPage.m_deleteIntervalEdit.SetWindowText(_T("2"));	// 删帖间隔
 	m_prefPage.m_confirmCheck.SetCheck(TRUE);				// 操作前提示
 	m_prefPage.m_scanPageCountEdit.SetWindowText(_T("1"));	// 扫描最后页数
 	m_prefPage.m_briefLogCheck.SetCheck(FALSE);				// 只输出删帖封号
+	m_prefPage.m_deleteCheck.SetCheck(TRUE);				// 删帖
 }
 
 static inline void WriteRegexTexts(const gzFile& f, CListBox& list)
@@ -467,7 +468,7 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	intBuf = m_prefPage.m_banDurationCombo.GetCurSel();
 	intBuf = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);
 	gzwrite(f, &intBuf, sizeof(int));												// 封禁时长
-	gzwrite(f, &(boolBuf = m_prefPage.m_banIPCheck.GetCheck()), sizeof(BOOL));		// 封IP
+	gzwrite(f, &(boolBuf = FALSE), sizeof(BOOL));									// 封IP
 	m_prefPage.m_trigCountEdit.GetWindowText(strBuf);
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 封禁违规次数
 	gzwrite(f, &(boolBuf = m_prefPage.m_onlyScanTitleCheck.GetCheck()), sizeof(BOOL)); // 只扫描标题
@@ -477,6 +478,7 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	m_prefPage.m_scanPageCountEdit.GetWindowText(strBuf);
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 扫描最后页数
 	gzwrite(f, &(boolBuf = m_prefPage.m_briefLogCheck.GetCheck()), sizeof(BOOL));	// 只输出删帖封号
+	gzwrite(f, &(boolBuf = m_prefPage.m_deleteCheck.GetCheck()), sizeof(BOOL));		// 删帖
 
 	gzclose(f);
 }

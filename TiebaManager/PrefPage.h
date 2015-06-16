@@ -26,7 +26,6 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnEnKillfocusEdit1();
 	afx_msg void OnBnClickedCheck1();
-	afx_msg void OnBnClickedCheck2();
 	afx_msg void OnEnKillfocusEdit3();
 	afx_msg void OnEnKillfocusEdit4();
 	afx_msg void OnEnKillfocusEdit5();
@@ -35,9 +34,9 @@ public:
 
 public:
 	CEdit m_scanIntervalEdit;
+	CButton m_deleteCheck;
 	CButton m_banIDCheck;
 	CComboBox m_banDurationCombo;
-	CButton m_banIPCheck;
 	CEdit m_trigCountEdit;
 	CButton m_onlyScanTitleCheck;
 	CEdit m_deleteIntervalEdit;

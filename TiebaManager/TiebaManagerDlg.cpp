@@ -508,19 +508,6 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 			Log(_T("<font color=red>封禁失败！</font>"));
 		return;
 	}
-	/*else if (prefix == _T("BP:")) // 封IP
-	{
-		CStringArray args;
-		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		get_ip_tbs banTBS;
-		GetBanTBS(args[0], args[1], banTBS);
-		CString code = BanIP(banTBS.ip_int, banTBS.tbs_ban_ip, banTBS.ip_secure_str);
-		if (code == _T("0"))
-			Log(_T("<font color=green>封禁成功！</font>"));
-		else
-			Log(_T("<font color=red>封禁失败！</font>"));
-		return;
-	}*/
 
 	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }
@@ -724,6 +711,17 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		AfxMessageBox(_T("您不是吧主或小吧主！"), MB_ICONERROR);
 		goto error;
 	}
+
+	// 加入信任用户
+	BOOL inWhiteList = FALSE;
+	for (const CString& i : g_whiteList)
+		if (i == userName)
+		{
+			inWhiteList = TRUE;
+			break;
+		}
+	if (!inWhiteList)
+		g_whiteList.push_back(userName);
 
 	// 取tbs(口令号)
 	g_tbs = GetStringBetween(src, _TBS_LEFT, _TBS_RIGHT);

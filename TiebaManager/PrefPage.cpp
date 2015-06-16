@@ -27,9 +27,9 @@ void CPrefPage::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_scanIntervalEdit);
+	DDX_Control(pDX, IDC_CHECK2, m_deleteCheck);
 	DDX_Control(pDX, IDC_CHECK1, m_banIDCheck);
 	DDX_Control(pDX, IDC_COMBO1, m_banDurationCombo);
-	DDX_Control(pDX, IDC_CHECK2, m_banIPCheck);
 	DDX_Control(pDX, IDC_EDIT3, m_trigCountEdit);
 	DDX_Control(pDX, IDC_CHECK3, m_onlyScanTitleCheck);
 	DDX_Control(pDX, IDC_EDIT4, m_deleteIntervalEdit);
@@ -100,15 +100,9 @@ void CPrefPage::OnEnKillfocusEdit1()
 // ·âID
 void CPrefPage::OnBnClickedCheck1()
 {
-	BOOL enable = m_banIDCheck.GetCheck() || m_banIPCheck.GetCheck();
+	BOOL enable = m_banIDCheck.GetCheck();
 	m_banDurationCombo.EnableWindow(enable);
 	m_trigCountEdit.EnableWindow(enable);
-}
-
-// ·âIP
-void CPrefPage::OnBnClickedCheck2()
-{
-	OnBnClickedCheck1();
 }
 
 // ·â½ûÎ¥¹æ´ÎÊý
