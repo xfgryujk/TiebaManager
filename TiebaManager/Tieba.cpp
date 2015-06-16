@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Tieba.h"
 #include "Global.h"
 #include "Setting.h"
+#include "ConfirmDlg.h"
 #include <queue>
 using std::queue;
 #include <Mmsystem.h>
@@ -45,16 +46,6 @@ set<__int64> g_deletedTID; // 已删的主题ID
 map<__int64, int> g_reply; // 主题的回复数
 map<CString, int> g_IDTrigCount; // 某ID违规次数，已封为-1
 
-struct Operation
-{
-	CString msg;		// 提示消息
-	TBObject object;	// 操作对象
-	CString tid;		// 主题ID
-	CString title;		// 主题标题
-	CString floor;		// 楼层
-	CString pid;		// 帖子ID
-	CString author;		// 帖子作者
-};
 static queue<Operation> g_operationQueue; // 操作队列
 static CCriticalSection g_operationQueueLock;
 CWinThread* g_operateThread = NULL;
@@ -518,8 +509,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		// 确认是否操作
 		if (g_confirm)
 		{
-			if (MessageBox(NULL, op.msg + _T("\r\n\r\n作者：") + op.author + _T("\r\n是否处理？"),
-				op.title, MB_ICONQUESTION | MB_YESNO) == IDNO)
+			if (CConfirmDlg(&op).DoModal() == IDCANCEL)
 			{
 				switch (op.object)
 				{

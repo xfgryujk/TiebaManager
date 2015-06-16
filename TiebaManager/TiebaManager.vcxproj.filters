@@ -93,6 +93,9 @@
     <ClInclude Include="LoginDlg.h">
       <Filter>头文件\Dialog</Filter>
     </ClInclude>
+    <ClInclude Include="ConfirmDlg.h">
+      <Filter>头文件\Dialog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -147,6 +150,9 @@
       <Filter>源文件\Global</Filter>
     </ClCompile>
     <ClCompile Include="LoginDlg.cpp">
+      <Filter>源文件\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfirmDlg.cpp">
       <Filter>源文件\Dialog</Filter>
     </ClCompile>
   </ItemGroup>

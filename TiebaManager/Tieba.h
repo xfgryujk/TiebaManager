@@ -130,6 +130,16 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	int ScanedCount, const CString& src, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocument2>* pDocument);
 
 // 操作 /////////////////////////////////////////////////////////////////////////////////
+struct Operation
+{
+	CString msg;		// 提示消息
+	TBObject object;	// 操作对象
+	CString tid;		// 主题ID
+	CString title;		// 主题标题
+	CString floor;		// 楼层
+	CString pid;		// 帖子ID
+	CString author;		// 帖子作者
+};
 extern CWinThread* g_operateThread;
 void AddOperation(const CString& msg, TBObject object, const CString& tid, const CString& title, 
 	const CString& floor, const CString& pid, const CString& author);
