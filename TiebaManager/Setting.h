@@ -5,12 +5,15 @@ using std::vector;
 using std::wregex;
 
 
+
 // 配置文件路径
-extern CString	PROFILE_PATH;
-const CString	OPTIONS_PATH = _T("Option\\");
-const CString	USER_PATH = _T("User\\");
-extern CString	COOKIE_PATH;
-extern CString	CACHE_PATH;
+extern CString	ALL_PROFILE_PATH;	// 程序运行时初始化
+extern CString	USER_PROFILE_PATH;	// 确定贴吧时初始化
+extern CString	OPTIONS_PATH;
+extern CString	USERS_PATH;			// 确定贴吧时初始化
+extern CString	CURRENT_USER_PATH;	// 确定贴吧时初始化
+extern CString	COOKIE_PATH;		// 确定贴吧时初始化
+extern CString	CACHE_PATH;			// 确定贴吧时初始化
 
 struct RegexText
 {
@@ -19,7 +22,7 @@ struct RegexText
 	wregex regexp;
 };
 
-
+extern CString	g_currentUser;		// 当前账号
 extern BOOL		g_autoUpdate;		// 自动更新
 
 // 方案
@@ -44,3 +47,7 @@ extern CCriticalSection g_optionsLock; // 判断违规用的临界区
 
 void ReadOptions(LPCTSTR path);
 void WriteOptions(LPCTSTR path);
+// 保存当前账号配置
+void SaveCurrentUserProfile();
+// 设置当前账号
+void SetCurrentUser(LPCTSTR userName);

@@ -32,6 +32,9 @@ public:
 	CEdit m_passwordEdit;
 	CEdit m_verifyCodeEdit;
 	CStatic m_verifyCodePicture;
+
+	CString m_cookie;
+	CString m_userName;
 protected:
 	CString m_token;
 	CString m_verifyStr;

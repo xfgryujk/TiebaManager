@@ -7,6 +7,7 @@
 #include "WhiteListPage.h"
 #include "WhiteContentPage.h"
 #include "OptionsPage.h"
+#include "UsersPage.h"
 #include "AboutPage.h"
 
 
@@ -36,7 +37,6 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnClose();
-	afx_msg void OnBnClickedButton1();
 
 	void ShowCurrentOptions();
 	void ApplyOptionsInDlg();
@@ -52,12 +52,12 @@ public:
 	CWhiteListPage m_whiteListPage;
 	CWhiteContentPage m_whiteContentPage;
 	COptionsPage m_optionsPage;
+	CUsersPage m_usersPage;
 	CAboutPage m_aboutPage;
-	CButton m_logoutButton;
 	CButton m_okButton;
 	CButton m_cancelButton;
 
 	BOOL m_clearScanCache;
 protected:
-	CDialog* m_pages[7];
+	CDialog* m_pages[8];
 };

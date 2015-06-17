@@ -152,20 +152,6 @@ HCURSOR CTiebaManagerDlg::OnQueryDragIcon()
 }
 #pragma endregion
 
-static inline void ReadIDList(const gzFile& f, set<__int64>& IDList)
-{
-	int size;
-	if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
-	{
-		__int64 id;
-		for (int i = 0; i < size; i++)
-		{
-			gzread(f, &id, sizeof(__int64));
-			IDList.insert(id);
-		}
-	}
-}
-
 // 初始化
 BOOL CTiebaManagerDlg::OnInitDialog()
 {
@@ -194,64 +180,23 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	s_oldExplorerWndProc = (WNDPROC)SetWindowLong(ExplorerHwnd, GWL_WNDPROC, (LONG)ExplorerWndProc);
 
 	// 读取设置
-	// 方案
-	TCHAR* pBuffer = g_currentOption.GetBuffer(MAX_PATH);
-	GetPrivateProfileString(_T("Routine"), _T("Option"), _T("默认"), pBuffer, MAX_PATH, PROFILE_PATH);
-	g_currentOption.ReleaseBuffer();
-	ReadOptions(OPTIONS_PATH + g_currentOption + _T(".tb"));
 	TCHAR buffer[260];
-	// 贴吧名
-	GetPrivateProfileString(_T("Routine"), _T("ForumName"), _T(""), buffer, _countof(buffer), PROFILE_PATH);
-	m_forumNameEdit.SetWindowText(buffer);
-	// Cookie
-	gzFile f = gzopen_w(COOKIE_PATH, "rb");
-	if (f != NULL)
-	{
-		int size;
-		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 1024 * 1024) // 字符串长度
-		{
-			gzread(f, g_cookie.GetBuffer(size), size * sizeof(TCHAR)); // 字符串
-			g_cookie.ReleaseBuffer();
-		}
-		gzclose(f);
-	}
+	// 账号
+	GetPrivateProfileString(_T("Setting"), _T("UserName"), _T("[NULL]"), buffer, _countof(buffer), ALL_PROFILE_PATH);
+	SetCurrentUser(buffer);
+	
 	// 自动更新
-	g_autoUpdate = GetPrivateProfileInt(_T("Routine"), _T("AutoUpdate"), 1, PROFILE_PATH) != 0;
+	g_autoUpdate = GetPrivateProfileInt(_T("Setting"), _T("AutoUpdate"), 1, ALL_PROFILE_PATH) != 0;
 	if (g_autoUpdate)
 		AfxBeginThread(AutoUpdateThread, this);
 
-	// 历史回复、忽略ID
-	f = gzopen_w(CACHE_PATH, "rb");
-	if (f != NULL)
+	// 初次运行先看关于
+	if (GetPrivateProfileInt(_T("Setting"), _T("FirstRun"), 1, ALL_PROFILE_PATH) != 0)
 	{
-		int size;
-		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
-		{
-			__int64 tid;
-			int reply;
-			for (int i = 0; i < size; i++)
-			{
-				gzread(f, &tid, sizeof(__int64));
-				gzread(f, &reply, sizeof(int));
-				g_reply[tid] = reply;
-			}
-		}
-		ReadIDList(f, g_initIgnoredTID);
-		g_ignoredTID = g_initIgnoredTID;
-		ReadIDList(f, g_initIgnoredPID);
-		g_ignoredPID = g_initIgnoredPID;
-		ReadIDList(f, g_initIgnoredLZLID);
-		g_ignoredLZLID = g_initIgnoredLZLID;
-		gzclose(f);
-	}
-
-	// 初次运行先设置方案
-	if (GetPrivateProfileInt(_T("Routine"), _T("FirstRun"), 1, PROFILE_PATH) != 0)
-	{
-		WritePrivateProfileString(_T("Routine"), _T("FirstRun"), _T("0"), PROFILE_PATH);
+		WritePrivateProfileString(_T("Setting"), _T("FirstRun"), _T("0"), ALL_PROFILE_PATH);
 		m_settingDlg = new CSettingDlg();
 		m_settingDlg->Create(IDD_SETTING_DIALOG, this);
-		m_settingDlg->m_tab.SetCurSel(6);
+		m_settingDlg->m_tab.SetCurSel(7);
 		LRESULT tmp;
 		m_settingDlg->OnTcnSelchangeTab1(NULL, &tmp);
 	}
@@ -277,45 +222,13 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
-static inline void WriteIDList(const gzFile& f, const set<__int64>& IDList)
-{
-	int len = IDList.size();
-	gzwrite(f, &len, sizeof(int)); // 长度
-	for (auto& i : IDList)
-		gzwrite(f, &i, sizeof(__int64)); // ID
-}
-
 // 释放
 void CTiebaManagerDlg::OnDestroy()
 {
 	CDialog::OnDestroy();
 
-	// 保存Cookie
-	gzFile f = gzopen_w(COOKIE_PATH, "wb");
-	if (f != NULL)
-	{
-		int len = g_cookie.GetLength();
-		gzwrite(f, &len, sizeof(int)); // 字符串长度
-		gzwrite(f, (LPCTSTR)g_cookie, len * sizeof(TCHAR)); // 字符串
-		gzclose(f);
-	}
-	
-	// 保存历史回复、忽略ID
-	f = gzopen_w(CACHE_PATH, "wb");
-	if (f != NULL)
-	{
-		int len = g_reply.size();
-		gzwrite(f, &len, sizeof(int)); // 长度
-		for (auto& i : g_reply)
-		{
-			gzwrite(f, &i.first, sizeof(__int64)); // 主题ID
-			gzwrite(f, &i.second, sizeof(int)); // 回复数
-		}
-		WriteIDList(f, g_initIgnoredTID);
-		WriteIDList(f, g_initIgnoredPID);
-		WriteIDList(f, g_initIgnoredLZLID);
-		gzclose(f);
-	}
+	SaveCurrentUserProfile();
+	WritePrivateProfileString(_T("Setting"), _T("UserName"), g_currentUser, ALL_PROFILE_PATH);
 
 	g_stopScanFlag = TRUE; // 实际上线程不会返回？
 }
@@ -704,14 +617,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	if (userName == _T(""))
 	{
 		WriteString(src, _T("forum.txt"));
-		if (AfxMessageBox(_T("现在登录？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
-		{
-			if (CLoginDlg(this).DoModal() == IDOK)
-			{
-				OnBnClickedButton1();
-				return;
-			}
-		}
+		AfxMessageBox(_T("请在设置-账号管理登录百度账号"), MB_ICONERROR);
 		goto error;
 	}
 	SetWindowText(_T("贴吧管理器 - ") + userName);
@@ -731,16 +637,8 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	if (/*pos2 == -1 || */pos2 <= pos1 || (pos3 != -1 && pos2 >= pos3))
 	{
 		WriteString(src2, _T("admin.txt"));
-		if (AfxMessageBox(_T("使用当前账号？"), MB_ICONQUESTION | MB_YESNO) == IDNO)
-		{
-			SetWindowText(_T("贴吧管理器"));
-			if (CLoginDlg(this).DoModal() == IDOK)
-			{
-				OnBnClickedButton1();
-				return;
-			}
-		}
 		AfxMessageBox(_T("您不是吧主或小吧主！"), MB_ICONERROR);
+		SetWindowText(_T("贴吧管理器"));
 		goto error;
 	}
 
@@ -763,7 +661,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_startButton.EnableWindow(TRUE);
 	m_pageEdit.EnableWindow(TRUE);
 	m_backStageButton.EnableWindow(TRUE);
-	WritePrivateProfileString(_T("Routine"), _T("ForumName"), g_forumName, PROFILE_PATH);
+	WritePrivateProfileString(_T("Setting"), _T("ForumName"), g_forumName, USER_PROFILE_PATH);
 	Log(_T("<font color=green>确认监控贴吧：</font>") + g_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));
 	return;
 

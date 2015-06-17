@@ -99,6 +99,9 @@
     <ClInclude Include="Update.h">
       <Filter>头文件\Global</Filter>
     </ClInclude>
+    <ClInclude Include="UsersPage.h">
+      <Filter>头文件\Dialog\Setting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -160,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="Update.cpp">
       <Filter>源文件\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="UsersPage.cpp">
+      <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

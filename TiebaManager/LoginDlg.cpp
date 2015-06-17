@@ -55,15 +55,12 @@ BOOL CLoginDlg::OnInitDialog()
 
 	SetClassLong(m_verifyCodePicture.m_hWnd, GCL_HCURSOR, (LONG)LoadCursor(NULL, IDC_HAND));
 
-	// 登录前清除BDUSS避免错误判断登录成功
-	g_cookie = _T("");
-
 	// 初始化token
-	CString src = HTTPGet(_T("https://passport.baidu.com/v2/api/?getapi&class=login&tpl=mn&tangram=true"));
+	CString src = HTTPGet(_T("https://passport.baidu.com/v2/api/?getapi&class=login&tpl=mn&tangram=true"), TRUE, NULL, &m_cookie);
 	m_token = GetStringBetween(src, _T("token='"), _T("'"));
 	if (m_token == _T("the fisrt two args should be string type:0,1!"))
 	{
-		src = HTTPGet(_T("https://passport.baidu.com/v2/api/?getapi&class=login&tpl=mn&tangram=true"));
+		src = HTTPGet(_T("https://passport.baidu.com/v2/api/?getapi&class=login&tpl=mn&tangram=true"), TRUE, NULL, &m_cookie);
 		m_token = GetStringBetween(src, _T("token='"), _T("'"));
 	}
 
@@ -77,13 +74,13 @@ BOOL CLoginDlg::OnInitDialog()
 // 更换验证码
 void CLoginDlg::OnStnClickedStatic4()
 {
-	CString src = HTTPGet(_T("https://passport.baidu.com/v2/?reggetcodestr&token=") + m_token + _T("&tpl=mn&apiver=v3&tt=1374720914453&callback=bd__cbs__hb302a"));
+	CString src = HTTPGet(_T("https://passport.baidu.com/v2/?reggetcodestr&token=") + m_token + _T("&tpl=mn&apiver=v3&tt=1374720914453&callback=bd__cbs__hb302a"), TRUE, NULL, &m_cookie);
 	m_verifyStr = GetStringBetween(src, _T("\"verifyStr\" : \""), _T("\""));
 	
 	// 下载图片
 	BYTE* buffer;
 	ULONG size;
-	HTTPGetRaw(_T("https://passport.baidu.com/cgi-bin/genimage?") + m_verifyStr, &buffer, &size);
+	HTTPGetRaw(_T("https://passport.baidu.com/cgi-bin/genimage?") + m_verifyStr, &buffer, &size, TRUE, NULL, &m_cookie);
 	if (buffer == NULL)
 	{
 		AfxMessageBox(_T("获取验证码图片失败！"), MB_ICONERROR);
@@ -157,7 +154,7 @@ void CLoginDlg::OnOK()
 &u=http%%3A%%2F%%2Fwww.baidu.com%%2F&username=%s&password=%s&verifycode=%s&mem_pass=on&ppui_logintime=35219\
 &callback=parent.bd__pcbs__4y6hex"), 
 		m_token, timestamp, m_verifyStr, EncodeURI(userName), EncodeURI(password), verifyCode);
-	CString result = HTTPPost(_T("https://passport.baidu.com/v2/api/?login"), data);
+	CString result = HTTPPost(_T("https://passport.baidu.com/v2/api/?login"), data, TRUE, NULL, &m_cookie);
 
 	EnableWindow(TRUE);
 	if (result == NET_TIMEOUT_TEXT)
@@ -167,7 +164,7 @@ void CLoginDlg::OnOK()
 		m_verifyCodeEdit.SetWindowText(_T(""));
 		return;
 	}
-	if (!StringIncludes(g_cookie, _T("BDUSS=")))
+	if (!StringIncludes(m_cookie, _T("BDUSS=")))
 	{
 		WriteString(result, _T("login.txt"));
 		AfxMessageBox(_T("登录失败！"), MB_ICONERROR);
@@ -176,6 +173,7 @@ void CLoginDlg::OnOK()
 		return;
 	}
 
+	m_userName = userName;
 	CDialog::OnOK();
 }
 
@@ -183,18 +181,32 @@ void CLoginDlg::OnOK()
 void CLoginDlg::OnBnClickedButton3()
 {
 	DWORD size = 1024 * 1024;
-	BOOL result = InternetGetCookieEx(_T("http://tieba.baidu.com/"), NULL, g_cookie.GetBuffer(size),
+	BOOL result = InternetGetCookieEx(_T("http://tieba.baidu.com/"), NULL, m_cookie.GetBuffer(size),
 		&size, INTERNET_COOKIE_HTTPONLY, NULL);
-	g_cookie.ReleaseBuffer();
+	m_cookie.ReleaseBuffer();
 	if (!result)
 	{
 		AfxMessageBox(_T("获取Cookie失败！"), MB_ICONERROR);
 		return;
 	}
-	if (!StringIncludes(g_cookie, _T("BDUSS=")))
+	if (!StringIncludes(m_cookie, _T("BDUSS=")))
 	{
 		AfxMessageBox(_T("请先在IE浏览器登陆百度账号！"), MB_ICONERROR);
 		return;
 	}
+
+	// 取用户名
+	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=\
+%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD"), TRUE, NULL, &m_cookie);
+	std::wcmatch res;
+	if (std::regex_search((LPCTSTR)src, res, USER_NAME_REG))
+		m_userName = JSUnescape(res[3].str().c_str());
+	if (m_userName == _T(""))
+	{
+		WriteString(src, _T("login_forum.txt"));
+		AfxMessageBox(_T("请先在IE浏览器登陆百度账号！"), MB_ICONERROR);
+		return;
+	}
+
 	EndDialog(IDOK);
 }

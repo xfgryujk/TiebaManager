@@ -135,6 +135,7 @@
     <ClInclude Include="TiebaManager.h" />
     <ClInclude Include="TiebaManagerDlg.h" />
     <ClInclude Include="Update.h" />
+    <ClInclude Include="UsersPage.h" />
     <ClInclude Include="WhiteContentPage.h" />
     <ClInclude Include="WhiteListPage.h" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     <ClCompile Include="TiebaManager.cpp" />
     <ClCompile Include="TiebaManagerDlg.cpp" />
     <ClCompile Include="Update.cpp" />
+    <ClCompile Include="UsersPage.cpp" />
     <ClCompile Include="WhiteContentPage.cpp" />
     <ClCompile Include="WhiteListPage.cpp" />
   </ItemGroup>

@@ -1,13 +1,20 @@
 #include "stdafx.h"
 #include "Setting.h"
 #include <zlib.h>
+#include "Tieba.h"
+#include "TiebaManagerDlg.h"
 
 
 // 配置文件路径
-CString		PROFILE_PATH = _T("\\options.tb");
-CString		COOKIE_PATH = _T("ck.tb");
-CString		CACHE_PATH = _T("cache.tb");
+CString		ALL_PROFILE_PATH = _T("\\options.tb");	// 程序运行时初始化
+CString		USER_PROFILE_PATH;						// 确定贴吧时初始化
+CString		OPTIONS_PATH = _T("Option\\");
+CString		USERS_PATH = _T("\\User\\");			// 程序运行时初始化
+CString		CURRENT_USER_PATH;						// 确定贴吧时初始化
+CString		COOKIE_PATH;							// 确定贴吧时初始化
+CString		CACHE_PATH;								// 确定贴吧时初始化
 
+CString	g_currentUser;		// 当前账号
 BOOL	g_autoUpdate;		// 自动更新
 
 // 方案
@@ -172,4 +179,125 @@ void WriteOptions(LPCTSTR path)
 	gzwrite(f, &g_delete, sizeof(BOOL));			// 删帖
 
 	gzclose(f);
+}
+
+static inline void ReadIDList(const gzFile& f, set<__int64>& IDList)
+{
+	int size;
+	if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
+	{
+		__int64 id;
+		for (int i = 0; i < size; i++)
+		{
+			gzread(f, &id, sizeof(__int64));
+			IDList.insert(id);
+		}
+	}
+}
+
+static inline void WriteIDList(const gzFile& f, const set<__int64>& IDList)
+{
+	int len = IDList.size();
+	gzwrite(f, &len, sizeof(int)); // 长度
+	for (auto& i : IDList)
+		gzwrite(f, &i, sizeof(__int64)); // ID
+}
+
+// 保存当前账号配置
+void SaveCurrentUserProfile()
+{
+	// 创建目录
+	if (!PathFileExists(USERS_PATH))
+		CreateDirectory(USERS_PATH, NULL);
+	if (!PathFileExists(USERS_PATH + g_currentUser))
+		CreateDirectory(USERS_PATH + g_currentUser, NULL);
+
+	// 保存Cookie
+	gzFile f = gzopen_w(COOKIE_PATH, "wb");
+	if (f != NULL)
+	{
+		int len = g_cookie.GetLength();
+		gzwrite(f, &len, sizeof(int)); // 字符串长度
+		gzwrite(f, (LPCTSTR)g_cookie, len * sizeof(TCHAR)); // 字符串
+		gzclose(f);
+	}
+
+	// 保存历史回复、忽略ID
+	f = gzopen_w(CACHE_PATH, "wb");
+	if (f != NULL)
+	{
+		int len = g_reply.size();
+		gzwrite(f, &len, sizeof(int)); // 长度
+		for (auto& i : g_reply)
+		{
+			gzwrite(f, &i.first, sizeof(__int64)); // 主题ID
+			gzwrite(f, &i.second, sizeof(int)); // 回复数
+		}
+		WriteIDList(f, g_initIgnoredTID);
+		WriteIDList(f, g_initIgnoredPID);
+		WriteIDList(f, g_initIgnoredLZLID);
+		gzclose(f);
+	}
+}
+
+// 设置当前账号
+void SetCurrentUser(LPCTSTR userName)
+{
+	// 保存当前账号配置
+	if (g_currentUser != _T(""))
+		SaveCurrentUserProfile();
+
+	// 设置配置路径
+	g_currentUser = userName;
+	CURRENT_USER_PATH = USERS_PATH + userName;
+	USER_PROFILE_PATH = CURRENT_USER_PATH + _T("\\options.tb");
+	COOKIE_PATH = CURRENT_USER_PATH + _T("\\ck.tb");
+	CACHE_PATH = CURRENT_USER_PATH + _T("\\cache.tb");
+
+	// 读取设置
+	TCHAR buffer[260];
+	// 方案
+	GetPrivateProfileString(_T("Setting"), _T("Option"), _T("默认"), g_currentOption.GetBuffer(MAX_PATH), MAX_PATH, USER_PROFILE_PATH);
+	g_currentOption.ReleaseBuffer();
+	ReadOptions(OPTIONS_PATH + g_currentOption + _T(".tb"));
+	// 贴吧名
+	GetPrivateProfileString(_T("Setting"), _T("ForumName"), _T(""), buffer, _countof(buffer), USER_PROFILE_PATH);
+	((CTiebaManagerDlg*)AfxGetMainWnd())->m_forumNameEdit.SetWindowText(buffer);
+	// Cookie
+	gzFile f = gzopen_w(COOKIE_PATH, "rb");
+	if (f != NULL)
+	{
+		int size;
+		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 1024 * 1024) // 字符串长度
+		{
+			gzread(f, g_cookie.GetBuffer(size), size * sizeof(TCHAR)); // 字符串
+			g_cookie.ReleaseBuffer();
+		}
+		gzclose(f);
+	}
+
+	// 历史回复、忽略ID
+	f = gzopen_w(CACHE_PATH, "rb");
+	if (f != NULL)
+	{
+		int size;
+		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
+		{
+			__int64 tid;
+			int reply;
+			for (int i = 0; i < size; i++)
+			{
+				gzread(f, &tid, sizeof(__int64));
+				gzread(f, &reply, sizeof(int));
+				g_reply[tid] = reply;
+			}
+		}
+		ReadIDList(f, g_initIgnoredTID);
+		g_ignoredTID = g_initIgnoredTID;
+		ReadIDList(f, g_initIgnoredPID);
+		g_ignoredPID = g_initIgnoredPID;
+		ReadIDList(f, g_initIgnoredLZLID);
+		g_ignoredLZLID = g_initIgnoredLZLID;
+		gzclose(f);
+	}
 }

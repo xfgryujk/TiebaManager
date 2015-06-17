@@ -155,32 +155,34 @@ CString JSUnescape(const CString& src)
 }
 
 
-// 从HTTP头提取Cookie并修改g_cookie
-static void ReceiveCookie(LPCTSTR headers)
+// 从HTTP头提取Cookie并修改cookie
+static void ReceiveCookie(LPCTSTR headers, CString& cookie)
 {
 	static const wregex cookieExp(_T("Set-Cookie: (.*?)=(.*?);"));
 	for (regex_iterator<LPCTSTR> it(headers, headers + _tcslen(headers), cookieExp), end; it != end; it++)
 	{
 		CString name = (*it)[1].str().c_str();
 		CString value = (*it)[2].str().c_str();
-		int start = g_cookie.Find(name + _T("="));
+		int start = cookie.Find(name + _T("="));
 		if (start == -1)
-			g_cookie += name + _T("=") + value + _T(";");
+			cookie += name + _T("=") + value + _T(";");
 		else
 		{
 			start += name.GetLength() + 1;
-			int end = g_cookie.Find(_T(';'), start);
-			g_cookie = g_cookie.Left(start) + value + g_cookie.Right(g_cookie.GetLength() - end);
+			int end = cookie.Find(_T(';'), start);
+			cookie = cookie.Left(start) + value + cookie.Right(cookie.GetLength() - end);
 		}
 	}
 }
 
 // HTTP请求
 static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CComPtr<IServerXMLHTTPRequest>& xml, 
-	LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopFlag)
+	LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
 {
 	if (FAILED(xml.CoCreateInstance(__uuidof(ServerXMLHTTP))))
 		return NET_FAILED_TO_CREATE_INSTANCE;
+	if (cookie == NULL)
+		cookie = &g_cookie;
 
 	if (postMethod)
 	{
@@ -215,7 +217,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CComPtr<IServerXMLHTTP
 	{
 		_bstr_t headers;
 		xml->getAllResponseHeaders(headers.GetAddress());
-		ReceiveCookie((LPCTSTR)headers);
+		ReceiveCookie((LPCTSTR)headers, *cookie);
 	}
 
 	// 重定向
@@ -225,17 +227,17 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CComPtr<IServerXMLHTTP
 	{
 		_bstr_t location;
 		xml->getResponseHeader(_bstr_t(_T("Location")), location.GetAddress());
-		return HTTPRequestBase(postMethod, xml, URL, data, useCookie, stopFlag);
+		return HTTPRequestBase(postMethod, xml, URL, data, useCookie, stopFlag, cookie);
 	}
 
 	return NET_SUCCESS;
 }
 
 // HTTP GET请求
-CString HTTPGet(LPCTSTR URL, BOOL useCookie, volatile BOOL* stopFlag)
+CString HTTPGet(LPCTSTR URL, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
 {
 	CComPtr<IServerXMLHTTPRequest> xml;
-	HTTPRequestResult ret = HTTPRequestBase(FALSE, xml, URL, NULL, useCookie, stopFlag);
+	HTTPRequestResult ret = HTTPRequestBase(FALSE, xml, URL, NULL, useCookie, stopFlag, cookie);
 	if (ret != NET_SUCCESS)
 		switch (ret)
 		{
@@ -253,10 +255,10 @@ CString HTTPGet(LPCTSTR URL, BOOL useCookie, volatile BOOL* stopFlag)
 }
 
 // HTTP POST请求
-CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopFlag)
+CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
 {
 	CComPtr<IServerXMLHTTPRequest> xml;
-	HTTPRequestResult ret = HTTPRequestBase(TRUE, xml, URL, data, useCookie, stopFlag);
+	HTTPRequestResult ret = HTTPRequestBase(TRUE, xml, URL, data, useCookie, stopFlag, cookie);
 	if (ret != NET_SUCCESS)
 		switch (ret)
 	{
@@ -274,7 +276,7 @@ CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopF
 }
 
 // HTTP GET请求，取得原始数据，注意自行delete buffer!!!
-HTTPRequestResult HTTPGetRaw(LPCTSTR URL, BYTE** buffer, ULONG* size, BOOL useCookie, volatile BOOL* stopFlag)
+HTTPRequestResult HTTPGetRaw(LPCTSTR URL, BYTE** buffer, ULONG* size, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
 {
 	if (buffer != NULL)
 		*buffer = NULL;
@@ -282,7 +284,7 @@ HTTPRequestResult HTTPGetRaw(LPCTSTR URL, BYTE** buffer, ULONG* size, BOOL useCo
 		*size = 0;
 
 	CComPtr<IServerXMLHTTPRequest> xml;
-	HTTPRequestResult ret = HTTPRequestBase(FALSE, xml, URL, NULL, useCookie, stopFlag);
+	HTTPRequestResult ret = HTTPRequestBase(FALSE, xml, URL, NULL, useCookie, stopFlag, cookie);
 	if (ret != NET_SUCCESS)
 		return ret;
 

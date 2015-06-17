@@ -43,6 +43,7 @@ CSettingDlg::CSettingDlg(CWnd* pParent /*=NULL*/)
 	m_pages[i++] = &m_whiteListPage;
 	m_pages[i++] = &m_whiteContentPage;
 	m_pages[i++] = &m_optionsPage;
+	m_pages[i++] = &m_usersPage;
 	m_pages[i++] = &m_aboutPage;
 }
 
@@ -55,7 +56,6 @@ void CSettingDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TAB1, m_tab);
-	DDX_Control(pDX, IDC_BUTTON1, m_logoutButton);
 	DDX_Control(pDX, IDOK, m_okButton);
 	DDX_Control(pDX, IDCANCEL, m_cancelButton);
 }
@@ -66,7 +66,6 @@ BEGIN_MESSAGE_MAP(CSettingDlg, CDialog)
 	ON_WM_SIZE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CSettingDlg::OnTcnSelchangeTab1)
 	ON_WM_CLOSE()
-	ON_BN_CLICKED(IDC_BUTTON1, &CSettingDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -89,6 +88,7 @@ BOOL CSettingDlg::OnInitDialog()
 	m_tab.InsertItem(i++, _T("信任用户"));
 	m_tab.InsertItem(i++, _T("信任内容"));
 	m_tab.InsertItem(i++, _T("方案"));
+	m_tab.InsertItem(i++, _T("账号管理"));
 	m_tab.InsertItem(i++, _T("关于&&更新"));
 
 	// 初始化各页
@@ -98,6 +98,7 @@ BOOL CSettingDlg::OnInitDialog()
 	m_whiteListPage.Create(IDD_LIST_PAGE, &m_tab);
 	m_whiteContentPage.Create(IDD_LIST_PAGE, &m_tab);
 	m_optionsPage.Create(IDD_OPTIONS_PAGE, &m_tab);
+	m_usersPage.Create(IDD_USERS_PAGE, &m_tab);
 	m_aboutPage.Create(IDD_ABOUT_PAGE, &m_tab);
 
 	CRect rect;
@@ -110,8 +111,8 @@ BOOL CSettingDlg::OnInitDialog()
 	// 显示配置
 	ShowCurrentOptions();
 	m_clearScanCache = FALSE; // 在m_prefPage.m_scanPageCountEdit.SetWindowText后初始化
+
 	m_optionsPage.m_currentOptionStatic.SetWindowText(_T("当前方案：") + g_currentOption); // 当前方案
-	m_aboutPage.m_autoCheckUpdateCheck.SetCheck(g_autoUpdate); // 自动更新
 	// 方案
 	CFileFind fileFind;
 	BOOL flag = fileFind.FindFile(OPTIONS_PATH + _T("*.tb"));
@@ -120,6 +121,18 @@ BOOL CSettingDlg::OnInitDialog()
 		flag = fileFind.FindNextFile();
 		m_optionsPage.m_list.AddString(fileFind.GetFileTitle());
 	}
+
+	m_usersPage.m_currentUserStatic.SetWindowText(_T("当前账号：") + g_currentUser); // 当前账号
+	// 账号
+	flag = fileFind.FindFile(USERS_PATH + _T("*"));
+	while (flag)
+	{
+		flag = fileFind.FindNextFile();
+		if (fileFind.IsDirectory() && !fileFind.IsDots() && PathFileExists(fileFind.GetFilePath() + _T("\\ck.tb")))
+			m_usersPage.m_list.AddString(fileFind.GetFileTitle());		
+	}
+
+	m_aboutPage.m_autoCheckUpdateCheck.SetCheck(g_autoUpdate); // 自动更新
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -178,7 +191,6 @@ void CSettingDlg::OnSize(UINT nType, int cx, int cy)
 	GetClientRect(&rect); // 默认473 * 373
 	m_tab.SetWindowPos(NULL, 0, 0, rect.Width() - 21, rect.Height() - 58, SWP_NOMOVE | SWP_NOREDRAW);
 	int y = rect.Height() - 35;
-	m_logoutButton.SetWindowPos(NULL, rect.Width() - 326, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
 	m_okButton.SetWindowPos(NULL, rect.Width() - 200, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
 	m_cancelButton.SetWindowPos(NULL, rect.Width() - 105, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
 
@@ -493,16 +505,9 @@ void CSettingDlg::OnOK()
 		CreateDirectory(OPTIONS_PATH, NULL);
 	SaveOptionsInDlg(OPTIONS_PATH + g_currentOption + _T(".tb"));
 	ApplyOptionsInDlg();
-	WritePrivateProfileString(_T("Routine"), _T("Option"), g_currentOption, PROFILE_PATH);
-	WritePrivateProfileString(_T("Routine"), _T("AutoUpdate"), 
-		m_aboutPage.m_autoCheckUpdateCheck.GetCheck() ? _T("1") : _T("0"), PROFILE_PATH);
+	WritePrivateProfileString(_T("Setting"), _T("Option"), g_currentOption, USER_PROFILE_PATH);
+	WritePrivateProfileString(_T("Setting"), _T("AutoUpdate"), 
+		m_aboutPage.m_autoCheckUpdateCheck.GetCheck() ? _T("1") : _T("0"), ALL_PROFILE_PATH);
 
 	DestroyWindow();
-}
-
-// 退出登录
-void CSettingDlg::OnBnClickedButton1()
-{
-	g_cookie = _T("");
-	AfxGetApp()->m_pMainWnd->DestroyWindow();
 }

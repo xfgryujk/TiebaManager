@@ -59,7 +59,7 @@ protected:
 
 static const TCHAR IS_REGEX_PREFIX[] = _T("正|");
 static const TCHAR NOT_REGEX_PREFIX[] = _T("　|");
-static const int REGEX_PREFIX_LENGTH = 2;
+static const int REGEX_PREFIX_LENGTH = _countof(IS_REGEX_PREFIX) - 1;
 
 // 用不相关的两个内容做测试
 static const TCHAR MATCH_TOO_MUCH_CONTENT_TEST1[] = _T("【吧务导航】删帖查询，帖子申精，吧规，刷豆，刷粉");

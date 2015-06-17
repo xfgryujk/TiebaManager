@@ -70,19 +70,11 @@ BOOL CTiebaManagerApp::InitInstance()
 	// 添加异常处理
 	SetUnhandledExceptionFilter(ExceptionHandler);
 
-	// 防多开
-	if (OpenMutex(MUTEX_ALL_ACCESS, TRUE, _T("TiebaManager")) == NULL)
-		CreateMutex(NULL, TRUE, _T("TiebaManager"));
-	else
-	{
-		AfxMessageBox(_T("多开什么的最讨厌了！"), MB_ICONWARNING);
-		return FALSE;
-	}
-
 	// 初始化配置文件路径
 	TCHAR cd[MAX_PATH];
 	GetCurrentDirectory(_countof(cd), cd);
-	PROFILE_PATH = cd + PROFILE_PATH;
+	ALL_PROFILE_PATH = cd + ALL_PROFILE_PATH;
+	USERS_PATH = cd + USERS_PATH;
 
 	// 载入主窗口
 	CTiebaManagerDlg dlg;
