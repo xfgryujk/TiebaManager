@@ -24,6 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Setting.h"
 #include <zlib.h>
 #include "Global.h"
+#include "Update.h"
 #include "Tieba.h"
 #include "LoginDlg.h"
 

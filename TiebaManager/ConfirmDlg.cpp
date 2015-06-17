@@ -40,12 +40,22 @@ void CConfirmDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CConfirmDlg, CDialog)
 	ON_WM_SIZE()
+	ON_WM_GETMINMAXINFO()
 END_MESSAGE_MAP()
 #pragma endregion
 
 // CConfirmDlg 消息处理程序
 
 #pragma region UI
+// 限制最小尺寸
+void CConfirmDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
+{
+	lpMMI->ptMinTrackSize.x = 455;
+	lpMMI->ptMinTrackSize.y = 362;
+
+	CDialog::OnGetMinMaxInfo(lpMMI);
+}
+
 // 改变尺寸
 void CConfirmDlg::OnSize(UINT nType, int cx, int cy)
 {
@@ -75,6 +85,7 @@ BOOL CConfirmDlg::OnInitDialog()
 		SetWindowText(m_operation->title);
 		m_contentEdit.SetWindowText(m_operation->msg + _T("\r\n\r\n作者：") + m_operation->author);
 	}
+	MessageBeep(MB_ICONQUESTION);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE

@@ -82,7 +82,7 @@ BOOL CTiebaManagerApp::InitInstance()
 	// 初始化配置文件路径
 	TCHAR cd[MAX_PATH];
 	GetCurrentDirectory(_countof(cd), cd);
-	PROFILE_PATH = cd; PROFILE_PATH += _T("\\options.tb");
+	PROFILE_PATH = cd + PROFILE_PATH;
 
 	// 载入主窗口
 	CTiebaManagerDlg dlg;

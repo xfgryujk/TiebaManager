@@ -34,4 +34,6 @@ public:
 
 protected:
 	Operation* m_operation;
+public:
+	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 };

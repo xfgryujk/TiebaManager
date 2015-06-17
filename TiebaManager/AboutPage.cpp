@@ -5,7 +5,7 @@
 #include "TiebaManager.h"
 #include "AboutPage.h"
 #include "afxdialogex.h"
-#include "Global.h"
+#include "Update.h"
 
 
 // CAboutPage ¶Ô»°¿ò

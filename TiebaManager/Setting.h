@@ -8,8 +8,9 @@ using std::wregex;
 // ≈‰÷√Œƒº˛¬∑æ∂
 extern CString	PROFILE_PATH;
 const CString	OPTIONS_PATH = _T("Option\\");
-const TCHAR		COOKIE_PATH[] = _T("ck.tb");
-const TCHAR		CACHE_PATH[] = _T("cache.tb");
+const CString	USER_PATH = _T("User\\");
+extern CString	COOKIE_PATH;
+extern CString	CACHE_PATH;
 
 struct RegexText
 {

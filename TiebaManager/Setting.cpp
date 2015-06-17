@@ -4,7 +4,9 @@
 
 
 // 配置文件路径
-CString		PROFILE_PATH;
+CString		PROFILE_PATH = _T("\\options.tb");
+CString		COOKIE_PATH = _T("ck.tb");
+CString		CACHE_PATH = _T("cache.tb");
 
 BOOL	g_autoUpdate;		// 自动更新
 
