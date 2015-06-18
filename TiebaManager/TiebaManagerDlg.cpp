@@ -57,6 +57,7 @@ CTiebaManagerDlg::CTiebaManagerDlg(CWnd* pParent /*=NULL*/)
 	m_clearLogStatic.m_normalColor = m_saveLogStatic.m_normalColor = RGB(128, 128, 128);
 	m_clearLogStatic.m_hoverColor = m_saveLogStatic.m_hoverColor = RGB(192, 192, 192);
 
+	m_explorerDlg = NULL;
 	m_settingDlg = NULL;
 
 	// 初始化托盘图标数据
@@ -86,6 +87,7 @@ void CTiebaManagerDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC5, m_stateStatic);
 	DDX_Control(pDX, IDC_STATIC6, m_clearLogStatic);
 	DDX_Control(pDX, IDC_STATIC7, m_saveLogStatic);
+	DDX_Control(pDX, IDC_BUTTON7, m_explorerButton);
 }
 
 BEGIN_MESSAGE_MAP(CTiebaManagerDlg, CDialog)
@@ -105,6 +107,7 @@ BEGIN_MESSAGE_MAP(CTiebaManagerDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON5, &CTiebaManagerDlg::OnBnClickedButton5)
 	ON_STN_CLICKED(IDC_STATIC6, &CTiebaManagerDlg::OnStnClickedStatic6)
 	ON_STN_CLICKED(IDC_STATIC7, &CTiebaManagerDlg::OnStnClickedStatic7)
+	ON_BN_CLICKED(IDC_BUTTON7, &CTiebaManagerDlg::OnBnClickedButton7)
 END_MESSAGE_MAP()
 
 BEGIN_EVENTSINK_MAP(CTiebaManagerDlg, CDialog)
@@ -265,7 +268,7 @@ LRESULT CALLBACK CTiebaManagerDlg::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM 
 // 限制最小尺寸
 void CTiebaManagerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
-	lpMMI->ptMinTrackSize.x = 463;
+	lpMMI->ptMinTrackSize.x = 530;
 	lpMMI->ptMinTrackSize.y = 116;
 
 	CDialog::OnGetMinMaxInfo(lpMMI);
@@ -280,6 +283,7 @@ void CTiebaManagerDlg::OnSize(UINT nType, int cx, int cy)
 
 	CRect rect;
 	GetClientRect(&rect); // 默认557 * 392
+	m_explorerButton.SetWindowPos(NULL, rect.Width() - 221, 45, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
 	m_backStageButton.SetWindowPos(NULL, rect.Width() - 147, 45, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
 	m_settingButton.SetWindowPos(NULL, rect.Width() - 74, 45, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
 	m_logStatic.SetWindowPos(NULL, 0, 0, rect.Width() - 21, rect.Height() - 113, SWP_NOMOVE | SWP_NOREDRAW);
@@ -553,6 +557,16 @@ UINT CTiebaManagerDlg::AutoUpdateThread(LPVOID _thiz)
 	return 0;
 }
 
+// 设置
+void CTiebaManagerDlg::OnBnClickedButton5()
+{
+	if (m_explorerDlg == NULL)
+	{
+		m_explorerDlg = new CExplorerDlg();
+		m_explorerDlg->Create(IDD_EXPLORER_DIALOG, this);
+	}
+}
+
 // 后台
 void CTiebaManagerDlg::OnBnClickedButton4()
 {
@@ -660,6 +674,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_stateStatic.SetWindowText(_T("待机中"));
 	m_startButton.EnableWindow(TRUE);
 	m_pageEdit.EnableWindow(TRUE);
+	m_explorerButton.EnableWindow(TRUE);
 	m_backStageButton.EnableWindow(TRUE);
 	WritePrivateProfileString(_T("Setting"), _T("ForumName"), g_forumName, USER_PROFILE_PATH);
 	Log(_T("<font color=green>确认监控贴吧：</font>") + g_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));

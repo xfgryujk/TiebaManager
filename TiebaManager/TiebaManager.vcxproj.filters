@@ -31,6 +31,12 @@
     <Filter Include="源文件\Dialog\Setting">
       <UniqueIdentifier>{24c46866-091f-4946-a9a7-390aa4582ec4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Dialog\TiebaExplorer">
+      <UniqueIdentifier>{765367cc-88df-4522-a069-ab963fa4457a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Dialog\TiebaExplorer">
+      <UniqueIdentifier>{c0d4b662-7847-45e1-873f-9ff3b66ce3e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -102,6 +108,15 @@
     <ClInclude Include="UsersPage.h">
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
+    <ClInclude Include="ExplorerPage.h">
+      <Filter>头文件\Dialog\TiebaExplorer</Filter>
+    </ClInclude>
+    <ClInclude Include="ExploreThreadPage.h">
+      <Filter>头文件\Dialog\TiebaExplorer</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplorerDlg.h">
+      <Filter>头文件\Dialog\TiebaExplorer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -166,6 +181,15 @@
     </ClCompile>
     <ClCompile Include="UsersPage.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplorerPage.cpp">
+      <Filter>源文件\Dialog\TiebaExplorer</Filter>
+    </ClCompile>
+    <ClCompile Include="ExploreThreadPage.cpp">
+      <Filter>源文件\Dialog\TiebaExplorer</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplorerDlg.cpp">
+      <Filter>源文件\Dialog\TiebaExplorer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@
 #include "afxwin.h"
 #include "TextButton.h"
 #include "SettingDlg.h"
+#include "ExplorerDlg.h"
 
 
 // CTiebaManagerDlg ¶Ô»°¿ò
@@ -51,6 +52,7 @@ public:
 	afx_msg void OnBnClickedButton5();
 	afx_msg void OnStnClickedStatic6();
 	afx_msg void OnStnClickedStatic7();
+	afx_msg void OnBnClickedButton7();
 	DECLARE_EVENTSINK_MAP()
 	void BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers, BOOL* Cancel);
 
@@ -73,6 +75,7 @@ public:
 	CButton m_startButton;
 	CButton m_stopButton;
 	CEdit m_pageEdit;
+	CButton m_explorerButton;
 	CButton m_backStageButton;
 	CButton m_settingButton;
 	CStatic m_logStatic;
@@ -82,6 +85,7 @@ public:
 	CTextButton m_saveLogStatic;
 
 	CSettingDlg* m_settingDlg;
+	CExplorerDlg* m_explorerDlg;
 
 protected:
 	static WNDPROC s_oldExplorerWndProc;

@@ -104,7 +104,7 @@ BOOL CSettingDlg::OnInitDialog()
 	CRect rect;
 	m_tab.GetClientRect(&rect);
 	rect.left += 1; rect.right -= 3; rect.top += 23; rect.bottom -= 2;
-	m_prefPage.SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(), SWP_SHOWWINDOW);
+	m_pages[0]->SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(), SWP_SHOWWINDOW);
 	for (i = 1; i < _countof(m_pages); i++)
 		m_pages[i]->SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(), SWP_HIDEWINDOW);
 
@@ -129,7 +129,7 @@ BOOL CSettingDlg::OnInitDialog()
 	{
 		flag = fileFind.FindNextFile();
 		if (fileFind.IsDirectory() && !fileFind.IsDots() && PathFileExists(fileFind.GetFilePath() + _T("\\ck.tb")))
-			m_usersPage.m_list.AddString(fileFind.GetFileTitle());		
+			m_usersPage.m_list.AddString(fileFind.GetFileName());
 	}
 
 	m_aboutPage.m_autoCheckUpdateCheck.SetCheck(g_autoUpdate); // 自动更新

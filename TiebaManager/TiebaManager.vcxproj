@@ -119,6 +119,9 @@
     <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="ConfirmDlg.h" />
     <ClInclude Include="explorer1.h" />
+    <ClInclude Include="ExplorerDlg.h" />
+    <ClInclude Include="ExplorerPage.h" />
+    <ClInclude Include="ExploreThreadPage.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="KeywordsPage.h" />
     <ClInclude Include="ListPage.h" />
@@ -144,6 +147,9 @@
     <ClCompile Include="BlackListPage.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
     <ClCompile Include="explorer1.cpp" />
+    <ClCompile Include="ExplorerDlg.cpp" />
+    <ClCompile Include="ExplorerPage.cpp" />
+    <ClCompile Include="ExploreThreadPage.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="KeywordsPage.cpp" />
     <ClCompile Include="ListPage.cpp" />
