@@ -4,7 +4,7 @@
 
 // CUsersPage ¶Ô»°¿ò
 
-class CUsersPage : public CDialogEx
+class CUsersPage : public CDialog
 {
 	DECLARE_DYNAMIC(CUsersPage)
 

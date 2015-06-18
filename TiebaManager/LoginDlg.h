@@ -25,6 +25,8 @@ public:
 	afx_msg void OnStnClickedStatic4();
 	afx_msg void OnBnClickedButton3();
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
+protected:
+	void GetLoginUserName();
 
 
 public:

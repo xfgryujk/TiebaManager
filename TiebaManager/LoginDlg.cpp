@@ -168,13 +168,22 @@ void CLoginDlg::OnOK()
 	{
 		WriteString(result, _T("login.txt"));
 		AfxMessageBox(_T("登录失败！"), MB_ICONERROR);
-		OnStnClickedStatic4();
-		m_verifyCodeEdit.SetWindowText(_T(""));
-		return;
+		goto error;
 	}
 
-	m_userName = userName;
+	GetLoginUserName();
+	if (m_userName == _T(""))
+	{
+		AfxMessageBox(_T("获取用户名失败！"), MB_ICONERROR);
+		goto error;
+	}
+
 	CDialog::OnOK();
+	return;
+
+error:
+	OnStnClickedStatic4();
+	m_verifyCodeEdit.SetWindowText(_T(""));
 }
 
 // 使用IE Cookie
@@ -195,18 +204,24 @@ void CLoginDlg::OnBnClickedButton3()
 		return;
 	}
 
-	// 取用户名
+	GetLoginUserName();
+	if (m_userName == _T(""))
+	{
+		AfxMessageBox(_T("获取用户名失败！"), MB_ICONERROR);
+		return;
+	}
+
+	EndDialog(IDOK);
+}
+
+// 取用户名
+void CLoginDlg::GetLoginUserName()
+{
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=\
 %D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD"), TRUE, NULL, &m_cookie);
 	std::wcmatch res;
 	if (std::regex_search((LPCTSTR)src, res, USER_NAME_REG))
 		m_userName = JSUnescape(res[3].str().c_str());
 	if (m_userName == _T(""))
-	{
 		WriteString(src, _T("login_forum.txt"));
-		AfxMessageBox(_T("请先在IE浏览器登陆百度账号！"), MB_ICONERROR);
-		return;
-	}
-
-	EndDialog(IDOK);
 }

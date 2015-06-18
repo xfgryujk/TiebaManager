@@ -14,10 +14,10 @@
 
 // CUsersPage 对话框
 
-IMPLEMENT_DYNAMIC(CUsersPage, CDialogEx)
+IMPLEMENT_DYNAMIC(CUsersPage, CDialog)
 
 CUsersPage::CUsersPage(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CUsersPage::IDD, pParent)
+	: CDialog(CUsersPage::IDD, pParent)
 {
 
 }
@@ -29,7 +29,7 @@ CUsersPage::~CUsersPage()
 
 void CUsersPage::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STATIC1, m_currentUserStatic);
 	DDX_Control(pDX, IDC_LIST1, m_list);
 	DDX_Control(pDX, IDC_BUTTON1, m_loginButton);
@@ -38,7 +38,7 @@ void CUsersPage::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CUsersPage, CDialogEx)
+BEGIN_MESSAGE_MAP(CUsersPage, CDialog)
 	ON_WM_CLOSE()
 	ON_WM_SIZE()
 	ON_BN_CLICKED(IDC_BUTTON1, &CUsersPage::OnBnClickedButton1)
@@ -91,7 +91,7 @@ void CUsersPage::OnSize(UINT nType, int cx, int cy)
 // 初始化
 BOOL CUsersPage::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CDialog::OnInitDialog();
 
 	// 已确认贴吧
 	if (!((CTiebaManagerDlg*)AfxGetMainWnd())->m_confirmButton.IsWindowEnabled())

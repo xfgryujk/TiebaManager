@@ -192,7 +192,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CComPtr<IServerXMLHTTP
 	else
 		xml->open(_bstr_t(_T("GET")), _bstr_t(URL), _variant_t(true), _variant_t(), _variant_t());
 	if (useCookie)
-		xml->setRequestHeader(_bstr_t(_T("Cookie")), _bstr_t(g_cookie));
+		xml->setRequestHeader(_bstr_t(_T("Cookie")), _bstr_t(*cookie));
 	xml->send(_variant_t(data));
 
 	// µÈ´ý
