@@ -118,6 +118,8 @@
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="ConfirmDlg.h" />
+    <ClInclude Include="ExploreLzlPage.h" />
+    <ClInclude Include="ExplorePostPage.h" />
     <ClInclude Include="explorer1.h" />
     <ClInclude Include="ExplorerDlg.h" />
     <ClInclude Include="ExplorerPage.h" />
@@ -146,6 +148,8 @@
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="BlackListPage.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
+    <ClCompile Include="ExploreLzlPage.cpp" />
+    <ClCompile Include="ExplorePostPage.cpp" />
     <ClCompile Include="explorer1.cpp" />
     <ClCompile Include="ExplorerDlg.cpp" />
     <ClCompile Include="ExplorerPage.cpp" />

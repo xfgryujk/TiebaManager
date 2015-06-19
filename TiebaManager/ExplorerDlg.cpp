@@ -6,6 +6,9 @@
 #include "ExplorerDlg.h"
 #include "afxdialogex.h"
 #include "TiebaManagerDlg.h"
+#include "Tieba.h"
+#include "Global.h"
+#include <Mmsystem.h>
 
 
 // CExplorerDlg 对话框
@@ -14,13 +17,14 @@ IMPLEMENT_DYNAMIC(CExplorerDlg, CDialog)
 
 // 构造函数
 CExplorerDlg::CExplorerDlg(CWnd* pParent /*=NULL*/)
+
 	: CDialog(CExplorerDlg::IDD, pParent)
 {
 	// 初始化m_pages
 	int i = 0;
 	m_pages[i++] = &m_exploreThreadPage;
-	//m_pages[i++] = &m_keywordsPage;
-	//m_pages[i++] = &m_blackListPage;
+	m_pages[i++] = &m_explorePostPage;
+	m_pages[i++] = &m_exploreLzlPage;
 }
 
 #pragma region MFC
@@ -44,6 +48,9 @@ BEGIN_MESSAGE_MAP(CExplorerDlg, CDialog)
 	ON_WM_GETMINMAXINFO()
 	ON_WM_SIZE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CExplorerDlg::OnTcnSelchangeTab1)
+	ON_BN_CLICKED(IDC_BUTTON1, &CExplorerDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, &CExplorerDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON3, &CExplorerDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -133,11 +140,13 @@ BOOL CExplorerDlg::OnInitDialog()
 	// 初始化m_tab
 	int i = 0;
 	m_tab.InsertItem(i++, _T("主题"));
-	//m_tab.InsertItem(i++, _T("帖子"));
-	//m_tab.InsertItem(i++, _T("楼中楼"));
+	m_tab.InsertItem(i++, _T("帖子"));
+	m_tab.InsertItem(i++, _T("楼中楼"));
 
 	// 初始化各页
 	m_exploreThreadPage.Create(IDD_EXPLORER_PAGE, &m_tab);
+	m_explorePostPage.Create(IDD_EXPLORER_PAGE, &m_tab);
+	m_exploreLzlPage.Create(IDD_EXPLORER_PAGE, &m_tab);
 
 	CRect rect;
 	m_tab.GetClientRect(&rect);
@@ -148,4 +157,101 @@ BOOL CExplorerDlg::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
+}
+
+// 删除
+void CExplorerDlg::OnBnClickedButton1()
+{
+	int tabIndex = m_tab.GetCurSel(); 
+	POSITION pos = m_pages[tabIndex]->m_list.GetFirstSelectedItemPosition();
+	if (pos == NULL)
+		return;
+	int index = m_pages[tabIndex]->m_list.GetNextSelectedItem(pos);
+
+
+	CString code;
+	if (tabIndex == 0) // 主题
+	{
+		ThreadInfo& thread = m_exploreThreadPage.m_threads[index];
+		code = DeleteThread(thread.tid);
+		if (code == _T("0"))
+			g_deletedTID.insert(_ttoi64(thread.tid));
+	}
+	else if (tabIndex == 1) // 帖子
+		code = DeletePost(m_explorePostPage.m_tid, m_explorePostPage.m_posts[index].pid);
+	else // 楼中楼
+		code = DeleteLZL(m_explorePostPage.m_tid, m_exploreLzlPage.m_lzls[index].pid);
+
+
+	if (code != _T("0"))
+		AfxMessageBox(_T("删除失败，错误代码" + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
+	else
+		sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
+}
+
+// 封禁
+void CExplorerDlg::OnBnClickedButton2()
+{
+	int tabIndex = m_tab.GetCurSel();
+	POSITION pos = m_pages[tabIndex]->m_list.GetFirstSelectedItemPosition();
+	if (pos == NULL)
+		return;
+	int index = m_pages[tabIndex]->m_list.GetNextSelectedItem(pos);
+
+
+	CString author;
+	get_ip_tbs banTBS;
+	BOOL result;
+	if (tabIndex == 0) // 主题
+	{
+		author = m_exploreThreadPage.m_threads[index].author;
+		result = GetBanTBS(m_exploreThreadPage.m_threads[index].tid, author, banTBS);
+	}
+	else if (tabIndex == 1) // 帖子
+	{
+		author = m_explorePostPage.m_posts[index].author;
+		result = GetBanTBS(m_explorePostPage.m_tid, author, banTBS);
+	}
+	else // 楼中楼
+	{
+		author = m_exploreLzlPage.m_lzls[index].author;
+		result = GetBanTBS(m_explorePostPage.m_tid, author, banTBS);
+	}
+	if (!result)
+	{
+		AfxMessageBox(_T("获取封禁口令号失败"), MB_ICONERROR);
+		return;
+	}
+
+
+	CString code = BanID(author, banTBS.tbs_ban_user);
+	if (code != _T("0"))
+		AfxMessageBox(_T("封禁失败，错误代码" + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
+	else
+		sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
+}
+
+// 浏览器
+void CExplorerDlg::OnBnClickedButton3()
+{
+	CString url;
+	if (m_tab.GetCurSel() == 0)
+	{
+		POSITION pos = m_exploreThreadPage.m_list.GetFirstSelectedItemPosition();
+		if (pos == NULL)
+			return;
+		int index = m_exploreThreadPage.m_list.GetNextSelectedItem(pos);
+		url = _T("http://tieba.baidu.com/p/") + m_exploreThreadPage.m_threads[index].tid;
+	}
+	else
+	{
+		POSITION pos = m_exploreThreadPage.m_list.GetFirstSelectedItemPosition();
+		if (pos == NULL)
+			return;
+		int index = m_exploreThreadPage.m_list.GetNextSelectedItem(pos);
+		CString page;
+		m_exploreThreadPage.m_edit.GetWindowText(page);
+		url = _T("http://tieba.baidu.com/p/") + m_explorePostPage.m_tid + _T("?pn=") + page;
+	}
+	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }

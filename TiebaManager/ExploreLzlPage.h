@@ -2,18 +2,18 @@
 #include "ExplorerPage.h"
 #include <vector>
 using std::vector;
-struct ThreadInfo;
+struct PostInfo;
 
 
 // CExploreThreadPage 对话框
 
-class CExploreThreadPage : public CExplorerPage
+class CExploreLzlPage : public CExplorerPage
 {
-	DECLARE_DYNAMIC(CExploreThreadPage)
+	DECLARE_DYNAMIC(CExploreLzlPage)
 
 public:
-	CExploreThreadPage(CWnd* pParent = NULL);   // 标准构造函数
-	virtual ~CExploreThreadPage();
+	CExploreLzlPage(CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CExploreLzlPage();
 
 // 对话框数据
 	enum { IDD = IDD_EXPLORER_PAGE };
@@ -24,11 +24,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
-	void OnBnClickedButton1();
 	afx_msg void OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult);
-	afx_msg void OnDblclkList1(NMHDR *pNMHDR, LRESULT *pResult);
 
 
 public:
-	vector<ThreadInfo> m_threads;
+	vector<PostInfo> m_lzls;
 };

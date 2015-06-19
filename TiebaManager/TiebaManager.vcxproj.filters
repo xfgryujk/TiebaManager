@@ -117,6 +117,12 @@
     <ClInclude Include="ExplorerDlg.h">
       <Filter>头文件\Dialog\TiebaExplorer</Filter>
     </ClInclude>
+    <ClInclude Include="ExploreLzlPage.h">
+      <Filter>头文件\Dialog\TiebaExplorer</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplorePostPage.h">
+      <Filter>头文件\Dialog\TiebaExplorer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -189,6 +195,12 @@
       <Filter>源文件\Dialog\TiebaExplorer</Filter>
     </ClCompile>
     <ClCompile Include="ExplorerDlg.cpp">
+      <Filter>源文件\Dialog\TiebaExplorer</Filter>
+    </ClCompile>
+    <ClCompile Include="ExploreLzlPage.cpp">
+      <Filter>源文件\Dialog\TiebaExplorer</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplorePostPage.cpp">
       <Filter>源文件\Dialog\TiebaExplorer</Filter>
     </ClCompile>
   </ItemGroup>

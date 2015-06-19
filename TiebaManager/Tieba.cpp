@@ -352,7 +352,10 @@ void ScanPost(const ThreadInfo& thread, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocu
 	auto historyReplyIt = g_reply.find(tid);
 	BOOL hasHistoryReply = historyReplyIt != g_reply.end();
 	if (hasHistoryReply && reply <= historyReplyIt->second) // 无新回复
+	{
+		historyReplyIt->second = reply;
 		return;
+	}
 
 	// 第一页
 	CString src = HTTPGet(_T("http://tieba.baidu.com/p/" + thread.tid), FALSE, &g_stopScanFlag);
@@ -378,12 +381,7 @@ void ScanPost(const ThreadInfo& thread, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocu
 
 	// 记录历史回复
 	if (res)
-	{
-		/*if (hasHistoryReply)
-			historyReplyIt->second = reply;
-		else*/
-			g_reply[tid] = reply;
-	}
+		g_reply[tid] = reply;
 }
 
 // 扫描帖子页
