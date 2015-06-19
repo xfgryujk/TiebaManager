@@ -41,5 +41,5 @@ public:
 	CButton m_explorerButton;
 
 protected:
-	CDialog* m_pages[3];
+	CDialog* m_pages[1];
 };

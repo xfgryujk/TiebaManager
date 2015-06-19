@@ -66,8 +66,6 @@ void CExplorerDlg::OnOK()
 void CExplorerDlg::OnClose()
 {
 	DestroyWindow();
-
-	CDialog::OnClose();
 }
 
 // ÊÍ·Åthis
@@ -75,7 +73,7 @@ void CExplorerDlg::PostNcDestroy()
 {
 	CDialog::PostNcDestroy();
 
-	//((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_explorerDlg = NULL;
+	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_explorerDlg = NULL;
 	delete this;
 }
 

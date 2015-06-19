@@ -5,6 +5,7 @@
 #include "TiebaManager.h"
 #include "ExploreThreadPage.h"
 #include "afxdialogex.h"
+#include "Tieba.h"
 
 
 // CExploreThreadPage 对话框
@@ -40,10 +41,13 @@ BOOL CExploreThreadPage::OnInitDialog()
 
 	m_edit.SetWindowText(_T("1"));
 
+	m_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	int i = 0;
-	m_list.InsertColumn(i++, _T("回复"), LVCFMT_CENTER, 30);
-	m_list.InsertColumn(i++, _T("标题"), LVCFMT_CENTER, 300);
-	m_list.InsertColumn(i++, _T("作者"), LVCFMT_CENTER, 50);
+	m_list.InsertColumn(i++, _T(""), LVCFMT_LEFT, 0);
+	m_list.InsertColumn(i++, _T("回复"), LVCFMT_RIGHT, 50);
+	m_list.InsertColumn(i++, _T("标题"), LVCFMT_CENTER, 540);
+	m_list.InsertColumn(i++, _T("作者"), LVCFMT_CENTER, 130);
+	m_list.DeleteColumn(0); // 解决第一列文字不能右对齐的问题
 
 	OnBnClickedButton1();
 
@@ -54,6 +58,8 @@ BOOL CExploreThreadPage::OnInitDialog()
 // 转到
 void CExploreThreadPage::OnBnClickedButton1()
 {
+	m_gotoButton.EnableWindow(FALSE);
+
 	CString sPage;
 	m_edit.GetWindowText(sPage);
 	int iPage = _ttoi(sPage);
@@ -69,9 +75,11 @@ void CExploreThreadPage::OnBnClickedButton1()
 	m_list.DeleteAllItems();
 	for (const ThreadInfo& i : m_threads)
 	{
-		int index = m_list.GetItemCount() - 1;
+		int index = m_list.GetItemCount();
 		m_list.InsertItem(index, i.reply);
 		m_list.SetItemText(index, 1, i.title);
 		m_list.SetItemText(index, 2, i.author);
 	}
+
+	m_gotoButton.EnableWindow(TRUE);
 }

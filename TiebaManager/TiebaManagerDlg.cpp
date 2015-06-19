@@ -269,7 +269,7 @@ LRESULT CALLBACK CTiebaManagerDlg::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM 
 void CTiebaManagerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
 	lpMMI->ptMinTrackSize.x = 530;
-	lpMMI->ptMinTrackSize.y = 116;
+	lpMMI->ptMinTrackSize.y = 142;
 
 	CDialog::OnGetMinMaxInfo(lpMMI);
 }
@@ -557,13 +557,13 @@ UINT CTiebaManagerDlg::AutoUpdateThread(LPVOID _thiz)
 	return 0;
 }
 
-// 设置
-void CTiebaManagerDlg::OnBnClickedButton5()
+// 查看帖子
+void CTiebaManagerDlg::OnBnClickedButton7()
 {
 	if (m_explorerDlg == NULL)
 	{
 		m_explorerDlg = new CExplorerDlg();
-		m_explorerDlg->Create(IDD_EXPLORER_DIALOG, this);
+		m_explorerDlg->Create(IDD_EXPLORER_DIALOG, GetDesktopWindow());
 	}
 }
 

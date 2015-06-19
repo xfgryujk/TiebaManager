@@ -1,6 +1,8 @@
 #pragma once
 #include "ExplorerPage.h"
-#include "Tieba.h"
+#include <vector>
+using std::vector;
+struct ThreadInfo;
 
 
 // CExploreThreadPage ¶Ô»°¿ò
