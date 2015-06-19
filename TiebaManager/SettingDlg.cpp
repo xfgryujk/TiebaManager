@@ -329,7 +329,7 @@ static inline void ReadRegexTexts(const gzFile& f, CListBox& list)
 		int strLen;
 		gzread(f, &strLen, sizeof(int)); // ×Ö·û´®³¤¶È
 		gzread(f, strBuf.GetBuffer(strLen), strLen * sizeof(TCHAR)); // ×Ö·û´®
-		strBuf.ReleaseBuffer();
+		strBuf.ReleaseBuffer(strLen);
 		list.AddString((isRegex != 0 ? IS_REGEX_PREFIX : NOT_REGEX_PREFIX) + strBuf);
 	}
 }
@@ -367,7 +367,7 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	{
 		gzread(f, &intBuf, sizeof(int)); // ×Ö·û´®³¤¶È
 		gzread(f, strBuf.GetBuffer(intBuf), intBuf * sizeof(TCHAR)); // ×Ö·û´®
-		strBuf.ReleaseBuffer();
+		strBuf.ReleaseBuffer(intBuf);
 		m_whiteListPage.m_list.AddString(strBuf);
 	}
 

@@ -474,7 +474,7 @@ void AddOperation(const CString& msg, TBObject object, const CString& tid, const
 	g_operationQueue.push(tmp);
 	g_operationQueueLock.Unlock();
 	if (g_operateThread == NULL)
-		g_operateThread = AfxBeginThread(OperateThread, AfxGetApp()->m_pMainWnd);
+		g_operateThread = AfxBeginThread(OperateThread, AfxGetMainWnd());
 }
 
 // ²Ù×÷Ïß³Ì

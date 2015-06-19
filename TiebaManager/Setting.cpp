@@ -48,7 +48,7 @@ static inline void ReadRegexTexts(const gzFile& f, vector<RegexText>& vec)
 		i.isRegex = intBuf != 0;
 		gzread(f, &intBuf, sizeof(int)); // ×Ö·û´®³¤¶È
 		gzread(f, i.text.GetBuffer(intBuf), intBuf * sizeof(TCHAR)); // ×Ö·û´®
-		i.text.ReleaseBuffer();
+		i.text.ReleaseBuffer(intBuf);
 		i.regexp = i.isRegex ? i.text : _T("");
 	}
 }
@@ -83,7 +83,7 @@ void ReadOptions(LPCTSTR path)
 	{
 		gzread(f, &intBuf, sizeof(int)); // ×Ö·û´®³¤¶È
 		gzread(f, i.GetBuffer(intBuf), intBuf * sizeof(TCHAR)); // ×Ö·û´®
-		i.ReleaseBuffer();
+		i.ReleaseBuffer(intBuf);
 	}
 
 	// ÐÅÈÎÄÚÈÝ
@@ -271,7 +271,7 @@ void SetCurrentUser(LPCTSTR userName)
 		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 1024 * 1024) // ×Ö·û´®³¤¶È
 		{
 			gzread(f, g_cookie.GetBuffer(size), size * sizeof(TCHAR)); // ×Ö·û´®
-			g_cookie.ReleaseBuffer();
+			g_cookie.ReleaseBuffer(size);
 		}
 		gzclose(f);
 	}
