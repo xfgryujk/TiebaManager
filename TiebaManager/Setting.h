@@ -37,6 +37,7 @@ extern BOOL		g_confirm;			// 操作前提示
 extern int		g_scanPageCount;	// 扫描最后页数
 extern BOOL		g_briefLog;			// 只输出删帖封号
 extern BOOL		g_delete;			// 删帖
+extern int		g_threadCount;		// 线程数
 extern vector<RegexText>	g_keywords;		// 违规内容
 extern vector<RegexText>	g_blackList;	// 屏蔽用户
 extern vector<CString>		g_whiteList;	// 信任用户

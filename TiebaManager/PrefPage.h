@@ -30,6 +30,7 @@ public:
 	afx_msg void OnEnKillfocusEdit4();
 	afx_msg void OnEnKillfocusEdit5();
 	afx_msg void OnEnChangeEdit5();
+	afx_msg void OnEnKillfocusEdit2();
 
 
 public:
@@ -43,4 +44,5 @@ public:
 	CButton m_confirmCheck;
 	CEdit m_scanPageCountEdit;
 	CButton m_briefLogCheck;
+	CEdit m_threadCountEdit;
 };

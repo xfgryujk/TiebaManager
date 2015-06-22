@@ -64,9 +64,9 @@ protected:
 	inline static void WriteDocument(const CString& content, CComPtr<IHTMLDocument2>& document);
 	static BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam);
 	static LRESULT CALLBACK ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static UINT SaveLogThread(LPVOID _thiz);
+	static UINT AFX_CDECL SaveLogThread(LPVOID _thiz);
 
-	static UINT AutoUpdateThread(LPVOID _thiz);
+	static UINT AFX_CDECL AutoUpdateThread(LPVOID _thiz);
 
 
 public:
@@ -83,6 +83,7 @@ public:
 	CStatic m_stateStatic;
 	CTextButton m_clearLogStatic;
 	CTextButton m_saveLogStatic;
+	CListBox m_stateList;
 
 	CSettingDlg* m_settingDlg;
 	CExplorerDlg* m_explorerDlg;

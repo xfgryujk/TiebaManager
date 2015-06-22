@@ -94,7 +94,7 @@ BOOL CUsersPage::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// 已确认贴吧
-	if (!((CTiebaManagerDlg*)AfxGetMainWnd())->m_confirmButton.IsWindowEnabled())
+	if (!((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_confirmButton.IsWindowEnabled())
 		m_switchButton.EnableWindow(FALSE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -121,7 +121,8 @@ void CUsersPage::OnBnClickedButton1()
 		gzwrite(f, (LPCTSTR)loginDlg.m_cookie, len * sizeof(TCHAR)); // 字符串
 		gzclose(f);
 	}
-	m_list.SetCurSel(m_list.AddString(loginDlg.m_userName));
+	if (m_list.FindStringExact(-1, loginDlg.m_userName) == LB_ERR)
+		m_list.SetCurSel(m_list.AddString(loginDlg.m_userName));
 }
 
 // 删除
@@ -149,7 +150,7 @@ void CUsersPage::OnBnClickedButton3()
 	if (index == LB_ERR)
 		return;
 	// 已确认贴吧
-	if (!((CTiebaManagerDlg*)AfxGetMainWnd())->m_confirmButton.IsWindowEnabled())
+	if (!((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_confirmButton.IsWindowEnabled())
 		return;
 	CString name;
 	m_list.GetText(index, name);

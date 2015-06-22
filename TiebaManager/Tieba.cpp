@@ -46,6 +46,10 @@ set<__int64> g_deletedTID; // 已删的主题ID
 map<__int64, int> g_reply; // 主题的回复数
 map<CString, int> g_IDTrigCount; // 某ID违规次数，已封为-1
 
+static vector<ThreadInfo> g_threads; // 当前扫描的主题列表
+static int g_threadIndex; // 下个要扫描的主题索引
+static CCriticalSection g_threadIndexLock;
+
 static queue<Operation> g_operationQueue; // 操作队列
 static CCriticalSection g_operationQueueLock;
 CWinThread* g_operateThread = NULL;
@@ -267,7 +271,6 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	CString ignoreThread; // 忽略前几个主题
 	ignoreThread.Format(_T("%d"), (iPage - 1) * 50);
 
-	vector<ThreadInfo> threads;
 	CString msg;
 	while (!g_stopScanFlag)
 	{
@@ -276,7 +279,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		if (!g_briefLog)
 			dlg->Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + g_currentOption, pDocument);
 		
-		if (!GetThreads(g_forumName, ignoreThread, threads))
+		if (!GetThreads(g_forumName, ignoreThread, g_threads))
 		{
 			if (g_stopScanFlag)
 				break;
@@ -286,7 +289,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		}
 
 		// 扫描主题
-		for (const ThreadInfo& thread : threads)
+		for (const ThreadInfo& thread : g_threads)
 		{
 			if (g_stopScanFlag)
 				break;
@@ -306,15 +309,32 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 
 		// 扫描帖子
 		if (!g_onlyScanTitle)
-			for (const ThreadInfo& thread : threads)
+		{
+			dlg->m_stateStatic.SetWindowText(_T("扫描帖子中"));
+			g_threadIndex = 0;
+			CWinThread** threadObjects = new CWinThread*[g_threadCount];
+			HANDLE* threadHandles = new HANDLE[g_threadCount];
+			for (int i = 0; i < g_threadCount; i++)
 			{
-				if (g_stopScanFlag)
-					break;
-				if (g_deletedTID.find(_ttoi64(thread.tid)) == g_deletedTID.end())
-					ScanPost(thread, dlg, pDocument);
+				dlg->m_stateList.AddString(_T("准备中"));
+				threadObjects[i] = AfxBeginThread(ScanPostThread, (LPVOID)i, 0, 0, CREATE_SUSPENDED);
+				threadObjects[i]->m_bAutoDelete = FALSE;
+				threadHandles[i] = threadObjects[i]->m_hThread;
+				threadObjects[i]->ResumeThread();
 			}
+			WaitForMultipleObjects(g_threadCount, threadHandles, TRUE, INFINITE);
 
-			dlg->m_stateStatic.SetWindowText(_T("延时中"));
+			for (int i = 0; i < g_threadCount; i++)
+			{
+				CloseHandle(threadHandles[i]);
+				delete threadObjects[i];
+			}
+			delete threadHandles;
+			delete threadObjects;
+			dlg->m_stateList.ResetContent();
+		}
+
+		dlg->m_stateStatic.SetWindowText(_T("延时中"));
 		if (!g_briefLog)
 		{
 			CString content;
@@ -344,54 +364,83 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	return 0;
 }
 
-// 扫描帖子
-void ScanPost(const ThreadInfo& thread, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocument2>* pDocument)
+// 扫描帖子线程
+UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 {
-	__int64 tid = _ttoi64(thread.tid);
-	int reply = _ttoi(thread.reply);
-	auto historyReplyIt = g_reply.find(tid);
-	BOOL hasHistoryReply = historyReplyIt != g_reply.end();
-	if (hasHistoryReply && reply <= historyReplyIt->second) // 无新回复
-	{
-		historyReplyIt->second = reply;
-		return;
-	}
+	int threadID = (int)_threadID;
+	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
+	// 初始化日志文档
+	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	CComPtr<IHTMLDocument2> document;
+	dlg->GetLogDocument(document);
+	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 
-	// 第一页
-	CString src = HTTPGet(_T("http://tieba.baidu.com/p/" + thread.tid), FALSE, &g_stopScanFlag);
-	if (src == NET_STOP_TEXT)
-		return;
-
-	// 帖子页数
-	CString pageCount = GetStringBetween(src, PAGE_COUNT_LEFT, PAGE_COUNT_RIGHT);
-	if (pageCount == _T(""))
+	CString pageCount, src;
+	map<__int64, int>::iterator historyReplyIt;
+	g_threadIndexLock.Lock();
+	while (!g_stopScanFlag && g_threadIndex < (int)g_threads.size())
 	{
-		WriteString(src, _T("page1.txt"));
-		if (!g_briefLog)
-			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title 
+		ThreadInfo& thread = g_threads[g_threadIndex++];
+		g_threadIndexLock.Unlock();
+		if (g_deletedTID.find(_ttoi64(thread.tid)) != g_deletedTID.end())
+			goto next;
+
+		__int64 tid = _ttoi64(thread.tid);
+		int reply = _ttoi(thread.reply);
+		historyReplyIt = g_reply.find(tid);
+		BOOL hasHistoryReply = historyReplyIt != g_reply.end();
+		if (hasHistoryReply && reply <= historyReplyIt->second) // 无新回复
+		{
+			historyReplyIt->second = reply;
+			goto next;
+		}
+
+		// 第一页
+		src = HTTPGet(_T("http://tieba.baidu.com/p/" + thread.tid), FALSE, &g_stopScanFlag);
+		if (src == NET_STOP_TEXT)
+			goto next;
+
+		// 帖子页数
+		pageCount = GetStringBetween(src, PAGE_COUNT_LEFT, PAGE_COUNT_RIGHT);
+		if (pageCount == _T(""))
+		{
+			WriteString(src, _T("page1.txt"));
+			if (!g_briefLog)
+				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
 				+ _T("</a> <font color=red>获取贴子列表失败，暂时跳过</font>"), pDocument);
-		return;
+			goto next;
+		}
+
+		// 扫描帖子页
+		int iPageCount = _ttoi(pageCount);
+		BOOL res = ScanPostPage(thread.tid, 1, thread.title, hasHistoryReply, 0, src, threadID, dlg, pDocument);
+		if (iPageCount > 1 && !g_stopScanFlag)
+			res = ScanPostPage(thread.tid, iPageCount, thread.title, hasHistoryReply, 0, _T(""), threadID, dlg, pDocument);
+
+		// 记录历史回复
+		if (res)
+			g_reply[tid] = reply;
+
+next:
+		g_threadIndexLock.Lock();
 	}
-
-	// 扫描帖子页
-	int iPageCount = _ttoi(pageCount);
-	BOOL res = ScanPostPage(thread.tid, 1, thread.title, hasHistoryReply, 0, src, dlg, pDocument);
-	if (iPageCount > 1 && !g_stopScanFlag)
-		res = ScanPostPage(thread.tid, iPageCount, thread.title, hasHistoryReply, 0, _T(""), dlg, pDocument);
-
-	// 记录历史回复
-	if (res)
-		g_reply[tid] = reply;
+	g_threadIndexLock.Unlock();
+	
+	CoUninitialize();
+	dlg->m_stateList.DeleteString(threadID);
+	dlg->m_stateList.InsertString(threadID, _T("线程结束"));
+	return 0;
 }
 
 // 扫描帖子页
 BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHistoryReply, 
-	int ScanedCount, const CString& src, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocument2>* pDocument)
+	int ScanedCount, const CString& src, int threadID, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocument2>* pDocument)
 {
-	dlg->m_stateStatic.SetWindowText(_T("扫描贴子：") + tid + _T(":1 ") + title);
-
 	CString sPage;
 	sPage.Format(_T("%d"), page);
+	dlg->m_stateList.DeleteString(threadID);
+	dlg->m_stateList.InsertString(threadID, tid + _T(":") + sPage + _T(" ") + title);
+
 	vector<PostInfo> posts, lzls;
 	GetPostsResult res = GetPosts(tid, src, sPage, posts, lzls);
 	switch (res)
@@ -416,8 +465,8 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			__int64 pid = _ttoi64(post.pid);
 			if (g_ignoredPID.find(pid) == g_ignoredPID.end())
 			{
-				AddOperation(post.content.GetLength() > 700 ? post.content.Left(700) + _T("…………") : post.content,
-					post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST, tid, title, post.floor, post.pid, post.author);
+				AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST, 
+					tid, title, post.floor, post.pid, post.author);
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) + 
 					_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
 				g_ignoredPID.insert(pid);
@@ -450,7 +499,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		{
 			if (--page < 2) // 扫描完
 				return TRUE;
-			return ScanPostPage(tid, page, title, FALSE, ScanedCount, _T(""), dlg, pDocument);
+			return ScanPostPage(tid, page, title, FALSE, ScanedCount, _T(""), threadID, dlg, pDocument);
 		}
 	}
 	return TRUE;
@@ -474,7 +523,7 @@ void AddOperation(const CString& msg, TBObject object, const CString& tid, const
 	g_operationQueue.push(tmp);
 	g_operationQueueLock.Unlock();
 	if (g_operateThread == NULL)
-		g_operateThread = AfxBeginThread(OperateThread, AfxGetMainWnd());
+		g_operateThread = AfxBeginThread(OperateThread, AfxGetApp()->m_pMainWnd);
 }
 
 // 操作线程

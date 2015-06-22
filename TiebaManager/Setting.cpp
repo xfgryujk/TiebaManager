@@ -29,6 +29,7 @@ BOOL	g_confirm;			// 操作前提示
 int		g_scanPageCount;	// 扫描最后页数
 BOOL	g_briefLog;			// 只输出删帖封号
 BOOL	g_delete;			// 删帖
+int		g_threadCount;		// 线程数
 vector<RegexText>	g_keywords;		// 违规内容
 vector<RegexText>	g_blackList;	// 屏蔽用户
 vector<CString>		g_whiteList;	// 信任用户
@@ -102,6 +103,8 @@ void ReadOptions(LPCTSTR path)
 	gzread(f, &g_briefLog, sizeof(BOOL));		// 只输出删帖封号
 	if (gzread(f, &g_delete, sizeof(BOOL)) != sizeof(BOOL))			// 删帖
 		g_delete = TRUE;
+	if (gzread(f, &g_threadCount, sizeof(int)) != sizeof(int))		// 线程数
+		g_threadCount = 2;
 
 	gzclose(f);
 	return;
@@ -120,6 +123,7 @@ UseDefaultOptions:
 	g_scanPageCount = 1;		// 扫描最后页数
 	g_briefLog = FALSE;			// 只输出删帖封号
 	g_delete = TRUE;			// 删帖
+	g_threadCount = 2;			// 线程数
 }
 
 static inline void WriteRegexTexts(const gzFile& f, vector<RegexText>& vec)
@@ -177,6 +181,7 @@ void WriteOptions(LPCTSTR path)
 	gzwrite(f, &g_scanPageCount, sizeof(int));		// 扫描最后页数
 	gzwrite(f, &g_briefLog, sizeof(BOOL));			// 只输出删帖封号
 	gzwrite(f, &g_delete, sizeof(BOOL));			// 删帖
+	gzwrite(f, &g_threadCount, sizeof(int));		// 线程数
 
 	gzclose(f);
 }
@@ -262,7 +267,7 @@ void SetCurrentUser(LPCTSTR userName)
 	ReadOptions(OPTIONS_PATH + g_currentOption + _T(".tb"));
 	// 贴吧名
 	GetPrivateProfileString(_T("Setting"), _T("ForumName"), _T(""), buffer, _countof(buffer), USER_PROFILE_PATH);
-	((CTiebaManagerDlg*)AfxGetMainWnd())->m_forumNameEdit.SetWindowText(buffer);
+	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_forumNameEdit.SetWindowText(buffer);
 	// Cookie
 	gzFile f = gzopen_w(COOKIE_PATH, "rb");
 	if (f != NULL)

@@ -88,6 +88,7 @@ void CTiebaManagerDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC6, m_clearLogStatic);
 	DDX_Control(pDX, IDC_STATIC7, m_saveLogStatic);
 	DDX_Control(pDX, IDC_BUTTON7, m_explorerButton);
+	DDX_Control(pDX, IDC_LIST2, m_stateList);
 }
 
 BEGIN_MESSAGE_MAP(CTiebaManagerDlg, CDialog)
@@ -269,7 +270,7 @@ LRESULT CALLBACK CTiebaManagerDlg::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM 
 void CTiebaManagerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
 	lpMMI->ptMinTrackSize.x = 530;
-	lpMMI->ptMinTrackSize.y = 142;
+	lpMMI->ptMinTrackSize.y = 238;
 
 	CDialog::OnGetMinMaxInfo(lpMMI);
 }
@@ -282,16 +283,17 @@ void CTiebaManagerDlg::OnSize(UINT nType, int cx, int cy)
 		return;
 
 	CRect rect;
-	GetClientRect(&rect); // 默认557 * 392
+	GetClientRect(&rect); // 默认557 * 486
 	m_explorerButton.SetWindowPos(NULL, rect.Width() - 221, 45, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
 	m_backStageButton.SetWindowPos(NULL, rect.Width() - 147, 45, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
 	m_settingButton.SetWindowPos(NULL, rect.Width() - 74, 45, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_logStatic.SetWindowPos(NULL, 0, 0, rect.Width() - 21, rect.Height() - 113, SWP_NOMOVE | SWP_NOREDRAW);
-	m_logExplorer.SetWindowPos(NULL, 0, 0, rect.Width() - 42, rect.Height() - 146, SWP_NOMOVE | SWP_NOREDRAW);
-	int y = rect.Height() - 32;
+	m_logStatic.SetWindowPos(NULL, 0, 0, rect.Width() - 21, rect.Height() - 207, SWP_NOMOVE | SWP_NOREDRAW);
+	m_logExplorer.SetWindowPos(NULL, 0, 0, rect.Width() - 42, rect.Height() - 240, SWP_NOMOVE | SWP_NOREDRAW);
+	int y = rect.Height() - 126;
 	m_stateStatic.SetWindowPos(NULL, 11, y, rect.Width() - 158, 26, SWP_NOREDRAW);
 	m_clearLogStatic.SetWindowPos(NULL, rect.Width() - 137, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
 	m_saveLogStatic.SetWindowPos(NULL, rect.Width() - 74, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
+	m_stateList.SetWindowPos(NULL, 13, rect.Height() - 90, rect.Width() - 21, 81, SWP_NOREDRAW);
 
 	Invalidate();
 }
@@ -477,7 +479,7 @@ void CTiebaManagerDlg::OnStnClickedStatic7()
 }
 
 // 保存日志线程
-UINT CTiebaManagerDlg::SaveLogThread(LPVOID _thiz)
+UINT AFX_CDECL CTiebaManagerDlg::SaveLogThread(LPVOID _thiz)
 {
 	CTiebaManagerDlg* thiz = (CTiebaManagerDlg*)_thiz;
 	BROWSEINFO bi;
@@ -533,7 +535,7 @@ UINT CTiebaManagerDlg::SaveLogThread(LPVOID _thiz)
 
 #pragma region 杂项
 // 自动更新线程
-UINT CTiebaManagerDlg::AutoUpdateThread(LPVOID _thiz)
+UINT AFX_CDECL CTiebaManagerDlg::AutoUpdateThread(LPVOID _thiz)
 {
 	CTiebaManagerDlg* thiz = (CTiebaManagerDlg*)_thiz;
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);

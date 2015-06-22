@@ -125,9 +125,9 @@ extern map<__int64, int> g_reply; // 主题的回复数
 extern map<CString, int> g_IDTrigCount; // 某ID违规次数，已封为-1
 BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg);
 UINT AFX_CDECL ScanThread(LPVOID mainDlg);
-void ScanPost(const ThreadInfo& thread, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocument2>* pDocument);
+UINT AFX_CDECL ScanPostThread(LPVOID threadID);
 BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHistoryReply,
-	int ScanedCount, const CString& src, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocument2>* pDocument);
+	int ScanedCount, const CString& src, int threadID, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocument2>* pDocument);
 
 // 操作 /////////////////////////////////////////////////////////////////////////////////
 struct Operation

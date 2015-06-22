@@ -124,12 +124,17 @@ BOOL CSettingDlg::OnInitDialog()
 
 	m_usersPage.m_currentUserStatic.SetWindowText(_T("当前账号：") + g_currentUser); // 当前账号
 	// 账号
+	m_usersPage.m_list.AddString(_T("[NULL]"));
 	flag = fileFind.FindFile(USERS_PATH + _T("*"));
 	while (flag)
 	{
 		flag = fileFind.FindNextFile();
 		if (fileFind.IsDirectory() && !fileFind.IsDots() && PathFileExists(fileFind.GetFilePath() + _T("\\ck.tb")))
-			m_usersPage.m_list.AddString(fileFind.GetFileName());
+		{
+			CString name = fileFind.GetFileName();
+			if (name != _T("[NULL]"))
+				m_usersPage.m_list.AddString(name);
+		}
 	}
 
 	m_aboutPage.m_autoCheckUpdateCheck.SetCheck(g_autoUpdate); // 自动更新
@@ -232,6 +237,8 @@ void CSettingDlg::ShowCurrentOptions()
 	m_prefPage.m_scanPageCountEdit.SetWindowText(tmp);		// 扫描最后页数
 	m_prefPage.m_briefLogCheck.SetCheck(g_briefLog);		// 只输出删帖封号
 	m_prefPage.m_deleteCheck.SetCheck(g_delete);			// 删帖
+	tmp.Format(_T("%d"), g_threadCount);
+	m_prefPage.m_threadCountEdit.SetWindowText(tmp);		// 线程数
 
 	// 违规内容
 	m_keywordsPage.m_list.ResetContent();
@@ -288,6 +295,8 @@ void CSettingDlg::ApplyOptionsInDlg()
 	g_scanPageCount = _ttoi(strBuf);							// 扫描最后页数
 	g_briefLog = m_prefPage.m_briefLogCheck.GetCheck();			// 只输出删帖封号
 	g_delete = m_prefPage.m_deleteCheck.GetCheck();				// 删帖
+	m_prefPage.m_threadCountEdit.GetWindowText(strBuf);
+	g_threadCount = _ttoi(strBuf);								// 线程数
 
 	g_optionsLock.Lock();
 	// 违规内容
@@ -399,8 +408,17 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	m_prefPage.m_scanPageCountEdit.SetWindowText(strBuf);	// 扫描最后页数
 	gzread(f, &boolBuf, sizeof(BOOL));
 	m_prefPage.m_briefLogCheck.SetCheck(boolBuf);			// 只输出删帖封号
-	gzread(f, &boolBuf, sizeof(BOOL));
-	m_prefPage.m_deleteCheck.SetCheck(boolBuf);				// 删帖
+	if (gzread(f, &boolBuf, sizeof(BOOL)) == sizeof(BOOL))
+		m_prefPage.m_deleteCheck.SetCheck(boolBuf);				// 删帖
+	else
+		m_prefPage.m_deleteCheck.SetCheck(TRUE);
+	if (gzread(f, &intBuf, sizeof(int)) == sizeof(int))
+	{
+		strBuf.Format(_T("%d"), intBuf);
+		m_prefPage.m_threadCountEdit.SetWindowText(strBuf);		// 线程数
+	}
+	else
+		m_prefPage.m_threadCountEdit.SetWindowText(_T("2"));
 
 	gzclose(f);
 	return;
@@ -420,6 +438,7 @@ UseDefaultOptions:
 	m_prefPage.m_scanPageCountEdit.SetWindowText(_T("1"));	// 扫描最后页数
 	m_prefPage.m_briefLogCheck.SetCheck(FALSE);				// 只输出删帖封号
 	m_prefPage.m_deleteCheck.SetCheck(TRUE);				// 删帖
+	m_prefPage.m_threadCountEdit.SetWindowText(_T("2"));	// 线程数
 }
 
 static inline void WriteRegexTexts(const gzFile& f, CListBox& list)
@@ -491,6 +510,8 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 扫描最后页数
 	gzwrite(f, &(boolBuf = m_prefPage.m_briefLogCheck.GetCheck()), sizeof(BOOL));	// 只输出删帖封号
 	gzwrite(f, &(boolBuf = m_prefPage.m_deleteCheck.GetCheck()), sizeof(BOOL));		// 删帖
+	m_prefPage.m_threadCountEdit.GetWindowText(strBuf);
+	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 线程数
 
 	gzclose(f);
 }

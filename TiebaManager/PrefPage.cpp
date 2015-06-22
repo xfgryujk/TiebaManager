@@ -36,6 +36,7 @@ void CPrefPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK4, m_confirmCheck);
 	DDX_Control(pDX, IDC_EDIT5, m_scanPageCountEdit);
 	DDX_Control(pDX, IDC_CHECK5, m_briefLogCheck);
+	DDX_Control(pDX, IDC_EDIT2, m_threadCountEdit);
 }
 
 
@@ -47,6 +48,7 @@ BEGIN_MESSAGE_MAP(CPrefPage, CDialog)
 	ON_EN_KILLFOCUS(IDC_EDIT4, &CPrefPage::OnEnKillfocusEdit4)
 	ON_EN_KILLFOCUS(IDC_EDIT5, &CPrefPage::OnEnKillfocusEdit5)
 	ON_EN_CHANGE(IDC_EDIT5, &CPrefPage::OnEnChangeEdit5)
+	ON_EN_KILLFOCUS(IDC_EDIT2, &CPrefPage::OnEnKillfocusEdit2)
 END_MESSAGE_MAP()
 
 
@@ -138,4 +140,14 @@ void CPrefPage::OnEnKillfocusEdit5()
 void CPrefPage::OnEnChangeEdit5()
 {
 	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+}
+
+// Ïß³ÌÊý
+void CPrefPage::OnEnKillfocusEdit2()
+{
+	CString tmp;
+	m_threadCountEdit.GetWindowText(tmp);
+	int threadCount = _ttoi(tmp);
+	if (threadCount < 1 || threadCount > 16)
+		m_threadCountEdit.SetWindowText(_T("2"));
 }
