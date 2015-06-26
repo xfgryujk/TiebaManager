@@ -598,20 +598,26 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			}
 			else // 达到封禁违规次数
 			{
-				get_ip_tbs banTBS;
-				if (!GetBanTBS(op.tid, op.author, banTBS))
+				if (op.pid == _T(""))
+				{
+					vector<PostInfo> posts, lzls;
+					GetPosts(op.tid, _T(""), _T("1"), posts, lzls);
+					if (posts.size() > 0)
+						op.pid = posts[0].pid;
+				}
+				if (op.pid == _T(""))
 				{
 					dlg->Log(_T("<font color=red>封禁 </font>") + op.author + _T("<font color=red> 失败！\
-(获取封禁口令号失败)</font><a href=\"BD:") + op.tid + _T(",") + op.author + _T("\">重试</a>"), pDocument);
+(获取帖子ID失败)</font>"), pDocument);
 				}
 				else
 				{
-					CString code = BanID(op.author, banTBS.tbs_ban_user);
+					CString code = BanID(op.author, op.pid);
 					if (code != _T("0"))
 					{
 						CString content;
 						content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！\
-错误代码：%s(%s)</font><a href=\"BD:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.tid, op.author);
+错误代码：%s(%s)</font><a href=\"BD:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.pid, op.author);
 						dlg->Log(content, pDocument);
 					}
 					else
@@ -694,32 +700,13 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 	return 0;
 }
 
-// 获取封禁用tbs
-BOOL GetBanTBS(LPCTSTR tid, LPCTSTR userName, get_ip_tbs& result)
-{
-	CString url;
-	url.Format(_T("http://tieba.baidu.com/bawu/filter/get_ip_tbs?type=get_ip_tbs&tid=%s&pid=%s\
-&user_name=%s&post_id=%s&word=%s&fid=%s&can_prison_ip=true&ie=utf-8"), tid, tid, EncodeURI(userName), 
-		tid, g_encodedForumName, g_forumID);
-	CString src = HTTPGet(url);
-	CStringArray tmp;
-	SplitString(tmp, src, _T(","));
-	if (tmp.GetSize() < 6)
-		return FALSE;
-	result.ip_int = GetStringBetween(tmp[1], _T("\"ip_int\":\""), _T("\""));
-	result.tbs_ban_user = GetStringBetween(tmp[2], _T("\"tbs_ban_user\":\""), _T("\""));
-	result.tbs_ban_ip = GetStringBetween(tmp[3], _T("\"tbs_ban_ip\":\""), _T("\""));
-	result.ip_secure_str = GetStringBetween(tmp[5], _T("\"ip_secure_str\":\""), _T("\""));
-	return TRUE;
-}
-
 // 封ID，返回错误代码
-CString BanID(LPCTSTR userName, LPCTSTR tbs_ban_user)
+CString BanID(LPCTSTR userName, LPCTSTR pid)
 {
 	CString data;
-	data.Format(_T("cm=filter_forum_user&user_name=%s&ban_days=%d&word=%s&fid=%s&tbs=%s&ie=utf-8"), 
-		EncodeURI(userName), g_banDuration, g_encodedForumName, g_forumID, tbs_ban_user);
-	CString src = HTTPPost(_T("http://tieba.baidu.com/bawu/cm"), data);
+	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&pid%%5B%%5D=%s&reason=%s"), 
+		g_banDuration, g_forumID, g_tbs, EncodeURI(userName), pid, g_banReason != _T("") ? g_banReason : _T(" "));
+	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
 	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
 		return _T("-1");
 	return GetStringBetween(src, _T("no\":"), _T(","));
@@ -766,6 +753,8 @@ CString GetTiebaErrorText(const CString& errorCode)
 		return _T("贴子已删");
 	if (errorCode == _T("-1"))
 		return _T("超时");
+	if (errorCode == _T("78"))
+		return _T("参数错误");
 	if (errorCode == _T("4"))
 		return _T("参数校验失败");
 	if (errorCode == _T("11"))

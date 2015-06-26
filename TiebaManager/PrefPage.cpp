@@ -37,6 +37,7 @@ void CPrefPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT5, m_scanPageCountEdit);
 	DDX_Control(pDX, IDC_CHECK5, m_briefLogCheck);
 	DDX_Control(pDX, IDC_EDIT2, m_threadCountEdit);
+	DDX_Control(pDX, IDC_EDIT7, m_banReasonEdit);
 }
 
 
@@ -103,6 +104,7 @@ void CPrefPage::OnBnClickedCheck1()
 {
 	BOOL enable = m_banIDCheck.GetCheck();
 	m_banDurationCombo.EnableWindow(enable);
+	m_banReasonEdit.EnableWindow(enable);
 	m_trigCountEdit.EnableWindow(enable);
 }
 

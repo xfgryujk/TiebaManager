@@ -116,9 +116,7 @@ void CUsersPage::OnBnClickedButton1()
 	gzFile f = gzopen_w(USERS_PATH + loginDlg.m_userName + _T("\\ck.tb"), "wb");
 	if (f != NULL)
 	{
-		int len = loginDlg.m_cookie.GetLength();
-		gzwrite(f, &len, sizeof(int)); // ×Ö·û´®³¤¶È
-		gzwrite(f, (LPCTSTR)loginDlg.m_cookie, len * sizeof(TCHAR)); // ×Ö·û´®
+		WriteText(f, loginDlg.m_cookie);
 		gzclose(f);
 	}
 	if (m_list.FindStringExact(-1, loginDlg.m_userName) == LB_ERR)

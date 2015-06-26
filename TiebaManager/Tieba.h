@@ -96,14 +96,6 @@ struct PostInfo // 帖子信息
 
 enum TBObject { TBOBJ_THREAD, TBOBJ_POST, TBOBJ_LZL };
 
-struct get_ip_tbs // 封禁用的tbs
-{
-	CString ip_int;
-	CString tbs_ban_user; // 封ID用
-	CString tbs_ban_ip; // 封IP用
-	CString ip_secure_str; // 封IP用
-};
-
 
 // 采集 /////////////////////////////////////////////////////////////////////////////////
 BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& threads);
@@ -144,8 +136,7 @@ extern CWinThread* g_operateThread;
 void AddOperation(const CString& msg, TBObject object, const CString& tid, const CString& title, 
 	const CString& floor, const CString& pid, const CString& author);
 UINT AFX_CDECL OperateThread(LPVOID mainDlg);
-BOOL GetBanTBS(LPCTSTR tid, LPCTSTR userName, get_ip_tbs& result);
-CString BanID(LPCTSTR userName, LPCTSTR tbs_ban_user);
+CString BanID(LPCTSTR userName, LPCTSTR pid);
 CString DeleteThread(const CString& tid);
 CString DeletePost(LPCTSTR tid, LPCTSTR pid);
 CString DeleteLZL(LPCTSTR tid, LPCTSTR lzlid);

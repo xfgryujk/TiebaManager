@@ -24,7 +24,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TiebaManagerDlg.h"
 #include "Setting.h"
 #include "Tieba.h"
-#include <zlib.h>
 
 
 // CSettingDlg 对话框
@@ -239,6 +238,7 @@ void CSettingDlg::ShowCurrentOptions()
 	m_prefPage.m_deleteCheck.SetCheck(g_delete);			// 删帖
 	tmp.Format(_T("%d"), g_threadCount);
 	m_prefPage.m_threadCountEdit.SetWindowText(tmp);		// 线程数
+	m_prefPage.m_banReasonEdit.SetWindowText(g_banReason);	// 封禁原因
 
 	// 违规内容
 	m_keywordsPage.m_list.ResetContent();
@@ -297,6 +297,8 @@ void CSettingDlg::ApplyOptionsInDlg()
 	g_delete = m_prefPage.m_deleteCheck.GetCheck();				// 删帖
 	m_prefPage.m_threadCountEdit.GetWindowText(strBuf);
 	g_threadCount = _ttoi(strBuf);								// 线程数
+	m_prefPage.m_banReasonEdit.GetWindowText(strBuf);
+	g_banReason = strBuf;										// 封禁原因
 
 	g_optionsLock.Lock();
 	// 违规内容
@@ -335,11 +337,24 @@ static inline void ReadRegexTexts(const gzFile& f, CListBox& list)
 	{
 		int isRegex;
 		gzread(f, &isRegex, sizeof(int)); // 是正则
-		int strLen;
-		gzread(f, &strLen, sizeof(int)); // 字符串长度
-		gzread(f, strBuf.GetBuffer(strLen), strLen * sizeof(TCHAR)); // 字符串
-		strBuf.ReleaseBuffer(strLen);
+		ReadText(f, strBuf);
 		list.AddString((isRegex != 0 ? IS_REGEX_PREFIX : NOT_REGEX_PREFIX) + strBuf);
+	}
+}
+
+static inline void WriteRegexTexts(const gzFile& f, CListBox& list)
+{
+	int size;
+	gzwrite(f, &(size = list.GetCount()), sizeof(int)); // 长度
+	CString strBuf;
+	for (int i = 0; i < size; i++)
+	{
+		list.GetText(i, strBuf);
+		BOOL isRegex = strBuf.Left(REGEX_PREFIX_LENGTH) == IS_REGEX_PREFIX;
+		int intBuf;
+		gzwrite(f, &(intBuf = isRegex ? 1 : 0), sizeof(int)); // 是正则
+		strBuf = strBuf.Right(strBuf.GetLength() - REGEX_PREFIX_LENGTH);
+		WriteText(f, strBuf);
 	}
 }
 
@@ -374,9 +389,7 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	int intBuf;
 	for (int i = 0; i < size; i++)
 	{
-		gzread(f, &intBuf, sizeof(int)); // 字符串长度
-		gzread(f, strBuf.GetBuffer(intBuf), intBuf * sizeof(TCHAR)); // 字符串
-		strBuf.ReleaseBuffer(intBuf);
+		ReadText(f, strBuf);
 		m_whiteListPage.m_list.AddString(strBuf);
 	}
 
@@ -385,40 +398,42 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 
 	BOOL boolBuf;
 	float floatBuf;
-	gzread(f, &intBuf, sizeof(int));
+	gzread(f, &intBuf, sizeof(int));						// 扫描间隔
 	strBuf.Format(_T("%d"), intBuf);
-	m_prefPage.m_scanIntervalEdit.SetWindowText(strBuf);	// 扫描间隔
-	gzread(f, &boolBuf, sizeof(BOOL));
-	m_prefPage.m_banIDCheck.SetCheck(boolBuf);				// 封ID
-	gzread(f, &intBuf, sizeof(int));
-	m_prefPage.m_banDurationCombo.SetCurSel(intBuf == 1 ? 0 : (intBuf == 3 ? 1 : 2)); // 封禁时长
+	m_prefPage.m_scanIntervalEdit.SetWindowText(strBuf);
+	gzread(f, &boolBuf, sizeof(BOOL));						// 封ID
+	m_prefPage.m_banIDCheck.SetCheck(boolBuf);
+	gzread(f, &intBuf, sizeof(int));						// 封禁时长
+	m_prefPage.m_banDurationCombo.SetCurSel(intBuf == 1 ? 0 : (intBuf == 3 ? 1 : 2));
 	gzread(f, &boolBuf, sizeof(BOOL));						// 封IP
-	gzread(f, &intBuf, sizeof(int));
+	gzread(f, &intBuf, sizeof(int));						// 封禁违规次数
 	strBuf.Format(_T("%d"), intBuf);
-	m_prefPage.m_trigCountEdit.SetWindowText(strBuf);		// 封禁违规次数
-	gzread(f, &boolBuf, sizeof(BOOL));
-	m_prefPage.m_onlyScanTitleCheck.SetCheck(boolBuf);		// 只扫描标题
-	gzread(f, &floatBuf, sizeof(float));
+	m_prefPage.m_trigCountEdit.SetWindowText(strBuf);
+	gzread(f, &boolBuf, sizeof(BOOL));						// 只扫描标题
+	m_prefPage.m_onlyScanTitleCheck.SetCheck(boolBuf);
+	gzread(f, &floatBuf, sizeof(float));					// 删帖间隔
 	strBuf.Format(_T("%g"), floatBuf);
-	m_prefPage.m_deleteIntervalEdit.SetWindowText(strBuf);	// 删帖间隔
-	gzread(f, &boolBuf, sizeof(BOOL));
-	m_prefPage.m_confirmCheck.SetCheck(boolBuf);			// 操作前提示
-	gzread(f, &intBuf, sizeof(int));
+	m_prefPage.m_deleteIntervalEdit.SetWindowText(strBuf);
+	gzread(f, &boolBuf, sizeof(BOOL));						// 操作前提示
+	m_prefPage.m_confirmCheck.SetCheck(boolBuf);
+	gzread(f, &intBuf, sizeof(int));						// 扫描最后页数
 	strBuf.Format(_T("%d"), intBuf);
-	m_prefPage.m_scanPageCountEdit.SetWindowText(strBuf);	// 扫描最后页数
-	gzread(f, &boolBuf, sizeof(BOOL));
-	m_prefPage.m_briefLogCheck.SetCheck(boolBuf);			// 只输出删帖封号
-	if (gzread(f, &boolBuf, sizeof(BOOL)) == sizeof(BOOL))
-		m_prefPage.m_deleteCheck.SetCheck(boolBuf);				// 删帖
+	m_prefPage.m_scanPageCountEdit.SetWindowText(strBuf);
+	gzread(f, &boolBuf, sizeof(BOOL));						// 只输出删帖封号
+	m_prefPage.m_briefLogCheck.SetCheck(boolBuf);
+	if (gzread(f, &boolBuf, sizeof(BOOL)) == sizeof(BOOL))	// 删帖
+		m_prefPage.m_deleteCheck.SetCheck(boolBuf);
 	else
 		m_prefPage.m_deleteCheck.SetCheck(TRUE);
-	if (gzread(f, &intBuf, sizeof(int)) == sizeof(int))
+	if (gzread(f, &intBuf, sizeof(int)) == sizeof(int))		// 线程数
 	{
 		strBuf.Format(_T("%d"), intBuf);
-		m_prefPage.m_threadCountEdit.SetWindowText(strBuf);		// 线程数
+		m_prefPage.m_threadCountEdit.SetWindowText(strBuf);
 	}
 	else
 		m_prefPage.m_threadCountEdit.SetWindowText(_T("2"));
+	if (!ReadText(f, g_banReason))							// 封禁原因
+		g_banReason = _T("");
 
 	gzclose(f);
 	return;
@@ -439,24 +454,7 @@ UseDefaultOptions:
 	m_prefPage.m_briefLogCheck.SetCheck(FALSE);				// 只输出删帖封号
 	m_prefPage.m_deleteCheck.SetCheck(TRUE);				// 删帖
 	m_prefPage.m_threadCountEdit.SetWindowText(_T("2"));	// 线程数
-}
-
-static inline void WriteRegexTexts(const gzFile& f, CListBox& list)
-{
-	int size;
-	gzwrite(f, &(size = list.GetCount()), sizeof(int)); // 长度
-	CString strBuf;
-	for (int i = 0; i < size; i++)
-	{
-		list.GetText(i, strBuf);
-		BOOL isRegex = strBuf.Left(REGEX_PREFIX_LENGTH) == IS_REGEX_PREFIX;
-		int intBuf;
-		gzwrite(f, &(intBuf = isRegex ? 1 : 0), sizeof(int)); // 是正则
-		strBuf = strBuf.Right(strBuf.GetLength() - REGEX_PREFIX_LENGTH);
-		int len = strBuf.GetLength();
-		gzwrite(f, &len, sizeof(int)); // 字符串长度
-		gzwrite(f, (LPCTSTR)strBuf, len * sizeof(TCHAR)); // 字符串
-	}
+	g_banReason = _T("");									// 封禁原因
 }
 
 // 把对话框中的设置写入文件
@@ -482,9 +480,7 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	for (int i = 0; i < size; i++)
 	{
 		m_whiteListPage.m_list.GetText(i, strBuf);
-		int len = strBuf.GetLength();
-		gzwrite(f, &len, sizeof(int)); // 字符串长度
-		gzwrite(f, (LPCTSTR)strBuf, len * sizeof(TCHAR)); // 字符串
+		WriteText(f, strBuf);
 	}
 
 	// 信任内容
@@ -512,6 +508,8 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	gzwrite(f, &(boolBuf = m_prefPage.m_deleteCheck.GetCheck()), sizeof(BOOL));		// 删帖
 	m_prefPage.m_threadCountEdit.GetWindowText(strBuf);
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 线程数
+	m_prefPage.m_banReasonEdit.GetWindowText(strBuf);
+	WriteText(f, strBuf);															// 封禁原因
 
 	gzclose(f);
 }

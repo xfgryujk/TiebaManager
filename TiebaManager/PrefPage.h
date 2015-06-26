@@ -38,6 +38,7 @@ public:
 	CButton m_deleteCheck;
 	CButton m_banIDCheck;
 	CComboBox m_banDurationCombo;
+	CEdit m_banReasonEdit;
 	CEdit m_trigCountEdit;
 	CButton m_onlyScanTitleCheck;
 	CEdit m_deleteIntervalEdit;

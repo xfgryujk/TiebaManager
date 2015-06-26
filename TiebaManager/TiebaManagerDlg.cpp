@@ -450,9 +450,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		get_ip_tbs banTBS;
-		GetBanTBS(args[0], args[1], banTBS);
-		CString code = BanID(args[1], banTBS.tbs_ban_user);
+		CString code = BanID(args[1], args[0]);
 		if (code == _T("0"))
 			Log(_T("<font color=green>·â½û³É¹¦£¡</font>"));
 		else

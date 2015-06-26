@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Setting.h"
-#include <zlib.h>
 #include "Tieba.h"
 #include "TiebaManagerDlg.h"
 
@@ -30,6 +29,7 @@ int		g_scanPageCount;	// 扫描最后页数
 BOOL	g_briefLog;			// 只输出删帖封号
 BOOL	g_delete;			// 删帖
 int		g_threadCount;		// 线程数
+CString	g_banReason;		// 封号原因
 vector<RegexText>	g_keywords;		// 违规内容
 vector<RegexText>	g_blackList;	// 屏蔽用户
 vector<CString>		g_whiteList;	// 信任用户
@@ -47,10 +47,19 @@ static inline void ReadRegexTexts(const gzFile& f, vector<RegexText>& vec)
 	{
 		gzread(f, &intBuf, sizeof(int)); // 是正则
 		i.isRegex = intBuf != 0;
-		gzread(f, &intBuf, sizeof(int)); // 字符串长度
-		gzread(f, i.text.GetBuffer(intBuf), intBuf * sizeof(TCHAR)); // 字符串
-		i.text.ReleaseBuffer(intBuf);
+		ReadText(f, i.text);
 		i.regexp = i.isRegex ? i.text : _T("");
+	}
+}
+
+static inline void WriteRegexTexts(const gzFile& f, vector<RegexText>& vec)
+{
+	int intBuf;
+	gzwrite(f, &(intBuf = vec.size()), sizeof(int)); // 长度
+	for (const RegexText& i : vec)
+	{
+		gzwrite(f, &(intBuf = i.isRegex ? 1 : 0), sizeof(int)); // 是正则
+		WriteText(f, i.text);
 	}
 }
 
@@ -81,11 +90,7 @@ void ReadOptions(LPCTSTR path)
 	gzread(f, &intBuf, sizeof(int)); // 长度
 	g_whiteList.resize(intBuf);
 	for (CString& i : g_whiteList)
-	{
-		gzread(f, &intBuf, sizeof(int)); // 字符串长度
-		gzread(f, i.GetBuffer(intBuf), intBuf * sizeof(TCHAR)); // 字符串
-		i.ReleaseBuffer(intBuf);
-	}
+		ReadText(f, i);
 
 	// 信任内容
 	ReadRegexTexts(f, g_whiteContent);
@@ -105,6 +110,8 @@ void ReadOptions(LPCTSTR path)
 		g_delete = TRUE;
 	if (gzread(f, &g_threadCount, sizeof(int)) != sizeof(int))		// 线程数
 		g_threadCount = 2;
+	if (!ReadText(f, g_banReason))									// 封禁原因
+		g_banReason = _T("");
 
 	gzclose(f);
 	return;
@@ -124,19 +131,7 @@ UseDefaultOptions:
 	g_briefLog = FALSE;			// 只输出删帖封号
 	g_delete = TRUE;			// 删帖
 	g_threadCount = 2;			// 线程数
-}
-
-static inline void WriteRegexTexts(const gzFile& f, vector<RegexText>& vec)
-{
-	int intBuf;
-	gzwrite(f, &(intBuf = vec.size()), sizeof(int)); // 长度
-	for (const RegexText& i : vec)
-	{
-		gzwrite(f, &(intBuf = i.isRegex ? 1 : 0), sizeof(int)); // 是正则
-		int len = i.text.GetLength();
-		gzwrite(f, &(intBuf = len), sizeof(int)); // 字符串长度
-		gzwrite(f, (LPCTSTR)i.text, len * sizeof(TCHAR)); // 字符串
-	}
+	g_banReason = _T("");		// 封禁原因
 }
 
 // 写方案
@@ -160,11 +155,7 @@ void WriteOptions(LPCTSTR path)
 	// 信任用户
 	gzwrite(f, &(intBuf = g_whiteList.size()), sizeof(int)); // 长度
 	for (const CString& i : g_whiteList)
-	{
-		int len = i.GetLength();
-		gzwrite(f, &len, sizeof(int)); // 字符串长度
-		gzwrite(f, (LPCTSTR)i, len * sizeof(TCHAR)); // 字符串
-	}
+		WriteText(f, i);
 
 	// 信任内容
 	WriteRegexTexts(f, g_whiteContent);
@@ -182,6 +173,7 @@ void WriteOptions(LPCTSTR path)
 	gzwrite(f, &g_briefLog, sizeof(BOOL));			// 只输出删帖封号
 	gzwrite(f, &g_delete, sizeof(BOOL));			// 删帖
 	gzwrite(f, &g_threadCount, sizeof(int));		// 线程数
+	WriteText(f, g_banReason);						// 封禁原因
 
 	gzclose(f);
 }
@@ -221,9 +213,7 @@ void SaveCurrentUserProfile()
 	gzFile f = gzopen_w(COOKIE_PATH, "wb");
 	if (f != NULL)
 	{
-		int len = g_cookie.GetLength();
-		gzwrite(f, &len, sizeof(int)); // 字符串长度
-		gzwrite(f, (LPCTSTR)g_cookie, len * sizeof(TCHAR)); // 字符串
+		WriteText(f, g_cookie);
 		gzclose(f);
 	}
 
@@ -272,12 +262,7 @@ void SetCurrentUser(LPCTSTR userName)
 	gzFile f = gzopen_w(COOKIE_PATH, "rb");
 	if (f != NULL)
 	{
-		int size;
-		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 1024 * 1024) // 字符串长度
-		{
-			gzread(f, g_cookie.GetBuffer(size), size * sizeof(TCHAR)); // 字符串
-			g_cookie.ReleaseBuffer(size);
-		}
+		ReadText(f, g_cookie);
 		gzclose(f);
 	}
 
