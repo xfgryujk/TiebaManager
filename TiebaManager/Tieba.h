@@ -25,55 +25,8 @@ const wregex FORUM_ID_NAME_REG(_T("PageData.forum.*?forum_id('|\")?:\\s*('|\")?(
 .*?forum_name('|\")?:\\s*('|\")(.*?)('|\")"));
 // 3是用户名
 const wregex USER_NAME_REG(_T("PageData.*?user_name('|\")?:\\s*('|\")(.*?)('|\")"));
-const TCHAR _TBS_LEFT[]			= _T("PageData.tbs = \"");
-const TCHAR _TBS_RIGHT[]		= _T("\"");
-#pragma endregion
-// 正则表达式太慢所以不用
-#pragma region 主题列表
-// 今日话题
-const TCHAR TOPIC_LEFT[] = _T("<ul id=\"thread_topic");
-const TCHAR TOPIC_RIGHT[] = _T("</ul>");
-const TCHAR TOPIC_TID_LEFT[] = _T("href=\"http://tieba.baidu.com/p/");
-const TCHAR TOPIC_TID_RIGHT[] = _T("\"");
-const TCHAR TOPIC_REPLY_LEFT[] = _T("title=\"");
-const TCHAR TOPIC_REPLY_RIGHT[] = _T("个回复\"");
-const TCHAR TOPIC_TITLE_LEFT[] = _T("title=\"");
-const TCHAR TOPIC_TITLE_RIGHT[] = _T("\"");
-const TCHAR TOPIC_PREVIEW_LEFT[] = _T("class=\"threadlist_abs\">");
-const TCHAR TOPIC_PREVIEW_RIGHT[] = _T("</div>");
-
-// 普通主题
-const TCHAR THREAD_SPLIT[] = _T("data-field='{&quot;author_name&quot;:&quot;");
-const TCHAR THREAD_END[] = _T("<div id=\"frs_list_pager\"");
-const TCHAR THREAD_TID_LEFT[] = _T("&quot;id&quot;:");
-const TCHAR THREAD_TID_RIGHT[] = _T(",");
-const TCHAR THREAD_REPLY_LEFT[] = _T("&quot;reply_num&quot;:");
-const TCHAR THREAD_REPLY_RIGHT[] = _T(",");
-const TCHAR THREAD_TITLE_LEFT[] = _T("class=\"j_th_tit\">");
-const TCHAR THREAD_TITLE_RIGHT[] = _T("</a>");
-const TCHAR THREAD_PREVIEW_LEFT[] = _T("threadlist_abs_onlyline\">");
-const TCHAR THREAD_PREVIEW_RIGHT[] = _T("</div>");
-const TCHAR THREAD_AUTHOR_LEFT[] = _T("&quot;author_name&quot;:&quot;");
-const TCHAR THREAD_AUTHOR_RIGHT[] = _T("&quot;");
-#pragma endregion
-#pragma region 帖子列表
-const TCHAR PAGE_COUNT_LEFT[] = _T(",\"total_page\":");
-const TCHAR PAGE_COUNT_RIGHT[] = _T("}");
-
-const TCHAR POST_SPLIT[] = _T("data-field='{&quot;author&quot;:");
-const TCHAR POST_PID_LEFT[] = _T("&quot;post_id&quot;:");
-const TCHAR POST_PID_RIGHT[] = _T(",");
-const TCHAR POST_FLOOR_LEFT[] = _T("&quot;post_no&quot;:");
-const TCHAR POST_FLOOR_RIGHT[] = _T(",");
-const TCHAR POST_AUTHOR_LEFT[] = _T("&quot;user_name&quot;:&quot;");
-const TCHAR POST_AUTHOR_RIGHT[] = _T("&quot;");
-const TCHAR POST_CONTENT_LEFT[] = _T("<cc>");
-const TCHAR POST_CONTENT_RIGHT[] = _T("</cc>");
-#pragma endregion
-#pragma region 楼中楼列表
-const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)\\]"));
-const wregex LZL_CONTENT_REG(_T("\"comment_id\":\"(\\d+)\".*?\"username\":\"(.*?)\".*?\"content\":\
-\"(.*?[^\\\\])\""));
+const TCHAR _TBS_LEFT[] = _T("PageData.tbs = \"");
+const TCHAR _TBS_RIGHT[] = _T("\"");
 #pragma endregion
 
 
@@ -109,9 +62,9 @@ extern CWinThread* g_scanThread;
 extern set<__int64> g_initIgnoredTID; // 不删的主题ID(手动忽略)，要写入文件
 extern set<__int64> g_initIgnoredPID; // 不删的帖子ID(手动忽略)，要写入文件
 extern set<__int64> g_initIgnoredLZLID; // 不删的楼中楼ID(手动忽略)，要写入文件
-extern set<__int64> g_ignoredTID; // 不删的主题ID(已扫描)
-extern set<__int64> g_ignoredPID; // 不删的帖子ID(已扫描)
-extern set<__int64> g_ignoredLZLID; // 不删的楼中楼ID(已扫描)
+extern set<__int64> g_ignoredTID; // 不删的主题ID(已扫描且违规)
+extern set<__int64> g_ignoredPID; // 不删的帖子ID(已扫描且违规)
+extern set<__int64> g_ignoredLZLID; // 不删的楼中楼ID(已扫描且违规)
 extern set<__int64> g_deletedTID; // 已删的主题ID
 extern map<__int64, int> g_reply; // 主题的回复数
 extern map<CString, int> g_IDTrigCount; // 某ID违规次数，已封为-1

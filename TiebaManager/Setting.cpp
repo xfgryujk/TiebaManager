@@ -2,6 +2,7 @@
 #include "Setting.h"
 #include "Tieba.h"
 #include "TiebaManagerDlg.h"
+#include "ScanImage.h"
 
 
 // 配置文件路径
@@ -30,10 +31,12 @@ BOOL	g_briefLog;			// 只输出删帖封号
 BOOL	g_delete;			// 删帖
 int		g_threadCount;		// 线程数
 CString	g_banReason;		// 封号原因
-vector<RegexText>	g_keywords;		// 违规内容
-vector<RegexText>	g_blackList;	// 屏蔽用户
-vector<CString>		g_whiteList;	// 信任用户
-vector<RegexText>	g_whiteContent;	// 信任内容
+CString g_imageDir;			// 违规图片目录
+vector<RegexText>		g_keywords;		// 违规内容
+vector<RegexText>		g_blackList;	// 屏蔽用户
+vector<CString>			g_whiteList;	// 信任用户
+vector<RegexText>		g_whiteContent;	// 信任内容
+vector<ImageFeature>	g_imageFeatures; // 图片特征
 
 CCriticalSection g_optionsLock; // 判断违规用的临界区
 
@@ -110,16 +113,21 @@ void ReadOptions(LPCTSTR path)
 		g_delete = TRUE;
 	if (gzread(f, &g_threadCount, sizeof(int)) != sizeof(int))		// 线程数
 		g_threadCount = 2;
-	if (!ReadText(f, g_banReason))									// 封禁原因
-		g_banReason = _T("");
+	ReadText(f, g_banReason);										// 封禁原因
+	if (!ReadText(f, g_imageDir))									// 违规图片目录
+		g_imageFeatures.clear();
+	else
+		ReadFeatures(g_imageDir + FEATURE_PATH, g_imageFeatures);
 
 	gzclose(f);
 	return;
 
 UseDefaultOptions:
 	g_keywords.clear();			// 违规内容
+	g_imageFeatures.clear();	// 违规图片特征
 	g_blackList.clear();		// 屏蔽用户
 	g_whiteList.clear();		// 信任用户
+	g_whiteContent.clear();		// 信任内容
 	g_scanInterval = 5;			// 扫描间隔
 	g_banID = FALSE;			// 封ID
 	g_banDuration = 1;			// 封禁时长
@@ -132,6 +140,8 @@ UseDefaultOptions:
 	g_delete = TRUE;			// 删帖
 	g_threadCount = 2;			// 线程数
 	g_banReason = _T("");		// 封禁原因
+	g_imageDir = _T("");		// 违规图片目录
+	g_imageFeatures.clear();
 }
 
 // 写方案
@@ -174,6 +184,7 @@ void WriteOptions(LPCTSTR path)
 	gzwrite(f, &g_delete, sizeof(BOOL));			// 删帖
 	gzwrite(f, &g_threadCount, sizeof(int));		// 线程数
 	WriteText(f, g_banReason);						// 封禁原因
+	WriteText(f, g_imageDir);						// 违规图片目录
 
 	gzclose(f);
 }

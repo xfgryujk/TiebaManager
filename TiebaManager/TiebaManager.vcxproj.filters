@@ -123,6 +123,12 @@
     <ClInclude Include="ExplorePostPage.h">
       <Filter>头文件\Dialog\TiebaExplorer</Filter>
     </ClInclude>
+    <ClInclude Include="ImagePage.h">
+      <Filter>头文件\Dialog\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="ScanImage.h">
+      <Filter>头文件\Global</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -202,6 +208,12 @@
     </ClCompile>
     <ClCompile Include="ExplorePostPage.cpp">
       <Filter>源文件\Dialog\TiebaExplorer</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePage.cpp">
+      <Filter>源文件\Dialog\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="ScanImage.cpp">
+      <Filter>源文件\Global</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

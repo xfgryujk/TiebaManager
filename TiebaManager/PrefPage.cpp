@@ -51,10 +51,9 @@ BEGIN_MESSAGE_MAP(CPrefPage, CDialog)
 	ON_EN_CHANGE(IDC_EDIT5, &CPrefPage::OnEnChangeEdit5)
 	ON_EN_KILLFOCUS(IDC_EDIT2, &CPrefPage::OnEnKillfocusEdit2)
 END_MESSAGE_MAP()
-
+#pragma endregion
 
 // CPrefPage 消息处理程序
-#pragma endregion
 
 #pragma region UI
 // 屏蔽Esc关闭窗口

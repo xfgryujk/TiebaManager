@@ -3,6 +3,7 @@
 #include "afxwin.h"
 #include "PrefPage.h"
 #include "KeywordsPage.h"
+#include "ImagePage.h"
 #include "BlackListPage.h"
 #include "WhiteListPage.h"
 #include "WhiteContentPage.h"
@@ -12,6 +13,8 @@
 
 
 // CSettingDlg ¶Ô»°¿ò
+
+const int SETTING_DLG_PAGE_COUNT = 9;
 
 class CSettingDlg : public CDialog
 {
@@ -48,6 +51,7 @@ public:
 	CTabCtrl m_tab;
 	CPrefPage m_prefPage;
 	CKeywordsPage m_keywordsPage;
+	CImagePage m_imagePage;
 	CBlackListPage m_blackListPage;
 	CWhiteListPage m_whiteListPage;
 	CWhiteContentPage m_whiteContentPage;
@@ -59,5 +63,5 @@ public:
 
 	BOOL m_clearScanCache;
 protected:
-	CDialog* m_pages[8];
+	CDialog* m_pages[SETTING_DLG_PAGE_COUNT];
 };

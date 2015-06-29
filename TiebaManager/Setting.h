@@ -4,6 +4,7 @@ using std::vector;
 #include <regex>
 using std::wregex;
 #include <zlib.h>
+struct ImageFeature;
 
 
 
@@ -40,10 +41,12 @@ extern BOOL		g_briefLog;			// 只输出删帖封号
 extern BOOL		g_delete;			// 删帖
 extern int		g_threadCount;		// 线程数
 extern CString	g_banReason;		// 封号原因
+extern CString g_imageDir;			// 违规图片目录
 extern vector<RegexText>	g_keywords;		// 违规内容
 extern vector<RegexText>	g_blackList;	// 屏蔽用户
 extern vector<CString>		g_whiteList;	// 信任用户
 extern vector<RegexText>	g_whiteContent;	// 信任内容
+extern vector<ImageFeature>	g_imageFeatures; // 图片特征
 
 extern CCriticalSection g_optionsLock; // 判断违规用的临界区
 
@@ -52,8 +55,11 @@ extern CCriticalSection g_optionsLock; // 判断违规用的临界区
 inline BOOL ReadText(const gzFile& f, CString& text)
 {
 	int size;
-	if (gzread(f, &size, sizeof(int)) != sizeof(int) || size < 0) // 字符串长度
+	if (gzread(f, &size, sizeof(int)) != sizeof(int) || size < 0 || size > 100000) // 字符串长度
+	{
+		text = _T("");
 		return FALSE;
+	}
 	if (gzread(f, text.GetBuffer(size), size * sizeof(TCHAR)) != size * sizeof(TCHAR)) // 字符串
 	{
 		text.ReleaseBuffer(0);

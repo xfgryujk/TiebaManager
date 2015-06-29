@@ -43,26 +43,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)Library\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <IncludePath>$(OpenCV)\build\include;$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(OpenCV)\build\x86\vc12\lib;$(SolutionDir)Library\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);</IncludePath>
-    <LibraryPath>$(SolutionDir)Library\lib;$(VC_LibraryPath_x86);$(WindowsSdk_71A_LibraryPath_x86);</LibraryPath>
+    <IncludePath>$(OpenCV)\build\include;$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);</IncludePath>
+    <LibraryPath>$(OpenCV)\build\x86\vc12\staticlib;$(VC_LibraryPath_x86);$(WindowsSdk_71A_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>ZLIB_WINAPI;ASMV;ASMINF;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ASMV;ASMINF;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>zlibstatd.lib;Dbghelp.lib;oleacc.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>opencv_ts300d.lib;opencv_world300d.lib;zlibstatd.lib;Dbghelp.lib;oleacc.lib;Winmm.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
@@ -84,7 +85,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>ZLIB_WINAPI;ASMV;ASMINF;WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ASMV;ASMINF;WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -92,7 +93,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>zlibstat.lib;Dbghelp.lib;Wininet.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>ippicvmt.lib;IlmImf.lib;libjasper.lib;libjpeg.lib;libpng.lib;libtiff.lib;libwebp.lib;zlib.lib;opencv_calib3d300.lib;opencv_core300.lib;opencv_features2d300.lib;opencv_flann300.lib;opencv_hal300.lib;opencv_highgui300.lib;opencv_imgcodecs300.lib;opencv_imgproc300.lib;opencv_ml300.lib;opencv_objdetect300.lib;opencv_photo300.lib;opencv_shape300.lib;opencv_stitching300.lib;opencv_superres300.lib;opencv_ts300.lib;opencv_video300.lib;opencv_videoio300.lib;opencv_videostab300.lib;Dbghelp.lib;Wininet.lib;Winmm.lib</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Midl>
@@ -117,6 +118,7 @@
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="BlackListPage.h" />
+    <ClInclude Include="ScanImage.h" />
     <ClInclude Include="ConfirmDlg.h" />
     <ClInclude Include="ExploreLzlPage.h" />
     <ClInclude Include="ExplorePostPage.h" />
@@ -125,6 +127,7 @@
     <ClInclude Include="ExplorerPage.h" />
     <ClInclude Include="ExploreThreadPage.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="ImagePage.h" />
     <ClInclude Include="KeywordsPage.h" />
     <ClInclude Include="ListPage.h" />
     <ClInclude Include="LoginDlg.h" />
@@ -147,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="BlackListPage.cpp" />
+    <ClCompile Include="ScanImage.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
     <ClCompile Include="ExploreLzlPage.cpp" />
     <ClCompile Include="ExplorePostPage.cpp" />
@@ -155,6 +159,7 @@
     <ClCompile Include="ExplorerPage.cpp" />
     <ClCompile Include="ExploreThreadPage.cpp" />
     <ClCompile Include="Global.cpp" />
+    <ClCompile Include="ImagePage.cpp" />
     <ClCompile Include="KeywordsPage.cpp" />
     <ClCompile Include="ListPage.cpp" />
     <ClCompile Include="LoginDlg.cpp" />

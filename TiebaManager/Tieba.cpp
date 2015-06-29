@@ -25,6 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <queue>
 using std::queue;
 #include <Mmsystem.h>
+#include "ScanImage.h"
 
 
 // 贴吧、用户信息
@@ -34,14 +35,67 @@ CString g_forumID;
 CString g_cookie;
 CString g_tbs;
 
+
+// 采集贴吧用的常量
+// 正则表达式太慢所以不用
+#pragma region 主题列表
+// 今日话题
+const TCHAR TOPIC_LEFT[] = _T("<ul id=\"thread_topic");
+const TCHAR TOPIC_RIGHT[] = _T("</ul>");
+const TCHAR TOPIC_TID_LEFT[] = _T("href=\"http://tieba.baidu.com/p/");
+const TCHAR TOPIC_TID_RIGHT[] = _T("\"");
+const TCHAR TOPIC_REPLY_LEFT[] = _T("title=\"");
+const TCHAR TOPIC_REPLY_RIGHT[] = _T("个回复\"");
+const TCHAR TOPIC_TITLE_LEFT[] = _T("title=\"");
+const TCHAR TOPIC_TITLE_RIGHT[] = _T("\"");
+const TCHAR TOPIC_PREVIEW_LEFT[] = _T("class=\"threadlist_abs\">");
+const TCHAR TOPIC_PREVIEW_RIGHT[] = _T("</div>");
+
+// 普通主题
+const TCHAR THREAD_SPLIT[] = _T("data-field='{&quot;author_name&quot;:&quot;");
+const TCHAR THREAD_END[] = _T("<div id=\"frs_list_pager\"");
+const TCHAR THREAD_TID_LEFT[] = _T("&quot;id&quot;:");
+const TCHAR THREAD_TID_RIGHT[] = _T(",");
+const TCHAR THREAD_REPLY_LEFT[] = _T("&quot;reply_num&quot;:");
+const TCHAR THREAD_REPLY_RIGHT[] = _T(",");
+const TCHAR THREAD_TITLE_LEFT[] = _T("class=\"j_th_tit\">");
+const TCHAR THREAD_TITLE_RIGHT[] = _T("</a>");
+const TCHAR THREAD_PREVIEW_LEFT[] = _T("threadlist_abs_onlyline\">");
+const TCHAR THREAD_PREVIEW_RIGHT[] = _T("</div>");
+const TCHAR THREAD_MEDIA_LEFT[] = _T("<ul class=\"threadlist_media");
+const TCHAR THREAD_MEDIA_RIGHT[] = _T("</ul>");
+const TCHAR THREAD_AUTHOR_LEFT[] = _T("&quot;author_name&quot;:&quot;");
+const TCHAR THREAD_AUTHOR_RIGHT[] = _T("&quot;");
+#pragma endregion
+#pragma region 帖子列表
+const TCHAR PAGE_COUNT_LEFT[] = _T(",\"total_page\":");
+const TCHAR PAGE_COUNT_RIGHT[] = _T("}");
+
+const TCHAR POST_SPLIT[] = _T("data-field='{&quot;author&quot;:");
+const TCHAR POST_PID_LEFT[] = _T("&quot;post_id&quot;:");
+const TCHAR POST_PID_RIGHT[] = _T(",");
+const TCHAR POST_FLOOR_LEFT[] = _T("&quot;post_no&quot;:");
+const TCHAR POST_FLOOR_RIGHT[] = _T(",");
+const TCHAR POST_AUTHOR_LEFT[] = _T("&quot;user_name&quot;:&quot;");
+const TCHAR POST_AUTHOR_RIGHT[] = _T("&quot;");
+const TCHAR POST_CONTENT_LEFT[] = _T("<cc>");
+const TCHAR POST_CONTENT_RIGHT[] = _T("</cc>");
+#pragma endregion
+#pragma region 楼中楼列表
+const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)\\]"));
+const wregex LZL_CONTENT_REG(_T("\"comment_id\":\"(\\d+)\".*?\"username\":\"(.*?)\".*?\"content\":\
+\"(.*?[^\\\\])\""));
+#pragma endregion
+
+
 volatile BOOL g_stopScanFlag;
 CWinThread* g_scanThread = NULL;
 set<__int64> g_initIgnoredTID; // 不删的主题ID(手动忽略)，要写入文件
 set<__int64> g_initIgnoredPID; // 不删的帖子ID(手动忽略)，要写入文件
 set<__int64> g_initIgnoredLZLID; // 不删的楼中楼ID(手动忽略)，要写入文件
-set<__int64> g_ignoredTID; // 不删的主题ID(已扫描)
-set<__int64> g_ignoredPID; // 不删的帖子ID(已扫描)
-set<__int64> g_ignoredLZLID; // 不删的楼中楼ID(已扫描)
+set<__int64> g_ignoredTID; // 不删的主题ID(已扫描且违规)
+set<__int64> g_ignoredPID; // 不删的帖子ID(已扫描且违规)
+set<__int64> g_ignoredLZLID; // 不删的楼中楼ID(已扫描且违规)
 set<__int64> g_deletedTID; // 已删的主题ID
 map<__int64, int> g_reply; // 主题的回复数
 map<CString, int> g_IDTrigCount; // 某ID违规次数，已封为-1
@@ -99,7 +153,8 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 		threads[iThreads].tid = GetStringBetween(rawThreads[iRawThreads], THREAD_TID_LEFT, THREAD_TID_RIGHT);
 		threads[iThreads].reply = GetStringBetween(rawThreads[iRawThreads], THREAD_REPLY_LEFT, THREAD_REPLY_RIGHT);
 		threads[iThreads].title = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
-		threads[iThreads].preview = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT));
+		threads[iThreads].preview = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT))
+			+ _T("\r\n") + GetStringBetween(rawThreads[iRawThreads], THREAD_MEDIA_LEFT, THREAD_MEDIA_RIGHT);
 		threads[iThreads].author = JSUnescape(GetStringBefore(rawThreads[iRawThreads], THREAD_AUTHOR_RIGHT));
 
 		//OutputDebugString(_T("\n"));
@@ -140,11 +195,15 @@ GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& 
 		int right = rawPosts[iRawPosts].Find(POST_CONTENT_RIGHT, left + 1);
 		// CString不支持反向查找字符串？
 		posts[iPosts].content = rawPosts[iRawPosts].Mid(left, right - left);
-		right = ((DWORD)StrRStrI(posts[iPosts].content, NULL, _T("</div>")) - (DWORD)(LPCTSTR)posts[iPosts].content) / sizeof(TCHAR) - 1;
-		// 去掉尾空格
-		while (right >= 0 && posts[iPosts].content[right] == _T(' '))
-			right--;
-		posts[iPosts].content = posts[iPosts].content.Left(right + 1);
+		LPCTSTR pos = StrRStrI(posts[iPosts].content, NULL, _T("</div>"));
+		if (pos != NULL)
+		{
+			right = ((DWORD)pos - (DWORD)(LPCTSTR)posts[iPosts].content) / sizeof(TCHAR) - 1;
+			// 去掉尾空格
+			while (right >= 0 && posts[iPosts].content[right] == _T(' '))
+				right--;
+			posts[iPosts].content = posts[iPosts].content.Left(right + 1);
+		}
 
 		//OutputDebugString(_T("\n"));
 		//OutputDebugString(rawPosts[iRawThreads]);
@@ -245,6 +304,26 @@ BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg)
 	return FALSE;
 }
 
+// 扫描主题图片
+static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocument2>* pDocument)
+{
+	for (const ThreadInfo& thread : g_threads)
+	{
+		if (g_stopScanFlag)
+			break;
+		__int64 tid = _ttoi64(thread.tid);
+		if (g_ignoredTID.find(tid) == g_ignoredTID.end()
+			&& CheckImageIllegal(thread, msg))
+		{
+			AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
+				thread.title, _T("1"), _T(""), thread.author);
+			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
+				+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
+			g_ignoredTID.insert(tid);
+		}
+	}
+}
+
 // 总扫描线程
 UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 {
@@ -279,6 +358,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		if (!g_briefLog)
 			dlg->Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + g_currentOption, pDocument);
 		
+		// 获取主题列表
 		if (!GetThreads(g_forumName, ignoreThread, g_threads))
 		{
 			if (g_stopScanFlag)
@@ -293,18 +373,23 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		{
 			if (g_stopScanFlag)
 				break;
-			if (CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, msg))
+			__int64 tid = _ttoi64(thread.tid);
+			if (g_ignoredTID.find(tid) == g_ignoredTID.end()
+				&& CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, msg))
 			{
-				__int64 tid = _ttoi64(thread.tid);
-				if (g_ignoredTID.find(tid) == g_ignoredTID.end())
-				{
-					AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid, 
-						thread.title, _T("1"), _T(""), thread.author);
-					dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
-						+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
-					g_ignoredTID.insert(tid);
-				}
+				AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid, 
+					thread.title, _T("1"), _T(""), thread.author);
+				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
+					+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
+				g_ignoredTID.insert(tid);
 			}
+		}
+		// 扫描主题图片
+		BOOL scanImage = !g_imageFeatures.empty();
+		if (g_onlyScanTitle && scanImage)
+		{
+			scanImage = FALSE;
+			ScanThreadImage(msg, dlg, pDocument);
 		}
 
 		// 扫描帖子
@@ -312,9 +397,11 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		{
 			dlg->m_stateStatic.SetWindowText(_T("扫描帖子中"));
 			g_threadIndex = 0;
-			CWinThread** threadObjects = new CWinThread*[g_threadCount];
-			HANDLE* threadHandles = new HANDLE[g_threadCount];
-			for (int i = 0; i < g_threadCount; i++)
+			// 创建线程扫描帖子
+			int threadCount = g_threadCount; // g_threadCount会变
+			CWinThread** threadObjects = new CWinThread*[threadCount];
+			HANDLE* threadHandles = new HANDLE[threadCount];
+			for (int i = 0; i < threadCount; i++)
 			{
 				dlg->m_stateList.AddString(_T("准备中"));
 				threadObjects[i] = AfxBeginThread(ScanPostThread, (LPVOID)i, 0, 0, CREATE_SUSPENDED);
@@ -322,9 +409,13 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 				threadHandles[i] = threadObjects[i]->m_hThread;
 				threadObjects[i]->ResumeThread();
 			}
-			WaitForMultipleObjects(g_threadCount, threadHandles, TRUE, INFINITE);
+			// 等待扫描帖子时扫描主题图片
+			if (scanImage)
+				ScanThreadImage(msg, dlg, pDocument);
+			WaitForMultipleObjects(threadCount, threadHandles, TRUE, INFINITE);
 
-			for (int i = 0; i < g_threadCount; i++)
+			// 释放线程
+			for (int i = 0; i < threadCount; i++)
 			{
 				CloseHandle(threadHandles[i]);
 				delete threadObjects[i];
@@ -441,6 +532,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	dlg->m_stateList.DeleteString(threadID);
 	dlg->m_stateList.InsertString(threadID, tid + _T(":") + sPage + _T(" ") + title);
 
+	// 获取帖子列表
 	vector<PostInfo> posts, lzls;
 	GetPostsResult res = GetPosts(tid, src, sPage, posts, lzls);
 	switch (res)
@@ -460,17 +552,15 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	{
 		if (g_stopScanFlag)
 			return FALSE;
-		if (CheckIllegal(post.content, post.author, msg))
+		__int64 pid = _ttoi64(post.pid);
+		if (g_ignoredPID.find(pid) == g_ignoredPID.end() 
+			&& CheckIllegal(post.content, post.author, msg))
 		{
-			__int64 pid = _ttoi64(post.pid);
-			if (g_ignoredPID.find(pid) == g_ignoredPID.end())
-			{
-				AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST, 
-					tid, title, post.floor, post.pid, post.author);
-				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) + 
-					_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
-				g_ignoredPID.insert(pid);
-			}
+			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST, 
+				tid, title, post.floor, post.pid, post.author);
+			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) + 
+				_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
+			g_ignoredPID.insert(pid);
 		}
 	}
 
@@ -489,6 +579,23 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg, pDocument);
 				g_ignoredLZLID.insert(lzlid);
 			}
+		}
+	}
+
+	// 扫描帖子图片
+	for (const PostInfo& post : posts)
+	{
+		if (g_stopScanFlag)
+			return FALSE;
+		__int64 pid = _ttoi64(post.pid);
+		if (g_ignoredPID.find(pid) == g_ignoredPID.end()
+			&& CheckImageIllegal(post, msg))
+		{
+			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
+				tid, title, post.floor, post.pid, post.author);
+			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
+				_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
+			g_ignoredPID.insert(pid);
 		}
 	}
 

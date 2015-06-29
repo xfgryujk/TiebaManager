@@ -24,6 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TiebaManagerDlg.h"
 #include "Setting.h"
 #include "Tieba.h"
+#include "ScanImage.h"
 
 
 // CSettingDlg 对话框
@@ -38,6 +39,7 @@ CSettingDlg::CSettingDlg(CWnd* pParent /*=NULL*/)
 	int i = 0;
 	m_pages[i++] = &m_prefPage;
 	m_pages[i++] = &m_keywordsPage;
+	m_pages[i++] = &m_imagePage;
 	m_pages[i++] = &m_blackListPage;
 	m_pages[i++] = &m_whiteListPage;
 	m_pages[i++] = &m_whiteContentPage;
@@ -83,6 +85,7 @@ BOOL CSettingDlg::OnInitDialog()
 	int i = 0;
 	m_tab.InsertItem(i++, _T("首选项"));
 	m_tab.InsertItem(i++, _T("违规内容"));
+	m_tab.InsertItem(i++, _T("违规图片"));
 	m_tab.InsertItem(i++, _T("屏蔽用户"));
 	m_tab.InsertItem(i++, _T("信任用户"));
 	m_tab.InsertItem(i++, _T("信任内容"));
@@ -93,6 +96,7 @@ BOOL CSettingDlg::OnInitDialog()
 	// 初始化各页
 	m_prefPage.Create(IDD_PREF_PAGE, &m_tab);
 	m_keywordsPage.Create(IDD_LIST_PAGE, &m_tab);
+	m_imagePage.Create(IDD_IMAGE_PAGE, &m_tab);
 	m_blackListPage.Create(IDD_LIST_PAGE, &m_tab);
 	m_whiteListPage.Create(IDD_LIST_PAGE, &m_tab);
 	m_whiteContentPage.Create(IDD_LIST_PAGE, &m_tab);
@@ -239,6 +243,7 @@ void CSettingDlg::ShowCurrentOptions()
 	tmp.Format(_T("%d"), g_threadCount);
 	m_prefPage.m_threadCountEdit.SetWindowText(tmp);		// 线程数
 	m_prefPage.m_banReasonEdit.SetWindowText(g_banReason);	// 封禁原因
+	m_imagePage.m_dirEdit.SetWindowText(g_imageDir);		// 违规图片目录
 
 	// 违规内容
 	m_keywordsPage.m_list.ResetContent();
@@ -299,6 +304,7 @@ void CSettingDlg::ApplyOptionsInDlg()
 	g_threadCount = _ttoi(strBuf);								// 线程数
 	m_prefPage.m_banReasonEdit.GetWindowText(strBuf);
 	g_banReason = strBuf;										// 封禁原因
+	m_imagePage.m_dirEdit.GetWindowText(g_imageDir);			// 违规图片目录
 
 	g_optionsLock.Lock();
 	// 违规内容
@@ -317,6 +323,9 @@ void CSettingDlg::ApplyOptionsInDlg()
 
 	// 信任内容
 	ApplyRegexTexts(g_whiteContent, m_whiteContentPage.m_list);
+
+	// 违规图片
+	ReadFeatures(g_imageDir + FEATURE_PATH, g_imageFeatures);
 	g_optionsLock.Unlock();
 
 	if (m_clearScanCache)
@@ -432,8 +441,10 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	}
 	else
 		m_prefPage.m_threadCountEdit.SetWindowText(_T("2"));
-	if (!ReadText(f, g_banReason))							// 封禁原因
-		g_banReason = _T("");
+	ReadText(f, strBuf);									// 封禁原因
+	m_prefPage.m_banReasonEdit.SetWindowText(strBuf);
+	ReadText(f, strBuf);									// 违规图片目录
+	m_imagePage.m_dirEdit.SetWindowText(strBuf);
 
 	gzclose(f);
 	return;
@@ -454,7 +465,8 @@ UseDefaultOptions:
 	m_prefPage.m_briefLogCheck.SetCheck(FALSE);				// 只输出删帖封号
 	m_prefPage.m_deleteCheck.SetCheck(TRUE);				// 删帖
 	m_prefPage.m_threadCountEdit.SetWindowText(_T("2"));	// 线程数
-	g_banReason = _T("");									// 封禁原因
+	m_prefPage.m_banReasonEdit.SetWindowText(_T(""));		// 封禁原因
+	m_imagePage.m_dirEdit.SetWindowText(_T(""));			// 违规图片目录
 }
 
 // 把对话框中的设置写入文件
@@ -510,6 +522,8 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 线程数
 	m_prefPage.m_banReasonEdit.GetWindowText(strBuf);
 	WriteText(f, strBuf);															// 封禁原因
+	m_imagePage.m_dirEdit.GetWindowText(strBuf);
+	WriteText(f, strBuf);															// 违规图片目录
 
 	gzclose(f);
 }

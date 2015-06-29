@@ -200,7 +200,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 		WritePrivateProfileString(_T("Setting"), _T("FirstRun"), _T("0"), ALL_PROFILE_PATH);
 		m_settingDlg = new CSettingDlg();
 		m_settingDlg->Create(IDD_SETTING_DIALOG, this);
-		m_settingDlg->m_tab.SetCurSel(7);
+		m_settingDlg->m_tab.SetCurSel(SETTING_DLG_PAGE_COUNT - 1);
 		LRESULT tmp;
 		m_settingDlg->OnTcnSelchangeTab1(NULL, &tmp);
 	}
@@ -689,7 +689,7 @@ error:
 // 开始
 void CTiebaManagerDlg::OnBnClickedButton2()
 {
-	if (g_keywords.empty() && g_blackList.empty())
+	if (g_keywords.empty() && g_imageFeatures.empty() && g_blackList.empty())
 	{
 		AfxMessageBox(_T("至少设置一个违规内容或屏蔽用户！"), MB_ICONERROR);
 		OnBnClickedButton5();
