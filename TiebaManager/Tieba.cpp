@@ -385,7 +385,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			}
 		}
 		// …®√Ë÷˜Ã‚Õº∆¨
-		BOOL scanImage = !g_imageFeatures.empty();
+		BOOL scanImage = !g_images.empty();
 		if (g_onlyScanTitle && scanImage)
 		{
 			scanImage = FALSE;

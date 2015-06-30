@@ -32,11 +32,11 @@ BOOL	g_delete;			// 删帖
 int		g_threadCount;		// 线程数
 CString	g_banReason;		// 封号原因
 CString g_imageDir;			// 违规图片目录
-vector<RegexText>		g_keywords;		// 违规内容
-vector<RegexText>		g_blackList;	// 屏蔽用户
-vector<CString>			g_whiteList;	// 信任用户
-vector<RegexText>		g_whiteContent;	// 信任内容
-vector<ImageFeature>	g_imageFeatures; // 图片特征
+vector<RegexText>	g_keywords;		// 违规内容
+vector<RegexText>	g_blackList;	// 屏蔽用户
+vector<CString>		g_whiteList;	// 信任用户
+vector<RegexText>	g_whiteContent;	// 信任内容
+vector<NameImage>	g_images;		// 违规图片
 
 CCriticalSection g_optionsLock; // 判断违规用的临界区
 
@@ -115,16 +115,15 @@ void ReadOptions(LPCTSTR path)
 		g_threadCount = 2;
 	ReadText(f, g_banReason);										// 封禁原因
 	if (!ReadText(f, g_imageDir))									// 违规图片目录
-		g_imageFeatures.clear();
+		g_images.clear();
 	else
-		ReadFeatures(g_imageDir + FEATURE_PATH, g_imageFeatures);
+		ReadImages(g_imageDir);										// 违规图片
 
 	gzclose(f);
 	return;
 
 UseDefaultOptions:
 	g_keywords.clear();			// 违规内容
-	g_imageFeatures.clear();	// 违规图片特征
 	g_blackList.clear();		// 屏蔽用户
 	g_whiteList.clear();		// 信任用户
 	g_whiteContent.clear();		// 信任内容
@@ -141,7 +140,7 @@ UseDefaultOptions:
 	g_threadCount = 2;			// 线程数
 	g_banReason = _T("");		// 封禁原因
 	g_imageDir = _T("");		// 违规图片目录
-	g_imageFeatures.clear();
+	g_images.clear();			// 违规图片
 }
 
 // 写方案

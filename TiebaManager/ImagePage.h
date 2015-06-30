@@ -31,4 +31,6 @@ public:
 	CEdit m_dirEdit;
 	CButton m_browseButton;
 	CButton m_calcFeatureButton;
+
+	BOOL m_updateImage;
 };

@@ -4,7 +4,7 @@ using std::vector;
 #include <regex>
 using std::wregex;
 #include <zlib.h>
-struct ImageFeature;
+struct NameImage;
 
 
 
@@ -46,7 +46,7 @@ extern vector<RegexText>	g_keywords;		// 违规内容
 extern vector<RegexText>	g_blackList;	// 屏蔽用户
 extern vector<CString>		g_whiteList;	// 信任用户
 extern vector<RegexText>	g_whiteContent;	// 信任内容
-extern vector<ImageFeature>	g_imageFeatures; // 图片特征
+extern vector<NameImage>	g_images;		// 违规图片
 
 extern CCriticalSection g_optionsLock; // 判断违规用的临界区
 

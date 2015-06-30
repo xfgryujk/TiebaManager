@@ -325,7 +325,8 @@ void CSettingDlg::ApplyOptionsInDlg()
 	ApplyRegexTexts(g_whiteContent, m_whiteContentPage.m_list);
 
 	// 违规图片
-	ReadFeatures(g_imageDir + FEATURE_PATH, g_imageFeatures);
+	if (m_imagePage.m_updateImage)
+		ReadImages(g_imageDir);
 	g_optionsLock.Unlock();
 
 	if (m_clearScanCache)
@@ -405,6 +406,9 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	// 信任内容
 	ReadRegexTexts(f, m_whiteContentPage.m_list);
 
+	// 违规图片
+	m_imagePage.m_updateImage = TRUE;
+
 	BOOL boolBuf;
 	float floatBuf;
 	gzread(f, &intBuf, sizeof(int));						// 扫描间隔
@@ -454,6 +458,7 @@ UseDefaultOptions:
 	m_blackListPage.m_list.ResetContent();					// 屏蔽用户
 	m_whiteListPage.m_list.ResetContent();					// 信任用户
 	m_whiteContentPage.m_list.ResetContent();				// 信任内容
+	m_imagePage.m_updateImage = TRUE;						// 违规图片
 	m_prefPage.m_scanIntervalEdit.SetWindowText(_T("5"));	// 扫描间隔
 	m_prefPage.m_banIDCheck.SetCheck(FALSE);				// 封ID
 	m_prefPage.m_banDurationCombo.SetCurSel(0);				// 封禁时长

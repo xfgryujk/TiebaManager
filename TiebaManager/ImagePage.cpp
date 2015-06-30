@@ -15,7 +15,7 @@ IMPLEMENT_DYNAMIC(CImagePage, CDialog)
 CImagePage::CImagePage(CWnd* pParent /*=NULL*/)
 	: CDialog(CImagePage::IDD, pParent)
 {
-
+	m_updateImage = FALSE;
 }
 
 #pragma region MFC
@@ -79,38 +79,9 @@ void CImagePage::OnBnClickedButton1()
 	}
 }
 
-// 计算特征值
+// 更新图片
 void CImagePage::OnBnClickedButton2()
 {
-	vector<CString> imagePath;
-
-	CString dir;
-	m_dirEdit.GetWindowText(dir);
-	if (dir == _T(""))
-		return;
-	CFileFind fileFind;
-	static const TCHAR* IMG_EXT[] = { _T("\\*.jpg"), _T("\\*.png"), _T("\\*.jpeg"), _T("\\*.bmp") };
-	for (int i = 0; i < _countof(IMG_EXT); i++)
-	{
-		BOOL flag = fileFind.FindFile(dir + IMG_EXT[i]);
-		while (flag)
-		{
-			flag = fileFind.FindNextFile();
-			imagePath.push_back(fileFind.GetFilePath());
-		}
-	}
-
-	vector<ImageFeature> feature(imagePath.size());
-	for (UINT i = 0; i < imagePath.size(); i++)
-	{
-		LPTSTR pos = StrRChr(imagePath[i], NULL, _T('\\'));
-		feature[i].name = (pos == NULL ? imagePath[i] : pos + 1);
-		CalculateFeature(imagePath[i], feature[i].feature);
-	}
-	WriteFeatures(dir + FEATURE_PATH, feature);
-
-	CString msg;
-	msg.Format(_T("已保存%d张图片"), feature.size());
-	AfxMessageBox(msg);
+	m_updateImage = TRUE;
 	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 }

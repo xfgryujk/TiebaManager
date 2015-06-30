@@ -27,6 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Update.h"
 #include "Tieba.h"
 #include "LoginDlg.h"
+#include "ScanImage.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -235,6 +236,8 @@ void CTiebaManagerDlg::OnDestroy()
 	WritePrivateProfileString(_T("Setting"), _T("UserName"), g_currentUser, ALL_PROFILE_PATH);
 
 	g_stopScanFlag = TRUE; // 实际上线程不会返回？
+
+	g_images.clear(); // 不知道为什么不加这个Release版关闭后会崩溃...
 }
 
 #pragma region UI
@@ -689,7 +692,7 @@ error:
 // 开始
 void CTiebaManagerDlg::OnBnClickedButton2()
 {
-	if (g_keywords.empty() && g_imageFeatures.empty() && g_blackList.empty())
+	if (g_keywords.empty() && g_images.empty() && g_blackList.empty())
 	{
 		AfxMessageBox(_T("至少设置一个违规内容或屏蔽用户！"), MB_ICONERROR);
 		OnBnClickedButton5();
