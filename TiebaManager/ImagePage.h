@@ -25,12 +25,14 @@ public:
 	afx_msg void OnClose();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
+	afx_msg void OnEnKillfocusEdit5();
 
 
 public:
 	CEdit m_dirEdit;
 	CButton m_browseButton;
-	CButton m_calcFeatureButton;
+	CButton m_updateButton;
+	CEdit m_thresholdEdit;
 
 	BOOL m_updateImage;
 };

@@ -244,6 +244,8 @@ void CSettingDlg::ShowCurrentOptions()
 	m_prefPage.m_threadCountEdit.SetWindowText(tmp);		// 线程数
 	m_prefPage.m_banReasonEdit.SetWindowText(g_banReason);	// 封禁原因
 	m_imagePage.m_dirEdit.SetWindowText(g_imageDir);		// 违规图片目录
+	tmp.Format(_T("%lf"), g_SSIMThreshold);
+	m_imagePage.m_thresholdEdit.SetWindowText(tmp);			// 阈值
 
 	// 违规内容
 	m_keywordsPage.m_list.ResetContent();
@@ -305,6 +307,8 @@ void CSettingDlg::ApplyOptionsInDlg()
 	m_prefPage.m_banReasonEdit.GetWindowText(strBuf);
 	g_banReason = strBuf;										// 封禁原因
 	m_imagePage.m_dirEdit.GetWindowText(g_imageDir);			// 违规图片目录
+	m_imagePage.m_thresholdEdit.GetWindowText(strBuf);
+	g_SSIMThreshold = _ttof(strBuf);							// 阈值
 
 	g_optionsLock.Lock();
 	// 违规内容
@@ -411,6 +415,7 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 
 	BOOL boolBuf;
 	float floatBuf;
+	double doubleBuf;
 	gzread(f, &intBuf, sizeof(int));						// 扫描间隔
 	strBuf.Format(_T("%d"), intBuf);
 	m_prefPage.m_scanIntervalEdit.SetWindowText(strBuf);
@@ -449,6 +454,13 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	m_prefPage.m_banReasonEdit.SetWindowText(strBuf);
 	ReadText(f, strBuf);									// 违规图片目录
 	m_imagePage.m_dirEdit.SetWindowText(strBuf);
+	if (gzread(f, &doubleBuf, sizeof(double)) == sizeof(double))	// 阈值
+	{
+		strBuf.Format(_T("%lf"), doubleBuf);
+		m_imagePage.m_thresholdEdit.SetWindowText(strBuf);
+	}
+	else
+		m_imagePage.m_thresholdEdit.SetWindowText(_T("2.43"));
 
 	gzclose(f);
 	return;
@@ -472,6 +484,7 @@ UseDefaultOptions:
 	m_prefPage.m_threadCountEdit.SetWindowText(_T("2"));	// 线程数
 	m_prefPage.m_banReasonEdit.SetWindowText(_T(""));		// 封禁原因
 	m_imagePage.m_dirEdit.SetWindowText(_T(""));			// 违规图片目录
+	m_imagePage.m_thresholdEdit.SetWindowText(_T("2.43"));	// 阈值
 }
 
 // 把对话框中的设置写入文件
@@ -506,6 +519,7 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	int intBuf;
 	BOOL boolBuf;
 	float floatBuf;
+	double doubleBuf;
 	m_prefPage.m_scanIntervalEdit.GetWindowText(strBuf);
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 扫描间隔
 	gzwrite(f, &(boolBuf = m_prefPage.m_banIDCheck.GetCheck()), sizeof(BOOL));		// 封ID
@@ -529,6 +543,8 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	WriteText(f, strBuf);															// 封禁原因
 	m_imagePage.m_dirEdit.GetWindowText(strBuf);
 	WriteText(f, strBuf);															// 违规图片目录
+	m_imagePage.m_thresholdEdit.GetWindowText(strBuf);
+	gzwrite(f, &(doubleBuf = _ttof(strBuf)), sizeof(double));						// 阈值
 
 	gzclose(f);
 }

@@ -31,7 +31,8 @@ BOOL	g_briefLog;			// 只输出删帖封号
 BOOL	g_delete;			// 删帖
 int		g_threadCount;		// 线程数
 CString	g_banReason;		// 封号原因
-CString g_imageDir;			// 违规图片目录
+CString	g_imageDir;			// 违规图片目录
+double	g_SSIMThreshold;	// 阈值
 vector<RegexText>	g_keywords;		// 违规内容
 vector<RegexText>	g_blackList;	// 屏蔽用户
 vector<CString>		g_whiteList;	// 信任用户
@@ -118,6 +119,8 @@ void ReadOptions(LPCTSTR path)
 		g_images.clear();
 	else
 		ReadImages(g_imageDir);										// 违规图片
+	if (gzread(f, &g_SSIMThreshold, sizeof(double)) != sizeof(double))	// 阈值
+		g_SSIMThreshold = 2.43;
 
 	gzclose(f);
 	return;
@@ -141,6 +144,7 @@ UseDefaultOptions:
 	g_banReason = _T("");		// 封禁原因
 	g_imageDir = _T("");		// 违规图片目录
 	g_images.clear();			// 违规图片
+	g_SSIMThreshold = 2.43;		// 阈值
 }
 
 // 写方案
@@ -184,6 +188,7 @@ void WriteOptions(LPCTSTR path)
 	gzwrite(f, &g_threadCount, sizeof(int));		// 线程数
 	WriteText(f, g_banReason);						// 封禁原因
 	WriteText(f, g_imageDir);						// 违规图片目录
+	gzwrite(f, &g_SSIMThreshold, sizeof(double));	// 阈值
 
 	gzclose(f);
 }

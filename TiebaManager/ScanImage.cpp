@@ -176,7 +176,7 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 		for (const NameImage i : g_images)
 		{
 			double mssim = getMSSIM(image, i.img);
-			if (mssim > 2.43)
+			if (mssim > g_SSIMThreshold)
 			{
 				msg.Format(_T("<font color=red> 触发违规图片 </font>%s<font color=red> 相似度%.3lf</font>"),
 					i.name, mssim);
