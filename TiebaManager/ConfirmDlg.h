@@ -1,6 +1,7 @@
 #pragma once
 #include "afxwin.h"
 #include "Tieba.h"
+#include "ImageViewDlg.h"
 
 
 // CConfirmDlg ¶Ô»°¿ò
@@ -31,6 +32,8 @@ public:
 	CStatic m_static;
 	CButton m_yesButton;
 	CButton m_noButton;
+
+	CImageViewDlg* m_imageViewDlg;
 
 protected:
 	Operation* m_operation;

@@ -25,6 +25,8 @@ CExplorerDlg::CExplorerDlg(CWnd* pParent /*=NULL*/)
 	m_pages[i++] = &m_exploreThreadPage;
 	m_pages[i++] = &m_explorePostPage;
 	m_pages[i++] = &m_exploreLzlPage;
+
+	m_imageViewDlg = NULL;
 }
 
 #pragma region MFC
@@ -255,4 +257,15 @@ void CExplorerDlg::OnBnClickedButton3()
 		url = _T("http://tieba.baidu.com/p/") + m_explorePostPage.m_tid + _T("?pn=") + page;
 	}
 	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
+}
+
+// 打开浏览图片对话框
+void CExplorerDlg::ViewImages(vector<CString>* img)
+{
+	if (m_imageViewDlg == NULL)
+	{
+		m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);
+		m_imageViewDlg->Create(IDD_IMAGE_VIEW_DIALOG, this);
+	}
+	m_imageViewDlg->SetImages(img);
 }

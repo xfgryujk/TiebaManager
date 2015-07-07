@@ -118,6 +118,7 @@
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="BlackListPage.h" />
+    <ClInclude Include="ImageViewDlg.h" />
     <ClInclude Include="ScanImage.h" />
     <ClInclude Include="ConfirmDlg.h" />
     <ClInclude Include="ExploreLzlPage.h" />
@@ -150,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="BlackListPage.cpp" />
+    <ClCompile Include="ImageViewDlg.cpp" />
     <ClCompile Include="ScanImage.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
     <ClCompile Include="ExploreLzlPage.cpp" />

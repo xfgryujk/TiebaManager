@@ -8,6 +8,7 @@
 #include "Tieba.h"
 #include "ExplorerDlg.h"
 #include "ExploreLzlPage.h"
+#include "ScanImage.h"
 
 
 // CExplorePostPage ¶Ô»°¿ò
@@ -104,8 +105,14 @@ void CExplorePostPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
 	
 	if (pNMLV->iItem != LB_ERR)
-		((CExplorerDlg*)GetParent()->GetParent())->m_edit.SetWindowText(m_posts[pNMLV->iItem].content + 
+	{
+		CExplorerDlg* explorerDlg = (CExplorerDlg*)GetParent()->GetParent();
+		explorerDlg->m_edit.SetWindowText(m_posts[pNMLV->iItem].content + 
 			_T("\r\n\r\n") + m_posts[pNMLV->iItem].author);
+		vector<CString>* img = new vector<CString>();
+		GetPostImage(m_posts[pNMLV->iItem].content, *img);
+		explorerDlg->ViewImages(img);
+	}
 
 	*pResult = 0;
 }

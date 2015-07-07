@@ -7,6 +7,7 @@
 #include "afxdialogex.h"
 #include "Tieba.h"
 #include "ExplorerDlg.h"
+#include "ScanImage.h"
 
 
 // CExploreThreadPage ¶Ô»°¿ò
@@ -96,8 +97,14 @@ void CExploreThreadPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
 	
 	if (pNMLV->iItem != LB_ERR)
-		((CExplorerDlg*)GetParent()->GetParent())->m_edit.SetWindowText(m_threads[pNMLV->iItem].title
-			+ _T("\r\n") + m_threads[pNMLV->iItem].preview + _T("\r\n\r\n") + m_threads[pNMLV->iItem].author);
+	{
+		CExplorerDlg* explorerDlg = (CExplorerDlg*)GetParent()->GetParent();
+		explorerDlg->m_edit.SetWindowText(m_threads[pNMLV->iItem].title + _T("\r\n") 
+			+ m_threads[pNMLV->iItem].preview + _T("\r\n\r\n") + m_threads[pNMLV->iItem].author);
+		vector<CString>* img = new vector<CString>();
+		GetThreadImage(m_threads[pNMLV->iItem].preview, *img);
+		explorerDlg->ViewImages(img);
+	}
 
 	*pResult = 0;
 }

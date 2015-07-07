@@ -313,7 +313,7 @@ static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg, CComPtr<
 			break;
 		__int64 tid = _ttoi64(thread.tid);
 		if (g_ignoredTID.find(tid) == g_ignoredTID.end()
-			&& CheckImageIllegal(thread, msg))
+			&& CheckImageIllegal(thread.preview, thread.author, GetThreadImage, msg))
 		{
 			AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
 				thread.title, _T("1"), _T(""), thread.author);
@@ -589,7 +589,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			return FALSE;
 		__int64 pid = _ttoi64(post.pid);
 		if (g_ignoredPID.find(pid) == g_ignoredPID.end()
-			&& CheckImageIllegal(post, msg))
+			&& CheckImageIllegal(post.content, post.author, GetPostImage, msg))
 		{
 			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author);

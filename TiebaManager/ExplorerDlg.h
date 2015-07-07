@@ -4,6 +4,7 @@
 #include "ExploreThreadPage.h"
 #include "ExplorePostPage.h"
 #include "ExploreLzlPage.h"
+#include "ImageViewDlg.h"
 
 
 // CExplorerDlg ¶Ô»°¿ò
@@ -36,6 +37,8 @@ public:
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButton3();
 
+	void ViewImages(vector<CString>* img);
+
 
 public:
 	CTabCtrl m_tab;
@@ -46,6 +49,8 @@ public:
 	CButton m_deleteButton;
 	CButton m_banButton;
 	CButton m_explorerButton;
+
+	CImageViewDlg* m_imageViewDlg;
 
 protected:
 	CExplorerPage* m_pages[3];

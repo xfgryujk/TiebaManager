@@ -94,6 +94,6 @@ void CImagePage::OnEnKillfocusEdit5()
 	CString tmp;
 	m_thresholdEdit.GetWindowText(tmp);
 	double threshold = _ttof(tmp);
-	if (threshold < 2.0 || threshold > 3.0)
+	if (threshold < 1.0 || threshold > 3.0)
 		m_thresholdEdit.SetWindowText(_T("2.43"));
 }

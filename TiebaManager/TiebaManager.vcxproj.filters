@@ -129,6 +129,9 @@
     <ClInclude Include="ScanImage.h">
       <Filter>头文件\Global</Filter>
     </ClInclude>
+    <ClInclude Include="ImageViewDlg.h">
+      <Filter>头文件\Dialog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -214,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="ScanImage.cpp">
       <Filter>源文件\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageViewDlg.cpp">
+      <Filter>源文件\Dialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

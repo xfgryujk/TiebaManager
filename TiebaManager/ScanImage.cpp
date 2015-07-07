@@ -8,9 +8,9 @@ using std::wregex;
 
 
 // 1是图片地址
-const wregex THREAD_IMG_REG(_T("<img.*b?pic=\"(.*?)\".*?/>"));
+const wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
 // 1是图片地址
-const wregex POST_IMG_REG(_T("<img class=\"BDE_Image\".*?src=\"(.*?)\".*?>"));
+const wregex POST_IMG_REG(_T("<img .*?class=\"BDE_Image\".*?src=\"(.*?)\".*?>"));
 
 
 // 从目录读取图片到g_images
@@ -50,21 +50,43 @@ void ReadImages(const CString& dir)
 
 
 // 从主题预览取图片地址
-void GetImage(const ThreadInfo& thread, vector<CString>& img)
+void GetThreadImage(const CString& preview, vector<CString>& img)
 {
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)thread.preview, (LPCTSTR)thread.preview
-		+ thread.preview.GetLength(), THREAD_IMG_REG), end; it != end; it++)
+	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)preview, (LPCTSTR)preview
+		+ preview.GetLength(), THREAD_IMG_REG), end; it != end; it++)
 		img.push_back((*it)[1].str().c_str());
 }
 
 // 从帖子取图片地址
-void GetImage(const PostInfo& post, vector<CString>& img)
+void GetPostImage(const CString& content, vector<CString>& img)
 {
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)post.content, (LPCTSTR)post.content
-		+ post.content.GetLength(), POST_IMG_REG), end; it != end; it++)
+	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)content, (LPCTSTR)content
+		+ content.GetLength(), POST_IMG_REG), end; it != end; it++)
 		img.push_back((*it)[1].str().c_str());
 }
 
+
+// 检查图片违规1，检测信任用户、获取图片地址
+BOOL CheckImageIllegal(const CString& content, const CString& author, void(*GetImage)(const CString& content,
+	vector<CString>& img), CString& msg)
+{
+	if (g_images.empty())
+		return FALSE;
+
+	g_optionsLock.Lock();
+	// 信任用户
+	for (const CString& whiteList : g_whiteList)
+	if (author == whiteList)
+	{
+		g_optionsLock.Unlock();
+		return FALSE;
+	}
+	g_optionsLock.Unlock();
+
+	vector<CString> imgs;
+	GetImage(content, imgs);
+	return DoCheckImageIllegal(imgs, msg);
+}
 
 // SSIM算法比较图片
 static double getMSSIM(const Mat& i1, const Mat& i2)
@@ -135,7 +157,7 @@ static double getMSSIM(const Mat& i1, const Mat& i2)
 	return mssim.val[0] + mssim.val[1] + mssim.val[2];
 }
 
-// 检查图片违规
+// 检查图片违规2，下载图片、比较图片
 BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 {
 	for (const CString& img : imgs)

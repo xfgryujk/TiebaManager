@@ -20,27 +20,9 @@ struct NameImage
 
 void ReadImages(const CString& dir);
 
-void GetImage(const ThreadInfo& thread, vector<CString>& img);
-void GetImage(const PostInfo& post, vector<CString>& img);
+void GetThreadImage(const CString& preview, vector<CString>& img);
+void GetPostImage(const CString& content, vector<CString>& img);
 
+BOOL CheckImageIllegal(const CString& content, const CString& author, void(*GetImage)(const CString& content,
+	vector<CString>& img), CString& msg);
 BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg);
-template<typename InfoType>
-BOOL CheckImageIllegal(InfoType content, CString& msg)
-{
-	if (g_images.empty())
-		return FALSE;
-
-	g_optionsLock.Lock();
-	// 信任用户
-	for (const CString& whiteList : g_whiteList)
-		if (content.author == whiteList)
-		{
-			g_optionsLock.Unlock();
-			return FALSE;
-		}
-	g_optionsLock.Unlock();
-
-	vector<CString> imgs;
-	GetImage(content, imgs);
-	return DoCheckImageIllegal(imgs, msg);
-}

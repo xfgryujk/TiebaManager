@@ -5,6 +5,7 @@
 #include "TiebaManager.h"
 #include "ConfirmDlg.h"
 #include "afxdialogex.h"
+#include "ScanImage.h"
 
 
 // CConfirmDlg 对话框
@@ -84,6 +85,23 @@ BOOL CConfirmDlg::OnInitDialog()
 	{
 		SetWindowText(m_operation->title);
 		m_contentEdit.SetWindowText(m_operation->msg + _T("\r\n\r\n作者：") + m_operation->author);
+
+		if (m_operation->object != TBOBJ_LZL)
+		{
+			vector<CString>* img = new vector<CString>();
+			if (m_operation->object == TBOBJ_THREAD)
+				GetThreadImage(m_operation->msg, *img);
+			else //if (m_operation->object == TBOBJ_POST)
+				GetPostImage(m_operation->msg, *img);
+			if (!img->empty())
+			{
+				m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);
+				m_imageViewDlg->Create(IDD_IMAGE_VIEW_DIALOG, this);
+				m_imageViewDlg->SetImages(img);
+			}
+			else
+				delete img;
+		}
 	}
 	MessageBeep(MB_ICONQUESTION);
 
