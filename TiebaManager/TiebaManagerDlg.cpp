@@ -602,7 +602,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_forumNameEdit.EnableWindow(FALSE);
 	m_confirmButton.EnableWindow(FALSE);
 	m_stateStatic.SetWindowText(_T("验证贴吧中"));
-	CString src, src2, userName;
+	CString src, src2, forumData, userName;
 	std::wcmatch res;
 
 
@@ -614,7 +614,9 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	}
 
 	// 采集贴吧信息
-	if (!std::regex_search((LPCTSTR)src, res, FORUM_ID_NAME_REG))
+	forumData = GetStringBetween(src, _T("PageData.forum"), _T("}"));
+	forumData.Replace(_T("\r\n"), _T(""));
+	if (!std::regex_search((LPCTSTR)forumData, res, FORUM_ID_NAME_REG))
 	{
 		WriteString(src, _T("forum.txt"));
 		AfxMessageBox(_T("贴吧不存在！(也可能是度娘抽了...)"), MB_ICONERROR);
@@ -629,7 +631,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	g_encodedForumName = EncodeURI(g_forumName);
 
 	// 取用户名
-	if (std::regex_search((LPCTSTR)src, res, USER_NAME_REG))
+	if (std::regex_search((LPCTSTR)GetStringBetween(src, _T("PageData.user"), _T("}")), res, USER_NAME_REG))
 		userName = JSUnescape(res[3].str().c_str());
 	if (userName == _T(""))
 	{
@@ -653,7 +655,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	int pos3 = src2.Find(_T(">图片小编<span"));
 	if (/*pos2 == -1 || */pos2 <= pos1 || (pos3 != -1 && pos2 >= pos3))
 	{
-		WriteString(src2, _T("admin.txt"));
+		WriteString(src2 + _T("\r\n") + g_cookie, _T("admin.txt"));
 		AfxMessageBox(_T("您不是吧主或小吧主！"), MB_ICONERROR);
 		SetWindowText(_T("贴吧管理器"));
 		goto error;
