@@ -631,7 +631,8 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	g_encodedForumName = EncodeURI(g_forumName);
 
 	// 取用户名
-	if (std::regex_search((LPCTSTR)GetStringBetween(src, _T("PageData.user"), _T("}")), res, USER_NAME_REG))
+	if (std::regex_search((LPCTSTR)GetStringBetween(src, _T("PageData.user"), _T("}")), res, USER_NAME_REG)
+		|| std::regex_search((LPCTSTR)GetStringBetween(src, _T("PageData"), _T("}")), res, USER_NAME_REG))
 		userName = JSUnescape(res[3].str().c_str());
 	if (userName == _T(""))
 	{
