@@ -27,6 +27,8 @@ const wregex FORUM_ID_NAME_REG(_T("id('|\")?:\\s*('|\")?(\\d+)('|\")?,\
 const wregex USER_NAME_REG(_T("name('|\")?:\\s*('|\")(.*?)('|\")"));
 const TCHAR _TBS_LEFT[] = _T("PageData.tbs = \"");
 const TCHAR _TBS_RIGHT[] = _T("\"");
+// 3ÊÇtbs
+const wregex TBS_REG(_T("tbs('|\")?:\\s*('|\")(.*?)('|\")"));
 #pragma endregion
 
 

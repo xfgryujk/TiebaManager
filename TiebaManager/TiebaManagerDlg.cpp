@@ -674,6 +674,15 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 
 	// 取tbs(口令号)
 	g_tbs = GetStringBetween(src, _TBS_LEFT, _TBS_RIGHT);
+	if (g_tbs == _T("") && std::regex_search((LPCTSTR)GetStringBetween(src, _T("PageData"), _T("}")), res, TBS_REG))
+		g_tbs = JSUnescape(res[3].str().c_str());
+	if (g_tbs == _T(""))
+	{
+		WriteString(src, _T("forum.txt"));
+		AfxMessageBox(_T("获取口令号失败！"), MB_ICONERROR);
+		SetWindowText(_T("贴吧管理器"));
+		goto error;
+	}
 
 
 	m_stateStatic.SetWindowText(_T("待机中"));
