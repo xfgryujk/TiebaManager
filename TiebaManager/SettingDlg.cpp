@@ -330,7 +330,11 @@ void CSettingDlg::ApplyOptionsInDlg()
 
 	// Î¥¹æÍ¼Æ¬
 	if (m_imagePage.m_updateImage)
+	{
+		g_leagalImage.clear();
+		g_illegalImage.clear();
 		ReadImages(g_imageDir);
+	}
 	g_optionsLock.Unlock();
 
 	if (m_clearScanCache)

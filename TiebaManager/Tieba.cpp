@@ -807,6 +807,17 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 	return 0;
 }
 
+// 取错误代码
+static inline CString GetOperationErrorCode(const CString& src)
+{
+	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
+		return _T("-1");
+	CString code = GetStringBetween(src, _T("no\":"), _T(","));
+	if (code != _T("0"))
+		WriteString(src, _T("operation.txt"));
+	return code;
+}
+
 // 封ID，返回错误代码
 CString BanID(LPCTSTR userName, LPCTSTR pid)
 {
@@ -814,9 +825,7 @@ CString BanID(LPCTSTR userName, LPCTSTR pid)
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&pid%%5B%%5D=%s&reason=%s"), 
 		g_banDuration, g_forumID, g_tbs, EncodeURI(userName), pid, g_banReason != _T("") ? g_banReason : _T(" "));
 	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
-	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
-		return _T("-1");
-	return GetStringBetween(src, _T("no\":"), _T(","));
+	return GetOperationErrorCode(src);
 }
 
 // 删主题，返回错误代码
@@ -824,9 +833,7 @@ CString DeleteThread(const CString& tid)
 {
 	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/thread/delete"), _T("kw=") + g_encodedForumName
 		+ _T("&fid=") + g_forumID + _T("&tid=") + tid + _T("&ie=utf-8&tbs=") + g_tbs);
-	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
-		return _T("-1");
-	return GetStringBetween(src, _T("no\":"), _T(","));
+	return GetOperationErrorCode(src);
 }
 
 // 删帖子，返回错误代码
@@ -836,9 +843,7 @@ CString DeletePost(LPCTSTR tid, LPCTSTR pid)
 	data.Format(_T("commit_fr=pb&ie=utf-8&tbs=%s&kw=%s&fid=%s&tid=%s&is_vipdel=0&pid=%s&is_finf=false"), 
 		g_tbs, g_encodedForumName, g_forumID, tid, pid);
 	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data);
-	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
-		return _T("-1");
-	return GetStringBetween(src, _T("no\":"), _T(","));
+	return GetOperationErrorCode(src);
 }
 
 // 删楼中楼，返回错误代码
@@ -848,9 +853,7 @@ CString DeleteLZL(LPCTSTR tid, LPCTSTR lzlid)
 	data.Format(_T("ie=utf-8&tbs=%s&kw=%s&fid=%s&tid=%s&pid=%s&is_finf=1"),
 		g_tbs, g_encodedForumName, g_forumID, tid, lzlid);
 	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data);
-	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
-		return _T("-1");
-	return GetStringBetween(src, _T("no\":"), _T(","));
+	return GetOperationErrorCode(src);
 }
 
 // 取错误文本

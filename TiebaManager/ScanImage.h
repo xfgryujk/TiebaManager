@@ -2,10 +2,16 @@
 #include <zlib.h>
 #include <vector>
 using std::vector;
+#include <set>
+using std::set;
 #include <opencv2\core\mat.hpp>
 using cv::Mat;
 #include "Tieba.h"
 #include "Global.h"
+
+
+extern set<CString> g_leagalImage; // 已检查不违规的图片
+extern set<CString> g_illegalImage; // 已检查违规的图片
 
 
 const CString IMG_CACHE_PATH = _T("ImageCache\\");

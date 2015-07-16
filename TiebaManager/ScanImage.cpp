@@ -7,6 +7,10 @@
 using std::wregex;
 
 
+set<CString> g_leagalImage; // 已检查不违规的图片
+set<CString> g_illegalImage; // 已检查违规的图片
+
+
 // 1是图片地址
 const wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
 // 1是图片地址
@@ -165,6 +169,12 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 		LPTSTR pos = StrRChr(img, NULL, _T('/'));
 		CString imgName = (pos == NULL ? img : pos + 1);
 
+		// 检查缓存结果
+		if (g_leagalImage.find(imgName) != g_leagalImage.end())
+			continue;
+		if (g_illegalImage.find(imgName) != g_illegalImage.end())
+			return TRUE;
+
 		// 读取图片
 		Mat image;
 		if (PathFileExists(IMG_CACHE_PATH + imgName))
@@ -202,10 +212,12 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 			{
 				msg.Format(_T("<font color=red> 触发违规图片 </font>%s<font color=red> 相似度%.3lf</font>"),
 					i.name, mssim);
+				g_illegalImage.insert(imgName);
 				g_optionsLock.Unlock();
 				return TRUE;
 			}
 		}
+		g_leagalImage.insert(imgName);
 		g_optionsLock.Unlock();
 	}
 

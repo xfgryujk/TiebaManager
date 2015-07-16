@@ -119,8 +119,13 @@ void CUsersPage::OnBnClickedButton1()
 		WriteText(f, loginDlg.m_cookie);
 		gzclose(f);
 	}
-	if (m_list.FindStringExact(-1, loginDlg.m_userName) == LB_ERR)
-		m_list.SetCurSel(m_list.AddString(loginDlg.m_userName));
+
+	int index = m_list.FindStringExact(-1, loginDlg.m_userName);
+	if (index == LB_ERR)
+		index = m_list.AddString(loginDlg.m_userName);
+	m_list.SetCurSel(index);
+	if (g_currentUser == _T("[NULL]"))
+		OnBnClickedButton3();
 }
 
 // 删除
@@ -131,6 +136,11 @@ void CUsersPage::OnBnClickedButton2()
 		return;
 	CString name;
 	m_list.GetText(index, name);
+	if (name == g_currentUser)
+	{
+		AfxMessageBox(_T("不能删除当前账号！"), MB_ICONERROR);
+		return;
+	}
 	CString path = USERS_PATH + name + _T("\\");
 	if (!DeleteFile(path + _T("ck.tb")) || !DeleteFile(path + _T("cache.tb")))
 	{
