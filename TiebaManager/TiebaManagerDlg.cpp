@@ -602,7 +602,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_forumNameEdit.EnableWindow(FALSE);
 	m_confirmButton.EnableWindow(FALSE);
 	m_stateStatic.SetWindowText(_T("验证贴吧中"));
-	CString src, src2, forumData, userName;
+	CString src, src2, tmp, userName;
 	std::wcmatch res;
 
 
@@ -614,9 +614,9 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	}
 
 	// 采集贴吧信息
-	forumData = GetStringBetween(src, _T("PageData.forum"), _T("}"));
-	forumData.Replace(_T("\r\n"), _T(""));
-	if (!std::regex_search((LPCTSTR)forumData, res, FORUM_ID_NAME_REG))
+	tmp = GetStringBetween(src, _T("PageData.forum"), _T("}"));
+	tmp.Replace(_T("\r\n"), _T(""));
+	if (!std::regex_search((LPCTSTR)tmp, res, FORUM_ID_NAME_REG))
 	{
 		WriteString(src, _T("forum.txt"));
 		AfxMessageBox(_T("贴吧不存在！(也可能是度娘抽了...)"), MB_ICONERROR);
@@ -631,8 +631,8 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	g_encodedForumName = EncodeURI(g_forumName);
 
 	// 取用户名
-	if (std::regex_search((LPCTSTR)GetStringBetween(src, _T("PageData.user"), _T("}")), res, USER_NAME_REG)
-		|| std::regex_search((LPCTSTR)GetStringBetween(src, _T("PageData"), _T("}")), res, USER_NAME_REG))
+	if (std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData.user"), _T("}"))), res, USER_NAME_REG)
+		|| std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData"), _T("}"))), res, USER_NAME_REG))
 		userName = JSUnescape(res[3].str().c_str());
 	if (userName == _T(""))
 	{
@@ -675,7 +675,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 
 	// 取tbs(口令号)
 	g_tbs = GetStringBetween(src, _TBS_LEFT, _TBS_RIGHT);
-	if (g_tbs == _T("") && std::regex_search((LPCTSTR)GetStringBetween(src, _T("PageData"), _T("}")), res, TBS_REG))
+	if (g_tbs == _T("") && std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData"), _T("}"))), res, TBS_REG))
 		g_tbs = JSUnescape(res[3].str().c_str());
 	if (g_tbs == _T(""))
 	{

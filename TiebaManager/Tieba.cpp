@@ -88,7 +88,7 @@ const wregex LZL_CONTENT_REG(_T("\"comment_id\":\"(\\d+)\".*?\"username\":\"(.*?
 #pragma endregion
 
 
-volatile BOOL g_stopScanFlag;
+volatile BOOL g_stopScanFlag = FALSE;
 CWinThread* g_scanThread = NULL;
 set<__int64> g_initIgnoredTID; // 不删的主题ID(手动忽略)，要写入文件
 set<__int64> g_initIgnoredPID; // 不删的帖子ID(手动忽略)，要写入文件
@@ -442,6 +442,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			Sleep(100);
 		}
 	}
+	g_stopScanFlag = FALSE;
 
 	if (!g_briefLog)
 		dlg->Log(_T("<font color=green>扫描结束</font>"), pDocument);
