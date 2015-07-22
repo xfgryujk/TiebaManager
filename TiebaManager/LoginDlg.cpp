@@ -168,6 +168,8 @@ void CLoginDlg::OnOK()
 	{
 		WriteString(result, _T("login.txt"));
 		AfxMessageBox(_T("登录失败！"), MB_ICONERROR);
+		if (userName.Left(2) == _T("13"))
+			AfxMessageBox(_T("(不能用手机号哦)"), MB_ICONINFORMATION);
 		goto error;
 	}
 
@@ -211,6 +213,7 @@ void CLoginDlg::OnBnClickedButton3()
 		return;
 	}
 
+	AfxMessageBox(_T("登录完毕，不要在IE退出账号以免cookie失效，可以直接清除cookie"), MB_ICONINFORMATION);
 	EndDialog(IDOK);
 }
 

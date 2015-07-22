@@ -656,7 +656,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	int pos3 = src2.Find(_T(">图片小编<span"));
 	if (/*pos2 == -1 || */pos2 <= pos1 || (pos3 != -1 && pos2 >= pos3))
 	{
-		WriteString(src2 + _T("\r\n") + g_cookie, _T("admin.txt"));
+		WriteString(src2, _T("admin.txt"));
 		AfxMessageBox(_T("您不是吧主或小吧主！"), MB_ICONERROR);
 		SetWindowText(_T("贴吧管理器"));
 		goto error;

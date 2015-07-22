@@ -80,6 +80,8 @@ const TCHAR POST_AUTHOR_LEFT[] = _T("&quot;user_name&quot;:&quot;");
 const TCHAR POST_AUTHOR_RIGHT[] = _T("&quot;");
 const TCHAR POST_CONTENT_LEFT[] = _T("<cc>");
 const TCHAR POST_CONTENT_RIGHT[] = _T("</cc>");
+const TCHAR POST_SIGN_LEFT[] = _T("<img class=\"j_user_sign\"");
+const TCHAR POST_SIGN_RIGHT[] = _T("/>");
 #pragma endregion
 #pragma region 楼中楼列表
 const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)\\]"));
@@ -154,7 +156,7 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 		threads[iThreads].reply = GetStringBetween(rawThreads[iRawThreads], THREAD_REPLY_LEFT, THREAD_REPLY_RIGHT);
 		threads[iThreads].title = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
 		threads[iThreads].preview = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT))
-			+ _T("\r\n") + GetStringBetween(rawThreads[iRawThreads], THREAD_MEDIA_LEFT, THREAD_MEDIA_RIGHT);
+			+ _T("\r\n") + GetStringBetween2(rawThreads[iRawThreads], THREAD_MEDIA_LEFT, THREAD_MEDIA_RIGHT);
 		threads[iThreads].author = JSUnescape(GetStringBefore(rawThreads[iRawThreads], THREAD_AUTHOR_RIGHT));
 
 		//OutputDebugString(_T("\n"));
@@ -204,9 +206,11 @@ GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& 
 				right--;
 			posts[iPosts].content = posts[iPosts].content.Left(right + 1);
 		}
+		// 签名档
+		posts[iPosts].content += _T("\r\n") + GetStringBetween2(rawPosts[iRawPosts], POST_SIGN_LEFT, POST_SIGN_RIGHT);
 
 		//OutputDebugString(_T("\n"));
-		//OutputDebugString(rawPosts[iRawThreads]);
+		//OutputDebugString(rawPosts[iRawPosts]);
 		//OutputDebugString(_T("\n----------------------------------"));
 	}
 

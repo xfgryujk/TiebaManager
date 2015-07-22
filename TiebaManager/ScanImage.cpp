@@ -13,8 +13,8 @@ set<CString> g_illegalImage; // 已检查违规的图片
 
 // 1是图片地址
 const wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
-// 1是图片地址
-const wregex POST_IMG_REG(_T("<img .*?class=\"BDE_Image\".*?src=\"(.*?)\".*?>"));
+// 2是图片地址
+const wregex POST_IMG_REG(_T("<img .*?class=\"(BDE_Image|j_user_sign)\".*?src=\"(.*?)\".*?>"));
 
 
 // 从目录读取图片到g_images
@@ -43,13 +43,21 @@ void ReadImages(const CString& dir)
 	UINT i;
 	for (i = 0; i < imagePath.size(); i++)
 	{
-		LPTSTR pos = StrRChr(imagePath[i], NULL, _T('\\'));
-		g_images[i].name = (pos == NULL ? imagePath[i] : pos + 1);
+		g_images[i].name = GetImageName(imagePath[i]);
 		g_images[i].img = cv::imread((LPCSTR)(CStringA)imagePath[i]);
 		if (g_images[i].img.data == NULL)
 			i--;
 	}
 	g_images.resize(i);
+}
+
+// 从图片地址取图片名
+CString GetImageName(const CString& img)
+{
+	LPTSTR pos = StrRChr(img, NULL, _T('/'));
+	CString imgName = (pos == NULL ? img : pos + 1);
+	int right = imgName.Find(_T("?"));
+	return right == -1 ? imgName : imgName.Left(right);
 }
 
 
@@ -66,7 +74,7 @@ void GetPostImage(const CString& content, vector<CString>& img)
 {
 	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)content, (LPCTSTR)content
 		+ content.GetLength(), POST_IMG_REG), end; it != end; it++)
-		img.push_back((*it)[1].str().c_str());
+		img.push_back((*it)[2].str().c_str());
 }
 
 
@@ -166,8 +174,7 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 {
 	for (const CString& img : imgs)
 	{
-		LPTSTR pos = StrRChr(img, NULL, _T('/'));
-		CString imgName = (pos == NULL ? img : pos + 1);
+		CString imgName = GetImageName(img);
 
 		// 检查缓存结果
 		if (g_leagalImage.find(imgName) != g_leagalImage.end())

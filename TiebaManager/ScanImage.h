@@ -25,6 +25,7 @@ struct NameImage
 
 
 void ReadImages(const CString& dir);
+CString GetImageName(const CString& imgUrl);
 
 void GetThreadImage(const CString& preview, vector<CString>& img);
 void GetPostImage(const CString& content, vector<CString>& img);

@@ -44,6 +44,7 @@ inline BOOL StringMatchs(const CString& str, const RegexText& content)
 		return str == content.text;
 }
 CString GetStringBetween(const CString& src, const CString& left, LPCTSTR right, int startPos = 0);
+CString GetStringBetween2(const CString& src, const CString& left, const CString& right, int startPos = 0);
 CString GetStringBefore(const CString& src, LPCTSTR right, int startPos = 0);
 BOOL WriteString(const CString& src, LPCTSTR path);
 CString EncodeURI(const CString& src);

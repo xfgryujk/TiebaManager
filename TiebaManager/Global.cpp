@@ -54,6 +54,21 @@ CString GetStringBetween(const CString& src, const CString& left, LPCTSTR right,
 		return _T("");
 	leftPos += left.GetLength();
 	int rightPos = src.Find(right, leftPos);
+	if (rightPos == -1)
+		return _T("");
+	return src.Mid(leftPos, rightPos - leftPos);
+}
+
+// È¡×Ö·û´®Ö®¼äµÄ×Ö·û´®£¬°üÀ¨×óÓÒµÄ×Ö·û´®
+CString GetStringBetween2(const CString& src, const CString& left, const CString& right, int startPos)
+{
+	int leftPos = src.Find(left, startPos);
+	if (leftPos == -1)
+		return _T("");
+	int rightPos = src.Find(right, leftPos + left.GetLength());
+	if (rightPos == -1)
+		return _T("");
+	rightPos += right.GetLength();
 	return src.Mid(leftPos, rightPos - leftPos);
 }
 

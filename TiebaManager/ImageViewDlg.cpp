@@ -142,8 +142,7 @@ void CImageViewDlg::SetCurImage(int index)
 		return;
 	}
 
-	LPTSTR pos = StrRChr((*m_imageURL)[m_curImageIndex], NULL, _T('/'));
-	CString imgName = (pos == NULL ? (*m_imageURL)[m_curImageIndex] : pos + 1);
+	CString imgName = GetImageName((*m_imageURL)[m_curImageIndex]);
 	if (!PathFileExists(IMG_CACHE_PATH + imgName))
 	{
 		// œ¬‘ÿÕº∆¨
@@ -226,8 +225,7 @@ void CImageViewDlg::OnBnClickedButton3()
 		SHGetPathFromIDList(pidlSel, folder.GetBuffer(MAX_PATH));
 		folder.ReleaseBuffer();
 		
-		LPTSTR pos = StrRChr((*m_imageURL)[m_curImageIndex], NULL, _T('/'));
-		CString imgName = (pos == NULL ? (*m_imageURL)[m_curImageIndex] : pos + 1);
+		CString imgName = GetImageName((*m_imageURL)[m_curImageIndex]);
 		m_curImage.Save(folder + _T("\\") + imgName);
 	}
 }
