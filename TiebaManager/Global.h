@@ -18,12 +18,30 @@ inline BOOL StringIncludes(const CString& str, LPCTSTR content, BOOL isRegex)
 	else
 		return StringIncludes(str, content);
 }
-inline BOOL StringIncludes(const CString& str, const RegexText& content)
+inline BOOL StringIncludes(const CString& str, const RegexText& content, int* _pos = NULL, int* length = NULL)
 {
+	BOOL result;
 	if (content.isRegex)
-		return std::regex_search((LPCTSTR)str, content.regexp);
+	{
+		std::wcmatch res;
+		result = std::regex_search((LPCTSTR)str, res, content.regexp);
+		if (result && _pos != NULL && length != NULL)
+		{
+			*_pos = res.position();
+			*length = res.length();
+		}
+	}
 	else
-		return StringIncludes(str, content.text);
+	{
+		int pos = str.Find(content.text);
+		result = pos != -1;
+		if (result && _pos != NULL && length != NULL)
+		{
+			*_pos = pos;
+			*length = content.text.GetLength();
+		}
+	}
+	return result;
 }
 // ×Ö·û´®Æ¥Åä
 inline BOOL StringMatchs(const CString& str, LPCTSTR content, BOOL isRegex)

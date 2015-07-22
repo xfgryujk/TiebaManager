@@ -70,7 +70,7 @@ extern set<__int64> g_ignoredLZLID; // 不删的楼中楼ID(已扫描且违规)
 extern set<__int64> g_deletedTID; // 已删的主题ID
 extern map<__int64, int> g_reply; // 主题的回复数
 extern map<CString, int> g_IDTrigCount; // 某ID违规次数，已封为-1
-BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg);
+BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg, int& pos, int& length);
 UINT AFX_CDECL ScanThread(LPVOID mainDlg);
 UINT AFX_CDECL ScanPostThread(LPVOID threadID);
 BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHistoryReply,
@@ -80,6 +80,8 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 struct Operation
 {
 	CString msg;		// 提示消息
+	int pos;			// 高亮位置
+	int length;			// 高亮长度
 	TBObject object;	// 操作对象
 	CString tid;		// 主题ID
 	CString title;		// 主题标题
@@ -89,7 +91,7 @@ struct Operation
 };
 extern CWinThread* g_operateThread;
 void AddOperation(const CString& msg, TBObject object, const CString& tid, const CString& title, 
-	const CString& floor, const CString& pid, const CString& author);
+	const CString& floor, const CString& pid, const CString& author, int pos = 0, int length = 0);
 UINT AFX_CDECL OperateThread(LPVOID mainDlg);
 CString BanID(LPCTSTR userName, LPCTSTR pid);
 CString DeleteThread(const CString& tid);

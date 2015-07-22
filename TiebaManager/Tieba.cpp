@@ -266,7 +266,7 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 
 // 扫描 /////////////////////////////////////////////////////////////////////////////////
 // 检查违规
-BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg)
+BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg, int& pos, int& length)
 {
 	g_optionsLock.Lock();
 
@@ -288,7 +288,7 @@ BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg)
 	
 	// 违规内容
 	for (const RegexText& keyword : g_keywords)
-		if (StringIncludes(content, keyword))
+		if (StringIncludes(content, keyword, &pos, &length))
 		{
 			msg = _T("<font color=red> 触发违禁词 </font>") + HTMLEscape(keyword.text);
 			g_optionsLock.Unlock();
@@ -299,6 +299,8 @@ BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg)
 	for (const RegexText& blackList : g_blackList)
 		if (StringMatchs(author, blackList))
 		{
+			pos = 0;
+			length = 0;
 			msg = _T("<font color=red> 触发屏蔽用户 </font>") + HTMLEscape(blackList.text);
 			g_optionsLock.Unlock();
 			return TRUE;
@@ -355,6 +357,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	ignoreThread.Format(_T("%d"), (iPage - 1) * 50);
 
 	CString msg;
+	int pos, length;
 	while (!g_stopScanFlag)
 	{
 		DWORD startTime = GetTickCount();
@@ -379,10 +382,10 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 				break;
 			__int64 tid = _ttoi64(thread.tid);
 			if (g_ignoredTID.find(tid) == g_ignoredTID.end()
-				&& CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, msg))
+				&& CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, msg, pos, length))
 			{
 				AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid, 
-					thread.title, _T("1"), _T(""), thread.author);
+					thread.title, _T("0"), _T(""), thread.author, pos, length);
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 					+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
 				g_ignoredTID.insert(tid);
@@ -421,7 +424,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			// 释放线程
 			for (int i = 0; i < threadCount; i++)
 			{
-				CloseHandle(threadHandles[i]);
+				//CloseHandle(threadHandles[i]); // 下面这句自动释放？，加上会异常
 				delete threadObjects[i];
 			}
 			delete threadHandles;
@@ -552,6 +555,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	}
 
 	CString msg;
+	int pos, length;
 	// 扫描帖子
 	for (const PostInfo& post : posts)
 	{
@@ -559,10 +563,10 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			return FALSE;
 		__int64 pid = _ttoi64(post.pid);
 		if (g_ignoredPID.find(pid) == g_ignoredPID.end() 
-			&& CheckIllegal(post.content, post.author, msg))
+			&& CheckIllegal(post.content, post.author, msg, pos, length))
 		{
 			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST, 
-				tid, title, post.floor, post.pid, post.author);
+				tid, title, post.floor, post.pid, post.author, pos, length);
 			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) + 
 				_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
 			g_ignoredPID.insert(pid);
@@ -574,12 +578,12 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	{
 		if (g_stopScanFlag)
 			return FALSE;
-		if (CheckIllegal(lzl.content, lzl.author, msg))
+		if (CheckIllegal(lzl.content, lzl.author, msg, pos, length))
 		{
 			__int64 lzlid = _ttoi64(lzl.pid);
 			if (g_ignoredLZLID.find(lzlid) == g_ignoredLZLID.end())
 			{
-				AddOperation(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author);
+				AddOperation(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, pos, length);
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg, pDocument);
 				g_ignoredLZLID.insert(lzlid);
@@ -621,10 +625,12 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 // 操作 /////////////////////////////////////////////////////////////////////////////////
 // 添加操作
 void AddOperation(const CString& msg, TBObject object, const CString& tid, const CString& title,
-	const CString& floor, const CString& pid, const CString& author)
+	const CString& floor, const CString& pid, const CString& author, int pos, int length)
 {
 	Operation tmp;
 	tmp.msg = msg;
+	tmp.pos = pos;
+	tmp.length = length;
 	tmp.object = object;
 	tmp.tid = tid;
 	tmp.title = title;
@@ -673,12 +679,14 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				switch (op.object)
 				{
 				case TBOBJ_THREAD:
+					if (op.floor == _T("1"))
+						goto casePost;
 					g_initIgnoredTID.insert(tid);
 					dlg->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a>"), pDocument);
 					break;
 				case TBOBJ_POST:
-					g_initIgnoredPID.insert(_ttoi64(op.pid));
+casePost:			g_initIgnoredPID.insert(_ttoi64(op.pid));
 					dlg->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼"), pDocument);
 					break;

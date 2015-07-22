@@ -85,6 +85,7 @@ BOOL CConfirmDlg::OnInitDialog()
 	{
 		SetWindowText(m_operation->title);
 		m_contentEdit.SetWindowText(m_operation->msg + _T("\r\n\r\n×÷Õß£º") + m_operation->author);
+		m_contentEdit.SetSel(m_operation->pos, m_operation->pos + m_operation->length);
 
 		if (m_operation->object != TBOBJ_LZL)
 		{
