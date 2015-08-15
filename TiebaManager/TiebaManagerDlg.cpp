@@ -208,12 +208,12 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 
 
 	// 对付百度显示回复数为0的BUG，十分钟清除一次回复记录
-	SetTimer(0, 10 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
+	/*SetTimer(0, 10 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
 		{
 			if (!g_briefLog)
 				((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->Log(_T("<font color=green>清除扫描记录</font>"));
 			g_reply.clear();
-		});
+		});*/
 
 
 	// 测试
@@ -651,7 +651,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
 		goto error;
 	}
-	int pos1 = src2.Find(_T(">吧主<span"));
+	int pos1 = src2.Find(_T("吧主<span"));
 	int pos2 = src2.Find(_T(">") + userName + _T("<"));
 	int pos3 = src2.Find(_T(">图片小编<span"));
 	if (/*pos2 == -1 || */pos2 <= pos1 || (pos3 != -1 && pos2 >= pos3))
