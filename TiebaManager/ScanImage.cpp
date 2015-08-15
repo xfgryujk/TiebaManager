@@ -40,19 +40,19 @@ void ReadImages(const CString& dir)
 	}
 
 	g_images.resize(imagePath.size());
-	UINT i, imgCount = 0;
-	for (i = 0; i < imagePath.size(); i++)
+	UINT imgCount = 0;
+	for (CString& i : imagePath)
 	{
-		g_images[i].name = GetImageName(imagePath[i]);
-		g_images[i].img = cv::imread((LPCSTR)(CStringA)imagePath[i]);
-		if (g_images[i].img.data != NULL)
+		g_images[imgCount].name = GetImageName(i);
+		g_images[imgCount].img = cv::imread((LPCSTR)(CStringA)i);
+		if (g_images[imgCount].img.data != NULL)
 			imgCount++;
 	}
-	g_images.resize(imgCount);
-	if (i != imgCount)
+	if (imagePath.size() != imgCount)
 	{
+		g_images.resize(imgCount);
 		CString msg;
-		msg.Format(_T("%uÕÅÍ¼Æ¬¼ÓÔØÊ§°Ü£¡"), i - imgCount);
+		msg.Format(_T("%uÕÅÍ¼Æ¬¼ÓÔØÊ§°Ü£¡"), imagePath.size() - imgCount);
 		AfxMessageBox(msg, MB_ICONINFORMATION);
 	}
 }
