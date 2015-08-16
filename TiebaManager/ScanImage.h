@@ -24,6 +24,9 @@ struct NameImage
 };
 
 
+BOOL ReadImage(const CString& path, Mat& img);
+BOOL ReadImage(const BYTE* buffer, ULONG size, CImage& img);
+BOOL ReadImage(const BYTE* buffer, ULONG size, Mat& img);
 void ReadImages(const CString& dir);
 CString GetImageName(const CString& imgUrl);
 

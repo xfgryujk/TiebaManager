@@ -143,13 +143,22 @@ void CImageViewDlg::SetCurImage(int index)
 	}
 
 	CString imgName = GetImageName((*m_imageURL)[m_curImageIndex]);
-	if (!PathFileExists(IMG_CACHE_PATH + imgName))
+	if (PathFileExists(IMG_CACHE_PATH + imgName))
+	{
+		// ∂¡»°Õº∆¨ª∫¥Ê
+		if (!m_curImage.IsNull())
+			m_curImage.Destroy();
+		m_curImage.Load(IMG_CACHE_PATH + imgName);
+	}
+	else
 	{
 		// œ¬‘ÿÕº∆¨
 		BYTE* buffer;
 		ULONG size;
 		if (HTTPGetRaw((*m_imageURL)[m_curImageIndex], &buffer, &size) == NET_SUCCESS)
 		{
+			ReadImage(buffer, size, m_curImage);
+
 			if (!PathFileExists(IMG_CACHE_PATH))
 				CreateDirectory(IMG_CACHE_PATH, NULL);
 			CFile file;
@@ -158,11 +167,6 @@ void CImageViewDlg::SetCurImage(int index)
 			delete buffer;
 		}
 	}
-
-	// ∂¡»°Õº∆¨
-	if (!m_curImage.IsNull())
-		m_curImage.Destroy();
-	m_curImage.Load(IMG_CACHE_PATH + imgName);
 
 	SetWindowText(imgName);
 	m_imageStatic.Invalidate();

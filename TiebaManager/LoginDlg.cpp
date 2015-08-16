@@ -8,6 +8,7 @@
 #include "Global.h"
 #include <WinInet.h>
 #include "Tieba.h"
+#include "ScanImage.h"
 
 
 // CLoginDlg 对话框
@@ -87,20 +88,8 @@ void CLoginDlg::OnStnClickedStatic4()
 		return;
 	}
 
-	// 创建流
-	HGLOBAL m_hMem = GlobalAlloc(GMEM_FIXED, size);
-	BYTE* pmem = (BYTE*)GlobalLock(m_hMem);
-	memcpy(pmem, buffer, size);
+	ReadImage(buffer, size, m_verifyImage);
 	delete buffer;
-	IStream* pstm;
-	CreateStreamOnHGlobal(m_hMem, FALSE, &pstm);
-	// 加载到CImage
-	if(!m_verifyImage.IsNull())
-		m_verifyImage.Destroy();
-	m_verifyImage.Load(pstm);
-	// 释放流
-	GlobalUnlock(m_hMem);
-	pstm->Release();
 
 	// 显示图片
 	m_verifyCodePicture.Invalidate();
