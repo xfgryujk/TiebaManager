@@ -83,9 +83,13 @@ BOOL ReadImage(const BYTE* buffer, ULONG size, CImage& img)
 // ¥”ƒ⁄¥Êº”‘ÿÕº∆¨
 BOOL ReadImage(const BYTE* buffer, ULONG size, Mat& img)
 {
+	try
 	{
-	vector<BYTE> _imgBuffer(buffer, buffer + size);
-	img = cv::imdecode(Mat(_imgBuffer), cv::IMREAD_COLOR);
+		vector<BYTE> _imgBuffer(buffer, buffer + size);
+		img = cv::imdecode(Mat(_imgBuffer), cv::IMREAD_COLOR);
+	}
+	catch (...)
+	{
 	}
 	if (img.data != NULL)
 		return TRUE;
