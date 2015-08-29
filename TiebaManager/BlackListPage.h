@@ -21,6 +21,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
+	afx_msg void OnKillfocusEdit1();
 
 protected:
 	virtual BOOL CheckMatchTooMuch(const CString& text, BOOL isRegex);

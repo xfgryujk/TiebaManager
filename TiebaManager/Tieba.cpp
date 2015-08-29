@@ -84,9 +84,9 @@ const TCHAR POST_SIGN_LEFT[] = _T("<img class=\"j_user_sign\"");
 const TCHAR POST_SIGN_RIGHT[] = _T("/>");
 #pragma endregion
 #pragma region 楼中楼列表
-const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)\\]"));
+const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)during_time\":\\d+\\}\\]"));
 const wregex LZL_CONTENT_REG(_T("\"comment_id\":\"(\\d+)\".*?\"username\":\"(.*?)\".*?\"content\":\
-\"(.*?[^\\\\])\""));
+\"(.*?)\",\"ptype"));
 #pragma endregion
 
 
@@ -498,6 +498,13 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		src = HTTPGet(_T("http://tieba.baidu.com/p/" + thread.tid), FALSE, &g_stopScanFlag);
 		if (src == NET_STOP_TEXT)
 			goto next;
+		if (src == NET_TIMEOUT_TEXT)
+		{
+			if (!g_briefLog)
+				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
+				+ _T("</a> <font color=red>获取贴子列表失败(超时)，暂时跳过</font>"), pDocument);
+			goto next;
+		}
 
 		// 帖子页数
 		pageCount = GetStringBetween(src, PAGE_COUNT_LEFT, PAGE_COUNT_RIGHT);
@@ -506,7 +513,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 			WriteString(src, _T("page1.txt"));
 			if (!g_briefLog)
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
-				+ _T("</a> <font color=red>获取贴子列表失败，暂时跳过</font>"), pDocument);
+				+ _T("</a> <font color=red>获取贴子列表失败(可能已被删)，暂时跳过</font>"), pDocument);
 			goto next;
 		}
 
