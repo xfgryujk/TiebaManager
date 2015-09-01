@@ -356,6 +356,6 @@ LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpWithIndirectlyReferencedMemory,
 			&einfo, NULL, NULL);
 	}
-	AfxMessageBox(_T("程序崩溃了，请联系作者帮助调试"), MB_ICONERROR);
+	AfxMessageBox(_T("程序崩溃了，请把exception.dmp文件发到xfgryujk@126.com帮助调试"), MB_ICONERROR);
 	return EXCEPTION_CONTINUE_SEARCH;
 }

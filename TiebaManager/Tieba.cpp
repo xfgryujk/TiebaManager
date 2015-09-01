@@ -86,7 +86,7 @@ const TCHAR POST_SIGN_RIGHT[] = _T("/>");
 #pragma region 楼中楼列表
 const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)during_time\":\\d+\\}\\]"));
 const wregex LZL_CONTENT_REG(_T("\"comment_id\":\"(\\d+)\".*?\"username\":\"(.*?)\".*?\"content\":\
-\"(.*?)\",\"ptype"));
+\"(.*?)\",\"")); // 果然还是太慢了，以后这里不用正则
 #pragma endregion
 
 

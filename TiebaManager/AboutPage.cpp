@@ -48,11 +48,11 @@ BOOL CAboutPage::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	m_edit.SetWindowText(_T("目测是现在百度贴吧唯一的吧务管理工具\r\n\
+	m_edit.SetWindowText(_T("软件介绍帖http://tieba.baidu.com/p/3915111330\r\n\
 \r\n\
-不懂正则表达式的自己去百度一下~\r\n\
+html代码只转换了\"'&<>还有空格，其他以网页源码为准，如换行符为<br> (不注意的话会不匹配或匹配太多)\r\n\
 \r\n\
-代码只转换了\"'&<>还有空格，其他以网页源码为准，如换行符为<br> (不注意的话会不匹配或匹配太多)\r\n\
+我的邮箱和支付宝是xfgryujk@126.com，喜欢此软件可以捐助哦\r\n\
 \r\n\
 此程序通过GPL协议开源，你可以在https://github.com/xfgryujk/TiebaManager得到源码，欢迎完善程序\r\n\
 \r\n\
