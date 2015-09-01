@@ -85,8 +85,14 @@ const TCHAR POST_SIGN_RIGHT[] = _T("/>");
 #pragma endregion
 #pragma region 楼中楼列表
 const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)during_time\":\\d+\\}\\]"));
-const wregex LZL_CONTENT_REG(_T("\"comment_id\":\"(\\d+)\".*?\"username\":\"(.*?)\".*?\"content\":\
-\"(.*?)\",\"")); // 果然还是太慢了，以后这里不用正则
+
+const TCHAR LZL_SPLIT[] = _T("{\"thread_id\"");
+const TCHAR LZL_PID_LEFT[] = _T("\"post_id\":\"");
+const TCHAR LZL_PID_RIGHT[] = _T("\"");
+const TCHAR LZL_AUTHOR_LEFT[] = _T("\"username\":\"");
+const TCHAR LZL_AUTHOR_RIGHT[] = _T("\"");
+const TCHAR LZL_CONTENT_LEFT[] = _T("\"content\":\"");
+const TCHAR LZL_CONTENT_RIGHT[] = _T("\",\"");
 #pragma endregion
 
 
@@ -229,32 +235,30 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 	CString src = HTTPGet(url, FALSE, &g_stopScanFlag);
 
 	lzls.clear();
-	PostInfo lzl;
+	int iLzls = 0;
 	// 遍历楼层
 	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)src, (LPCTSTR)src + src.GetLength(), LZL_FLOOR_REG), end; it != end; it++)
 	{
 		// 查找该层楼层
 		CString pid = (*it)[1].str().c_str(); // 该层PID
+		CString floor;
 		for (PostInfo post : posts)
 			if (post.pid == pid)
 			{
-				lzl.floor = post.floor;
+				floor = post.floor;
 				break;
 			}
 		
 		// 遍历该层楼中楼
-		CString floorContent = (*it)[2].str().c_str(); // 该层楼中楼内容
-		for (std::regex_iterator<LPCTSTR> it2((LPCTSTR)floorContent, (LPCTSTR)floorContent 
-			+ floorContent.GetLength(), LZL_CONTENT_REG), end2; it2 != end2; it2++)
+		CStringArray rawLzls;
+		SplitString(rawLzls, (*it)[2].str().c_str(), LZL_SPLIT);
+		lzls.resize(lzls.size() + rawLzls.GetSize() - 1);
+		for (int iRawLzls = 1; iRawLzls < rawLzls.GetSize(); iRawLzls++, iLzls++)
 		{
-			lzl.pid = (*it2)[1].str().c_str();
-			lzl.author = JSUnescape((*it2)[2].str().c_str());
-			CString content = (*it2)[3].str().c_str();
-			if (content == _T("\",")) // 内容为空时正则会匹配到这个
-				lzl.content = _T("");
-			else
-				lzl.content = HTMLUnescape(JSUnescape(content));
-			lzls.push_back(lzl);
+			lzls[iLzls].pid = GetStringBetween(rawLzls[iRawLzls], LZL_PID_LEFT, LZL_PID_RIGHT);
+			lzls[iLzls].floor = floor;
+			lzls[iLzls].author = JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_AUTHOR_LEFT, LZL_AUTHOR_RIGHT));
+			lzls[iLzls].content = HTMLUnescape(JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_CONTENT_LEFT, LZL_CONTENT_RIGHT)));
 		}
 
 		//OutputDebugString(_T("\n"));
