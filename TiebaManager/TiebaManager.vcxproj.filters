@@ -132,6 +132,9 @@
     <ClInclude Include="ImageViewDlg.h">
       <Filter>头文件\Dialog</Filter>
     </ClInclude>
+    <ClInclude Include="TrustedThreadPage.h">
+      <Filter>头文件\Dialog\Setting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -148,9 +151,6 @@
     </ClCompile>
     <ClCompile Include="explorer1.cpp">
       <Filter>源文件\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="Global.cpp">
-      <Filter>源文件\Global</Filter>
     </ClCompile>
     <ClCompile Include="Setting.cpp">
       <Filter>源文件\Global</Filter>
@@ -220,6 +220,12 @@
     </ClCompile>
     <ClCompile Include="ImageViewDlg.cpp">
       <Filter>源文件\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Global.cpp">
+      <Filter>源文件\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="TrustedThreadPage.cpp">
+      <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

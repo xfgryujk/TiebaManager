@@ -126,7 +126,10 @@ void CListPage::OnDblclkList1()
 	CString tmp;
 	m_list.GetText(m_list.GetCurSel(), tmp);
 	m_regexCheck.SetCheck(tmp.Left(REGEX_PREFIX_LENGTH) == IS_REGEX_PREFIX);
-	m_edit.SetWindowText(tmp.Right(tmp.GetLength() - REGEX_PREFIX_LENGTH));
+	if (HasRegex())
+		m_edit.SetWindowText(tmp.Right(tmp.GetLength() - REGEX_PREFIX_LENGTH));
+	else
+		m_edit.SetWindowText(tmp);
 }
 
 // Ìí¼Ó

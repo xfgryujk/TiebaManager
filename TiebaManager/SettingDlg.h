@@ -7,6 +7,7 @@
 #include "BlackListPage.h"
 #include "WhiteListPage.h"
 #include "WhiteContentPage.h"
+#include "TrustedThreadPage.h"
 #include "OptionsPage.h"
 #include "UsersPage.h"
 #include "AboutPage.h"
@@ -14,7 +15,7 @@
 
 // CSettingDlg ¶Ô»°¿ò
 
-const int SETTING_DLG_PAGE_COUNT = 9;
+const int SETTING_DLG_PAGE_COUNT = 10;
 
 class CSettingDlg : public CDialog
 {
@@ -55,6 +56,7 @@ public:
 	CBlackListPage m_blackListPage;
 	CWhiteListPage m_whiteListPage;
 	CWhiteContentPage m_whiteContentPage;
+	CTrustedThreadPage m_trustedThreadPage;
 	COptionsPage m_optionsPage;
 	CUsersPage m_usersPage;
 	CAboutPage m_aboutPage;

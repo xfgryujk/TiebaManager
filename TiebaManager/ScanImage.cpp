@@ -25,6 +25,8 @@ static BOOL CImageToMat(const CImage& image, Mat& img)
 
 	// 支持24位、32位图
 	int bpp = image.GetBPP() / 8;
+	if (bpp < 3)
+		return FALSE;
 	for (int y = 0; y < image.GetHeight(); y++)
 	{
 		BYTE* src = (BYTE*)image.GetPixelAddress(0, y);
@@ -174,10 +176,9 @@ BOOL CheckImageIllegal(const CString& content, const CString& author, void(*GetI
 	if (g_images.empty())
 		return FALSE;
 
-	g_optionsLock.Lock();
 	// 信任用户
-	for (const CString& whiteList : g_whiteList)
-	if (author == whiteList)
+	g_optionsLock.Lock();
+	if (g_whiteList.find(author) != g_whiteList.end())
 	{
 		g_optionsLock.Unlock();
 		return FALSE;

@@ -275,12 +275,11 @@ BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg, int& pos, int& 
 	g_optionsLock.Lock();
 
 	// 信任用户
-	for (const CString& whiteList : g_whiteList)
-		if (author == whiteList)
-		{
-			g_optionsLock.Unlock();
-			return FALSE;
-		}
+	if (g_whiteList.find(author) != g_whiteList.end())
+	{
+		g_optionsLock.Unlock();
+		return FALSE;
+	}
 
 	// 信任内容
 	for (const RegexText& whiteContent : g_whiteContent)
@@ -485,8 +484,15 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 	{
 		ThreadInfo& thread = g_threads[g_threadIndex++];
 		g_threadIndexLock.Unlock();
-		if (g_deletedTID.find(_ttoi64(thread.tid)) != g_deletedTID.end())
+		if (g_deletedTID.find(_ttoi64(thread.tid)) != g_deletedTID.end()) // 已删
 			goto next;
+		g_optionsLock.Lock();
+		if (g_trustedThread.find(thread.tid) != g_trustedThread.end()) // 信任
+		{
+			g_optionsLock.Unlock();
+			goto next;
+		}
+		g_optionsLock.Unlock();
 
 		__int64 tid = _ttoi64(thread.tid);
 		int reply = _ttoi(thread.reply);

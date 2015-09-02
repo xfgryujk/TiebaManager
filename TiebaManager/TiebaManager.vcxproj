@@ -143,6 +143,7 @@
     <ClInclude Include="Tieba.h" />
     <ClInclude Include="TiebaManager.h" />
     <ClInclude Include="TiebaManagerDlg.h" />
+    <ClInclude Include="TrustedThreadPage.h" />
     <ClInclude Include="Update.h" />
     <ClInclude Include="UsersPage.h" />
     <ClInclude Include="WhiteContentPage.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Tieba.cpp" />
     <ClCompile Include="TiebaManager.cpp" />
     <ClCompile Include="TiebaManagerDlg.cpp" />
+    <ClCompile Include="TrustedThreadPage.cpp" />
     <ClCompile Include="Update.cpp" />
     <ClCompile Include="UsersPage.cpp" />
     <ClCompile Include="WhiteContentPage.cpp" />

@@ -43,6 +43,7 @@ CSettingDlg::CSettingDlg(CWnd* pParent /*=NULL*/)
 	m_pages[i++] = &m_blackListPage;
 	m_pages[i++] = &m_whiteListPage;
 	m_pages[i++] = &m_whiteContentPage;
+	m_pages[i++] = &m_trustedThreadPage;
 	m_pages[i++] = &m_optionsPage;
 	m_pages[i++] = &m_usersPage;
 	m_pages[i++] = &m_aboutPage;
@@ -89,6 +90,7 @@ BOOL CSettingDlg::OnInitDialog()
 	m_tab.InsertItem(i++, _T("屏蔽用户"));
 	m_tab.InsertItem(i++, _T("信任用户"));
 	m_tab.InsertItem(i++, _T("信任内容"));
+	m_tab.InsertItem(i++, _T("信任主题"));
 	m_tab.InsertItem(i++, _T("方案"));
 	m_tab.InsertItem(i++, _T("账号管理"));
 	m_tab.InsertItem(i++, _T("关于&&更新"));
@@ -100,6 +102,7 @@ BOOL CSettingDlg::OnInitDialog()
 	m_blackListPage.Create(IDD_LIST_PAGE, &m_tab);
 	m_whiteListPage.Create(IDD_LIST_PAGE, &m_tab);
 	m_whiteContentPage.Create(IDD_LIST_PAGE, &m_tab);
+	m_trustedThreadPage.Create(IDD_TRUSTED_THREAD_PAGE, &m_tab);
 	m_optionsPage.Create(IDD_OPTIONS_PAGE, &m_tab);
 	m_usersPage.Create(IDD_USERS_PAGE, &m_tab);
 	m_aboutPage.Create(IDD_ABOUT_PAGE, &m_tab);
@@ -266,6 +269,11 @@ void CSettingDlg::ShowCurrentOptions()
 	m_whiteContentPage.m_list.ResetContent();
 	for (const RegexText& i : g_whiteContent)
 		m_whiteContentPage.m_list.AddString((i.isRegex ? IS_REGEX_PREFIX : NOT_REGEX_PREFIX) + i.text);
+
+	// 信任主题
+	m_trustedThreadPage.m_list.ResetContent();
+	for (const CString& i : g_trustedThread)
+		m_trustedThreadPage.m_list.AddString(i);
 }
 
 static inline void ApplyRegexTexts(vector<RegexText>& vec, CListBox& list)
@@ -287,6 +295,8 @@ void CSettingDlg::ApplyOptionsInDlg()
 {
 	CString strBuf;
 	int intBuf;
+	g_optionsLock.Lock();
+
 	m_prefPage.m_scanIntervalEdit.GetWindowText(strBuf);
 	g_scanInterval = _ttoi(strBuf);								// 扫描间隔
 	g_banID = m_prefPage.m_banIDCheck.GetCheck();				// 封ID
@@ -310,7 +320,6 @@ void CSettingDlg::ApplyOptionsInDlg()
 	m_imagePage.m_thresholdEdit.GetWindowText(strBuf);
 	g_SSIMThreshold = _ttof(strBuf);							// 阈值
 
-	g_optionsLock.Lock();
 	// 违规内容
 	ApplyRegexTexts(g_keywords, m_keywordsPage.m_list);
 
@@ -319,14 +328,24 @@ void CSettingDlg::ApplyOptionsInDlg()
 
 	// 信任用户
 	int size = m_whiteListPage.m_list.GetCount();
-	g_whiteList.resize(size);
+	g_whiteList.clear();
 	for (int i = 0; i < size; i++)
 	{
-		m_whiteListPage.m_list.GetText(i, g_whiteList[i]);
+		m_whiteListPage.m_list.GetText(i, strBuf);
+		g_whiteList.insert(strBuf);
 	}
 
 	// 信任内容
 	ApplyRegexTexts(g_whiteContent, m_whiteContentPage.m_list);
+
+	// 信任主题
+	size = m_trustedThreadPage.m_list.GetCount();
+	g_trustedThread.clear();
+	for (int i = 0; i < size; i++)
+	{
+		m_trustedThreadPage.m_list.GetText(i, strBuf);
+		g_trustedThread.insert(strBuf);
+	}
 
 	// 违规图片
 	if (m_imagePage.m_updateImage)
@@ -335,6 +354,7 @@ void CSettingDlg::ApplyOptionsInDlg()
 		g_illegalImage.clear();
 		ReadImages(g_imageDir);
 	}
+
 	g_optionsLock.Unlock();
 
 	if (m_clearScanCache)
@@ -466,6 +486,15 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	else
 		m_imagePage.m_thresholdEdit.SetWindowText(_T("2.43"));
 
+	// 信任主题
+	m_whiteListPage.m_list.ResetContent();
+	if (gzread(f, &size, sizeof(int)) == sizeof(int)) // 长度
+		for (int i = 0; i < size; i++)
+		{
+			ReadText(f, strBuf);
+			m_whiteListPage.m_list.AddString(strBuf);
+		}
+
 	gzclose(f);
 	return;
 
@@ -489,6 +518,7 @@ UseDefaultOptions:
 	m_prefPage.m_banReasonEdit.SetWindowText(_T(""));		// 封禁原因
 	m_imagePage.m_dirEdit.SetWindowText(_T(""));			// 违规图片目录
 	m_imagePage.m_thresholdEdit.SetWindowText(_T("2.43"));	// 阈值
+	m_trustedThreadPage.m_list.ResetContent();				// 信任主题
 }
 
 // 把对话框中的设置写入文件
@@ -549,6 +579,14 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	WriteText(f, strBuf);															// 违规图片目录
 	m_imagePage.m_thresholdEdit.GetWindowText(strBuf);
 	gzwrite(f, &(doubleBuf = _ttof(strBuf)), sizeof(double));						// 阈值
+
+	// 信任主题
+	gzwrite(f, &(size = m_trustedThreadPage.m_list.GetCount()), sizeof(int)); // 长度
+	for (int i = 0; i < size; i++)
+	{
+		m_trustedThreadPage.m_list.GetText(i, strBuf);
+		WriteText(f, strBuf);
+	}
 
 	gzclose(f);
 }

@@ -35,11 +35,12 @@ CString	g_imageDir;			// 违规图片目录
 double	g_SSIMThreshold;	// 阈值
 vector<RegexText>	g_keywords;		// 违规内容
 vector<RegexText>	g_blackList;	// 屏蔽用户
-vector<CString>		g_whiteList;	// 信任用户
+set<CString>		g_whiteList;	// 信任用户
 vector<RegexText>	g_whiteContent;	// 信任内容
 vector<NameImage>	g_images;		// 违规图片
+set<CString>		g_trustedThread;// 信任主题
 
-CCriticalSection g_optionsLock; // 判断违规用的临界区
+CCriticalSection g_optionsLock; // 方案临界区
 
 
 static inline void ReadRegexTexts(const gzFile& f, vector<RegexText>& vec)
@@ -70,6 +71,8 @@ static inline void WriteRegexTexts(const gzFile& f, vector<RegexText>& vec)
 // 读方案
 void ReadOptions(LPCTSTR path)
 {
+	CString strBuf;
+
 	gzFile f = gzopen_w(path, "rb");
 	if (f == NULL)
 		goto UseDefaultOptions;
@@ -83,6 +86,8 @@ void ReadOptions(LPCTSTR path)
 		goto UseDefaultOptions;
 	}
 
+	g_optionsLock.Lock();
+
 	// 违规内容
 	ReadRegexTexts(f, g_keywords);
 
@@ -92,9 +97,11 @@ void ReadOptions(LPCTSTR path)
 	// 信任用户
 	int intBuf;
 	gzread(f, &intBuf, sizeof(int)); // 长度
-	g_whiteList.resize(intBuf);
-	for (CString& i : g_whiteList)
-		ReadText(f, i);
+	for (int i = 0; i < intBuf; i++)
+	{
+		ReadText(f, strBuf);
+		g_whiteList.insert(strBuf);
+	}
 
 	// 信任内容
 	ReadRegexTexts(f, g_whiteContent);
@@ -122,10 +129,22 @@ void ReadOptions(LPCTSTR path)
 	if (gzread(f, &g_SSIMThreshold, sizeof(double)) != sizeof(double))	// 阈值
 		g_SSIMThreshold = 2.43;
 
+	// 信任主题
+	g_trustedThread.clear();
+	if (gzread(f, &intBuf, sizeof(int)) == sizeof(int)) // 长度
+		for (int i = 0; i < intBuf; i++)
+		{
+			ReadText(f, strBuf);
+			g_trustedThread.insert(strBuf);
+		}
+
+	g_optionsLock.Unlock();
+
 	gzclose(f);
 	return;
 
 UseDefaultOptions:
+	g_optionsLock.Lock();
 	g_keywords.clear();			// 违规内容
 	g_blackList.clear();		// 屏蔽用户
 	g_whiteList.clear();		// 信任用户
@@ -145,6 +164,8 @@ UseDefaultOptions:
 	g_imageDir = _T("");		// 违规图片目录
 	g_images.clear();			// 违规图片
 	g_SSIMThreshold = 2.43;		// 阈值
+	g_trustedThread.clear();	// 信任主题
+	g_optionsLock.Unlock();
 }
 
 // 写方案
@@ -189,6 +210,11 @@ void WriteOptions(LPCTSTR path)
 	WriteText(f, g_banReason);						// 封禁原因
 	WriteText(f, g_imageDir);						// 违规图片目录
 	gzwrite(f, &g_SSIMThreshold, sizeof(double));	// 阈值
+
+	// 信任主题
+	gzwrite(f, &(intBuf = g_trustedThread.size()), sizeof(int)); // 长度
+	for (const CString& i : g_trustedThread)
+		WriteText(f, i);
 
 	gzclose(f);
 }

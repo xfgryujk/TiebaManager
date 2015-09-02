@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 using std::vector;
+#include <set>
+using std::set;
 #include <regex>
 using std::wregex;
 #include <zlib.h>
@@ -45,11 +47,12 @@ extern CString	g_imageDir;			// 违规图片目录
 extern double	g_SSIMThreshold;	// 阈值
 extern vector<RegexText>	g_keywords;		// 违规内容
 extern vector<RegexText>	g_blackList;	// 屏蔽用户
-extern vector<CString>		g_whiteList;	// 信任用户
+extern set<CString>			g_whiteList;	// 信任用户
 extern vector<RegexText>	g_whiteContent;	// 信任内容
 extern vector<NameImage>	g_images;		// 违规图片
+extern set<CString>			g_trustedThread;// 信任主题
 
-extern CCriticalSection g_optionsLock; // 判断违规用的临界区
+extern CCriticalSection g_optionsLock; // 方案临界区
 
 
 // 读字符串

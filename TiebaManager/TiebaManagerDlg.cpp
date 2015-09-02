@@ -663,15 +663,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	}
 
 	// 加入信任用户
-	BOOL inWhiteList = FALSE;
-	for (const CString& i : g_whiteList)
-		if (i == userName)
-		{
-			inWhiteList = TRUE;
-			break;
-		}
-	if (!inWhiteList)
-		g_whiteList.push_back(userName);
+	g_whiteList.insert(userName);
 
 	// 取tbs(口令号)
 	g_tbs = GetStringBetween(src, _TBS_LEFT, _TBS_RIGHT);
