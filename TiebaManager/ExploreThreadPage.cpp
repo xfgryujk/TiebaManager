@@ -2,9 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
 #include "ExploreThreadPage.h"
-#include "afxdialogex.h"
 #include "Tieba.h"
 #include "ExplorerDlg.h"
 #include "ScanImage.h"

@@ -1,6 +1,4 @@
 #pragma once
-#include <regex>
-using std::wregex;
 #include "Setting.h"
 
 

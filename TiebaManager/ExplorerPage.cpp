@@ -2,9 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
 #include "ExplorerPage.h"
-#include "afxdialogex.h"
 
 
 // CExplorerPage ¶Ô»°¿ò

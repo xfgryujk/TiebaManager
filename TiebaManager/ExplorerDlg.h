@@ -4,7 +4,7 @@
 #include "ExploreThreadPage.h"
 #include "ExplorePostPage.h"
 #include "ExploreLzlPage.h"
-#include "ImageViewDlg.h"
+class CImageViewDlg;
 
 
 // CExplorerDlg ¶Ô»°¿ò

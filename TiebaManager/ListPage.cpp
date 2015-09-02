@@ -2,9 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
 #include "ListPage.h"
-#include "afxdialogex.h"
 
 
 // CListPage ¶Ô»°¿ò

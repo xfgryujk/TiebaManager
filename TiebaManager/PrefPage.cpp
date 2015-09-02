@@ -2,9 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
 #include "PrefPage.h"
-#include "afxdialogex.h"
 #include "SettingDlg.h"
 
 

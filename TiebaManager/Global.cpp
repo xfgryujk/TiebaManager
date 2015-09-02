@@ -19,13 +19,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "Global.h"
-#include "Tieba.h"
-#include <vector>
-#include <oleacc.h>
-#include <msxml2.h>
-#include <regex>
-using std::wregex;
 using std::regex_iterator;
+extern CString g_cookie; //#include "Tieba.h"
+#include <msxml2.h>
 #import "msscript.ocx" no_namespace
 #include <Dbghelp.h>
 

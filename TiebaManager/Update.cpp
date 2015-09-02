@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "Update.h"
 #include "Global.h"
-#include <regex>
-using std::wregex;
 
+
+// 当前版本日期，每次更新后修改
+const TCHAR UPDATE_CURRENT_VERSION[] = _T("15-09-02");
 
 // 检查更新
 CheckUpdateResult CheckUpdate()

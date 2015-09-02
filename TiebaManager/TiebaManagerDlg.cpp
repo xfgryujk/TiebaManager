@@ -18,15 +18,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include "stdafx.h"
-#include "TiebaManager.h"
+#include "SettingDlg.h"
+#include "ExplorerDlg.h"
 #include "TiebaManagerDlg.h"
-#include "afxdialogex.h"
 #include "Setting.h"
-#include <zlib.h>
 #include "Global.h"
 #include "Update.h"
 #include "Tieba.h"
-#include "LoginDlg.h"
 #include "ScanImage.h"
 
 #ifdef _DEBUG

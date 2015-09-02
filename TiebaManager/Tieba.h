@@ -1,5 +1,4 @@
 #pragma once
-#include "TiebaManagerDlg.h"
 #include <regex>
 using std::wregex;
 #include <vector>
@@ -8,6 +7,8 @@ using std::vector;
 using std::set;
 #include <map>
 using std::map;
+class CTiebaManagerDlg;
+struct IHTMLDocument2;
 
 
 // 贴吧、用户信息

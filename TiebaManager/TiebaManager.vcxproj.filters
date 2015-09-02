@@ -37,6 +37,12 @@
     <Filter Include="源文件\Dialog\TiebaExplorer">
       <UniqueIdentifier>{c0d4b662-7847-45e1-873f-9ff3b66ce3e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Dialog\UI">
+      <UniqueIdentifier>{4a72c8b2-5332-4604-95f9-9f761d9e9a3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Dialog\UI">
+      <UniqueIdentifier>{5f92a814-ed20-4ebc-8d4f-560e1a02d9a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -52,12 +58,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TiebaManagerDlg.h">
-      <Filter>头文件\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="TextButton.h">
-      <Filter>头文件\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="explorer1.h">
       <Filter>头文件\Dialog</Filter>
     </ClInclude>
     <ClInclude Include="Global.h">
@@ -135,6 +135,12 @@
     <ClInclude Include="TrustedThreadPage.h">
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
+    <ClInclude Include="explorer1.h">
+      <Filter>头文件\Dialog\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextButton.h">
+      <Filter>头文件\Dialog\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -144,12 +150,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="TiebaManagerDlg.cpp">
-      <Filter>源文件\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="TextButton.cpp">
-      <Filter>源文件\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="explorer1.cpp">
       <Filter>源文件\Dialog</Filter>
     </ClCompile>
     <ClCompile Include="Setting.cpp">
@@ -226,6 +226,12 @@
     </ClCompile>
     <ClCompile Include="TrustedThreadPage.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="explorer1.cpp">
+      <Filter>源文件\Dialog\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TextButton.cpp">
+      <Filter>源文件\Dialog\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

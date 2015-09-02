@@ -6,8 +6,6 @@ using std::vector;
 using std::set;
 #include <opencv2\core\mat.hpp>
 using cv::Mat;
-#include "Tieba.h"
-#include "Global.h"
 
 
 extern set<CString> g_leagalImage; // 已检查不违规的图片

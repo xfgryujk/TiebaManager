@@ -2,10 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
 #include "ImagePage.h"
-#include "afxdialogex.h"
-#include "ScanImage.h"
+#include "SettingDlg.h"
 
 
 // CImagePage ¶Ô»°¿ò

@@ -2,11 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
 #include "WhiteContentPage.h"
-#include "afxdialogex.h"
 #include "Global.h"
-#include "SettingDlg.h"
 
 
 // CWhiteContentPage ¶Ô»°¿ò

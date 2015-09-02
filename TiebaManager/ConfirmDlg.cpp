@@ -2,9 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
+#include "ImageViewDlg.h"
 #include "ConfirmDlg.h"
-#include "afxdialogex.h"
 #include "ScanImage.h"
 
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "afxwin.h"
 #include "Tieba.h"
-#include "ImageViewDlg.h"
+class CImageViewDlg;
 
 
 // CConfirmDlg ¶Ô»°¿ò

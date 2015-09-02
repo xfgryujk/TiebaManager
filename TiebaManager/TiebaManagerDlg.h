@@ -4,12 +4,11 @@
 
 #pragma once
 #include "explorer1.h"
-#include <oleacc.h>
 #include <mshtml.h>
 #include "afxwin.h"
 #include "TextButton.h"
-#include "SettingDlg.h"
-#include "ExplorerDlg.h"
+class CSettingDlg;
+class CExplorerDlg;
 
 
 // CTiebaManagerDlg ¶Ô»°¿ò

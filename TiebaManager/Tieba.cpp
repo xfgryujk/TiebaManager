@@ -18,12 +18,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include "stdafx.h"
+#include "TiebaManagerDlg.h"
 #include "Tieba.h"
+#include <queue>
+using std::queue;
 #include "Global.h"
 #include "Setting.h"
 #include "ConfirmDlg.h"
-#include <queue>
-using std::queue;
 #include <Mmsystem.h>
 #include "ScanImage.h"
 

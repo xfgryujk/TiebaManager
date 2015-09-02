@@ -2,9 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
 #include "LoginDlg.h"
-#include "afxdialogex.h"
 #include "Global.h"
 #include <WinInet.h>
 #include "Tieba.h"

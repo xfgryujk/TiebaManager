@@ -2,10 +2,9 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
 #include "ImageViewDlg.h"
-#include "afxdialogex.h"
 #include "ScanImage.h"
+#include "Global.h"
 
 
 // CImageViewDlg ¶Ô»°¿ò

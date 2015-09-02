@@ -3,8 +3,7 @@
 #include "Setting.h"
 #include <opencv2\imgproc\imgproc.hpp>
 #include <opencv2\imgcodecs.hpp>
-#include <regex>
-using std::wregex;
+#include "Global.h"
 
 
 set<CString> g_leagalImage; // 已检查不违规的图片

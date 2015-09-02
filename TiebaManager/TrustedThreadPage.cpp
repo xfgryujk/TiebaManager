@@ -2,9 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
 #include "TrustedThreadPage.h"
-#include "afxdialogex.h"
 
 
 // CTrustedThreadPage ¶Ô»°¿ò
