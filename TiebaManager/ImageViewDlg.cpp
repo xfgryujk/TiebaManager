@@ -9,11 +9,11 @@
 
 // CImageViewDlg 对话框
 
-IMPLEMENT_DYNAMIC(CImageViewDlg, CDialog)
+IMPLEMENT_DYNAMIC(CImageViewDlg, CNormalDlg)
 
 // 构造函数
 CImageViewDlg::CImageViewDlg(CImageViewDlg** pThis, CWnd* pParent /*=NULL*/)
-	: CDialog(CImageViewDlg::IDD, pParent)
+	: CNormalDlg(CImageViewDlg::IDD, pParent)
 {
 	m_pThis = pThis;
 	m_imageURL = NULL;
@@ -29,7 +29,7 @@ CImageViewDlg::~CImageViewDlg()
 
 void CImageViewDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STATIC1, m_imageStatic);
 	DDX_Control(pDX, IDC_BUTTON1, m_prevButton);
 	DDX_Control(pDX, IDC_BUTTON2, m_nextButton);
@@ -37,10 +37,9 @@ void CImageViewDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CImageViewDlg, CDialog)
+BEGIN_MESSAGE_MAP(CImageViewDlg, CNormalDlg)
 	ON_WM_CLOSE()
 	ON_WM_GETMINMAXINFO()
-	ON_WM_SIZE()
 	ON_WM_DRAWITEM()
 	ON_BN_CLICKED(IDC_BUTTON1, &CImageViewDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CImageViewDlg::OnBnClickedButton2)
@@ -51,16 +50,6 @@ END_MESSAGE_MAP()
 // CImageViewDlg 消息处理程序
 
 #pragma region UI
-// 屏蔽Esc关闭窗口
-void CImageViewDlg::OnCancel()
-{
-}
-
-// 屏蔽回车关闭窗口
-void CImageViewDlg::OnOK()
-{
-}
-
 // 销毁窗口
 void CImageViewDlg::OnClose()
 {
@@ -70,7 +59,7 @@ void CImageViewDlg::OnClose()
 // 释放this
 void CImageViewDlg::PostNcDestroy()
 {
-	CDialog::PostNcDestroy();
+	CNormalDlg::PostNcDestroy();
 
 	*m_pThis = NULL;
 	delete this;
@@ -79,37 +68,24 @@ void CImageViewDlg::PostNcDestroy()
 // 限制最小尺寸
 void CImageViewDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
-	lpMMI->ptMinTrackSize.x = 240;
-	lpMMI->ptMinTrackSize.y = 240;
+	lpMMI->ptMinTrackSize.x = 275;
+	lpMMI->ptMinTrackSize.y = 275;
 
-	CDialog::OnGetMinMaxInfo(lpMMI);
-}
-
-// 改变尺寸
-void CImageViewDlg::OnSize(UINT nType, int cx, int cy)
-{
-	CDialog::OnSize(nType, cx, cy);
-	if (m_imageStatic.m_hWnd == NULL)
-		return;
-
-	CRect rect;
-	GetClientRect(&rect); // 默认452 * 384
-	m_imageStatic.SetWindowPos(NULL, 0, 0, rect.Width() - 21, rect.Height() - 58, SWP_NOMOVE | SWP_NOREDRAW);
-	int y = rect.Height() - 35;
-	m_prevButton.SetWindowPos(NULL, 11, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_nextButton.SetWindowPos(NULL, 74, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_saveButton.SetWindowPos(NULL, 137, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-
-	Invalidate();
+	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }
 #pragma endregion
 
 // 初始化
 BOOL CImageViewDlg::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+	CNormalDlg::OnInitDialog();
 
 	SetClassLong(m_imageStatic.m_hWnd, GCL_HCURSOR, (LONG)LoadCursor(NULL, IDC_ARROW));
+
+	m_resize.AddControl(&m_imageStatic, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_prevButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_imageStatic);
+	m_resize.AddControl(&m_nextButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_imageStatic);
+	m_resize.AddControl(&m_saveButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_imageStatic);
 
 	RECT rect;
 	GetParent()->GetWindowRect(&rect);
@@ -189,7 +165,7 @@ void CImageViewDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
 		return;
 	}
 
-	CDialog::OnDrawItem(nIDCtl, lpDrawItemStruct);
+	CNormalDlg::OnDrawItem(nIDCtl, lpDrawItemStruct);
 }
 
 // 上一张

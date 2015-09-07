@@ -4,12 +4,13 @@
 #include "ExploreThreadPage.h"
 #include "ExplorePostPage.h"
 #include "ExploreLzlPage.h"
+#include "NormalDlg.h"
 class CImageViewDlg;
 
 
 // CExplorerDlg 对话框
 
-class CExplorerDlg : public CDialog
+class CExplorerDlg : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CExplorerDlg)
 
@@ -24,8 +25,6 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
-	virtual void OnCancel();
-	virtual void OnOK();
 public:
 	afx_msg void OnClose();
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
@@ -54,4 +53,5 @@ public:
 
 protected:
 	CExplorerPage* m_pages[3];
+	CResizeControl m_pagesResize;
 };

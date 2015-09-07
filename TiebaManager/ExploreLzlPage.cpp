@@ -38,7 +38,7 @@ END_MESSAGE_MAP()
 // ≥ı ºªØ
 BOOL CExploreLzlPage::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+	CExplorerPage::OnInitDialog();
 
 	m_static.ShowWindow(SW_HIDE);
 	m_edit.ShowWindow(SW_HIDE);

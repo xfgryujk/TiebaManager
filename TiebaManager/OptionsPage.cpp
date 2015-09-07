@@ -9,10 +9,10 @@
 
 // COptionsPage 对话框
 
-IMPLEMENT_DYNAMIC(COptionsPage, CDialog)
+IMPLEMENT_DYNAMIC(COptionsPage, CNormalDlg)
 
 COptionsPage::COptionsPage(CWnd* pParent /*=NULL*/)
-	: CDialog(COptionsPage::IDD, pParent)
+	: CNormalDlg(COptionsPage::IDD, pParent)
 {
 
 }
@@ -24,7 +24,7 @@ COptionsPage::~COptionsPage()
 
 void COptionsPage::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_list);
 	DDX_Control(pDX, IDC_EDIT1, m_edit);
 	DDX_Control(pDX, IDC_BUTTON1, m_newOptionsButton);
@@ -36,9 +36,7 @@ void COptionsPage::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(COptionsPage, CDialog)
-	ON_WM_CLOSE()
-	ON_WM_SIZE()
+BEGIN_MESSAGE_MAP(COptionsPage, CNormalDlg)
 	ON_LBN_DBLCLK(IDC_LIST1, &COptionsPage::OnLbnDblclkList1)
 	ON_BN_CLICKED(IDC_BUTTON1, &COptionsPage::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &COptionsPage::OnBnClickedButton2)
@@ -50,48 +48,23 @@ END_MESSAGE_MAP()
 
 // COptionsPage 消息处理程序
 
-#pragma region UI
-// 屏蔽Esc关闭窗口
-void COptionsPage::OnCancel()
+// 初始化
+BOOL COptionsPage::OnInitDialog()
 {
+	CNormalDlg::OnInitDialog();
+
+	m_resize.AddControl(&m_currentOptionStatic, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this);
+	m_resize.AddControl(&m_list, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_edit, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_newOptionsButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_deleteOptionsButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_renameOptionsButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_loadOptionsButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_saveOptionsButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常:  OCX 属性页应返回 FALSE
 }
-
-// 屏蔽回车关闭窗口
-void COptionsPage::OnOK()
-{
-}
-
-// 销毁窗口
-void COptionsPage::OnClose()
-{
-	DestroyWindow();
-
-	CDialog::OnClose();
-}
-
-// 改变尺寸
-void COptionsPage::OnSize(UINT nType, int cx, int cy)
-{
-	CDialog::OnSize(nType, cx, cy);
-	if (m_list.m_hWnd == NULL)
-		return;
-
-	CRect rect;
-	GetClientRect(&rect); // 默认446 * 287
-	m_currentOptionStatic.SetWindowPos(NULL, 0, 0, rect.Width() - 21, 15, SWP_NOMOVE | SWP_NOREDRAW);
-	m_list.SetWindowPos(NULL, 0, 0, rect.Width() - 21, rect.Height() - 152, SWP_NOMOVE | SWP_NOREDRAW);
-	m_edit.SetWindowPos(NULL, 13, rect.Height() - 105, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	int y = rect.Height() - 107;
-	m_newOptionsButton.SetWindowPos(NULL, 158, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_deleteOptionsButton.SetWindowPos(NULL, 231, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_renameOptionsButton.SetWindowPos(NULL, 308, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	y = rect.Height() - 62;
-	m_loadOptionsButton.SetWindowPos(NULL, 21, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_saveOptionsButton.SetWindowPos(NULL, 95, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-
-	Invalidate();
-}
-#pragma endregion
 
 // 双击列表
 void COptionsPage::OnLbnDblclkList1()

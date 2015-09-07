@@ -27,11 +27,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // CSettingDlg 对话框
 
-IMPLEMENT_DYNAMIC(CSettingDlg, CDialog)
+IMPLEMENT_DYNAMIC(CSettingDlg, CNormalDlg)
 
 // 构造函数
 CSettingDlg::CSettingDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CSettingDlg::IDD, pParent)
+	: CNormalDlg(CSettingDlg::IDD, pParent),
+	m_pagesResize(&m_tab)
 {
 	// 初始化m_pages
 	int i = 0;
@@ -54,14 +55,14 @@ CSettingDlg::~CSettingDlg()
 
 void CSettingDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TAB1, m_tab);
 	DDX_Control(pDX, IDOK, m_okButton);
 	DDX_Control(pDX, IDCANCEL, m_cancelButton);
 }
 
 
-BEGIN_MESSAGE_MAP(CSettingDlg, CDialog)
+BEGIN_MESSAGE_MAP(CSettingDlg, CNormalDlg)
 	ON_WM_GETMINMAXINFO()
 	ON_WM_SIZE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CSettingDlg::OnTcnSelchangeTab1)
@@ -74,7 +75,7 @@ END_MESSAGE_MAP()
 // 初始化
 BOOL CSettingDlg::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+	CNormalDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	SetIcon(hIcon, TRUE);			// 设置大图标
@@ -95,12 +96,12 @@ BOOL CSettingDlg::OnInitDialog()
 
 	// 初始化各页
 	m_prefPage.Create(IDD_PREF_PAGE, &m_tab);
-	m_keywordsPage.Create(IDD_LIST_PAGE, &m_tab);
+	m_keywordsPage.Create(IDD_REG_LIST_PAGE, &m_tab);
 	m_imagePage.Create(IDD_IMAGE_PAGE, &m_tab);
-	m_blackListPage.Create(IDD_LIST_PAGE, &m_tab);
+	m_blackListPage.Create(IDD_REG_LIST_PAGE, &m_tab);
 	m_whiteListPage.Create(IDD_LIST_PAGE, &m_tab);
-	m_whiteContentPage.Create(IDD_LIST_PAGE, &m_tab);
-	m_trustedThreadPage.Create(IDD_TRUSTED_THREAD_PAGE, &m_tab);
+	m_whiteContentPage.Create(IDD_REG_LIST_PAGE, &m_tab);
+	m_trustedThreadPage.Create(IDD_LIST_PAGE, &m_tab);
 	m_optionsPage.Create(IDD_OPTIONS_PAGE, &m_tab);
 	m_usersPage.Create(IDD_USERS_PAGE, &m_tab);
 	m_aboutPage.Create(IDD_ABOUT_PAGE, &m_tab);
@@ -111,6 +112,12 @@ BOOL CSettingDlg::OnInitDialog()
 	m_pages[0]->SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(), SWP_SHOWWINDOW);
 	for (i = 1; i < _countof(m_pages); i++)
 		m_pages[i]->SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(), SWP_HIDEWINDOW);
+
+	m_resize.AddControl(&m_tab, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_okButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
+	m_resize.AddControl(&m_cancelButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
+	for (i = 0; i < _countof(m_pages); i++)
+		m_pagesResize.AddControl(m_pages[i], RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_tab, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
 
 	// 显示配置
 	ShowCurrentOptions();
@@ -168,13 +175,13 @@ void CSettingDlg::OnClose()
 	else if (result == IDCANCEL)
 		return;
 
-	CDialog::OnClose();
+	DestroyWindow();
 }
 
 // 释放this
 void CSettingDlg::PostNcDestroy()
 {
-	CDialog::PostNcDestroy();
+	CNormalDlg::PostNcDestroy();
 
 	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_settingDlg = NULL;
 	delete this;
@@ -183,32 +190,17 @@ void CSettingDlg::PostNcDestroy()
 // 限制最小尺寸
 void CSettingDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
-	lpMMI->ptMinTrackSize.x = 489;
-	lpMMI->ptMinTrackSize.y = 411;
+	lpMMI->ptMinTrackSize.x = 666;
+	lpMMI->ptMinTrackSize.y = 576;
 
-	CDialog::OnGetMinMaxInfo(lpMMI);
+	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }
 
 // 改变尺寸
 void CSettingDlg::OnSize(UINT nType, int cx, int cy)
 {
-	CDialog::OnSize(nType, cx, cy);
-	if (m_tab.m_hWnd == NULL)
-		return;
-
-	CRect rect;
-	GetClientRect(&rect); // 默认473 * 373
-	m_tab.SetWindowPos(NULL, 0, 0, rect.Width() - 21, rect.Height() - 58, SWP_NOMOVE | SWP_NOREDRAW);
-	int y = rect.Height() - 35;
-	m_okButton.SetWindowPos(NULL, rect.Width() - 200, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_cancelButton.SetWindowPos(NULL, rect.Width() - 105, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-
-	m_tab.GetClientRect(&rect);
-	rect.left += 1; rect.right -= 3; rect.top += 23; rect.bottom -= 2;
-	for (int i = 0; i < _countof(m_pages); i++)
-		m_pages[i]->SetWindowPos(NULL, 0, 0, rect.Width(), rect.Height(), SWP_NOMOVE | SWP_NOREDRAW);
-
-	Invalidate();
+	CNormalDlg::OnSize(nType, cx, cy);
+	m_pagesResize.Resize();
 }
 
 // 切换标签

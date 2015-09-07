@@ -9,10 +9,10 @@
 
 // CKeywordsPage 对话框
 
-IMPLEMENT_DYNAMIC(CKeywordsPage, CListPage)
+IMPLEMENT_DYNAMIC(CKeywordsPage, CRegListPage)
 
 CKeywordsPage::CKeywordsPage(CWnd* pParent /*=NULL*/)
-	: CListPage(pParent)
+	: CRegListPage(pParent)
 {
 
 }
@@ -23,11 +23,11 @@ CKeywordsPage::~CKeywordsPage()
 
 void CKeywordsPage::DoDataExchange(CDataExchange* pDX)
 {
-	CListPage::DoDataExchange(pDX);
+	CRegListPage::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CKeywordsPage, CListPage)
+BEGIN_MESSAGE_MAP(CKeywordsPage, CRegListPage)
 END_MESSAGE_MAP()
 
 
@@ -36,7 +36,7 @@ END_MESSAGE_MAP()
 
 BOOL CKeywordsPage::OnInitDialog()
 {
-	CListPage::OnInitDialog();
+	CRegListPage::OnInitDialog();
 
 	m_static.SetWindowText(_T("支持图片地址\\视频地址，当被测文本含有文本时匹配\r\n\
 注意正则表达式 .* 匹配所有文本，请不要不加限制使用！！"));

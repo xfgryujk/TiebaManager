@@ -12,13 +12,15 @@
 IMPLEMENT_DYNAMIC(CConfirmDlg, CDialog)
 
 CConfirmDlg::CConfirmDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CConfirmDlg::IDD, pParent)
+	: CDialog(CConfirmDlg::IDD, pParent),
+	m_resize(this)
 {
 	m_operation = NULL;
 }
 
 CConfirmDlg::CConfirmDlg(Operation* operation, CWnd* pParent)
-	: CDialog(CConfirmDlg::IDD, pParent)
+	: CDialog(CConfirmDlg::IDD, pParent),
+	m_resize(this)
 {
 	m_operation = operation;
 }
@@ -60,18 +62,7 @@ void CConfirmDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 void CConfirmDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialog::OnSize(nType, cx, cy);
-	if (m_contentEdit.m_hWnd == NULL)
-		return;
-
-	CRect rect;
-	GetClientRect(&rect); // д╛хо737 * 519
-	m_contentEdit.SetWindowPos(NULL, 0, 0, rect.Width() - 23, rect.Height() - 56, SWP_NOMOVE | SWP_NOREDRAW);
-	int y = rect.Height() - 35;
-	m_static.SetWindowPos(NULL, 11, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_yesButton.SetWindowPos(NULL, rect.Width() - 212, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_noButton.SetWindowPos(NULL, rect.Width() - 100, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-
-	Invalidate();
+	m_resize.Resize();
 }
 #pragma endregion
 
@@ -79,6 +70,11 @@ void CConfirmDlg::OnSize(UINT nType, int cx, int cy)
 BOOL CConfirmDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+
+	m_resize.AddControl(&m_contentEdit, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_static, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_contentEdit);
+	m_resize.AddControl(&m_yesButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_contentEdit);
+	m_resize.AddControl(&m_noButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_contentEdit);
 
 	if (m_operation != NULL)
 	{

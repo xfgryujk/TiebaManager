@@ -8,10 +8,10 @@
 
 // CImagePage 对话框
 
-IMPLEMENT_DYNAMIC(CImagePage, CDialog)
+IMPLEMENT_DYNAMIC(CImagePage, CNormalDlg)
 
 CImagePage::CImagePage(CWnd* pParent /*=NULL*/)
-	: CDialog(CImagePage::IDD, pParent)
+	: CNormalDlg(CImagePage::IDD, pParent)
 {
 	m_updateImage = FALSE;
 }
@@ -23,16 +23,16 @@ CImagePage::~CImagePage()
 
 void CImagePage::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_dirEdit);
 	DDX_Control(pDX, IDC_BUTTON1, m_browseButton);
 	DDX_Control(pDX, IDC_BUTTON2, m_updateButton);
 	DDX_Control(pDX, IDC_EDIT5, m_thresholdEdit);
+	DDX_Control(pDX, IDC_STATIC1, m_static);
 }
 
 
-BEGIN_MESSAGE_MAP(CImagePage, CDialog)
-	ON_WM_CLOSE()
+BEGIN_MESSAGE_MAP(CImagePage, CNormalDlg)
 	ON_BN_CLICKED(IDC_BUTTON1, &CImagePage::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CImagePage::OnBnClickedButton2)
 	ON_EN_KILLFOCUS(IDC_EDIT5, &CImagePage::OnEnKillfocusEdit5)
@@ -41,25 +41,18 @@ END_MESSAGE_MAP()
 
 // CImagePage 消息处理程序
 
-#pragma region UI
-// 屏蔽Esc关闭窗口
-void CImagePage::OnCancel()
+// 初始化
+BOOL CImagePage::OnInitDialog()
 {
-}
+	CNormalDlg::OnInitDialog();
 
-// 屏蔽回车关闭窗口
-void CImagePage::OnOK()
-{
-}
+	m_resize.AddControl(&m_dirEdit, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this);
+	m_resize.AddControl(&m_browseButton, RT_KEEP_DIST_TO_RIGHT, &m_dirEdit, RT_NULL, NULL);
+	m_resize.AddControl(&m_static, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this);
 
-// 销毁窗口
-void CImagePage::OnClose()
-{
-	DestroyWindow();
-
-	CDialog::OnClose();
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常:  OCX 属性页应返回 FALSE
 }
-#pragma endregion
 
 // 浏览
 void CImagePage::OnBnClickedButton1()

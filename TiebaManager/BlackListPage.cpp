@@ -9,10 +9,10 @@
 
 // CBlackListPage 对话框
 
-IMPLEMENT_DYNAMIC(CBlackListPage, CListPage)
+IMPLEMENT_DYNAMIC(CBlackListPage, CRegListPage)
 
 CBlackListPage::CBlackListPage(CWnd* pParent /*=NULL*/)
-	: CListPage(pParent)
+	: CRegListPage(pParent)
 {
 
 }
@@ -23,11 +23,11 @@ CBlackListPage::~CBlackListPage()
 
 void CBlackListPage::DoDataExchange(CDataExchange* pDX)
 {
-	CListPage::DoDataExchange(pDX);
+	CRegListPage::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CBlackListPage, CListPage)
+BEGIN_MESSAGE_MAP(CBlackListPage, CRegListPage)
 	ON_EN_KILLFOCUS(IDC_EDIT1, &CBlackListPage::OnKillfocusEdit1)
 END_MESSAGE_MAP()
 
@@ -37,7 +37,7 @@ END_MESSAGE_MAP()
 
 BOOL CBlackListPage::OnInitDialog()
 {
-	CListPage::OnInitDialog();
+	CRegListPage::OnInitDialog();
 
 	m_static.SetWindowText(_T("当被测文本等于文本时匹配\r\n\
 注意正则表达式.*匹配所有文本，请不要不加限制使用！！"));

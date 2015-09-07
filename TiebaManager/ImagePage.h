@@ -1,10 +1,11 @@
 #pragma once
 #include "afxwin.h"
+#include "NormalDlg.h"
 
 
 // CImagePage 对话框
 
-class CImagePage : public CDialog
+class CImagePage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CImagePage)
 
@@ -19,10 +20,8 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
-	virtual void OnCancel();
-	virtual void OnOK();
 public:
-	afx_msg void OnClose();
+	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnEnKillfocusEdit5();
@@ -32,6 +31,7 @@ public:
 	CEdit m_dirEdit;
 	CButton m_browseButton;
 	CButton m_updateButton;
+	CStatic m_static;
 	CEdit m_thresholdEdit;
 
 	BOOL m_updateImage;

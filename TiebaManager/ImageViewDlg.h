@@ -2,11 +2,12 @@
 #include "afxwin.h"
 #include <vector>
 using std::vector;
+#include "NormalDlg.h"
 
 
 // CImageViewDlg 对话框
 
-class CImageViewDlg : public CDialog
+class CImageViewDlg : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CImageViewDlg)
 
@@ -21,12 +22,9 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
-	virtual void OnCancel();
-	virtual void OnOK();
 public:
 	afx_msg void OnClose();
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
-	afx_msg void OnSize(UINT nType, int cx, int cy);
 	virtual void PostNcDestroy();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);

@@ -1,10 +1,10 @@
 #pragma once
-#include "ListPage.h"
+#include "RegListPage.h"
 
 
 // CKeywordsPage 对话框
 
-class CKeywordsPage : public CListPage
+class CKeywordsPage : public CRegListPage
 {
 	DECLARE_DYNAMIC(CKeywordsPage)
 
@@ -13,7 +13,7 @@ public:
 	virtual ~CKeywordsPage();
 
 // 对话框数据
-	enum { IDD = IDD_LIST_PAGE };
+	enum { IDD = IDD_REG_LIST_PAGE };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持

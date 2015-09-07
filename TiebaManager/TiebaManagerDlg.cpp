@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "SettingDlg.h"
 #include "ExplorerDlg.h"
+#include "SuperFunctionDlg.h"
 #include "TiebaManagerDlg.h"
 #include "Setting.h"
 #include "Global.h"
@@ -49,7 +50,7 @@ WNDPROC CTiebaManagerDlg::s_oldExplorerWndProc;
 
 // 构造函数
 CTiebaManagerDlg::CTiebaManagerDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CTiebaManagerDlg::IDD, pParent)
+	: CNormalDlg(CTiebaManagerDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
@@ -73,14 +74,14 @@ CTiebaManagerDlg::CTiebaManagerDlg(CWnd* pParent /*=NULL*/)
 #pragma region MFC
 void CTiebaManagerDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EXPLORER1, m_logExplorer);
 	DDX_Control(pDX, IDC_EDIT1, m_forumNameEdit);
 	DDX_Control(pDX, IDC_BUTTON1, m_confirmButton);
 	DDX_Control(pDX, IDC_BUTTON2, m_startButton);
 	DDX_Control(pDX, IDC_BUTTON3, m_stopButton);
 	DDX_Control(pDX, IDC_EDIT2, m_pageEdit);
-	DDX_Control(pDX, IDC_BUTTON4, m_backStageButton);
+	DDX_Control(pDX, IDC_BUTTON4, m_superFunctionButton);
 	DDX_Control(pDX, IDC_BUTTON5, m_settingButton);
 	DDX_Control(pDX, IDC_STATIC4, m_logStatic);
 	DDX_Control(pDX, IDC_STATIC5, m_stateStatic);
@@ -90,13 +91,11 @@ void CTiebaManagerDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST2, m_stateList);
 }
 
-BEGIN_MESSAGE_MAP(CTiebaManagerDlg, CDialog)
+BEGIN_MESSAGE_MAP(CTiebaManagerDlg, CNormalDlg)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
-	ON_WM_CLOSE()
 	ON_WM_GETMINMAXINFO()
-	ON_WM_SIZE()
 	ON_WM_SYSCOMMAND()
 	ON_MESSAGE(WM_TRAY, OnTray)
 	ON_REGISTERED_MESSAGE(WM_TASKBARCREATED, OnTaskBarCreated)
@@ -110,7 +109,7 @@ BEGIN_MESSAGE_MAP(CTiebaManagerDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON7, &CTiebaManagerDlg::OnBnClickedButton7)
 END_MESSAGE_MAP()
 
-BEGIN_EVENTSINK_MAP(CTiebaManagerDlg, CDialog)
+BEGIN_EVENTSINK_MAP(CTiebaManagerDlg, CNormalDlg)
 	ON_EVENT(CTiebaManagerDlg, IDC_EXPLORER1, 250, CTiebaManagerDlg::BeforeNavigate2Explorer1, VTS_DISPATCH VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PVARIANT VTS_PBOOL)
 END_EVENTSINK_MAP()
 
@@ -143,7 +142,7 @@ void CTiebaManagerDlg::OnPaint()
 	}
 	else
 	{
-		CDialog::OnPaint();
+		CNormalDlg::OnPaint();
 	}
 }
 
@@ -158,12 +157,22 @@ HCURSOR CTiebaManagerDlg::OnQueryDragIcon()
 // 初始化
 BOOL CTiebaManagerDlg::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+	CNormalDlg::OnInitDialog();
 
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
+
+	m_resize.AddControl(&m_explorerButton, RT_KEEP_DIST_TO_RIGHT, this);
+	m_resize.AddControl(&m_superFunctionButton, RT_KEEP_DIST_TO_RIGHT, this);
+	m_resize.AddControl(&m_settingButton, RT_KEEP_DIST_TO_RIGHT, this);
+	m_resize.AddControl(&m_logStatic, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_logExplorer, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_logStatic, RT_KEEP_DIST_TO_BOTTOM, &m_logStatic);
+	m_resize.AddControl(&m_stateStatic, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_logStatic, RT_KEEP_DIST_TO_RIGHT, this, RT_NULL, NULL);
+	m_resize.AddControl(&m_saveLogStatic, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_logStatic, RT_NULL, this, RT_NULL, NULL);
+	m_resize.AddControl(&m_clearLogStatic, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_logStatic, RT_NULL, this, RT_NULL, NULL);
+	m_resize.AddControl(&m_stateList, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this, RT_KEEP_DIST_TO_RIGHT, this);
 
 	m_pageEdit.SetWindowText(_T("1"));
 
@@ -228,7 +237,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 // 释放
 void CTiebaManagerDlg::OnDestroy()
 {
-	CDialog::OnDestroy();
+	CNormalDlg::OnDestroy();
 
 	SaveCurrentUserProfile();
 	WritePrivateProfileString(_T("Setting"), _T("UserName"), g_currentUser, ALL_PROFILE_PATH);
@@ -241,24 +250,6 @@ void CTiebaManagerDlg::OnDestroy()
 #pragma region UI
 // 窗口 /////////////////////////////////////////////////////////////////////////////////
 
-// 屏蔽Esc关闭窗口
-void CTiebaManagerDlg::OnCancel()
-{
-}
-
-// 屏蔽回车关闭窗口
-void CTiebaManagerDlg::OnOK()
-{
-}
-
-// 销毁窗口
-void CTiebaManagerDlg::OnClose()
-{
-	DestroyWindow();
-
-	CDialog::OnClose();
-}
-
 // 屏蔽日志右键菜单
 LRESULT CALLBACK CTiebaManagerDlg::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -270,33 +261,10 @@ LRESULT CALLBACK CTiebaManagerDlg::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM 
 // 限制最小尺寸
 void CTiebaManagerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
-	lpMMI->ptMinTrackSize.x = 530;
-	lpMMI->ptMinTrackSize.y = 238;
+	lpMMI->ptMinTrackSize.x = 705;
+	lpMMI->ptMinTrackSize.y = 293;
 
-	CDialog::OnGetMinMaxInfo(lpMMI);
-}
-
-// 改变尺寸
-void CTiebaManagerDlg::OnSize(UINT nType, int cx, int cy)
-{
-	CDialog::OnSize(nType, cx, cy);
-	if (m_backStageButton.m_hWnd == NULL)
-		return;
-
-	CRect rect;
-	GetClientRect(&rect); // 默认557 * 486
-	m_explorerButton.SetWindowPos(NULL, rect.Width() - 221, 45, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_backStageButton.SetWindowPos(NULL, rect.Width() - 147, 45, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_settingButton.SetWindowPos(NULL, rect.Width() - 74, 45, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_logStatic.SetWindowPos(NULL, 0, 0, rect.Width() - 21, rect.Height() - 207, SWP_NOMOVE | SWP_NOREDRAW);
-	m_logExplorer.SetWindowPos(NULL, 0, 0, rect.Width() - 42, rect.Height() - 240, SWP_NOMOVE | SWP_NOREDRAW);
-	int y = rect.Height() - 126;
-	m_stateStatic.SetWindowPos(NULL, 11, y, rect.Width() - 158, 26, SWP_NOREDRAW);
-	m_clearLogStatic.SetWindowPos(NULL, rect.Width() - 137, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_saveLogStatic.SetWindowPos(NULL, rect.Width() - 74, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_stateList.SetWindowPos(NULL, 13, rect.Height() - 90, rect.Width() - 21, 81, SWP_NOREDRAW);
-
-	Invalidate();
+	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }
 
 // 托盘 /////////////////////////////////////////////////////////////////////////////////
@@ -311,7 +279,7 @@ void CTiebaManagerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		return;
 	}
 
-	CDialog::OnSysCommand(nID, lParam);
+	CNormalDlg::OnSysCommand(nID, lParam);
 }
 
 // 托盘消息
@@ -568,10 +536,14 @@ void CTiebaManagerDlg::OnBnClickedButton7()
 	}
 }
 
-// 后台
+// 超级功能
 void CTiebaManagerDlg::OnBnClickedButton4()
 {
-	ShellExecute(NULL, _T("open"), _T("http://tieba.baidu.com/bawu2/platform/listPostLog?word=") + g_forumName, NULL, NULL, SW_NORMAL);
+	if (m_superFunctionDlg == NULL)
+	{
+		m_superFunctionDlg = new CSuperFunctionDlg();
+		m_superFunctionDlg->Create(IDD_SETTING_DIALOG, GetDesktopWindow());
+	}
 }
 
 // 设置
@@ -680,7 +652,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_startButton.EnableWindow(TRUE);
 	m_pageEdit.EnableWindow(TRUE);
 	m_explorerButton.EnableWindow(TRUE);
-	m_backStageButton.EnableWindow(TRUE);
+	m_superFunctionButton.EnableWindow(TRUE);
 	WritePrivateProfileString(_T("Setting"), _T("ForumName"), g_forumName, USER_PROFILE_PATH);
 	Log(_T("<font color=green>确认监控贴吧：</font>") + g_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));
 	return;

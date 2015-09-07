@@ -1,10 +1,11 @@
 #pragma once
 #include "afxwin.h"
+#include "NormalDlg.h"
 
 
 // COptionsPage 对话框
 
-class COptionsPage : public CDialog
+class COptionsPage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(COptionsPage)
 
@@ -19,11 +20,7 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
-	virtual void OnCancel();
-	virtual void OnOK();
 public:
-	afx_msg void OnClose();
-	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnLbnDblclkList1();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
@@ -41,4 +38,5 @@ public:
 	CButton m_loadOptionsButton;
 	CButton m_saveOptionsButton;
 	CStatic m_currentOptionStatic;
+	virtual BOOL OnInitDialog();
 };

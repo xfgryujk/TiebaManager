@@ -7,12 +7,14 @@
 #include <mshtml.h>
 #include "afxwin.h"
 #include "TextButton.h"
+#include "NormalDlg.h"
 class CSettingDlg;
 class CExplorerDlg;
+class CSuperFunctionDlg;
 
 
 // CTiebaManagerDlg 对话框
-class CTiebaManagerDlg : public CDialog
+class CTiebaManagerDlg : public CNormalDlg
 {
 // 构造
 public:
@@ -36,11 +38,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnDestroy();
-	virtual void OnCancel();
-	virtual void OnOK();
-	afx_msg void OnClose();
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
-	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	LRESULT OnTray(WPARAM wParam, LPARAM lParam);
 	LRESULT OnTaskBarCreated(WPARAM wParam, LPARAM lParam);
@@ -75,7 +73,7 @@ public:
 	CButton m_stopButton;
 	CEdit m_pageEdit;
 	CButton m_explorerButton;
-	CButton m_backStageButton;
+	CButton m_superFunctionButton;
 	CButton m_settingButton;
 	CStatic m_logStatic;
 	CExplorer1 m_logExplorer;
@@ -86,6 +84,7 @@ public:
 
 	CSettingDlg* m_settingDlg;
 	CExplorerDlg* m_explorerDlg;
+	CSuperFunctionDlg* m_superFunctionDlg;
 
 protected:
 	static WNDPROC s_oldExplorerWndProc;

@@ -8,10 +8,10 @@
 
 // CPrefPage 对话框
 
-IMPLEMENT_DYNAMIC(CPrefPage, CDialog)
+IMPLEMENT_DYNAMIC(CPrefPage, CNormalDlg)
 
 CPrefPage::CPrefPage(CWnd* pParent /*=NULL*/)
-	: CDialog(CPrefPage::IDD, pParent)
+	: CNormalDlg(CPrefPage::IDD, pParent)
 {
 
 }
@@ -23,7 +23,7 @@ CPrefPage::~CPrefPage()
 
 void CPrefPage::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_scanIntervalEdit);
 	DDX_Control(pDX, IDC_CHECK2, m_deleteCheck);
 	DDX_Control(pDX, IDC_CHECK1, m_banIDCheck);
@@ -39,8 +39,7 @@ void CPrefPage::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CPrefPage, CDialog)
-	ON_WM_CLOSE()
+BEGIN_MESSAGE_MAP(CPrefPage, CNormalDlg)
 	ON_EN_KILLFOCUS(IDC_EDIT1, &CPrefPage::OnEnKillfocusEdit1)
 	ON_BN_CLICKED(IDC_CHECK1, &CPrefPage::OnBnClickedCheck1)
 	ON_EN_KILLFOCUS(IDC_EDIT3, &CPrefPage::OnEnKillfocusEdit3)
@@ -53,29 +52,9 @@ END_MESSAGE_MAP()
 
 // CPrefPage 消息处理程序
 
-#pragma region UI
-// 屏蔽Esc关闭窗口
-void CPrefPage::OnCancel()
-{
-}
-
-// 屏蔽回车关闭窗口
-void CPrefPage::OnOK()
-{
-}
-
-// 销毁窗口
-void CPrefPage::OnClose()
-{
-	DestroyWindow();
-
-	CDialog::OnClose();
-}
-#pragma endregion
-
 BOOL CPrefPage::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+	CNormalDlg::OnInitDialog();
 
 	// 初始化封禁时长
 	m_banDurationCombo.AddString(_T("1"));

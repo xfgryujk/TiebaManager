@@ -11,10 +11,10 @@
 
 // CUsersPage 对话框
 
-IMPLEMENT_DYNAMIC(CUsersPage, CDialog)
+IMPLEMENT_DYNAMIC(CUsersPage, CNormalDlg)
 
 CUsersPage::CUsersPage(CWnd* pParent /*=NULL*/)
-	: CDialog(CUsersPage::IDD, pParent)
+	: CNormalDlg(CUsersPage::IDD, pParent)
 {
 
 }
@@ -26,7 +26,7 @@ CUsersPage::~CUsersPage()
 
 void CUsersPage::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STATIC1, m_currentUserStatic);
 	DDX_Control(pDX, IDC_LIST1, m_list);
 	DDX_Control(pDX, IDC_BUTTON1, m_loginButton);
@@ -35,9 +35,7 @@ void CUsersPage::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CUsersPage, CDialog)
-	ON_WM_CLOSE()
-	ON_WM_SIZE()
+BEGIN_MESSAGE_MAP(CUsersPage, CNormalDlg)
 	ON_BN_CLICKED(IDC_BUTTON1, &CUsersPage::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CUsersPage::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CUsersPage::OnBnClickedButton3)
@@ -46,49 +44,16 @@ END_MESSAGE_MAP()
 
 // CUsersPage 消息处理程序
 
-#pragma region UI
-// 屏蔽Esc关闭窗口
-void CUsersPage::OnCancel()
-{
-}
-
-// 屏蔽回车关闭窗口
-void CUsersPage::OnOK()
-{
-}
-
-// 销毁窗口
-void CUsersPage::OnClose()
-{
-	DestroyWindow();
-
-	CDialog::OnClose();
-}
-
-// 改变尺寸
-void CUsersPage::OnSize(UINT nType, int cx, int cy)
-{
-	CDialog::OnSize(nType, cx, cy);
-	if (m_list.m_hWnd == NULL)
-		return;
-
-	CRect rect;
-	GetClientRect(&rect); // 默认446 * 287
-	m_currentUserStatic.SetWindowPos(NULL, 0, 0, rect.Width() - 21, 15, SWP_NOMOVE | SWP_NOREDRAW);
-	m_list.SetWindowPos(NULL, 0, 0, rect.Width() - 21, rect.Height() - 84, SWP_NOMOVE | SWP_NOREDRAW);
-	int y = rect.Height() - 39;
-	m_loginButton.SetWindowPos(NULL, 11, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_deleteButton.SetWindowPos(NULL, 84, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_switchButton.SetWindowPos(NULL, 158, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-
-	Invalidate();
-}
-#pragma endregion
-
 // 初始化
 BOOL CUsersPage::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+	CNormalDlg::OnInitDialog();
+
+	m_resize.AddControl(&m_currentUserStatic, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this);
+	m_resize.AddControl(&m_list, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_loginButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_deleteButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_switchButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 
 	// 已确认贴吧
 	if (!((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_confirmButton.IsWindowEnabled())

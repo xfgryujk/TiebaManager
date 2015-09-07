@@ -1,10 +1,10 @@
 #pragma once
-#include "ListPage.h"
+#include "RegListPage.h"
 
 
-// CBlackListPage 对话框
+// CBlackListTestPage 对话框
 
-class CBlackListPage : public CListPage
+class CBlackListPage : public CRegListPage
 {
 	DECLARE_DYNAMIC(CBlackListPage)
 
@@ -13,7 +13,7 @@ public:
 	virtual ~CBlackListPage();
 
 // 对话框数据
-	enum { IDD = IDD_LIST_PAGE };
+	enum { IDD = IDD_REG_LIST_PAGE };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持

@@ -37,14 +37,11 @@ BOOL CWhiteListPage::OnInitDialog()
 {
 	CListPage::OnInitDialog();
 
+	m_contentStatic.SetWindowText(_T("用户名："));
+
 	m_static.SetWindowText(_T("当被测文本等于文本时匹配(无正则)"));
 	m_static.ModifyStyle(0, SS_CENTERIMAGE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
-}
-
-BOOL CWhiteListPage::TestMatch(const CString& test, const CString& text, BOOL isRegex)
-{
-	return test == text;
 }

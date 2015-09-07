@@ -7,17 +7,18 @@
 #include "BlackListPage.h"
 #include "WhiteListPage.h"
 #include "WhiteContentPage.h"
-#include "TrustedThreadPage.h"
+#include "ListPage.h"
 #include "OptionsPage.h"
 #include "UsersPage.h"
 #include "AboutPage.h"
+#include "NormalDlg.h"
 
 
 // CSettingDlg ¶Ô»°¿ò
 
 const int SETTING_DLG_PAGE_COUNT = 10;
 
-class CSettingDlg : public CDialog
+class CSettingDlg : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CSettingDlg)
 
@@ -56,7 +57,7 @@ public:
 	CBlackListPage m_blackListPage;
 	CWhiteListPage m_whiteListPage;
 	CWhiteContentPage m_whiteContentPage;
-	CTrustedThreadPage m_trustedThreadPage;
+	CListPage m_trustedThreadPage;
 	COptionsPage m_optionsPage;
 	CUsersPage m_usersPage;
 	CAboutPage m_aboutPage;
@@ -65,5 +66,6 @@ public:
 
 	BOOL m_clearScanCache;
 protected:
-	CDialog* m_pages[SETTING_DLG_PAGE_COUNT];
+	CWnd* m_pages[SETTING_DLG_PAGE_COUNT];
+	CResizeControl m_pagesResize;
 };

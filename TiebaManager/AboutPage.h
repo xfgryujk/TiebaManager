@@ -1,11 +1,12 @@
 #pragma once
 #include "afxwin.h"
 #include "TextButton.h"
+#include "NormalDlg.h"
 
 
 // CAboutPage 对话框
 
-class CAboutPage : public CDialog
+class CAboutPage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CAboutPage)
 
@@ -20,14 +21,10 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
-	virtual void OnCancel();
-	virtual void OnOK();
 public:
-	afx_msg void OnClose();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnStnClickedStatic1();
 	afx_msg void OnStnClickedStatic2();
-	afx_msg void OnSize(UINT nType, int cx, int cy);
 
 
 public:

@@ -41,7 +41,7 @@ END_MESSAGE_MAP()
 // ≥ı ºªØ
 BOOL CExploreThreadPage::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+	CExplorerPage::OnInitDialog();
 
 	m_edit.SetWindowText(_T("1"));
 

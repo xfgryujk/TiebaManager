@@ -43,6 +43,12 @@
     <Filter Include="源文件\Dialog\UI">
       <UniqueIdentifier>{5f92a814-ed20-4ebc-8d4f-560e1a02d9a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Dialog\SuperFunction">
+      <UniqueIdentifier>{cfc04151-1699-4135-a7c2-5267823e2d3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Dialog\SuperFunction">
+      <UniqueIdentifier>{628fdca5-b0af-4b2d-ad95-2780a193694c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -70,9 +76,6 @@
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
     <ClInclude Include="PrefPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
-    </ClInclude>
-    <ClInclude Include="ListPage.h">
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
     <ClInclude Include="BlackListPage.h">
@@ -132,14 +135,26 @@
     <ClInclude Include="ImageViewDlg.h">
       <Filter>头文件\Dialog</Filter>
     </ClInclude>
-    <ClInclude Include="TrustedThreadPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
-    </ClInclude>
     <ClInclude Include="explorer1.h">
       <Filter>头文件\Dialog\UI</Filter>
     </ClInclude>
     <ClInclude Include="TextButton.h">
       <Filter>头文件\Dialog\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SuperFunctionDlg.h">
+      <Filter>头文件\Dialog\SuperFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="ListPage.h">
+      <Filter>头文件\Dialog\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ResizeControl.h">
+      <Filter>头文件\Dialog\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalDlg.h">
+      <Filter>头文件\Dialog\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="RegListPage.h">
+      <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -159,9 +174,6 @@
       <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
     <ClCompile Include="PrefPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
-    </ClCompile>
-    <ClCompile Include="ListPage.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
     <ClCompile Include="BlackListPage.cpp">
@@ -224,14 +236,26 @@
     <ClCompile Include="Global.cpp">
       <Filter>源文件\Global</Filter>
     </ClCompile>
-    <ClCompile Include="TrustedThreadPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
-    </ClCompile>
     <ClCompile Include="explorer1.cpp">
       <Filter>源文件\Dialog\UI</Filter>
     </ClCompile>
     <ClCompile Include="TextButton.cpp">
       <Filter>源文件\Dialog\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SuperFunctionDlg.cpp">
+      <Filter>源文件\Dialog\SuperFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="ListPage.cpp">
+      <Filter>源文件\Dialog\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ResizeControl.cpp">
+      <Filter>源文件\Dialog\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalDlg.cpp">
+      <Filter>源文件\Dialog\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="RegListPage.cpp">
+      <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

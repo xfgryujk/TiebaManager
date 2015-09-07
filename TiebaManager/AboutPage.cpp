@@ -8,10 +8,10 @@
 
 // CAboutPage 对话框
 
-IMPLEMENT_DYNAMIC(CAboutPage, CDialog)
+IMPLEMENT_DYNAMIC(CAboutPage, CNormalDlg)
 
 CAboutPage::CAboutPage(CWnd* pParent /*=NULL*/)
-	: CDialog(CAboutPage::IDD, pParent)
+	: CNormalDlg(CAboutPage::IDD, pParent)
 {
 
 }
@@ -23,7 +23,7 @@ CAboutPage::~CAboutPage()
 
 void CAboutPage::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_edit);
 	DDX_Control(pDX, IDC_STATIC1, m_checkUpdateStatic);
 	DDX_Control(pDX, IDC_CHECK1, m_autoCheckUpdateCheck);
@@ -31,11 +31,9 @@ void CAboutPage::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CAboutPage, CDialog)
-	ON_WM_CLOSE()
+BEGIN_MESSAGE_MAP(CAboutPage, CNormalDlg)
 	ON_STN_CLICKED(IDC_STATIC1, &CAboutPage::OnStnClickedStatic1)
 	ON_STN_CLICKED(IDC_STATIC2, &CAboutPage::OnStnClickedStatic2)
-	ON_WM_SIZE()
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -44,7 +42,12 @@ END_MESSAGE_MAP()
 // 初始化
 BOOL CAboutPage::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+	CNormalDlg::OnInitDialog();
+
+	m_resize.AddControl(&m_edit, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_checkUpdateStatic, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_edit);
+	m_resize.AddControl(&m_autoCheckUpdateCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_edit);
+	m_resize.AddControl(&m_authorStatic, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_edit);
 
 	m_edit.SetWindowText(_T("软件介绍帖http://tieba.baidu.com/p/3915111330\r\n\
 \r\n\
@@ -61,45 +64,6 @@ html代码只转换了\"'&<>还有空格，其他以网页源码为准，如换行符为<br> (不注意的话会
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
-
-#pragma region UI
-// 屏蔽Esc关闭窗口
-void CAboutPage::OnCancel()
-{
-}
-
-// 屏蔽回车关闭窗口
-void CAboutPage::OnOK()
-{
-}
-
-// 销毁窗口
-void CAboutPage::OnClose()
-{
-	DestroyWindow();
-
-	CDialog::OnClose();
-}
-
-// 改变尺寸
-void CAboutPage::OnSize(UINT nType, int cx, int cy)
-{
-	CDialog::OnSize(nType, cx, cy);
-	if (m_edit.m_hWnd == NULL)
-		return;
-
-	CRect rect;
-	GetClientRect(&rect); // 默认446 * 287
-	m_edit.SetWindowPos(NULL, 0, 0, rect.Width() - 19, rect.Height() - 45, SWP_NOMOVE | SWP_NOREDRAW);
-	int y = rect.Height() - 28;
-	m_checkUpdateStatic.SetWindowPos(NULL, 11, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_autoCheckUpdateCheck.SetWindowPos(NULL, 116, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_authorStatic.SetWindowPos(NULL, rect.Width() - 124, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-
-	Invalidate();
-}
-#pragma endregion
-
 
 // 检查更新
 void CAboutPage::OnStnClickedStatic1()

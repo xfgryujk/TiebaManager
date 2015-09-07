@@ -8,10 +8,10 @@
 
 // CWhiteContentPage 对话框
 
-IMPLEMENT_DYNAMIC(CWhiteContentPage, CListPage)
+IMPLEMENT_DYNAMIC(CWhiteContentPage, CRegListPage)
 
 CWhiteContentPage::CWhiteContentPage(CWnd* pParent /*=NULL*/)
-	: CListPage(pParent)
+	: CRegListPage(pParent)
 {
 
 }
@@ -22,11 +22,11 @@ CWhiteContentPage::~CWhiteContentPage()
 
 void CWhiteContentPage::DoDataExchange(CDataExchange* pDX)
 {
-	CListPage::DoDataExchange(pDX);
+	CRegListPage::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CWhiteContentPage, CListPage)
+BEGIN_MESSAGE_MAP(CWhiteContentPage, CRegListPage)
 END_MESSAGE_MAP()
 
 
@@ -35,7 +35,7 @@ END_MESSAGE_MAP()
 
 BOOL CWhiteContentPage::OnInitDialog()
 {
-	CListPage::OnInitDialog();
+	CRegListPage::OnInitDialog();
 
 	m_static.SetWindowText(_T("支持图片地址\\视频地址，当被测文本含有文本时匹配"));
 	m_static.ModifyStyle(0, SS_CENTERIMAGE);

@@ -1,10 +1,11 @@
 #pragma once
 #include "afxwin.h"
+#include "NormalDlg.h"
 
 
 // CUsersPage 对话框
 
-class CUsersPage : public CDialog
+class CUsersPage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CUsersPage)
 
@@ -19,11 +20,7 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
-	virtual void OnCancel();
-	virtual void OnOK();
 public:
-	afx_msg void OnClose();
-	afx_msg void OnSize(UINT nType, int cx, int cy);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();

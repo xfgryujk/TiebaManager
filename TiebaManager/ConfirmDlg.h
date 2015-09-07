@@ -1,6 +1,7 @@
 #pragma once
 #include "afxwin.h"
 #include "Tieba.h"
+#include "ResizeControl.h"
 class CImageViewDlg;
 
 
@@ -25,6 +26,7 @@ protected:
 public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	virtual BOOL OnInitDialog();
+	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 
 
 public:
@@ -36,7 +38,7 @@ public:
 	CImageViewDlg* m_imageViewDlg;
 
 protected:
+	CResizeControl m_resize;
+
 	Operation* m_operation;
-public:
-	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 };

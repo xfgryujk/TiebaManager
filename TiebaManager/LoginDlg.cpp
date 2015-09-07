@@ -155,7 +155,7 @@ void CLoginDlg::OnOK()
 	{
 		WriteString(result, _T("login.txt"));
 		AfxMessageBox(_T("登录失败！"), MB_ICONERROR);
-		if (userName.Left(2) == _T("13"))
+		if (userName.Left(1) == _T("1"))
 			AfxMessageBox(_T("(不能用手机号哦)"), MB_ICONINFORMATION);
 		goto error;
 	}
