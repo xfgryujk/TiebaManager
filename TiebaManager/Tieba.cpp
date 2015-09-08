@@ -88,7 +88,7 @@ const TCHAR POST_SIGN_RIGHT[] = _T("/>");
 const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)during_time\":\\d+\\}\\]"));
 
 const TCHAR LZL_SPLIT[] = _T("{\"thread_id\"");
-const TCHAR LZL_PID_LEFT[] = _T("\"post_id\":\"");
+const TCHAR LZL_PID_LEFT[] = _T("\"comment_id\":\"");
 const TCHAR LZL_PID_RIGHT[] = _T("\"");
 const TCHAR LZL_AUTHOR_LEFT[] = _T("\"username\":\"");
 const TCHAR LZL_AUTHOR_RIGHT[] = _T("\"");
