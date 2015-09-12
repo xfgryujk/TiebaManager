@@ -5,9 +5,8 @@
 #include "KeywordsPage.h"
 #include "ImagePage.h"
 #include "BlackListPage.h"
-#include "WhiteListPage.h"
-#include "WhiteContentPage.h"
 #include "ListPage.h"
+#include "WhiteContentPage.h"
 #include "OptionsPage.h"
 #include "UsersPage.h"
 #include "AboutPage.h"
@@ -55,7 +54,7 @@ public:
 	CKeywordsPage m_keywordsPage;
 	CImagePage m_imagePage;
 	CBlackListPage m_blackListPage;
-	CWhiteListPage m_whiteListPage;
+	CListPage m_whiteListPage;
 	CWhiteContentPage m_whiteContentPage;
 	CListPage m_trustedThreadPage;
 	COptionsPage m_optionsPage;

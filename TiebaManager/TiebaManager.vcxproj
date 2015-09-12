@@ -120,6 +120,7 @@
     <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="ImageViewDlg.h" />
     <ClInclude Include="ListPage.h" />
+    <ClInclude Include="LoopBanPage.h" />
     <ClInclude Include="NormalDlg.h" />
     <ClInclude Include="ResizeControl.h" />
     <ClInclude Include="ScanImage.h" />
@@ -150,13 +151,13 @@
     <ClInclude Include="Update.h" />
     <ClInclude Include="UsersPage.h" />
     <ClInclude Include="WhiteContentPage.h" />
-    <ClInclude Include="WhiteListPage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="BlackListPage.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />
     <ClCompile Include="ListPage.cpp" />
+    <ClCompile Include="LoopBanPage.cpp" />
     <ClCompile Include="NormalDlg.cpp" />
     <ClCompile Include="ResizeControl.cpp" />
     <ClCompile Include="ScanImage.cpp" />
@@ -188,7 +189,6 @@
     <ClCompile Include="Update.cpp" />
     <ClCompile Include="UsersPage.cpp" />
     <ClCompile Include="WhiteContentPage.cpp" />
-    <ClCompile Include="WhiteListPage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TiebaManager.rc" />

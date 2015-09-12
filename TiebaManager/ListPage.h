@@ -24,9 +24,9 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 	afx_msg void OnDblclkList1();
-	afx_msg void OnClickedButton1();
-	afx_msg void OnClickedButton2();
-	afx_msg void OnClickedButton3();
+	afx_msg virtual void OnClickedButton1();
+	afx_msg virtual void OnClickedButton2();
+	afx_msg virtual void OnClickedButton3();
 
 
 public:

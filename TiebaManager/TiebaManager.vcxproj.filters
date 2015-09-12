@@ -84,9 +84,6 @@
     <ClInclude Include="KeywordsPage.h">
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
-    <ClInclude Include="WhiteListPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
-    </ClInclude>
     <ClInclude Include="WhiteContentPage.h">
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
@@ -156,6 +153,9 @@
     <ClInclude Include="RegListPage.h">
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
+    <ClInclude Include="LoopBanPage.h">
+      <Filter>头文件\Dialog\SuperFunction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -180,9 +180,6 @@
       <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
     <ClCompile Include="KeywordsPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
-    </ClCompile>
-    <ClCompile Include="WhiteListPage.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
     <ClCompile Include="WhiteContentPage.cpp">
@@ -256,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="RegListPage.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="LoopBanPage.cpp">
+      <Filter>源文件\Dialog\SuperFunction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

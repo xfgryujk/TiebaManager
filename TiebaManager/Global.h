@@ -10,8 +10,16 @@ inline BOOL StringIncludes(const CString& str, LPCTSTR content, BOOL isRegex)
 {
 	if (isRegex)
 	{
-		wregex reg(content);
-		return std::regex_search((LPCTSTR)str, reg);
+		try
+		{
+			wregex reg(content);
+			return std::regex_search((LPCTSTR)str, reg);
+		}
+		catch (...)
+		{
+			MessageBox(NULL, _T("正则表达式错误！"), _T("贴吧管理器"), MB_ICONERROR);
+			return FALSE;
+		}
 	}
 	else
 		return StringIncludes(str, content);
@@ -46,8 +54,16 @@ inline BOOL StringMatchs(const CString& str, LPCTSTR content, BOOL isRegex)
 {
 	if (isRegex)
 	{
-		wregex reg(content);
-		return std::regex_match((LPCTSTR)str, reg);
+		try
+		{
+			wregex reg(content);
+			return std::regex_match((LPCTSTR)str, reg);
+		}
+		catch (...)
+		{
+			MessageBox(NULL, _T("正则表达式错误！"), _T("贴吧管理器"), MB_ICONERROR);
+			return FALSE;
+		}
 	}
 	else
 		return str == content;

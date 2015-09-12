@@ -130,7 +130,7 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 	if (rawThreads.GetSize() < 2)
 	{
 		if (src != NET_STOP_TEXT && src != NET_TIMEOUT_TEXT)
-			WriteString(_T("forum.txt"), src);
+			WriteString(src, _T("forum.txt"));
 		return FALSE;
 	}
 
@@ -348,7 +348,13 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		g_operateThread = AfxBeginThread(OperateThread, mainDlg);
 	
 	// 初始化日志文档
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	if (FAILED(hr))
+	{
+		CString code;
+		code.Format(_T("0x%08X"), hr);
+		WriteString(_T("error.txt"), code);
+	}
 	CComPtr<IHTMLDocument2> document;
 	dlg->GetLogDocument(document);
 	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
@@ -521,7 +527,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		pageCount = GetStringBetween(src, PAGE_COUNT_LEFT, PAGE_COUNT_RIGHT);
 		if (pageCount == _T(""))
 		{
-			WriteString(src, _T("page1.txt"));
+			WriteString(src, _T("thread.txt"));
 			if (!g_briefLog)
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
 				+ _T("</a> <font color=red>获取贴子列表失败(可能已被删)，暂时跳过</font>"), pDocument);

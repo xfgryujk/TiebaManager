@@ -8,15 +8,16 @@
 
 // CSuperFunctionDlg 对话框
 
-IMPLEMENT_DYNAMIC(CSuperFunctionDlg, CDialog)
+IMPLEMENT_DYNAMIC(CSuperFunctionDlg, CNormalDlg)
 
 // 构造函数
 CSuperFunctionDlg::CSuperFunctionDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CSuperFunctionDlg::IDD, pParent)
+	: CNormalDlg(CSuperFunctionDlg::IDD, pParent),
+	m_pagesResize(&m_tab)
 {
 	// 初始化m_pages
 	int i = 0;
-	////////////////////m_pages[i++] = &m_prefPage;
+	m_pages[i++] = &m_loopBanPage;
 }
 
 #pragma region MFC
@@ -26,14 +27,14 @@ CSuperFunctionDlg::~CSuperFunctionDlg()
 
 void CSuperFunctionDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TAB1, m_tab);
 	DDX_Control(pDX, IDOK, m_okButton);
 	DDX_Control(pDX, IDCANCEL, m_cancelButton);
 }
 
 
-BEGIN_MESSAGE_MAP(CSuperFunctionDlg, CDialog)
+BEGIN_MESSAGE_MAP(CSuperFunctionDlg, CNormalDlg)
 	ON_WM_GETMINMAXINFO()
 	ON_WM_SIZE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CSuperFunctionDlg::OnTcnSelchangeTab1)
@@ -46,7 +47,7 @@ END_MESSAGE_MAP()
 // 初始化
 BOOL CSuperFunctionDlg::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+	CNormalDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	SetIcon(hIcon, TRUE);			// 设置大图标
@@ -56,10 +57,10 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 
 	// 初始化m_tab
 	int i = 0;
-	m_tab.InsertItem(i++, _T("首选项"));
+	m_tab.InsertItem(i++, _T("循环封"));
 
 	// 初始化各页
-	/////////////m_prefPage.Create(IDD_PREF_PAGE, &m_tab);
+	m_loopBanPage.Create(IDD_LIST_PAGE, &m_tab);
 
 	CRect rect;
 	m_tab.GetClientRect(&rect);
@@ -67,6 +68,12 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 	m_pages[0]->SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(), SWP_SHOWWINDOW);
 	for (i = 1; i < _countof(m_pages); i++)
 		m_pages[i]->SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(), SWP_HIDEWINDOW);
+
+	m_resize.AddControl(&m_tab, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_okButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
+	m_resize.AddControl(&m_cancelButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
+	for (i = 0; i < _countof(m_pages); i++)
+		m_pagesResize.AddControl(m_pages[i], RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_tab, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
 
 	// 显示配置
 
@@ -102,7 +109,7 @@ void CSuperFunctionDlg::OnClose()
 // 释放this
 void CSuperFunctionDlg::PostNcDestroy()
 {
-	CDialog::PostNcDestroy();
+	CNormalDlg::PostNcDestroy();
 
 	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_superFunctionDlg = NULL;
 	delete this;
@@ -111,32 +118,17 @@ void CSuperFunctionDlg::PostNcDestroy()
 // 限制最小尺寸
 void CSuperFunctionDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
-	lpMMI->ptMinTrackSize.x = 489;
-	lpMMI->ptMinTrackSize.y = 411;
+	lpMMI->ptMinTrackSize.x = 666;
+	lpMMI->ptMinTrackSize.y = 576;
 
-	CDialog::OnGetMinMaxInfo(lpMMI);
+	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }
 
 // 改变尺寸
 void CSuperFunctionDlg::OnSize(UINT nType, int cx, int cy)
 {
-	CDialog::OnSize(nType, cx, cy);
-	if (m_tab.m_hWnd == NULL)
-		return;
-
-	CRect rect;
-	GetClientRect(&rect); // 默认473 * 373
-	m_tab.SetWindowPos(NULL, 0, 0, rect.Width() - 21, rect.Height() - 58, SWP_NOMOVE | SWP_NOREDRAW);
-	int y = rect.Height() - 35;
-	m_okButton.SetWindowPos(NULL, rect.Width() - 200, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-	m_cancelButton.SetWindowPos(NULL, rect.Width() - 105, y, 0, 0, SWP_NOSIZE | SWP_NOREDRAW);
-
-	m_tab.GetClientRect(&rect);
-	rect.left += 1; rect.right -= 3; rect.top += 23; rect.bottom -= 2;
-	for (int i = 0; i < _countof(m_pages); i++)
-		m_pages[i]->SetWindowPos(NULL, 0, 0, rect.Width(), rect.Height(), SWP_NOMOVE | SWP_NOREDRAW);
-
-	Invalidate();
+	CNormalDlg::OnSize(nType, cx, cy);
+	m_pagesResize.Resize();
 }
 
 // 切换标签

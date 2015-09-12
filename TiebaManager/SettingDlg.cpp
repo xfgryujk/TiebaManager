@@ -100,8 +100,13 @@ BOOL CSettingDlg::OnInitDialog()
 	m_imagePage.Create(IDD_IMAGE_PAGE, &m_tab);
 	m_blackListPage.Create(IDD_REG_LIST_PAGE, &m_tab);
 	m_whiteListPage.Create(IDD_LIST_PAGE, &m_tab);
+	m_whiteListPage.m_contentStatic.SetWindowText(_T("用户名："));
+	m_whiteListPage.m_static.SetWindowText(_T("当被测文本等于文本时匹配(无正则)"));
 	m_whiteContentPage.Create(IDD_REG_LIST_PAGE, &m_tab);
 	m_trustedThreadPage.Create(IDD_LIST_PAGE, &m_tab);
+	m_trustedThreadPage.m_contentStatic.SetWindowText(_T("主题ID："));
+	m_trustedThreadPage.m_edit.ModifyStyle(NULL, ES_NUMBER);
+	m_trustedThreadPage.m_static.SetWindowText(_T("添加的主题不会扫描，主题ID是网址中\"p/\"后面跟的数字"));
 	m_optionsPage.Create(IDD_OPTIONS_PAGE, &m_tab);
 	m_usersPage.Create(IDD_USERS_PAGE, &m_tab);
 	m_aboutPage.Create(IDD_ABOUT_PAGE, &m_tab);

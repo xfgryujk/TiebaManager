@@ -1,9 +1,11 @@
 #pragma once
+#include "NormalDlg.h"
+#include "LoopBanPage.h"
 
 
 // CSuperFunctionDlg ¶Ô»°¿ò
 
-class CSuperFunctionDlg : public CDialog
+class CSuperFunctionDlg : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CSuperFunctionDlg)
 
@@ -31,8 +33,11 @@ public:
 
 public:
 	CTabCtrl m_tab;
+	CLoopBanPage m_loopBanPage;
 	CButton m_okButton;
 	CButton m_cancelButton;
+	
 protected:
-	CDialog* m_pages[1];
+	CWnd* m_pages[1];
+	CResizeControl m_pagesResize;
 };
