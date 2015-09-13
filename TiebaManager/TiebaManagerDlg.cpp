@@ -526,6 +526,62 @@ UINT AFX_CDECL CTiebaManagerDlg::AutoUpdateThread(LPVOID _thiz)
 	return 0;
 }
 
+// 循环封线程
+UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
+{
+	CTiebaManagerDlg* thiz = (CTiebaManagerDlg*)_thiz;
+
+	// 上次循环封日期
+	SYSTEMTIME time;
+	GetLocalTime(&time);
+	CStringA sTime;
+	sTime.Format("%d-%d-%d", time.wYear, time.wMonth, time.wDay);
+	CFile file;
+	if (file.Open(CURRENT_USER_PATH + _T("\\LoopBanDate.tb"), CFile::modeCreate | CFile::modeNoTruncate | CFile::modeReadWrite))
+	{
+		CStringA lastTime;
+		int size = (int)file.GetLength();
+		file.Read(lastTime.GetBuffer(size), size);
+		lastTime.ReleaseBuffer(size);
+		if (sTime == lastTime)
+			return 0;
+
+		file.SeekToBegin();
+		file.Write((LPCSTR)sTime, sTime.GetLength());
+		file.Close();
+	}
+
+	gzFile f = gzopen_w(CURRENT_USER_PATH + _T("\\options2.tb"), "rb");
+	if (f == NULL)
+		return 0;
+
+	// 头部
+	char header[2];
+	gzread(f, header, sizeof(header));
+	if (header[0] != 'T' || header[1] != 'B')
+	{
+		gzclose(f);
+		return 0;
+	}
+
+	// 循环封
+	thiz->m_stateStatic.SetWindowText(_T("循环封禁中"));
+	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	int size;
+	gzread(f, &size, sizeof(int)); // 长度
+	CString name, pid;
+	for (int i = 0; i < size; i++)
+	{
+		ReadText(f, name);
+		ReadText(f, pid);
+		BanID(name, pid);
+	}
+	CoUninitialize();
+	thiz->m_stateStatic.SetWindowText(_T("待机中"));
+
+	return 0;
+}
+
 // 查看帖子
 void CTiebaManagerDlg::OnBnClickedButton7()
 {
@@ -577,7 +633,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 
 
 	src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=") + EncodeURI(g_forumName));
-	if (src == NET_TIMEOUT)
+	if (src == NET_TIMEOUT_TEXT)
 	{
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
 		goto error;
@@ -616,7 +672,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	// 旧接口
 	//src2 = HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(g_forumName), FALSE);
 	src2 = HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/listBawuTeamInfo?word=") + g_encodedForumName + _T("&ie=utf-8"), FALSE);
-	if (src2 == NET_TIMEOUT)
+	if (src2 == NET_TIMEOUT_TEXT)
 	{
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
 		goto error;
@@ -655,6 +711,8 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_superFunctionButton.EnableWindow(TRUE);
 	WritePrivateProfileString(_T("Setting"), _T("ForumName"), g_forumName, USER_PROFILE_PATH);
 	Log(_T("<font color=green>确认监控贴吧：</font>") + g_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));
+	// 开始循环封
+	AfxBeginThread(LoopBanThread, this);
 	return;
 
 error:

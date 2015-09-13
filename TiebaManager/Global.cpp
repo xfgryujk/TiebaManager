@@ -190,8 +190,14 @@ static void ReceiveCookie(LPCTSTR headers, CString& cookie)
 static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CComPtr<IServerXMLHTTPRequest>& xml, 
 	LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
 {
-	if (FAILED(xml.CoCreateInstance(__uuidof(ServerXMLHTTP))))
+	HRESULT hr = xml.CoCreateInstance(__uuidof(ServerXMLHTTP));
+	if (FAILED(hr))
+	{
+		CString code;
+		code.Format(_T("CoCreateInstance: 0x%08X"), hr);
+		WriteString(code, _T("error.txt"));
 		return NET_FAILED_TO_CREATE_INSTANCE;
+	}
 	if (cookie == NULL)
 		cookie = &g_cookie;
 

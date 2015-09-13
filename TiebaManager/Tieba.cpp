@@ -352,8 +352,8 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	if (FAILED(hr))
 	{
 		CString code;
-		code.Format(_T("0x%08X"), hr);
-		WriteString(_T("error.txt"), code);
+		code.Format(_T("CoInitializeEx: 0x%08X"), hr);
+		WriteString(code, _T("error.txt"));
 	}
 	CComPtr<IHTMLDocument2> document;
 	dlg->GetLogDocument(document);

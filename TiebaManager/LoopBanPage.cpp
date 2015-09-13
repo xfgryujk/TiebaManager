@@ -121,7 +121,7 @@ void CLoopBanPage::OnClickedButton3()
 CString CLoopBanPage::GetPID(const CString& userName)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + g_encodedForumName + _T("&qw=&rn=10&un=") + userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"), FALSE);
-	if (src == NET_TIMEOUT)
+	if (src == NET_TIMEOUT_TEXT)
 		return NET_TIMEOUT_TEXT;
 	CString pid =  GetStringBetween(src, _T("<div class=\"s_post\">"), _T("target=\"_blank\" >"));
 	pid = GetStringBetween(pid, _T("?pid="), _T("&"));

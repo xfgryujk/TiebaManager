@@ -64,6 +64,7 @@ protected:
 	static UINT AFX_CDECL SaveLogThread(LPVOID _thiz);
 
 	static UINT AFX_CDECL AutoUpdateThread(LPVOID _thiz);
+	static UINT AFX_CDECL LoopBanThread(LPVOID _thiz);
 
 
 public:

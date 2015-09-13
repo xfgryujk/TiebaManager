@@ -30,6 +30,9 @@ public:
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnClose();
 
+	void ShowCurrentOptions();
+	void ApplyOptionsInDlg();
+
 
 public:
 	CTabCtrl m_tab;

@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "SuperFunctionDlg.h"
 #include "TiebaManagerDlg.h"
+#include "Setting.h"
+#include <zlib.h>
 
 
 // CSuperFunctionDlg 对话框
@@ -76,7 +78,7 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 		m_pagesResize.AddControl(m_pages[i], RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_tab, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
 
 	// 显示配置
-
+	ShowCurrentOptions();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -142,10 +144,66 @@ void CSuperFunctionDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 }
 #pragma endregion
 
+// 显示当前设置
+void CSuperFunctionDlg::ShowCurrentOptions()
+{
+	gzFile f = gzopen_w(CURRENT_USER_PATH + _T("\\options2.tb"), "rb");
+	if (f == NULL)
+		return;
+
+	// 头部
+	char header[2];
+	gzread(f, header, sizeof(header));
+	if (header[0] != 'T' || header[1] != 'B')
+	{
+		gzclose(f);
+		return;
+	}
+
+	// 循环封
+	int size;
+	gzread(f, &size, sizeof(int)); // 长度
+	m_loopBanPage.m_list.ResetContent();
+	m_loopBanPage.m_pid.resize(size);
+	CString strBuf;
+	for (int i = 0; i < size; i++)
+	{
+		ReadText(f, strBuf);
+		m_loopBanPage.m_list.AddString(strBuf);
+		ReadText(f, m_loopBanPage.m_pid[i]);
+	}
+
+	gzclose(f);
+}
+
+// 应用对话框中的设置
+void CSuperFunctionDlg::ApplyOptionsInDlg()
+{
+	gzFile f = gzopen_w(CURRENT_USER_PATH + _T("\\options2.tb"), "wb");
+	if (f == NULL)
+		return;
+
+	// 头部
+	gzwrite(f, "TB", 2);
+
+	// 循环封
+	int size;
+	gzwrite(f, &(size = m_loopBanPage.m_list.GetCount()), sizeof(int)); // 长度
+	CString strBuf;
+	for (int i = 0; i < size; i++)
+	{
+		m_loopBanPage.m_list.GetText(i, strBuf);
+		WriteText(f, strBuf);
+		WriteText(f, m_loopBanPage.m_pid[i]);
+	}
+
+	gzclose(f);
+}
+
 // 确认
 void CSuperFunctionDlg::OnOK()
 {
-
+	ApplyOptionsInDlg();
 
 	DestroyWindow();
 }
