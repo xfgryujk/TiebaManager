@@ -79,6 +79,7 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 
 	// 显示配置
 	ShowCurrentOptions();
+	m_clearScanCache = FALSE;
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -198,6 +199,9 @@ void CSuperFunctionDlg::ApplyOptionsInDlg()
 	}
 
 	gzclose(f);
+
+	if (m_clearScanCache)
+		DeleteFile(CURRENT_USER_PATH + _T("\\LoopBanDate.tb"));
 }
 
 // 确认

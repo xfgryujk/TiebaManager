@@ -214,6 +214,14 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	}
 
 
+	// 每24小时清理已封名单、开始循环封
+	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
+		{
+			g_IDTrigCount.clear();
+			AfxBeginThread(LoopBanThread, (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd);
+		});
+
+
 	// 对付百度显示回复数为0的BUG，十分钟清除一次回复记录
 	/*SetTimer(0, 10 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
 		{
@@ -531,23 +539,19 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 {
 	CTiebaManagerDlg* thiz = (CTiebaManagerDlg*)_thiz;
 
-	// 上次循环封日期
+	// 一天内循环封过不再封
 	SYSTEMTIME time;
 	GetLocalTime(&time);
-	CStringA sTime;
-	sTime.Format("%d-%d-%d", time.wYear, time.wMonth, time.wDay);
 	CFile file;
 	if (file.Open(CURRENT_USER_PATH + _T("\\LoopBanDate.tb"), CFile::modeCreate | CFile::modeNoTruncate | CFile::modeReadWrite))
 	{
-		CStringA lastTime;
-		int size = (int)file.GetLength();
-		file.Read(lastTime.GetBuffer(size), size);
-		lastTime.ReleaseBuffer(size);
-		if (sTime == lastTime)
+		SYSTEMTIME lastTime;
+		file.Read(&lastTime, sizeof(lastTime));
+		if (time.wDay == lastTime.wDay && time.wMonth == lastTime.wMonth && time.wYear == lastTime.wYear)
 			return 0;
 
 		file.SeekToBegin();
-		file.Write((LPCSTR)sTime, sTime.GetLength());
+		file.Write(&time, sizeof(time));
 		file.Close();
 	}
 

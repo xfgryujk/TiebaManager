@@ -5,6 +5,7 @@
 #include "LoopBanPage.h"
 #include "Global.h"
 #include "Tieba.h"
+#include "SuperFunctionDlg.h"
 
 
 // CLoopBanPage 对话框
@@ -40,7 +41,7 @@ BOOL CLoopBanPage::OnInitDialog()
 	CListPage::OnInitDialog();
 
 	m_contentStatic.SetWindowText(_T("用户名："));
-	m_static.SetWindowText(_T("添加的用户会在每天确认贴吧后封禁"));
+	m_static.SetWindowText(_T("添加的用户，在确认贴吧后只要运行着程序会每天封禁"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -73,6 +74,8 @@ void CLoopBanPage::OnClickedButton1()
 	index = m_list.InsertString(index + 1, text);
 	m_pid.insert(m_pid.begin() + index, pid);
 	m_list.SetCurSel(index);
+
+	((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 }
 
 // 删除
@@ -116,6 +119,8 @@ void CLoopBanPage::OnClickedButton3()
 	index = m_list.InsertString(index, text);
 	m_pid.insert(m_pid.begin() + index, pid);
 	m_list.SetCurSel(index);
+
+	((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 }
 
 CString CLoopBanPage::GetPID(const CString& userName)

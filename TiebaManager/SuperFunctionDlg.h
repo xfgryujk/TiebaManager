@@ -39,7 +39,8 @@ public:
 	CLoopBanPage m_loopBanPage;
 	CButton m_okButton;
 	CButton m_cancelButton;
-	
+
+	BOOL m_clearScanCache;
 protected:
 	CWnd* m_pages[1];
 	CResizeControl m_pagesResize;
