@@ -1,7 +1,8 @@
 #pragma once
 #include "afxcmn.h"
 #include "afxwin.h"
-#include "PrefPage.h"
+#include "ScanPage.h"
+#include "OperatePage.h"
 #include "KeywordsPage.h"
 #include "ImagePage.h"
 #include "BlackListPage.h"
@@ -15,7 +16,7 @@
 
 // CSettingDlg ¶Ô»°¿ò
 
-const int SETTING_DLG_PAGE_COUNT = 10;
+const int SETTING_DLG_PAGE_COUNT = 11;
 
 class CSettingDlg : public CNormalDlg
 {
@@ -50,7 +51,8 @@ public:
 
 public:
 	CTabCtrl m_tab;
-	CPrefPage m_prefPage;
+	CScanPage m_scanPage;
+	COperatePage m_operatePage;
 	CKeywordsPage m_keywordsPage;
 	CImagePage m_imagePage;
 	CBlackListPage m_blackListPage;

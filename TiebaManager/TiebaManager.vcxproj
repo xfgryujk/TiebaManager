@@ -122,6 +122,7 @@
     <ClInclude Include="ListPage.h" />
     <ClInclude Include="LoopBanPage.h" />
     <ClInclude Include="NormalDlg.h" />
+    <ClInclude Include="OperatePage.h" />
     <ClInclude Include="ResizeControl.h" />
     <ClInclude Include="ScanImage.h" />
     <ClInclude Include="ConfirmDlg.h" />
@@ -137,7 +138,7 @@
     <ClInclude Include="RegListPage.h" />
     <ClInclude Include="LoginDlg.h" />
     <ClInclude Include="OptionsPage.h" />
-    <ClInclude Include="PrefPage.h" />
+    <ClInclude Include="ScanPage.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Setting.h" />
     <ClInclude Include="SettingDlg.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="ListPage.cpp" />
     <ClCompile Include="LoopBanPage.cpp" />
     <ClCompile Include="NormalDlg.cpp" />
+    <ClCompile Include="OperatePage.cpp" />
     <ClCompile Include="ResizeControl.cpp" />
     <ClCompile Include="ScanImage.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
@@ -174,7 +176,7 @@
     <ClCompile Include="RegListPage.cpp" />
     <ClCompile Include="LoginDlg.cpp" />
     <ClCompile Include="OptionsPage.cpp" />
-    <ClCompile Include="PrefPage.cpp" />
+    <ClCompile Include="ScanPage.cpp" />
     <ClCompile Include="Setting.cpp" />
     <ClCompile Include="SettingDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -36,7 +36,8 @@ CSettingDlg::CSettingDlg(CWnd* pParent /*=NULL*/)
 {
 	// 初始化m_pages
 	int i = 0;
-	m_pages[i++] = &m_prefPage;
+	m_pages[i++] = &m_scanPage;
+	m_pages[i++] = &m_operatePage;
 	m_pages[i++] = &m_keywordsPage;
 	m_pages[i++] = &m_imagePage;
 	m_pages[i++] = &m_blackListPage;
@@ -83,7 +84,8 @@ BOOL CSettingDlg::OnInitDialog()
 
 	// 初始化m_tab
 	int i = 0;
-	m_tab.InsertItem(i++, _T("首选项"));
+	m_tab.InsertItem(i++, _T("扫描"));
+	m_tab.InsertItem(i++, _T("操作"));
 	m_tab.InsertItem(i++, _T("违规内容"));
 	m_tab.InsertItem(i++, _T("违规图片"));
 	m_tab.InsertItem(i++, _T("屏蔽用户"));
@@ -95,7 +97,8 @@ BOOL CSettingDlg::OnInitDialog()
 	m_tab.InsertItem(i++, _T("关于&&更新"));
 
 	// 初始化各页
-	m_prefPage.Create(IDD_PREF_PAGE, &m_tab);
+	m_scanPage.Create(IDD_SCAN_PAGE, &m_tab);
+	m_operatePage.Create(IDD_OPERATE_PAGE, &m_tab);
 	m_keywordsPage.Create(IDD_REG_LIST_PAGE, &m_tab);
 	m_imagePage.Create(IDD_IMAGE_PAGE, &m_tab);
 	m_blackListPage.Create(IDD_REG_LIST_PAGE, &m_tab);
@@ -126,7 +129,7 @@ BOOL CSettingDlg::OnInitDialog()
 
 	// 显示配置
 	ShowCurrentOptions();
-	m_clearScanCache = FALSE; // 在m_prefPage.m_scanPageCountEdit.SetWindowText后初始化
+	m_clearScanCache = FALSE; // 在m_scanPage.m_scanPageCountEdit.SetWindowText后初始化
 
 	m_optionsPage.m_currentOptionStatic.SetWindowText(_T("当前方案：") + g_currentOption); // 当前方案
 	// 方案
@@ -224,26 +227,26 @@ void CSettingDlg::ShowCurrentOptions()
 {
 	CString tmp;
 	tmp.Format(_T("%d"), g_scanInterval);
-	m_prefPage.m_scanIntervalEdit.SetWindowText(tmp);		// 扫描间隔
-	m_prefPage.m_banIDCheck.SetCheck(g_banID);				// 封ID
-	m_prefPage.m_banDurationCombo.SetCurSel(g_banDuration == 1 ? 0 : (g_banDuration == 3 ? 1 : 2)); // 封禁时长
-	m_prefPage.OnBnClickedCheck1();
+	m_scanPage.m_scanIntervalEdit.SetWindowText(tmp);			// 扫描间隔
+	m_operatePage.m_banIDCheck.SetCheck(g_banID);				// 封ID
+	m_operatePage.m_banDurationCombo.SetCurSel(g_banDuration == 1 ? 0 : (g_banDuration == 3 ? 1 : 2)); // 封禁时长
+	m_operatePage.OnBnClickedCheck1();
 	tmp.Format(_T("%d"), g_trigCount);
-	m_prefPage.m_trigCountEdit.SetWindowText(tmp);			// 封禁违规次数
-	m_prefPage.m_onlyScanTitleCheck.SetCheck(g_onlyScanTitle); // 只扫描标题
+	m_operatePage.m_trigCountEdit.SetWindowText(tmp);			// 封禁违规次数
+	m_scanPage.m_onlyScanTitleCheck.SetCheck(g_onlyScanTitle);	// 只扫描标题
 	tmp.Format(_T("%g"), g_deleteInterval);
-	m_prefPage.m_deleteIntervalEdit.SetWindowText(tmp);		// 删帖间隔
-	m_prefPage.m_confirmCheck.SetCheck(g_confirm);			// 操作前提示
+	m_operatePage.m_deleteIntervalEdit.SetWindowText(tmp);		// 删帖间隔
+	m_operatePage.m_confirmCheck.SetCheck(g_confirm);			// 操作前提示
 	tmp.Format(_T("%d"), g_scanPageCount);
-	m_prefPage.m_scanPageCountEdit.SetWindowText(tmp);		// 扫描最后页数
-	m_prefPage.m_briefLogCheck.SetCheck(g_briefLog);		// 只输出删帖封号
-	m_prefPage.m_deleteCheck.SetCheck(g_delete);			// 删帖
+	m_scanPage.m_scanPageCountEdit.SetWindowText(tmp);			// 扫描最后页数
+	m_scanPage.m_briefLogCheck.SetCheck(g_briefLog);			// 只输出删帖封号
+	m_operatePage.m_deleteCheck.SetCheck(g_delete);				// 删帖
 	tmp.Format(_T("%d"), g_threadCount);
-	m_prefPage.m_threadCountEdit.SetWindowText(tmp);		// 线程数
-	m_prefPage.m_banReasonEdit.SetWindowText(g_banReason);	// 封禁原因
-	m_imagePage.m_dirEdit.SetWindowText(g_imageDir);		// 违规图片目录
+	m_scanPage.m_threadCountEdit.SetWindowText(tmp);			// 线程数
+	m_operatePage.m_banReasonEdit.SetWindowText(g_banReason);	// 封禁原因
+	m_imagePage.m_dirEdit.SetWindowText(g_imageDir);			// 违规图片目录
 	tmp.Format(_T("%lf"), g_SSIMThreshold);
-	m_imagePage.m_thresholdEdit.SetWindowText(tmp);			// 阈值
+	m_imagePage.m_thresholdEdit.SetWindowText(tmp);				// 阈值
 
 	// 违规内容
 	m_keywordsPage.m_list.ResetContent();
@@ -292,24 +295,24 @@ void CSettingDlg::ApplyOptionsInDlg()
 	int intBuf;
 	g_optionsLock.Lock();
 
-	m_prefPage.m_scanIntervalEdit.GetWindowText(strBuf);
+	m_scanPage.m_scanIntervalEdit.GetWindowText(strBuf);
 	g_scanInterval = _ttoi(strBuf);								// 扫描间隔
-	g_banID = m_prefPage.m_banIDCheck.GetCheck();				// 封ID
-	intBuf = m_prefPage.m_banDurationCombo.GetCurSel();
+	g_banID = m_operatePage.m_banIDCheck.GetCheck();			// 封ID
+	intBuf = m_operatePage.m_banDurationCombo.GetCurSel();
 	g_banDuration = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);	// 封禁时长
-	m_prefPage.m_trigCountEdit.GetWindowText(strBuf);
+	m_operatePage.m_trigCountEdit.GetWindowText(strBuf);
 	g_trigCount = _ttoi(strBuf);								// 封禁违规次数
-	g_onlyScanTitle = m_prefPage.m_onlyScanTitleCheck.GetCheck(); // 只扫描标题
-	m_prefPage.m_deleteIntervalEdit.GetWindowText(strBuf);
+	g_onlyScanTitle = m_scanPage.m_onlyScanTitleCheck.GetCheck(); // 只扫描标题
+	m_operatePage.m_deleteIntervalEdit.GetWindowText(strBuf);
 	g_deleteInterval = (float)_ttof(strBuf);					// 删帖间隔
-	g_confirm = m_prefPage.m_confirmCheck.GetCheck();			// 操作前提示
-	m_prefPage.m_scanPageCountEdit.GetWindowText(strBuf);
+	g_confirm = m_operatePage.m_confirmCheck.GetCheck();		// 操作前提示
+	m_scanPage.m_scanPageCountEdit.GetWindowText(strBuf);
 	g_scanPageCount = _ttoi(strBuf);							// 扫描最后页数
-	g_briefLog = m_prefPage.m_briefLogCheck.GetCheck();			// 只输出删帖封号
-	g_delete = m_prefPage.m_deleteCheck.GetCheck();				// 删帖
-	m_prefPage.m_threadCountEdit.GetWindowText(strBuf);
+	g_briefLog = m_scanPage.m_briefLogCheck.GetCheck();			// 只输出删帖封号
+	g_delete = m_operatePage.m_deleteCheck.GetCheck();			// 删帖
+	m_scanPage.m_threadCountEdit.GetWindowText(strBuf);
 	g_threadCount = _ttoi(strBuf);								// 线程数
-	m_prefPage.m_banReasonEdit.GetWindowText(strBuf);
+	m_operatePage.m_banReasonEdit.GetWindowText(strBuf);
 	g_banReason = strBuf;										// 封禁原因
 	m_imagePage.m_dirEdit.GetWindowText(g_imageDir);			// 违规图片目录
 	m_imagePage.m_thresholdEdit.GetWindowText(strBuf);
@@ -437,40 +440,40 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	double doubleBuf;
 	gzread(f, &intBuf, sizeof(int));						// 扫描间隔
 	strBuf.Format(_T("%d"), intBuf);
-	m_prefPage.m_scanIntervalEdit.SetWindowText(strBuf);
+	m_scanPage.m_scanIntervalEdit.SetWindowText(strBuf);
 	gzread(f, &boolBuf, sizeof(BOOL));						// 封ID
-	m_prefPage.m_banIDCheck.SetCheck(boolBuf);
+	m_operatePage.m_banIDCheck.SetCheck(boolBuf);
 	gzread(f, &intBuf, sizeof(int));						// 封禁时长
-	m_prefPage.m_banDurationCombo.SetCurSel(intBuf == 1 ? 0 : (intBuf == 3 ? 1 : 2));
+	m_operatePage.m_banDurationCombo.SetCurSel(intBuf == 1 ? 0 : (intBuf == 3 ? 1 : 2));
 	gzread(f, &boolBuf, sizeof(BOOL));						// 封IP
 	gzread(f, &intBuf, sizeof(int));						// 封禁违规次数
 	strBuf.Format(_T("%d"), intBuf);
-	m_prefPage.m_trigCountEdit.SetWindowText(strBuf);
+	m_operatePage.m_trigCountEdit.SetWindowText(strBuf);
 	gzread(f, &boolBuf, sizeof(BOOL));						// 只扫描标题
-	m_prefPage.m_onlyScanTitleCheck.SetCheck(boolBuf);
+	m_scanPage.m_onlyScanTitleCheck.SetCheck(boolBuf);
 	gzread(f, &floatBuf, sizeof(float));					// 删帖间隔
 	strBuf.Format(_T("%g"), floatBuf);
-	m_prefPage.m_deleteIntervalEdit.SetWindowText(strBuf);
+	m_operatePage.m_deleteIntervalEdit.SetWindowText(strBuf);
 	gzread(f, &boolBuf, sizeof(BOOL));						// 操作前提示
-	m_prefPage.m_confirmCheck.SetCheck(boolBuf);
+	m_operatePage.m_confirmCheck.SetCheck(boolBuf);
 	gzread(f, &intBuf, sizeof(int));						// 扫描最后页数
 	strBuf.Format(_T("%d"), intBuf);
-	m_prefPage.m_scanPageCountEdit.SetWindowText(strBuf);
+	m_scanPage.m_scanPageCountEdit.SetWindowText(strBuf);
 	gzread(f, &boolBuf, sizeof(BOOL));						// 只输出删帖封号
-	m_prefPage.m_briefLogCheck.SetCheck(boolBuf);
+	m_scanPage.m_briefLogCheck.SetCheck(boolBuf);
 	if (gzread(f, &boolBuf, sizeof(BOOL)) == sizeof(BOOL))	// 删帖
-		m_prefPage.m_deleteCheck.SetCheck(boolBuf);
+		m_operatePage.m_deleteCheck.SetCheck(boolBuf);
 	else
-		m_prefPage.m_deleteCheck.SetCheck(TRUE);
+		m_operatePage.m_deleteCheck.SetCheck(TRUE);
 	if (gzread(f, &intBuf, sizeof(int)) == sizeof(int))		// 线程数
 	{
 		strBuf.Format(_T("%d"), intBuf);
-		m_prefPage.m_threadCountEdit.SetWindowText(strBuf);
+		m_scanPage.m_threadCountEdit.SetWindowText(strBuf);
 	}
 	else
-		m_prefPage.m_threadCountEdit.SetWindowText(_T("2"));
+		m_scanPage.m_threadCountEdit.SetWindowText(_T("2"));
 	ReadText(f, strBuf);									// 封禁原因
-	m_prefPage.m_banReasonEdit.SetWindowText(strBuf);
+	m_operatePage.m_banReasonEdit.SetWindowText(strBuf);
 	ReadText(f, strBuf);									// 违规图片目录
 	m_imagePage.m_dirEdit.SetWindowText(strBuf);
 	if (gzread(f, &doubleBuf, sizeof(double)) == sizeof(double))	// 阈值
@@ -499,18 +502,18 @@ UseDefaultOptions:
 	m_whiteListPage.m_list.ResetContent();					// 信任用户
 	m_whiteContentPage.m_list.ResetContent();				// 信任内容
 	m_imagePage.m_updateImage = TRUE;						// 违规图片
-	m_prefPage.m_scanIntervalEdit.SetWindowText(_T("5"));	// 扫描间隔
-	m_prefPage.m_banIDCheck.SetCheck(FALSE);				// 封ID
-	m_prefPage.m_banDurationCombo.SetCurSel(0);				// 封禁时长
-	m_prefPage.m_trigCountEdit.SetWindowText(_T("1"));		// 封禁违规次数
-	m_prefPage.m_onlyScanTitleCheck.SetCheck(FALSE);		// 只扫描标题
-	m_prefPage.m_deleteIntervalEdit.SetWindowText(_T("2"));	// 删帖间隔
-	m_prefPage.m_confirmCheck.SetCheck(TRUE);				// 操作前提示
-	m_prefPage.m_scanPageCountEdit.SetWindowText(_T("1"));	// 扫描最后页数
-	m_prefPage.m_briefLogCheck.SetCheck(FALSE);				// 只输出删帖封号
-	m_prefPage.m_deleteCheck.SetCheck(TRUE);				// 删帖
-	m_prefPage.m_threadCountEdit.SetWindowText(_T("2"));	// 线程数
-	m_prefPage.m_banReasonEdit.SetWindowText(_T(""));		// 封禁原因
+	m_scanPage.m_scanIntervalEdit.SetWindowText(_T("5"));	// 扫描间隔
+	m_operatePage.m_banIDCheck.SetCheck(FALSE);				// 封ID
+	m_operatePage.m_banDurationCombo.SetCurSel(0);			// 封禁时长
+	m_operatePage.m_trigCountEdit.SetWindowText(_T("1"));	// 封禁违规次数
+	m_scanPage.m_onlyScanTitleCheck.SetCheck(FALSE);		// 只扫描标题
+	m_operatePage.m_deleteIntervalEdit.SetWindowText(_T("2"));	// 删帖间隔
+	m_operatePage.m_confirmCheck.SetCheck(TRUE);			// 操作前提示
+	m_scanPage.m_scanPageCountEdit.SetWindowText(_T("1"));	// 扫描最后页数
+	m_scanPage.m_briefLogCheck.SetCheck(FALSE);				// 只输出删帖封号
+	m_operatePage.m_deleteCheck.SetCheck(TRUE);				// 删帖
+	m_scanPage.m_threadCountEdit.SetWindowText(_T("2"));	// 线程数
+	m_operatePage.m_banReasonEdit.SetWindowText(_T(""));	// 封禁原因
 	m_imagePage.m_dirEdit.SetWindowText(_T(""));			// 违规图片目录
 	m_imagePage.m_thresholdEdit.SetWindowText(_T("2.43"));	// 阈值
 	m_trustedThreadPage.m_list.ResetContent();				// 信任主题
@@ -549,26 +552,26 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	BOOL boolBuf;
 	float floatBuf;
 	double doubleBuf;
-	m_prefPage.m_scanIntervalEdit.GetWindowText(strBuf);
+	m_scanPage.m_scanIntervalEdit.GetWindowText(strBuf);
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 扫描间隔
-	gzwrite(f, &(boolBuf = m_prefPage.m_banIDCheck.GetCheck()), sizeof(BOOL));		// 封ID
-	intBuf = m_prefPage.m_banDurationCombo.GetCurSel();
+	gzwrite(f, &(boolBuf = m_operatePage.m_banIDCheck.GetCheck()), sizeof(BOOL));	// 封ID
+	intBuf = m_operatePage.m_banDurationCombo.GetCurSel();
 	intBuf = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);
 	gzwrite(f, &intBuf, sizeof(int));												// 封禁时长
 	gzwrite(f, &(boolBuf = FALSE), sizeof(BOOL));									// 封IP
-	m_prefPage.m_trigCountEdit.GetWindowText(strBuf);
+	m_operatePage.m_trigCountEdit.GetWindowText(strBuf);
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 封禁违规次数
-	gzwrite(f, &(boolBuf = m_prefPage.m_onlyScanTitleCheck.GetCheck()), sizeof(BOOL)); // 只扫描标题
-	m_prefPage.m_deleteIntervalEdit.GetWindowText(strBuf);
+	gzwrite(f, &(boolBuf = m_scanPage.m_onlyScanTitleCheck.GetCheck()), sizeof(BOOL)); // 只扫描标题
+	m_operatePage.m_deleteIntervalEdit.GetWindowText(strBuf);
 	gzwrite(f, &(floatBuf = (float)_ttof(strBuf)), sizeof(float));					// 删帖间隔
-	gzwrite(f, &(boolBuf = m_prefPage.m_confirmCheck.GetCheck()), sizeof(BOOL));	// 操作前提示
-	m_prefPage.m_scanPageCountEdit.GetWindowText(strBuf);
+	gzwrite(f, &(boolBuf = m_operatePage.m_confirmCheck.GetCheck()), sizeof(BOOL));	// 操作前提示
+	m_scanPage.m_scanPageCountEdit.GetWindowText(strBuf);
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 扫描最后页数
-	gzwrite(f, &(boolBuf = m_prefPage.m_briefLogCheck.GetCheck()), sizeof(BOOL));	// 只输出删帖封号
-	gzwrite(f, &(boolBuf = m_prefPage.m_deleteCheck.GetCheck()), sizeof(BOOL));		// 删帖
-	m_prefPage.m_threadCountEdit.GetWindowText(strBuf);
+	gzwrite(f, &(boolBuf = m_scanPage.m_briefLogCheck.GetCheck()), sizeof(BOOL));	// 只输出删帖封号
+	gzwrite(f, &(boolBuf = m_operatePage.m_deleteCheck.GetCheck()), sizeof(BOOL));	// 删帖
+	m_scanPage.m_threadCountEdit.GetWindowText(strBuf);
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 线程数
-	m_prefPage.m_banReasonEdit.GetWindowText(strBuf);
+	m_operatePage.m_banReasonEdit.GetWindowText(strBuf);
 	WriteText(f, strBuf);															// 封禁原因
 	m_imagePage.m_dirEdit.GetWindowText(strBuf);
 	WriteText(f, strBuf);															// 违规图片目录

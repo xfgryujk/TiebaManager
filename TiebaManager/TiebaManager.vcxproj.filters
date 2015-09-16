@@ -75,9 +75,6 @@
     <ClInclude Include="SettingDlg.h">
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
-    <ClInclude Include="PrefPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
-    </ClInclude>
     <ClInclude Include="BlackListPage.h">
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
@@ -156,6 +153,12 @@
     <ClInclude Include="LoopBanPage.h">
       <Filter>头文件\Dialog\SuperFunction</Filter>
     </ClInclude>
+    <ClInclude Include="ScanPage.h">
+      <Filter>头文件\Dialog\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="OperatePage.h">
+      <Filter>头文件\Dialog\Setting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -171,9 +174,6 @@
       <Filter>源文件\Global</Filter>
     </ClCompile>
     <ClCompile Include="SettingDlg.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
-    </ClCompile>
-    <ClCompile Include="PrefPage.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
     <ClCompile Include="BlackListPage.cpp">
@@ -256,6 +256,12 @@
     </ClCompile>
     <ClCompile Include="LoopBanPage.cpp">
       <Filter>源文件\Dialog\SuperFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="ScanPage.cpp">
+      <Filter>源文件\Dialog\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="OperatePage.cpp">
+      <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
