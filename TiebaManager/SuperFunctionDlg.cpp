@@ -62,7 +62,7 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 	m_tab.InsertItem(i++, _T("循环封"));
 
 	// 初始化各页
-	m_loopBanPage.Create(IDD_LIST_PAGE, &m_tab);
+	m_loopBanPage.Create(IDD_LOOP_BAN_PAGE, &m_tab);
 
 	CRect rect;
 	m_tab.GetClientRect(&rect);
@@ -174,6 +174,12 @@ void CSuperFunctionDlg::ShowCurrentOptions()
 		ReadText(f, m_loopBanPage.m_pid[i]);
 	}
 
+	BOOL boolBuf;
+	if (gzread(f, &boolBuf, sizeof(BOOL)) == sizeof(BOOL))		// 输出日志
+		m_loopBanPage.m_logCheck.SetCheck(boolBuf);
+	else
+		m_loopBanPage.m_logCheck.SetCheck(FALSE);
+
 	gzclose(f);
 }
 
@@ -197,6 +203,9 @@ void CSuperFunctionDlg::ApplyOptionsInDlg()
 		WriteText(f, strBuf);
 		WriteText(f, m_loopBanPage.m_pid[i]);
 	}
+
+	BOOL boolBuf;
+	gzwrite(f, &(boolBuf = m_loopBanPage.m_logCheck.GetCheck()), sizeof(BOOL));		// 输出日志
 
 	gzclose(f);
 

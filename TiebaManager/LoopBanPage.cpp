@@ -26,6 +26,7 @@ CLoopBanPage::~CLoopBanPage()
 void CLoopBanPage::DoDataExchange(CDataExchange* pDX)
 {
 	CListPage::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_CHECK6, m_logCheck);
 }
 
 
@@ -40,8 +41,7 @@ BOOL CLoopBanPage::OnInitDialog()
 {
 	CListPage::OnInitDialog();
 
-	m_contentStatic.SetWindowText(_T("用户名："));
-	m_static.SetWindowText(_T("添加的用户，在确认贴吧后只要运行着程序会每天封禁"));
+	m_resize.AddControl(&m_logCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list, RT_KEEP_DIST_TO_RIGHT, this);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE

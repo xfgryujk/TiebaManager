@@ -1,4 +1,5 @@
 #pragma once
+#include "afxwin.h"
 #include "ListPage.h"
 #include <vector>
 
@@ -14,7 +15,7 @@ public:
 	virtual ~CLoopBanPage();
 
 // 对话框数据
-	enum { IDD = IDD_LIST_PAGE };
+	enum { IDD = IDD_LOOP_BAN_PAGE };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
@@ -29,6 +30,9 @@ public:
 protected:
 	CString GetPID(const CString& userName);
 
+
 public:
+	CButton m_logCheck;
+
 	std::vector<CString> m_pid;
 };

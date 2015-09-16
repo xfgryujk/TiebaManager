@@ -568,21 +568,44 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 		return 0;
 	}
 
+	// 读取名单、设置
+	int size;
+	gzread(f, &size, sizeof(int)); // 长度
+	vector<CString> name(size), pid(size);
+	for (int i = 0; i < size; i++)
+	{
+		ReadText(f, name[i]);
+		ReadText(f, pid[i]);
+	}
+	BOOL log = FALSE;
+	gzread(f, &log, sizeof(BOOL)); // 输出日志
+
 	// 循环封
 	thiz->m_stateStatic.SetWindowText(_T("循环封禁中"));
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	int size;
-	gzread(f, &size, sizeof(int)); // 长度
-	CString name, pid;
+	CComPtr<IHTMLDocument2> document;
+	thiz->GetLogDocument(document);
+	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 	for (int i = 0; i < size; i++)
 	{
-		ReadText(f, name);
-		ReadText(f, pid);
-		BanID(name, pid);
+		CString code = BanID(name[i], pid[i]);
+		if (log)
+		{
+			if (code != _T("0"))
+			{
+				CString content;
+				content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！\
+错误代码：%s(%s)</font><a href=\"BD:%s,%s\">重试</a>"), name[i], code, GetTiebaErrorText(code), pid[i], name[i]);
+				thiz->Log(content, pDocument);
+			}
+			else
+				thiz->Log(_T("<font color=red>封禁 </font>") + name[i], pDocument);
+		}
 	}
 	CoUninitialize();
 	thiz->m_stateStatic.SetWindowText(_T("待机中"));
 
+	gzclose(f);
 	return 0;
 }
 
@@ -602,7 +625,7 @@ void CTiebaManagerDlg::OnBnClickedButton4()
 	if (m_superFunctionDlg == NULL)
 	{
 		m_superFunctionDlg = new CSuperFunctionDlg();
-		m_superFunctionDlg->Create(IDD_SETTING_DIALOG, GetDesktopWindow());
+		m_superFunctionDlg->Create(IDD_SETTING_DIALOG, this);
 	}
 }
 

@@ -143,7 +143,9 @@ void CImageViewDlg::SetCurImage(int index)
 		}
 	}
 
-	SetWindowText(imgName);
+	CString caption;
+	caption.Format(_T("(%d/%d) %s"), m_curImageIndex + 1, m_imageURL->size(), imgName);
+	SetWindowText(caption);
 	m_imageStatic.Invalidate();
 }
 
