@@ -34,7 +34,7 @@ extern CString	g_currentOption;	// 当前方案
 extern int		g_scanInterval;		// 扫描间隔
 extern BOOL		g_banID;			// 封ID
 extern int		g_banDuration;		// 封禁时长
-extern int		g_trigCount;		// 封禁违规次数
+extern int		g_banTrigCount;		// 封禁违规次数
 extern BOOL		g_onlyScanTitle;	// 只扫描标题
 extern float	g_deleteInterval;	// 删帖间隔
 extern BOOL		g_confirm;			// 操作前提示
@@ -45,6 +45,8 @@ extern int		g_threadCount;		// 线程数
 extern CString	g_banReason;		// 封号原因
 extern CString	g_imageDir;			// 违规图片目录
 extern double	g_SSIMThreshold;	// 阈值
+extern BOOL		g_defriend;			// 拉黑
+extern int		g_defriendTrigCount; // 拉黑违规次数
 extern vector<RegexText>	g_keywords;		// 违规内容
 extern vector<RegexText>	g_blackList;	// 屏蔽用户
 extern set<CString>			g_whiteList;	// 信任用户

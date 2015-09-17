@@ -22,7 +22,7 @@ CString	g_currentOption;	// 当前方案
 int		g_scanInterval;		// 扫描间隔
 BOOL	g_banID;			// 封ID
 int		g_banDuration;		// 封禁时长
-int		g_trigCount;		// 封禁违规次数
+int		g_banTrigCount;		// 封禁违规次数
 BOOL	g_onlyScanTitle;	// 只扫描标题
 float	g_deleteInterval;	// 删帖间隔
 BOOL	g_confirm;			// 操作前提示
@@ -33,6 +33,8 @@ int		g_threadCount;		// 线程数
 CString	g_banReason;		// 封号原因
 CString	g_imageDir;			// 违规图片目录
 double	g_SSIMThreshold;	// 阈值
+BOOL	g_defriend;			// 拉黑
+int		g_defriendTrigCount; // 拉黑违规次数
 vector<RegexText>	g_keywords;		// 违规内容
 vector<RegexText>	g_blackList;	// 屏蔽用户
 set<CString>		g_whiteList;	// 信任用户
@@ -111,7 +113,7 @@ void ReadOptions(LPCTSTR path)
 	gzread(f, &g_banDuration, sizeof(int));		// 封禁时长
 	BOOL banIP;
 	gzread(f, &banIP, sizeof(BOOL));			// 封IP
-	gzread(f, &g_trigCount, sizeof(int));		// 封禁违规次数
+	gzread(f, &g_banTrigCount, sizeof(int));	// 封禁违规次数
 	gzread(f, &g_onlyScanTitle, sizeof(BOOL));	// 只扫描标题
 	gzread(f, &g_deleteInterval, sizeof(float));// 删帖间隔
 	gzread(f, &g_confirm, sizeof(BOOL));		// 操作前提示
@@ -138,6 +140,11 @@ void ReadOptions(LPCTSTR path)
 			g_trustedThread.insert(strBuf);
 		}
 
+	if (gzread(f, &g_defriend, sizeof(BOOL)) != sizeof(BOOL))		// 拉黑
+		g_defriend = FALSE;
+	if (gzread(f, &g_defriendTrigCount, sizeof(int)) != sizeof(int)) // 拉黑违规次数
+		g_defriendTrigCount = 5;
+
 	g_optionsLock.Unlock();
 
 	gzclose(f);
@@ -152,7 +159,7 @@ UseDefaultOptions:
 	g_scanInterval = 5;			// 扫描间隔
 	g_banID = FALSE;			// 封ID
 	g_banDuration = 1;			// 封禁时长
-	g_trigCount = 1;			// 封禁违规次数
+	g_banTrigCount = 1;			// 封禁违规次数
 	g_onlyScanTitle = FALSE;	// 只扫描标题
 	g_deleteInterval = 2.0f;	// 删帖间隔
 	g_confirm = TRUE;			// 操作前提示
@@ -165,6 +172,8 @@ UseDefaultOptions:
 	g_images.clear();			// 违规图片
 	g_SSIMThreshold = 2.43;		// 阈值
 	g_trustedThread.clear();	// 信任主题
+	g_defriend = FALSE;			// 拉黑
+	g_defriendTrigCount = 5;	// 拉黑违规次数
 	g_optionsLock.Unlock();
 }
 
@@ -199,7 +208,7 @@ void WriteOptions(LPCTSTR path)
 	gzwrite(f, &g_banDuration, sizeof(int));		// 封禁时长
 	BOOL banIP = FALSE;
 	gzwrite(f, &banIP, sizeof(BOOL));				// 封IP
-	gzwrite(f, &g_trigCount, sizeof(int));			// 封禁违规次数
+	gzwrite(f, &g_banTrigCount, sizeof(int));		// 封禁违规次数
 	gzwrite(f, &g_onlyScanTitle, sizeof(BOOL));		// 只扫描标题
 	gzwrite(f, &g_deleteInterval, sizeof(float));	// 删帖间隔
 	gzwrite(f, &g_confirm, sizeof(BOOL));			// 操作前提示
@@ -216,10 +225,13 @@ void WriteOptions(LPCTSTR path)
 	for (const CString& i : g_trustedThread)
 		WriteText(f, i);
 
+	gzwrite(f, &g_defriend, sizeof(BOOL));			// 拉黑
+	gzwrite(f, &g_defriendTrigCount, sizeof(int));	// 拉黑违规次数
+
 	gzclose(f);
 }
 
-static inline void ReadIDList(const gzFile& f, set<__int64>& IDList)
+static inline void ReadIDSet(const gzFile& f, set<__int64>& IDSet)
 {
 	int size;
 	if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
@@ -228,17 +240,39 @@ static inline void ReadIDList(const gzFile& f, set<__int64>& IDList)
 		for (int i = 0; i < size; i++)
 		{
 			gzread(f, &id, sizeof(__int64));
-			IDList.insert(id);
+			IDSet.insert(id);
 		}
 	}
 }
 
-static inline void WriteIDList(const gzFile& f, const set<__int64>& IDList)
+static inline void ReadTextSet(const gzFile& f, set<CString>& TextSet)
 {
-	int len = IDList.size();
+	int size;
+	if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
+	{
+		CString text;
+		for (int i = 0; i < size; i++)
+		{
+			ReadText(f, text);
+			TextSet.insert(text);
+		}
+	}
+}
+
+static inline void WriteIDSet(const gzFile& f, const set<__int64>& IDSet)
+{
+	int len = IDSet.size();
 	gzwrite(f, &len, sizeof(int)); // 长度
-	for (auto& i : IDList)
+	for (auto& i : IDSet)
 		gzwrite(f, &i, sizeof(__int64)); // ID
+}
+
+static inline void WriteTextSet(const gzFile& f, const set<CString>& TextSet)
+{
+	int len = TextSet.size();
+	gzwrite(f, &len, sizeof(int)); // 长度
+	for (auto& i : TextSet)
+		WriteText(f, i); // 文本
 }
 
 // 保存当前账号配置
@@ -258,20 +292,31 @@ void SaveCurrentUserProfile()
 		gzclose(f);
 	}
 
-	// 保存历史回复、忽略ID
+	// 保存历史回复、忽略ID等
 	f = gzopen_w(CACHE_PATH, "wb");
 	if (f != NULL)
 	{
-		int len = g_reply.size();
-		gzwrite(f, &len, sizeof(int)); // 长度
+		int len;
+		// 历史回复
+		gzwrite(f, &(len = g_reply.size()), sizeof(int)); // 长度
 		for (auto& i : g_reply)
 		{
 			gzwrite(f, &i.first, sizeof(__int64)); // 主题ID
 			gzwrite(f, &i.second, sizeof(int)); // 回复数
 		}
-		WriteIDList(f, g_initIgnoredTID);
-		WriteIDList(f, g_initIgnoredPID);
-		WriteIDList(f, g_initIgnoredLZLID);
+		// 忽略ID
+		WriteIDSet(f, g_initIgnoredTID);
+		WriteIDSet(f, g_initIgnoredPID);
+		WriteIDSet(f, g_initIgnoredLZLID);
+		// 违规次数
+		gzwrite(f, &(len = g_userTrigCount.size()), sizeof(int)); // 长度
+		for (auto& i : g_userTrigCount)
+		{
+			WriteText(f, i.first); // 用户名
+			gzwrite(f, &i.second, sizeof(int)); // 违规次数
+		}
+		// 拉黑用户
+		WriteTextSet(f, g_defriendedUser);
 		gzclose(f);
 	}
 }
@@ -307,11 +352,12 @@ void SetCurrentUser(LPCTSTR userName)
 		gzclose(f);
 	}
 
-	// 历史回复、忽略ID
+	// 历史回复、忽略ID等
 	f = gzopen_w(CACHE_PATH, "rb");
 	if (f != NULL)
 	{
 		int size;
+		// 历史回复
 		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
 		{
 			__int64 tid;
@@ -323,12 +369,27 @@ void SetCurrentUser(LPCTSTR userName)
 				g_reply[tid] = reply;
 			}
 		}
-		ReadIDList(f, g_initIgnoredTID);
+		// 忽略ID
+		ReadIDSet(f, g_initIgnoredTID);
 		g_ignoredTID = g_initIgnoredTID;
-		ReadIDList(f, g_initIgnoredPID);
+		ReadIDSet(f, g_initIgnoredPID);
 		g_ignoredPID = g_initIgnoredPID;
-		ReadIDList(f, g_initIgnoredLZLID);
+		ReadIDSet(f, g_initIgnoredLZLID);
 		g_ignoredLZLID = g_initIgnoredLZLID;
+		// 违规次数
+		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
+		{
+			CString userName;
+			int count;
+			for (int i = 0; i < size; i++)
+			{
+				ReadText(f, userName);
+				gzread(f, &count, sizeof(int));
+				g_userTrigCount[userName] = count;
+			}
+		}
+		// 拉黑用户
+		ReadTextSet(f, g_defriendedUser);
 		gzclose(f);
 	}
 }

@@ -25,14 +25,18 @@ public:
 	afx_msg void OnBnClickedCheck1();
 	afx_msg void OnEnKillfocusEdit3();
 	afx_msg void OnEnKillfocusEdit4();
+	afx_msg void OnEnKillfocusEdit8();
+	afx_msg void OnBnClickedCheck3();
 
 
 public:
 	CButton m_deleteCheck;
 	CButton m_banIDCheck;
+	CButton m_defriendCheck;
 	CComboBox m_banDurationCombo;
 	CEdit m_banReasonEdit;
-	CEdit m_trigCountEdit;
+	CEdit m_banTrigCountEdit;
+	CEdit m_defriendTrigCountEdit;
 	CEdit m_deleteIntervalEdit;
 	CButton m_confirmCheck;
 };

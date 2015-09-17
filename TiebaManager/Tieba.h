@@ -40,6 +40,7 @@ struct ThreadInfo // 主题信息
 	CString title;		// 标题
 	CString preview;	// 预览
 	CString author;		// 作者
+	CString authorID;	// 作者ID
 };
 
 struct PostInfo // 帖子信息
@@ -47,6 +48,7 @@ struct PostInfo // 帖子信息
 	CString pid;		// 帖子ID
 	CString floor;		// 楼层
 	CString author;		// 作者
+	CString authorID;	// 作者ID
 	CString content;	// 内容
 };
 
@@ -69,8 +71,10 @@ extern set<__int64> g_ignoredTID; // 不删的主题ID(已扫描且违规)
 extern set<__int64> g_ignoredPID; // 不删的帖子ID(已扫描且违规)
 extern set<__int64> g_ignoredLZLID; // 不删的楼中楼ID(已扫描且违规)
 extern set<__int64> g_deletedTID; // 已删的主题ID
-extern map<__int64, int> g_reply; // 主题的回复数
-extern map<CString, int> g_IDTrigCount; // 某ID违规次数，已封为-1
+extern map<__int64, int> g_reply; // 主题的回复数，要写入文件
+extern map<CString, int> g_userTrigCount; // 某用户违规次数，要写入文件
+extern set<CString> g_bannedUser; // 已封的用户
+extern set<CString> g_defriendedUser; // 已拉黑的用户，要写入文件
 BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg, int& pos, int& length);
 UINT AFX_CDECL ScanThread(LPVOID mainDlg);
 UINT AFX_CDECL ScanPostThread(LPVOID threadID);
@@ -89,12 +93,14 @@ struct Operation
 	CString floor;		// 楼层
 	CString pid;		// 帖子ID
 	CString author;		// 帖子作者
+	CString authorID;	// 帖子作者ID
 };
 extern CWinThread* g_operateThread;
 void AddOperation(const CString& msg, TBObject object, const CString& tid, const CString& title, 
-	const CString& floor, const CString& pid, const CString& author, int pos = 0, int length = 0);
+	const CString& floor, const CString& pid, const CString& author, const CString& authorID, int pos = 0, int length = 0);
 UINT AFX_CDECL OperateThread(LPVOID mainDlg);
 CString BanID(LPCTSTR userName, LPCTSTR pid);
+CString Defriend(LPCTSTR userID);
 CString DeleteThread(const CString& tid);
 CString DeletePost(LPCTSTR tid, LPCTSTR pid);
 CString DeleteLZL(LPCTSTR tid, LPCTSTR lzlid);

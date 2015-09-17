@@ -217,7 +217,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	// 每24小时清理已封名单、开始循环封
 	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
 		{
-			g_IDTrigCount.clear();
+			g_bannedUser.clear();
 			AfxBeginThread(LoopBanThread, (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd);
 		});
 
@@ -226,17 +226,17 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	/*SetTimer(0, 10 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
 		{
 			if (!g_briefLog)
-				((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->Log(_T("<font color=green>清除扫描记录</font>"));
+				((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->Log(_T("<font color=green>清除历史回复</font>"));
 			g_reply.clear();
 		});*/
 
 
 	// 测试
-	//vector<ThreadInfo> threads;
-	//GetThreads(_T("一个极其隐秘只有xfgryujk知道的地方"), _T("0"), threads);
-	//g_forumID = _T("309740");
-	//vector<PostInfo> posts, lzls;
-	//GetPosts(_T("3033489261"), _T(""), _T("1"), posts, lzls);
+	/*vector<ThreadInfo> threads;
+	GetThreads(_T("一个极其隐秘只有xfgryujk知道的地方"), _T("0"), threads);
+	g_forumID = _T("309740");
+	vector<PostInfo> posts, lzls;
+	GetPosts(_T("3033489261"), _T(""), _T("1"), posts, lzls);*/
 
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -392,16 +392,15 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	*Cancel = TRUE;
 
 	CString prefix = url.Left(3);
-	if (prefix == _T("DT:")) // 删主题
+	if (prefix == _T("dt:")) // 删主题
 	{
 		CString code = DeleteThread(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
 			Log(_T("<font color=green>删除成功！</font>"));
 		else
 			Log(_T("<font color=red>删除失败！</font>"));
-		return;
 	}
-	else if (prefix == _T("DP:")) // 删帖子
+	else if (prefix == _T("dp:")) // 删帖子
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
@@ -410,9 +409,8 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 			Log(_T("<font color=green>删除成功！</font>"));
 		else
 			Log(_T("<font color=red>删除失败！</font>"));
-		return;
 	}
-	else if (prefix == _T("DL:")) // 删楼中楼
+	else if (prefix == _T("dl:")) // 删楼中楼
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
@@ -421,9 +419,8 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 			Log(_T("<font color=green>删除成功！</font>"));
 		else
 			Log(_T("<font color=red>删除失败！</font>"));
-		return;
 	}
-	else if (prefix == _T("BD:")) // 封ID
+	else if (prefix == _T("bd:")) // 封ID
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
@@ -432,10 +429,17 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 			Log(_T("<font color=green>封禁成功！</font>"));
 		else
 			Log(_T("<font color=red>封禁失败！</font>"));
-		return;
 	}
-
-	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
+	else if (prefix == _T("df:")) // 拉黑
+	{
+		CString code = Defriend(url.Right(url.GetLength() - 3));
+		if (code == _T("0"))
+			Log(_T("<font color=green>拉黑成功！</font>"));
+		else
+			Log(_T("<font color=red>拉黑失败！</font>"));
+	}
+	else
+		ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }
 
 // 清空日志
@@ -595,7 +599,7 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 			{
 				CString content;
 				content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！\
-错误代码：%s(%s)</font><a href=\"BD:%s,%s\">重试</a>"), name[i], code, GetTiebaErrorText(code), pid[i], name[i]);
+错误代码：%s(%s)</font><a href=\"bd:%s,%s\">重试</a>"), name[i], code, GetTiebaErrorText(code), pid[i], name[i]);
 				thiz->Log(content, pDocument);
 			}
 			else

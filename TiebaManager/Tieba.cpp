@@ -41,16 +41,16 @@ CString g_tbs;
 // 正则表达式太慢所以不用
 #pragma region 主题列表
 // 今日话题
-const TCHAR TOPIC_LEFT[] = _T("<ul id=\"thread_topic");
-const TCHAR TOPIC_RIGHT[] = _T("</ul>");
+const TCHAR TOPIC_LEFT[] = _T("<div class=\"interview");
+const TCHAR TOPIC_RIGHT[] = _T("<dd class=\"listBtnCnt hide\">");
 const TCHAR TOPIC_TID_LEFT[] = _T("href=\"http://tieba.baidu.com/p/");
 const TCHAR TOPIC_TID_RIGHT[] = _T("\"");
 const TCHAR TOPIC_REPLY_LEFT[] = _T("title=\"");
 const TCHAR TOPIC_REPLY_RIGHT[] = _T("个回复\"");
-const TCHAR TOPIC_TITLE_LEFT[] = _T("title=\"");
-const TCHAR TOPIC_TITLE_RIGHT[] = _T("\"");
-const TCHAR TOPIC_PREVIEW_LEFT[] = _T("class=\"threadlist_abs\">");
-const TCHAR TOPIC_PREVIEW_RIGHT[] = _T("</div>");
+const TCHAR TOPIC_TITLE_LEFT[] = _T("\">\r\n                ");
+const TCHAR TOPIC_TITLE_RIGHT[] = _T("            </a>");
+const TCHAR TOPIC_PREVIEW_LEFT[] = _T("<dd class=\"listDescCnt\"> ");
+const TCHAR TOPIC_PREVIEW_RIGHT[] = _T("</dd>");
 
 // 普通主题
 const TCHAR THREAD_SPLIT[] = _T("data-field='{&quot;author_name&quot;:&quot;");
@@ -67,6 +67,8 @@ const TCHAR THREAD_MEDIA_LEFT[] = _T("<ul class=\"threadlist_media");
 const TCHAR THREAD_MEDIA_RIGHT[] = _T("</ul>");
 const TCHAR THREAD_AUTHOR_LEFT[] = _T("&quot;author_name&quot;:&quot;");
 const TCHAR THREAD_AUTHOR_RIGHT[] = _T("&quot;");
+const TCHAR THREAD_AUTHOR_ID_LEFT[] = _T("&quot;user_id&quot;:");
+const TCHAR THREAD_AUTHOR_ID_RIGHT[] = _T("}");
 #pragma endregion
 #pragma region 帖子列表
 const TCHAR PAGE_COUNT_LEFT[] = _T(",\"total_page\":");
@@ -79,6 +81,8 @@ const TCHAR POST_FLOOR_LEFT[] = _T("&quot;post_no&quot;:");
 const TCHAR POST_FLOOR_RIGHT[] = _T(",");
 const TCHAR POST_AUTHOR_LEFT[] = _T("&quot;user_name&quot;:&quot;");
 const TCHAR POST_AUTHOR_RIGHT[] = _T("&quot;");
+const TCHAR POST_AUTHOR_ID_LEFT[] = _T("&quot;user_id&quot;:");
+const TCHAR POST_AUTHOR_ID_RIGHT[] = _T(",");
 const TCHAR POST_CONTENT_LEFT[] = _T("<cc>");
 const TCHAR POST_CONTENT_RIGHT[] = _T("</cc>");
 const TCHAR POST_SIGN_LEFT[] = _T("<img class=\"j_user_sign\"");
@@ -92,6 +96,8 @@ const TCHAR LZL_PID_LEFT[] = _T("\"comment_id\":\"");
 const TCHAR LZL_PID_RIGHT[] = _T("\"");
 const TCHAR LZL_AUTHOR_LEFT[] = _T("\"username\":\"");
 const TCHAR LZL_AUTHOR_RIGHT[] = _T("\"");
+const TCHAR LZL_AUTHOR_ID_LEFT[] = _T("\"user_id\":\"");
+const TCHAR LZL_AUTHOR_ID_RIGHT[] = _T("\"");
 const TCHAR LZL_CONTENT_LEFT[] = _T("\"content\":\"");
 const TCHAR LZL_CONTENT_RIGHT[] = _T("\",\"");
 #pragma endregion
@@ -106,8 +112,10 @@ set<__int64> g_ignoredTID; // 不删的主题ID(已扫描且违规)
 set<__int64> g_ignoredPID; // 不删的帖子ID(已扫描且违规)
 set<__int64> g_ignoredLZLID; // 不删的楼中楼ID(已扫描且违规)
 set<__int64> g_deletedTID; // 已删的主题ID
-map<__int64, int> g_reply; // 主题的回复数
-map<CString, int> g_IDTrigCount; // 某ID违规次数，已封为-1
+map<__int64, int> g_reply; // 主题的回复数，要写入文件
+map<CString, int> g_userTrigCount; // 某用户违规次数，要写入文件
+set<CString> g_bannedUser; // 已封的用户
+set<CString> g_defriendedUser; // 已拉黑的用户，要写入文件
 
 static vector<ThreadInfo> g_threads; // 当前扫描的主题列表
 static int g_threadIndex; // 下个要扫描的主题索引
@@ -136,7 +144,8 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 
 	int iThreads;
 	// 今日主题
-	CString topic = GetStringBetween(rawThreads[0], TOPIC_LEFT, TOPIC_RIGHT);
+	// 已过期，以后修复
+	/*CString topic = GetStringBetween(rawThreads[rawThreads.GetSize() - 1], TOPIC_LEFT, TOPIC_RIGHT);
 	if (topic != _T(""))
 	{
 		threads.resize(rawThreads.GetSize());
@@ -149,7 +158,7 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 
 		iThreads = 1;
 	}
-	else
+	else*/
 	{
 		threads.resize(rawThreads.GetSize() - 1);
 		iThreads = 0;
@@ -164,6 +173,7 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 		threads[iThreads].title = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
 		threads[iThreads].preview = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT))
 			+ _T("\r\n") + GetStringBetween2(rawThreads[iRawThreads], THREAD_MEDIA_LEFT, THREAD_MEDIA_RIGHT);
+		threads[iThreads].authorID = GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
 		threads[iThreads].author = JSUnescape(GetStringBefore(rawThreads[iRawThreads], THREAD_AUTHOR_RIGHT));
 
 		//OutputDebugString(_T("\n"));
@@ -194,6 +204,7 @@ GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& 
 		posts[iPosts].pid = GetStringBetween(rawPosts[iRawPosts], POST_PID_LEFT, POST_PID_RIGHT);
 		posts[iPosts].floor = GetStringBetween(rawPosts[iRawPosts], POST_FLOOR_LEFT, POST_FLOOR_RIGHT);
 		posts[iPosts].author = JSUnescape(GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_LEFT, POST_AUTHOR_RIGHT));
+		posts[iPosts].authorID = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_ID_LEFT, POST_AUTHOR_ID_RIGHT);
 		//posts[iPosts].content = GetStringBetween(rawPosts[iRawPosts], POST_CONTENT_LEFT, POST_CONTENT_RIGHT);
 		
 		int left = rawPosts[iRawPosts].Find(POST_CONTENT_LEFT) + _tcslen(POST_CONTENT_LEFT);
@@ -234,6 +245,7 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 	CString url;
 	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), timestamp, tid, g_forumID, page);
 	CString src = HTTPGet(url, FALSE, &g_stopScanFlag);
+	//WriteString(src, _T("lzl.txt"));
 
 	lzls.clear();
 	int iLzls = 0;
@@ -259,12 +271,9 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 			lzls[iLzls].pid = GetStringBetween(rawLzls[iRawLzls], LZL_PID_LEFT, LZL_PID_RIGHT);
 			lzls[iLzls].floor = floor;
 			lzls[iLzls].author = JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_AUTHOR_LEFT, LZL_AUTHOR_RIGHT));
+			lzls[iLzls].authorID = GetStringBetween(rawLzls[iRawLzls], LZL_AUTHOR_ID_LEFT, LZL_AUTHOR_ID_RIGHT);
 			lzls[iLzls].content = HTMLUnescape(JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_CONTENT_LEFT, LZL_CONTENT_RIGHT)));
 		}
-
-		//OutputDebugString(_T("\n"));
-		//OutputDebugString(floorContent);
-		//OutputDebugString(_T("\n----------------------------------"));
 	}
 }
 
@@ -326,7 +335,7 @@ static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg, CComPtr<
 			&& CheckImageIllegal(thread.preview, thread.author, GetThreadImage, msg))
 		{
 			AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
-				thread.title, _T("1"), _T(""), thread.author);
+				thread.title, _T("1"), _T(""), thread.author, thread.authorID);
 			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 				+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
 			g_ignoredTID.insert(tid);
@@ -395,7 +404,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 				&& CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, msg, pos, length))
 			{
 				AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid, 
-					thread.title, _T("0"), _T(""), thread.author, pos, length);
+					thread.title, _T("0"), _T(""), thread.author, thread.authorID, pos, length);
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 					+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
 				g_ignoredTID.insert(tid);
@@ -590,7 +599,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			&& CheckIllegal(post.content, post.author, msg, pos, length))
 		{
 			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST, 
-				tid, title, post.floor, post.pid, post.author, pos, length);
+				tid, title, post.floor, post.pid, post.author, post.authorID, pos, length);
 			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) + 
 				_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
 			g_ignoredPID.insert(pid);
@@ -607,7 +616,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			__int64 lzlid = _ttoi64(lzl.pid);
 			if (g_ignoredLZLID.find(lzlid) == g_ignoredLZLID.end())
 			{
-				AddOperation(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, pos, length);
+				AddOperation(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID, pos, length);
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg, pDocument);
 				g_ignoredLZLID.insert(lzlid);
@@ -625,7 +634,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			&& CheckImageIllegal(post.content, post.author, GetPostImage, msg))
 		{
 			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
-				tid, title, post.floor, post.pid, post.author);
+				tid, title, post.floor, post.pid, post.author, post.authorID);
 			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
 			g_ignoredPID.insert(pid);
@@ -649,7 +658,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 // 操作 /////////////////////////////////////////////////////////////////////////////////
 // 添加操作
 void AddOperation(const CString& msg, TBObject object, const CString& tid, const CString& title,
-	const CString& floor, const CString& pid, const CString& author, int pos, int length)
+	const CString& floor, const CString& pid, const CString& author, const CString& authorID, int pos, int length)
 {
 	Operation tmp;
 	tmp.msg = msg;
@@ -661,6 +670,7 @@ void AddOperation(const CString& msg, TBObject object, const CString& tid, const
 	tmp.floor = floor;
 	tmp.pid = pid;
 	tmp.author = author;
+	tmp.authorID = authorID;
 	g_operationQueueLock.Lock();
 	g_operationQueue.push(tmp);
 	g_operationQueueLock.Unlock();
@@ -687,7 +697,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		g_operationQueueLock.Unlock();
 
 		// 没有操作
-		if (!g_delete && !g_banID)
+		if (!g_delete && !g_banID && !g_defriend)
 			continue;
 
 		// 主题已被删
@@ -724,56 +734,65 @@ casePost:			g_initIgnoredPID.insert(_ttoi64(op.pid));
 			}
 		}
 
+		// 增加违规次数
+		auto countIt = g_userTrigCount.find(op.author);
+		BOOL hasHistory = countIt != g_userTrigCount.end();
+		int count = hasHistory ? (countIt->second + 1) : 1;
+		if (hasHistory)
+			countIt->second = count;
+		else
+			g_userTrigCount[op.author] = 1;
+
 		// 封禁
-		if (g_banID)
+		if (g_banID && count >= g_banTrigCount && g_bannedUser.find(op.author) == g_bannedUser.end()) // 达到封禁违规次数且未封
 		{
-			auto countIt = g_IDTrigCount.find(op.author);
-			BOOL hasHistory = countIt != g_IDTrigCount.end();
-			int count = hasHistory ? (countIt->second + 1) : 1;
-			if (count < g_trigCount) // 没达到封禁违规次数
+			if (op.pid == _T(""))
 			{
-				if (count != 0) // 未封
-				{
-					if (hasHistory)
-						countIt->second = count;
-					else
-						g_IDTrigCount[op.author] = 1;
-				}
+				vector<PostInfo> posts, lzls;
+				GetPosts(op.tid, _T(""), _T("1"), posts, lzls);
+				if (posts.size() > 0)
+					op.pid = posts[0].pid;
 			}
-			else // 达到封禁违规次数
+			if (op.pid == _T(""))
 			{
-				if (op.pid == _T(""))
-				{
-					vector<PostInfo> posts, lzls;
-					GetPosts(op.tid, _T(""), _T("1"), posts, lzls);
-					if (posts.size() > 0)
-						op.pid = posts[0].pid;
-				}
-				if (op.pid == _T(""))
-				{
-					dlg->Log(_T("<font color=red>封禁 </font>") + op.author + _T("<font color=red> 失败！\
+				dlg->Log(_T("<font color=red>封禁 </font>") + op.author + _T("<font color=red> 失败！\
 (获取帖子ID失败)</font>"), pDocument);
+			}
+			else
+			{
+				CString code = BanID(op.author, op.pid);
+				if (code != _T("0"))
+				{
+					CString content;
+					content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！\
+错误代码：%s(%s)</font><a href=\"bd:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.pid, op.author);
+					dlg->Log(content, pDocument);
 				}
 				else
 				{
-					CString code = BanID(op.author, op.pid);
-					if (code != _T("0"))
-					{
-						CString content;
-						content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！\
-错误代码：%s(%s)</font><a href=\"BD:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.pid, op.author);
-						dlg->Log(content, pDocument);
-					}
-					else
-					{
-						sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
-						if (hasHistory)
-							countIt->second = -1;
-						else
-							g_IDTrigCount[op.author] = -1;
-						dlg->Log(_T("<font color=red>封禁 </font>") + op.author, pDocument);
-					}
+					sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
+					g_bannedUser.insert(op.author);
+					dlg->Log(_T("<font color=red>封禁 </font>") + op.author, pDocument);
 				}
+			}
+		}
+
+		// 拉黑
+		if (g_defriend && count >= g_defriendTrigCount && g_defriendedUser.find(op.author) == g_defriendedUser.end()) // 达到拉黑违规次数且未拉黑
+		{
+			CString code = Defriend(op.authorID);
+			if (code != _T("0"))
+			{
+				CString content;
+				content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！\
+错误代码：%s(%s)</font><a href=\"df:%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.authorID);
+				dlg->Log(content, pDocument);
+			}
+			else
+			{
+				sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
+				g_defriendedUser.insert(op.author);
+				dlg->Log(_T("<font color=red>拉黑 </font>") + op.author, pDocument);
 			}
 		}
 
@@ -787,7 +806,7 @@ casePost:			g_initIgnoredPID.insert(_ttoi64(op.pid));
 			{
 				CString content;
 				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a><font color=red> 删除失败！\
-错误代码：%s(%s)</font><a href=\"DT:%s\">重试</a>"), op.tid, HTMLEscape(op.title), code, GetTiebaErrorText(code), op.tid);
+错误代码：%s(%s)</font><a href=\"dt:%s\">重试</a>"), op.tid, HTMLEscape(op.title), code, GetTiebaErrorText(code), op.tid);
 				dlg->Log(content, pDocument);
 			}
 			else
@@ -806,7 +825,7 @@ casePost:			g_initIgnoredPID.insert(_ttoi64(op.pid));
 			{
 				CString content;
 				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼<font color=red> 删除失败！\
-错误代码：%s(%s)</font><a href=\"DP:%s,%s\">重试</a>"), op.tid, HTMLEscape(op.title), op.floor, code, 
+错误代码：%s(%s)</font><a href=\"dp:%s,%s\">重试</a>"), op.tid, HTMLEscape(op.title), op.floor, code, 
 					GetTiebaErrorText(code), op.tid, op.pid);
 				dlg->Log(content, pDocument);
 			}
@@ -825,8 +844,8 @@ casePost:			g_initIgnoredPID.insert(_ttoi64(op.pid));
 			{
 				CString content;
 				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼回复<font color=red> 删除失败！\
-错误代码：%s(%s)</font><a href=\"DL:%s,%s\">重试</a>"), op.tid, HTMLEscape(op.title), op.floor, code,
-								  GetTiebaErrorText(code), op.tid, op.pid);
+错误代码：%s(%s)</font><a href=\"dl:%s,%s\">重试</a>"), op.tid, HTMLEscape(op.title), op.floor, code,
+					GetTiebaErrorText(code), op.tid, op.pid);
 				dlg->Log(content, pDocument);
 			}
 			else
@@ -848,7 +867,7 @@ casePost:			g_initIgnoredPID.insert(_ttoi64(op.pid));
 static inline CString GetOperationErrorCode(const CString& src)
 {
 	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
-		return _T("-1");
+		return _T("-65536");
 	CString code = GetStringBetween(src, _T("no\":"), _T(","));
 	if (code != _T("0"))
 		WriteString(src, _T("operation.txt"));
@@ -862,6 +881,14 @@ CString BanID(LPCTSTR userName, LPCTSTR pid)
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&pid%%5B%%5D=%s&reason=%s"), 
 		g_banDuration, g_forumID, g_tbs, EncodeURI(userName), pid, g_banReason != _T("") ? g_banReason : _T(" "));
 	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
+	return GetOperationErrorCode(src);
+}
+
+// 拉黑，返回错误代码
+CString Defriend(LPCTSTR userID)
+{
+	CString src = HTTPPost(_T("http://tieba.baidu.com/bawu2/platform/addBlack"), _T("ie=utf-8&tbs=") + g_tbs
+		+ _T("&user_id=") + userID + _T("&word=") + g_encodedForumName);
 	return GetOperationErrorCode(src);
 }
 
@@ -898,7 +925,7 @@ CString GetTiebaErrorText(const CString& errorCode)
 {
 	if (errorCode == _T("890"))
 		return _T("贴子已删");
-	if (errorCode == _T("-1"))
+	if (errorCode == _T("-65536"))
 		return _T("超时");
 	if (errorCode == _T("78"))
 		return _T("参数错误");
@@ -911,10 +938,12 @@ CString GetTiebaErrorText(const CString& errorCode)
 	if (errorCode == _T("308"))
 		return _T("你被封禁或失去权限");
 	if (errorCode == _T("4"))
-		return _T("小吧主只能封1天或小吧主不能封IP");
+		return _T("小吧主只能封1天");
 	if (errorCode == _T("872"))
 		return _T("精品贴不能删");
 	if (errorCode == _T("871"))
 		return _T("高楼不能删");
+	if (errorCode == _T("-1"))
+		return _T("权限不足");
 	return _T("未知错误");
 }

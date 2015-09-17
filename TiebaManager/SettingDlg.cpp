@@ -229,10 +229,10 @@ void CSettingDlg::ShowCurrentOptions()
 	tmp.Format(_T("%d"), g_scanInterval);
 	m_scanPage.m_scanIntervalEdit.SetWindowText(tmp);			// 扫描间隔
 	m_operatePage.m_banIDCheck.SetCheck(g_banID);				// 封ID
-	m_operatePage.m_banDurationCombo.SetCurSel(g_banDuration == 1 ? 0 : (g_banDuration == 3 ? 1 : 2)); // 封禁时长
 	m_operatePage.OnBnClickedCheck1();
-	tmp.Format(_T("%d"), g_trigCount);
-	m_operatePage.m_trigCountEdit.SetWindowText(tmp);			// 封禁违规次数
+	m_operatePage.m_banDurationCombo.SetCurSel(g_banDuration == 1 ? 0 : (g_banDuration == 3 ? 1 : 2)); // 封禁时长
+	tmp.Format(_T("%d"), g_banTrigCount);
+	m_operatePage.m_banTrigCountEdit.SetWindowText(tmp);		// 封禁违规次数
 	m_scanPage.m_onlyScanTitleCheck.SetCheck(g_onlyScanTitle);	// 只扫描标题
 	tmp.Format(_T("%g"), g_deleteInterval);
 	m_operatePage.m_deleteIntervalEdit.SetWindowText(tmp);		// 删帖间隔
@@ -247,6 +247,10 @@ void CSettingDlg::ShowCurrentOptions()
 	m_imagePage.m_dirEdit.SetWindowText(g_imageDir);			// 违规图片目录
 	tmp.Format(_T("%lf"), g_SSIMThreshold);
 	m_imagePage.m_thresholdEdit.SetWindowText(tmp);				// 阈值
+	m_operatePage.m_defriendCheck.SetCheck(g_defriend);			// 拉黑
+	m_operatePage.OnBnClickedCheck3();
+	tmp.Format(_T("%d"), g_defriendTrigCount);
+	m_operatePage.m_defriendTrigCountEdit.SetWindowText(tmp);	// 拉黑违规次数
 
 	// 违规内容
 	m_keywordsPage.m_list.ResetContent();
@@ -300,8 +304,8 @@ void CSettingDlg::ApplyOptionsInDlg()
 	g_banID = m_operatePage.m_banIDCheck.GetCheck();			// 封ID
 	intBuf = m_operatePage.m_banDurationCombo.GetCurSel();
 	g_banDuration = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);	// 封禁时长
-	m_operatePage.m_trigCountEdit.GetWindowText(strBuf);
-	g_trigCount = _ttoi(strBuf);								// 封禁违规次数
+	m_operatePage.m_banTrigCountEdit.GetWindowText(strBuf);
+	g_banTrigCount = _ttoi(strBuf);								// 封禁违规次数
 	g_onlyScanTitle = m_scanPage.m_onlyScanTitleCheck.GetCheck(); // 只扫描标题
 	m_operatePage.m_deleteIntervalEdit.GetWindowText(strBuf);
 	g_deleteInterval = (float)_ttof(strBuf);					// 删帖间隔
@@ -317,6 +321,9 @@ void CSettingDlg::ApplyOptionsInDlg()
 	m_imagePage.m_dirEdit.GetWindowText(g_imageDir);			// 违规图片目录
 	m_imagePage.m_thresholdEdit.GetWindowText(strBuf);
 	g_SSIMThreshold = _ttof(strBuf);							// 阈值
+	g_defriend = m_operatePage.m_defriendCheck.GetCheck();		// 拉黑
+	m_operatePage.m_defriendTrigCountEdit.GetWindowText(strBuf);
+	g_defriendTrigCount = _ttoi(strBuf);						// 拉黑违规次数
 
 	// 违规内容
 	ApplyRegexTexts(g_keywords, m_keywordsPage.m_list);
@@ -358,7 +365,7 @@ void CSettingDlg::ApplyOptionsInDlg()
 	if (m_clearScanCache)
 	{
 		if (!g_briefLog)
-			((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->Log(_T("<font color=green>清除扫描记录</font>"));
+			((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->Log(_T("<font color=green>清除历史回复</font>"));
 		g_reply.clear();
 	}
 }
@@ -443,12 +450,13 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	m_scanPage.m_scanIntervalEdit.SetWindowText(strBuf);
 	gzread(f, &boolBuf, sizeof(BOOL));						// 封ID
 	m_operatePage.m_banIDCheck.SetCheck(boolBuf);
+	m_operatePage.OnBnClickedCheck1();
 	gzread(f, &intBuf, sizeof(int));						// 封禁时长
 	m_operatePage.m_banDurationCombo.SetCurSel(intBuf == 1 ? 0 : (intBuf == 3 ? 1 : 2));
 	gzread(f, &boolBuf, sizeof(BOOL));						// 封IP
 	gzread(f, &intBuf, sizeof(int));						// 封禁违规次数
 	strBuf.Format(_T("%d"), intBuf);
-	m_operatePage.m_trigCountEdit.SetWindowText(strBuf);
+	m_operatePage.m_banTrigCountEdit.SetWindowText(strBuf);
 	gzread(f, &boolBuf, sizeof(BOOL));						// 只扫描标题
 	m_scanPage.m_onlyScanTitleCheck.SetCheck(boolBuf);
 	gzread(f, &floatBuf, sizeof(float));					// 删帖间隔
@@ -493,6 +501,17 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 			m_whiteListPage.m_list.AddString(strBuf);
 		}
 
+	gzread(f, &boolBuf, sizeof(BOOL));						// 拉黑
+	m_operatePage.m_defriendCheck.SetCheck(boolBuf);
+	m_operatePage.OnBnClickedCheck3();
+	if (gzread(f, &intBuf, sizeof(int)) == sizeof(int))		// 拉黑违规次数
+	{
+		strBuf.Format(_T("%d"), intBuf);
+		m_scanPage.m_threadCountEdit.SetWindowText(strBuf);
+	}
+	else
+		m_scanPage.m_threadCountEdit.SetWindowText(_T("5"));
+
 	gzclose(f);
 	return;
 
@@ -504,8 +523,9 @@ UseDefaultOptions:
 	m_imagePage.m_updateImage = TRUE;						// 违规图片
 	m_scanPage.m_scanIntervalEdit.SetWindowText(_T("5"));	// 扫描间隔
 	m_operatePage.m_banIDCheck.SetCheck(FALSE);				// 封ID
+	m_operatePage.OnBnClickedCheck1();
 	m_operatePage.m_banDurationCombo.SetCurSel(0);			// 封禁时长
-	m_operatePage.m_trigCountEdit.SetWindowText(_T("1"));	// 封禁违规次数
+	m_operatePage.m_banTrigCountEdit.SetWindowText(_T("1"));	// 封禁违规次数
 	m_scanPage.m_onlyScanTitleCheck.SetCheck(FALSE);		// 只扫描标题
 	m_operatePage.m_deleteIntervalEdit.SetWindowText(_T("2"));	// 删帖间隔
 	m_operatePage.m_confirmCheck.SetCheck(TRUE);			// 操作前提示
@@ -517,6 +537,9 @@ UseDefaultOptions:
 	m_imagePage.m_dirEdit.SetWindowText(_T(""));			// 违规图片目录
 	m_imagePage.m_thresholdEdit.SetWindowText(_T("2.43"));	// 阈值
 	m_trustedThreadPage.m_list.ResetContent();				// 信任主题
+	m_operatePage.m_defriendCheck.SetCheck(FALSE);			// 拉黑
+	m_operatePage.OnBnClickedCheck3();
+	m_scanPage.m_threadCountEdit.SetWindowText(_T("5"));	// 拉黑违规次数
 }
 
 // 把对话框中的设置写入文件
@@ -559,7 +582,7 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	intBuf = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);
 	gzwrite(f, &intBuf, sizeof(int));												// 封禁时长
 	gzwrite(f, &(boolBuf = FALSE), sizeof(BOOL));									// 封IP
-	m_operatePage.m_trigCountEdit.GetWindowText(strBuf);
+	m_operatePage.m_banTrigCountEdit.GetWindowText(strBuf);
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 封禁违规次数
 	gzwrite(f, &(boolBuf = m_scanPage.m_onlyScanTitleCheck.GetCheck()), sizeof(BOOL)); // 只扫描标题
 	m_operatePage.m_deleteIntervalEdit.GetWindowText(strBuf);
@@ -585,6 +608,10 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 		m_trustedThreadPage.m_list.GetText(i, strBuf);
 		WriteText(f, strBuf);
 	}
+
+	gzwrite(f, &(boolBuf = m_operatePage.m_defriendCheck.GetCheck()), sizeof(BOOL)); // 拉黑
+	m_operatePage.m_defriendTrigCountEdit.GetWindowText(strBuf);
+	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 拉黑违规次数
 
 	gzclose(f);
 }

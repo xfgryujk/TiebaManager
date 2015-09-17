@@ -209,8 +209,9 @@ void CLoginDlg::GetLoginUserName()
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=\
 %D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD"), TRUE, NULL, &m_cookie);
+	CString tmp;
 	std::wcmatch res;
-	if (std::regex_search((LPCTSTR)GetStringBetween(src, _T("PageData.user"), _T("}")), res, USER_NAME_REG))
+	if (std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData.user"), _T("}"))), res, USER_NAME_REG))
 		m_userName = JSUnescape(res[3].str().c_str());
 	if (m_userName == _T(""))
 		WriteString(src, _T("login_forum.txt"));
