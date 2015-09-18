@@ -233,6 +233,7 @@ void WriteOptions(LPCTSTR path)
 
 static inline void ReadIDSet(const gzFile& f, set<__int64>& IDSet)
 {
+	IDSet.clear();
 	int size;
 	if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
 	{
@@ -247,6 +248,7 @@ static inline void ReadIDSet(const gzFile& f, set<__int64>& IDSet)
 
 static inline void ReadTextSet(const gzFile& f, set<CString>& TextSet)
 {
+	TextSet.clear();
 	int size;
 	if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
 	{

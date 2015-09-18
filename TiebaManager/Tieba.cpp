@@ -40,17 +40,17 @@ CString g_tbs;
 // 采集贴吧用的常量
 // 正则表达式太慢所以不用
 #pragma region 主题列表
-// 今日话题
-const TCHAR TOPIC_LEFT[] = _T("<div class=\"interview");
-const TCHAR TOPIC_RIGHT[] = _T("<dd class=\"listBtnCnt hide\">");
-const TCHAR TOPIC_TID_LEFT[] = _T("href=\"http://tieba.baidu.com/p/");
-const TCHAR TOPIC_TID_RIGHT[] = _T("\"");
-const TCHAR TOPIC_REPLY_LEFT[] = _T("title=\"");
-const TCHAR TOPIC_REPLY_RIGHT[] = _T("个回复\"");
-const TCHAR TOPIC_TITLE_LEFT[] = _T("\">\r\n                ");
-const TCHAR TOPIC_TITLE_RIGHT[] = _T("            </a>");
-const TCHAR TOPIC_PREVIEW_LEFT[] = _T("<dd class=\"listDescCnt\"> ");
-const TCHAR TOPIC_PREVIEW_RIGHT[] = _T("</dd>");
+//// 今日话题
+//const TCHAR TOPIC_LEFT[] = _T("<div class=\"interview");
+//const TCHAR TOPIC_RIGHT[] = _T("<dd class=\"listBtnCnt hide\">");
+//const TCHAR TOPIC_TID_LEFT[] = _T("href=\"http://tieba.baidu.com/p/");
+//const TCHAR TOPIC_TID_RIGHT[] = _T("\"");
+//const TCHAR TOPIC_REPLY_LEFT[] = _T("title=\"");
+//const TCHAR TOPIC_REPLY_RIGHT[] = _T("个回复\"");
+//const TCHAR TOPIC_TITLE_LEFT[] = _T("\">\r\n                ");
+//const TCHAR TOPIC_TITLE_RIGHT[] = _T("            </a>");
+//const TCHAR TOPIC_PREVIEW_LEFT[] = _T("<dd class=\"listDescCnt\"> ");
+//const TCHAR TOPIC_PREVIEW_RIGHT[] = _T("</dd>");
 
 // 普通主题
 const TCHAR THREAD_SPLIT[] = _T("data-field='{&quot;author_name&quot;:&quot;");
@@ -143,26 +143,25 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 	}
 
 	int iThreads;
-	// 今日主题
-	// 已过期，以后修复
-	/*CString topic = GetStringBetween(rawThreads[rawThreads.GetSize() - 1], TOPIC_LEFT, TOPIC_RIGHT);
-	if (topic != _T(""))
-	{
-		threads.resize(rawThreads.GetSize());
-		int pos = topic.Find(TOPIC_TID_LEFT);
-		threads[0].tid = GetStringBetween(topic, TOPIC_TID_LEFT, TOPIC_TID_RIGHT, pos);
-		threads[0].reply = GetStringBetween(topic, TOPIC_REPLY_LEFT, TOPIC_REPLY_RIGHT);
-		threads[0].title = GetStringBetween(topic, TOPIC_TITLE_LEFT, TOPIC_TITLE_RIGHT, pos);
-		threads[0].preview = GetStringBetween(topic, TOPIC_PREVIEW_LEFT, TOPIC_PREVIEW_RIGHT, pos);
-		threads[0].author = _T("");
+	//// 今日主题
+	//CString topic = GetStringBetween(rawThreads[0], TOPIC_LEFT, TOPIC_RIGHT);
+	//if (topic != _T(""))
+	//{
+	//	threads.resize(rawThreads.GetSize());
+	//	int pos = topic.Find(TOPIC_TID_LEFT);
+	//	threads[0].tid = GetStringBetween(topic, TOPIC_TID_LEFT, TOPIC_TID_RIGHT, pos);
+	//	threads[0].reply = GetStringBetween(topic, TOPIC_REPLY_LEFT, TOPIC_REPLY_RIGHT);
+	//	threads[0].title = GetStringBetween(topic, TOPIC_TITLE_LEFT, TOPIC_TITLE_RIGHT, pos);
+	//	threads[0].preview = GetStringBetween(topic, TOPIC_PREVIEW_LEFT, TOPIC_PREVIEW_RIGHT, pos);
+	//	threads[0].author = _T("");
 
-		iThreads = 1;
-	}
-	else*/
-	{
+	//	iThreads = 1;
+	//}
+	//else
+	//{
 		threads.resize(rawThreads.GetSize() - 1);
 		iThreads = 0;
-	}
+	//}
 
 	// 普通主题
 	rawThreads[rawThreads.GetSize() - 1] = GetStringBefore(rawThreads[rawThreads.GetSize() - 1], THREAD_END);
