@@ -152,7 +152,7 @@ CString GetImageName(const CString& img)
 
 
 // 从主题预览取图片地址
-void GetThreadImage(const CString& preview, vector<CString>& img)
+void GetThreadImage(const CString& preview, const CString& portrait, vector<CString>& img)
 {
 	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)preview, (LPCTSTR)preview
 		+ preview.GetLength(), THREAD_IMG_REG), end; it != end; it++)
@@ -160,8 +160,10 @@ void GetThreadImage(const CString& preview, vector<CString>& img)
 }
 
 // 从帖子取图片地址
-void GetPostImage(const CString& content, vector<CString>& img)
+void GetPostImage(const CString& content, const CString& portrait, vector<CString>& img)
 {
+	if (portrait != _T(""))
+		img.push_back(_T("http://tb.himg.baidu.com/sys/portrait/item/") + portrait);
 	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)content, (LPCTSTR)content
 		+ content.GetLength(), POST_IMG_REG), end; it != end; it++)
 		img.push_back((*it)[2].str().c_str());
@@ -169,8 +171,8 @@ void GetPostImage(const CString& content, vector<CString>& img)
 
 
 // 检查图片违规1，检测信任用户、获取图片地址
-BOOL CheckImageIllegal(const CString& content, const CString& author, void(*GetImage)(const CString& content,
-	vector<CString>& img), CString& msg)
+BOOL CheckImageIllegal(const CString& content, const CString& author, const CString& portrait, void(*GetImage)(const CString& content,
+	const CString& portrait, vector<CString>& img), CString& msg)
 {
 	if (g_images.empty())
 		return FALSE;
@@ -185,7 +187,7 @@ BOOL CheckImageIllegal(const CString& content, const CString& author, void(*GetI
 	g_optionsLock.Unlock();
 
 	vector<CString> imgs;
-	GetImage(content, imgs);
+	GetImage(content, portrait, imgs);
 	return DoCheckImageIllegal(imgs, msg);
 }
 

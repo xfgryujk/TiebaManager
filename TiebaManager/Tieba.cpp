@@ -83,6 +83,8 @@ const TCHAR POST_AUTHOR_LEFT[] = _T("&quot;user_name&quot;:&quot;");
 const TCHAR POST_AUTHOR_RIGHT[] = _T("&quot;");
 const TCHAR POST_AUTHOR_ID_LEFT[] = _T("&quot;user_id&quot;:");
 const TCHAR POST_AUTHOR_ID_RIGHT[] = _T(",");
+const TCHAR POST_AUTHOR_PORTRAIT_LEFT[] = _T("=\"http://tb.himg.baidu.com/sys/portrait/item/");
+const TCHAR POST_AUTHOR_PORTRAIT_RIGHT[] = _T("\"");
 const TCHAR POST_CONTENT_LEFT[] = _T("<cc>");
 const TCHAR POST_CONTENT_RIGHT[] = _T("</cc>");
 const TCHAR POST_SIGN_LEFT[] = _T("<img class=\"j_user_sign\"");
@@ -204,6 +206,7 @@ GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& 
 		posts[iPosts].floor = GetStringBetween(rawPosts[iRawPosts], POST_FLOOR_LEFT, POST_FLOOR_RIGHT);
 		posts[iPosts].author = JSUnescape(GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_LEFT, POST_AUTHOR_RIGHT));
 		posts[iPosts].authorID = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_ID_LEFT, POST_AUTHOR_ID_RIGHT);
+		posts[iPosts].authorPortrait = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_PORTRAIT_LEFT, POST_AUTHOR_PORTRAIT_RIGHT);
 		//posts[iPosts].content = GetStringBetween(rawPosts[iRawPosts], POST_CONTENT_LEFT, POST_CONTENT_RIGHT);
 		
 		int left = rawPosts[iRawPosts].Find(POST_CONTENT_LEFT) + _tcslen(POST_CONTENT_LEFT);
@@ -274,6 +277,8 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 			lzls[iLzls].content = HTMLUnescape(JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_CONTENT_LEFT, LZL_CONTENT_RIGHT)));
 		}
 	}
+
+	// 遍历用户找头像哈希，以后做
 }
 
 
@@ -331,7 +336,7 @@ static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg, CComPtr<
 			break;
 		__int64 tid = _ttoi64(thread.tid);
 		if (g_ignoredTID.find(tid) == g_ignoredTID.end()
-			&& CheckImageIllegal(thread.preview, thread.author, GetThreadImage, msg))
+			&& CheckImageIllegal(thread.preview, thread.author, _T(""), GetThreadImage, msg))
 		{
 			AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
 				thread.title, _T("1"), _T(""), thread.author, thread.authorID);
@@ -403,7 +408,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 				&& CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, msg, pos, length))
 			{
 				AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid, 
-					thread.title, _T("0"), _T(""), thread.author, thread.authorID, pos, length);
+					thread.title, _T("0"), _T(""), thread.author, thread.authorID, _T(""), pos, length);
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 					+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
 				g_ignoredTID.insert(tid);
@@ -598,7 +603,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			&& CheckIllegal(post.content, post.author, msg, pos, length))
 		{
 			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST, 
-				tid, title, post.floor, post.pid, post.author, post.authorID, pos, length);
+				tid, title, post.floor, post.pid, post.author, post.authorID, _T(""), pos, length);
 			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) + 
 				_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
 			g_ignoredPID.insert(pid);
@@ -615,7 +620,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			__int64 lzlid = _ttoi64(lzl.pid);
 			if (g_ignoredLZLID.find(lzlid) == g_ignoredLZLID.end())
 			{
-				AddOperation(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID, pos, length);
+				AddOperation(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID, _T(""), pos, length);
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg, pDocument);
 				g_ignoredLZLID.insert(lzlid);
@@ -630,7 +635,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			return FALSE;
 		__int64 pid = _ttoi64(post.pid);
 		if (g_ignoredPID.find(pid) == g_ignoredPID.end()
-			&& CheckImageIllegal(post.content, post.author, GetPostImage, msg))
+			&& CheckImageIllegal(post.content, post.author, post.authorPortrait, GetPostImage, msg))
 		{
 			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID);
@@ -657,7 +662,8 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 // 操作 /////////////////////////////////////////////////////////////////////////////////
 // 添加操作
 void AddOperation(const CString& msg, TBObject object, const CString& tid, const CString& title,
-	const CString& floor, const CString& pid, const CString& author, const CString& authorID, int pos, int length)
+	const CString& floor, const CString& pid, const CString& author, const CString& authorID, 
+	const CString& authorPortrait, int pos, int length)
 {
 	Operation tmp;
 	tmp.msg = msg;
@@ -670,6 +676,7 @@ void AddOperation(const CString& msg, TBObject object, const CString& tid, const
 	tmp.pid = pid;
 	tmp.author = author;
 	tmp.authorID = authorID;
+	tmp.authorPortrait = authorPortrait;
 	g_operationQueueLock.Lock();
 	g_operationQueue.push(tmp);
 	g_operationQueueLock.Unlock();

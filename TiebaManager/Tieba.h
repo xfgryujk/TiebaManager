@@ -49,6 +49,7 @@ struct PostInfo // 帖子信息
 	CString floor;		// 楼层
 	CString author;		// 作者
 	CString authorID;	// 作者ID
+	CString authorPortrait;	// 作者头像哈希
 	CString content;	// 内容
 };
 
@@ -94,10 +95,12 @@ struct Operation
 	CString pid;		// 帖子ID
 	CString author;		// 帖子作者
 	CString authorID;	// 帖子作者ID
+	CString authorPortrait;	// 帖子作者头像哈希
 };
 extern CWinThread* g_operateThread;
 void AddOperation(const CString& msg, TBObject object, const CString& tid, const CString& title, 
-	const CString& floor, const CString& pid, const CString& author, const CString& authorID, int pos = 0, int length = 0);
+	const CString& floor, const CString& pid, const CString& author, const CString& authorID, 
+	const CString& authorPortrait = _T(""), int pos = 0, int length = 0);
 UINT AFX_CDECL OperateThread(LPVOID mainDlg);
 CString BanID(LPCTSTR userName, LPCTSTR pid);
 CString Defriend(LPCTSTR userID);

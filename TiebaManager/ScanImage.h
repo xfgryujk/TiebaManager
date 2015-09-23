@@ -28,9 +28,9 @@ BOOL ReadImage(const BYTE* buffer, ULONG size, Mat& img);
 void ReadImages(const CString& dir);
 CString GetImageName(const CString& imgUrl);
 
-void GetThreadImage(const CString& preview, vector<CString>& img);
-void GetPostImage(const CString& content, vector<CString>& img);
+void GetThreadImage(const CString& preview, const CString& portrait, vector<CString>& img);
+void GetPostImage(const CString& content, const CString& portrait, vector<CString>& img);
 
-BOOL CheckImageIllegal(const CString& content, const CString& author, void(*GetImage)(const CString& content,
-	vector<CString>& img), CString& msg);
+BOOL CheckImageIllegal(const CString& content, const CString& author, const CString& portrait, void(*GetImage)(const CString& content,
+	const CString& portrait, vector<CString>& img), CString& msg);
 BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg);

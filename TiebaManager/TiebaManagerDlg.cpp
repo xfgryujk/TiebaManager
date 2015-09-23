@@ -605,6 +605,7 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 			else
 				thiz->Log(_T("<font color=red>·â½û </font>") + name[i], pDocument);
 		}
+		Sleep(2000);
 	}
 	CoUninitialize();
 	thiz->m_stateStatic.SetWindowText(_T("´ý»úÖÐ"));
