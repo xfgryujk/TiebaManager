@@ -5,6 +5,7 @@
 #include "LoginDlg.h"
 #include "Global.h"
 #include <WinInet.h>
+#include <Iepmapi.h>
 #include "Tieba.h"
 #include "ScanImage.h"
 
@@ -182,13 +183,20 @@ void CLoginDlg::OnBnClickedButton3()
 	BOOL result = InternetGetCookieEx(_T("http://tieba.baidu.com/"), NULL, m_cookie.GetBuffer(size),
 		&size, INTERNET_COOKIE_HTTPONLY, NULL);
 	m_cookie.ReleaseBuffer();
+
+	BOOL jump = TRUE;
+CheckResult:
 	if (!result)
 	{
+		if (jump)
+			goto Win10;
 		AfxMessageBox(_T("获取Cookie失败！"), MB_ICONERROR);
 		return;
 	}
 	if (!StringIncludes(m_cookie, _T("BDUSS=")))
 	{
+		if (jump)
+			goto Win10;
 		AfxMessageBox(_T("请先在IE浏览器登陆百度账号并选中下次自动登录！"), MB_ICONERROR);
 		return;
 	}
@@ -202,6 +210,14 @@ void CLoginDlg::OnBnClickedButton3()
 
 	AfxMessageBox(_T("登录完毕，不要在IE退出账号以免cookie失效，可以直接清除cookie"), MB_ICONINFORMATION);
 	EndDialog(IDOK);
+	return;
+
+Win10:
+	size = 1024 * 1024;
+	result = SUCCEEDED(IEGetProtectedModeCookie(L"http://tieba.baidu.com/", NULL, m_cookie.GetBuffer(size),
+		&size, INTERNET_COOKIE_HTTPONLY));
+	jump = FALSE;
+	goto CheckResult;
 }
 
 // 取用户名

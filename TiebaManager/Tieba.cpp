@@ -951,5 +951,7 @@ CString GetTiebaErrorText(const CString& errorCode)
 		return _T("高楼不能删");
 	if (errorCode == _T("-1"))
 		return _T("权限不足");
+	if (errorCode == _T("224011"))
+		return _T("需要验证码(操作太快？)");
 	return _T("未知错误");
 }
