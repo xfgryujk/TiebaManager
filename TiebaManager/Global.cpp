@@ -149,20 +149,27 @@ CString HTMLUnescape(const CString& src)
 // JS反转义，自行转义src里的双引号
 CString JSUnescape(const CString& src)
 {
-	CComPtr<IScriptControl> script;
-	if (FAILED(script.CoCreateInstance(__uuidof(ScriptControl))))
-		return _T("");
-	script->PutLanguage("JScript");
-	_variant_t result;
 	try
 	{
+		CComPtr<IScriptControl> script;
+		if (FAILED(script.CoCreateInstance(__uuidof(ScriptControl))))
+			return _T("");
+		script->PutLanguage(_bstr_t(_T("JScript")));
+		_variant_t result;
 		result = script->Eval((LPCTSTR)(_T("\"") + src + _T("\"")));
+		return (LPCTSTR)(_bstr_t)result;
 	}
-	catch (_com_error&)
+	catch (_com_error& e)
 	{
+		CString info = _T("Description: ");
+		info += (LPCTSTR)e.Description();
+		info += _T("\r\nSource: ");
+		info += (LPCTSTR)e.Source();
+		info += _T("\r\nSource: ");
+		info += e.ErrorMessage();
+		WriteString(info, _T("error.txt"));
 		return _T("");
 	}
-	return (LPCTSTR)(_bstr_t)result;
 }
 
 

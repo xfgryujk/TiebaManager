@@ -93,6 +93,11 @@ const TCHAR POST_SIGN_RIGHT[] = _T("/>");
 #pragma region 楼中楼列表
 const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)during_time\":\\d+\\}\\]"));
 
+const TCHAR LZL_USER_SPLIT[] = _T("\"user_name\":\"");
+const TCHAR LZL_USER_NAME_RIGHT[] = _T("\"");
+const TCHAR LZL_USER_PORTRAIT_LEFT[] = _T("\"portrait\":\"");
+const TCHAR LZL_USER_PORTRAIT_RIGHT[] = _T("\"");
+
 const TCHAR LZL_SPLIT[] = _T("{\"thread_id\"");
 const TCHAR LZL_PID_LEFT[] = _T("\"comment_id\":\"");
 const TCHAR LZL_PID_RIGHT[] = _T("\"");
@@ -248,11 +253,25 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), timestamp, tid, g_forumID, page);
 	CString src = HTTPGet(url, FALSE, &g_stopScanFlag);
 	//WriteString(src, _T("lzl.txt"));
-
+	CStringArray splitedSrc; // 0楼中楼，1用户
+	SplitString(splitedSrc, src, _T("\"user_list\":{"));
 	lzls.clear();
-	int iLzls = 0;
+	if (splitedSrc.GetSize() != 2)
+		return;
+
+	// 遍历用户采集头像哈希
+	CStringArray users;
+	SplitString(users, splitedSrc[1], LZL_USER_SPLIT);
+	map<CString, CString> portrait;
+	for (int i = 1; i < users.GetSize(); i++)
+	{
+		CString id = JSUnescape(GetStringBefore(users[i], LZL_USER_NAME_RIGHT));
+		portrait[id] = GetStringBetween(users[i], LZL_USER_PORTRAIT_LEFT, LZL_USER_PORTRAIT_RIGHT);
+	}
+
 	// 遍历楼层
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)src, (LPCTSTR)src + src.GetLength(), LZL_FLOOR_REG), end; it != end; it++)
+	int iLzls = 0;
+	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)splitedSrc[0], (LPCTSTR)splitedSrc[0] + splitedSrc[0].GetLength(), LZL_FLOOR_REG), end; it != end; it++)
 	{
 		// 查找该层楼层
 		CString pid = (*it)[1].str().c_str(); // 该层PID
@@ -274,11 +293,10 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 			lzls[iLzls].floor = floor;
 			lzls[iLzls].author = JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_AUTHOR_LEFT, LZL_AUTHOR_RIGHT));
 			lzls[iLzls].authorID = GetStringBetween(rawLzls[iRawLzls], LZL_AUTHOR_ID_LEFT, LZL_AUTHOR_ID_RIGHT);
+			lzls[iLzls].authorPortrait = portrait[lzls[iLzls].author];
 			lzls[iLzls].content = HTMLUnescape(JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_CONTENT_LEFT, LZL_CONTENT_RIGHT)));
 		}
 	}
-
-	// 遍历用户找头像哈希，以后做
 }
 
 
@@ -951,7 +969,7 @@ CString GetTiebaErrorText(const CString& errorCode)
 		return _T("高楼不能删");
 	if (errorCode == _T("-1"))
 		return _T("权限不足");
-	if (errorCode == _T("224011"))
+	if (errorCode == _T("4011"))
 		return _T("需要验证码(操作太快？)");
 	return _T("未知错误");
 }

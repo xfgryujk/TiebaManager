@@ -5,6 +5,7 @@
 #include "ExploreLzlPage.h"
 #include "Tieba.h"
 #include "ExplorerDlg.h"
+#include "ScanImage.h"
 
 
 // CExploreLzlPage ¶Ô»°¿ò
@@ -62,8 +63,14 @@ void CExploreLzlPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
 	
 	if (pNMLV->iItem != LB_ERR)
-		((CExplorerDlg*)GetParent()->GetParent())->m_edit.SetWindowText(m_lzls[pNMLV->iItem].content +
+	{
+		CExplorerDlg* explorerDlg = (CExplorerDlg*)GetParent()->GetParent();
+		explorerDlg->m_edit.SetWindowText(m_lzls[pNMLV->iItem].content +
 			_T("\r\n\r\n") + m_lzls[pNMLV->iItem].author);
+		vector<CString>* img = new vector<CString>();
+		GetPostImage(m_lzls[pNMLV->iItem].content, m_lzls[pNMLV->iItem].authorPortrait, *img);
+		explorerDlg->ViewImages(img);
+	}
 
 	*pResult = 0;
 }
