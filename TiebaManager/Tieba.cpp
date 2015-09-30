@@ -663,6 +663,22 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		}
 	}
 
+	// 扫描楼中楼图片
+	for (const PostInfo& lzl : lzls)
+	{
+		if (g_stopScanFlag)
+			return FALSE;
+		__int64 pid = _ttoi64(lzl.pid);
+		if (g_ignoredLZLID.find(pid) == g_ignoredLZLID.end()
+			&& CheckImageIllegal(lzl.content, lzl.author, lzl.authorPortrait, GetPostImage, msg))
+		{
+			AddOperation(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID);
+			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
+				_T("</a> ") + lzl.floor + _T("楼回复") + msg, pDocument);
+			g_ignoredLZLID.insert(pid);
+		}
+	}
+
 	// 递归扫描上一页
 	if (!hasHistoryReply) // 如果有历史回复前面几页很可能被扫描过了，不递归
 	{

@@ -214,21 +214,24 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	}
 
 
-	// 每24小时清理已封名单、开始循环封
+	// 每24小时清除已封名单、开始循环封
 	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
 		{
 			g_bannedUser.clear();
 			AfxBeginThread(LoopBanThread, (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd);
 		});
 
-
-	// 对付百度显示回复数为0的BUG，十分钟清除一次回复记录
-	/*SetTimer(0, 10 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
+	// 每30分钟清除图片缓存
+	SetTimer(1, 30 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
 		{
-			if (!g_briefLog)
-				((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->Log(_T("<font color=green>清除历史回复</font>"));
-			g_reply.clear();
-		});*/
+			CFileFind fileFind;
+			BOOL flag = fileFind.FindFile(IMG_CACHE_PATH + _T("*"));
+			while (flag)
+			{
+				flag = fileFind.FindNextFile();
+				DeleteFile(fileFind.GetFilePath());
+			}
+		});
 
 
 	// 测试
