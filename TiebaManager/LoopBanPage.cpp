@@ -27,6 +27,7 @@ void CLoopBanPage::DoDataExchange(CDataExchange* pDX)
 {
 	CListPage::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_CHECK6, m_logCheck);
+	DDX_Control(pDX, IDC_CHECK7, m_enableCheck);
 }
 
 
@@ -41,7 +42,8 @@ BOOL CLoopBanPage::OnInitDialog()
 {
 	CListPage::OnInitDialog();
 
-	m_resize.AddControl(&m_logCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list, RT_KEEP_DIST_TO_RIGHT, this);
+	m_resize.AddControl(&m_enableCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_logCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE

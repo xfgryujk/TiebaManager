@@ -298,7 +298,7 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 			}
 		}
 
-		if (image.data == NULL)
+		if (image.data == NULL || image.cols < 30 || image.rows < 30) // 尺寸太小不比较
 			continue;
 		// 判断和违规图片比较大于阈值
 		g_optionsLock.Lock();

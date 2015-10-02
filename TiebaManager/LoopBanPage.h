@@ -32,6 +32,7 @@ protected:
 
 
 public:
+	CButton m_enableCheck;
 	CButton m_logCheck;
 
 	std::vector<CString> m_pid;

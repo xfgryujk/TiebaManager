@@ -556,10 +556,6 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 		file.Read(&lastTime, sizeof(lastTime));
 		if (time.wDay == lastTime.wDay && time.wMonth == lastTime.wMonth && time.wYear == lastTime.wYear)
 			return 0;
-
-		file.SeekToBegin();
-		file.Write(&time, sizeof(time));
-		file.Close();
 	}
 
 	gzFile f = gzopen_w(CURRENT_USER_PATH + _T("\\options2.tb"), "rb");
@@ -584,8 +580,21 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 		ReadText(f, name[i]);
 		ReadText(f, pid[i]);
 	}
-	BOOL log = FALSE;
+	BOOL log = FALSE, enable;
 	gzread(f, &log, sizeof(BOOL)); // 输出日志
+	if (gzread(f, &enable, sizeof(BOOL)) != sizeof(BOOL)) // 开启
+		enable = TRUE;
+	gzclose(f);
+	if (!enable)
+		return 0;
+
+	// 更新时间
+	if (file.m_hFile != NULL)
+	{
+		file.SeekToBegin();
+		file.Write(&time, sizeof(time));
+		file.Close();
+	}
 
 	// 循环封
 	thiz->m_stateStatic.SetWindowText(_T("循环封禁中"));
@@ -612,8 +621,6 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 	}
 	CoUninitialize();
 	thiz->m_stateStatic.SetWindowText(_T("待机中"));
-
-	gzclose(f);
 	return 0;
 }
 

@@ -179,6 +179,10 @@ void CSuperFunctionDlg::ShowCurrentOptions()
 		m_loopBanPage.m_logCheck.SetCheck(boolBuf);
 	else
 		m_loopBanPage.m_logCheck.SetCheck(FALSE);
+	if (gzread(f, &boolBuf, sizeof(BOOL)) == sizeof(BOOL))		// 开启
+		m_loopBanPage.m_enableCheck.SetCheck(boolBuf);
+	else
+		m_loopBanPage.m_enableCheck.SetCheck(TRUE);
 
 	gzclose(f);
 }
@@ -206,6 +210,7 @@ void CSuperFunctionDlg::ApplyOptionsInDlg()
 
 	BOOL boolBuf;
 	gzwrite(f, &(boolBuf = m_loopBanPage.m_logCheck.GetCheck()), sizeof(BOOL));		// 输出日志
+	gzwrite(f, &(boolBuf = m_loopBanPage.m_enableCheck.GetCheck()), sizeof(BOOL));	// 开启
 
 	gzclose(f);
 
