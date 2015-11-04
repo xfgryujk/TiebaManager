@@ -977,8 +977,6 @@ CString GetTiebaErrorText(const CString& errorCode)
 		return _T("已被系统封禁");
 	if (errorCode == _T("308"))
 		return _T("你被封禁或失去权限");
-	if (errorCode == _T("4"))
-		return _T("小吧主只能封1天");
 	if (errorCode == _T("872"))
 		return _T("精品贴不能删");
 	if (errorCode == _T("871"))

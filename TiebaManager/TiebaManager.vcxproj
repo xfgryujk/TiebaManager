@@ -118,6 +118,7 @@
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="BlackListPage.h" />
+    <ClInclude Include="DefriendPage.h" />
     <ClInclude Include="ImageViewDlg.h" />
     <ClInclude Include="ListPage.h" />
     <ClInclude Include="LoopBanPage.h" />
@@ -156,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="BlackListPage.cpp" />
+    <ClCompile Include="DefriendPage.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />
     <ClCompile Include="ListPage.cpp" />
     <ClCompile Include="LoopBanPage.cpp" />

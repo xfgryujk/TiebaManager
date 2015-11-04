@@ -20,6 +20,7 @@ CSuperFunctionDlg::CSuperFunctionDlg(CWnd* pParent /*=NULL*/)
 	// 初始化m_pages
 	int i = 0;
 	m_pages[i++] = &m_loopBanPage;
+	m_pages[i++] = &m_defriendPage;
 }
 
 #pragma region MFC
@@ -60,9 +61,11 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 	// 初始化m_tab
 	int i = 0;
 	m_tab.InsertItem(i++, _T("循环封"));
+	m_tab.InsertItem(i++, _T("批量拉黑"));
 
 	// 初始化各页
 	m_loopBanPage.Create(IDD_LOOP_BAN_PAGE, &m_tab);
+	m_defriendPage.Create(IDD_DEFRIEND_PAGE, &m_tab);
 
 	CRect rect;
 	m_tab.GetClientRect(&rect);

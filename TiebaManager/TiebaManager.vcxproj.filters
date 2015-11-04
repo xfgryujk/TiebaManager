@@ -159,6 +159,9 @@
     <ClInclude Include="OperatePage.h">
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
+    <ClInclude Include="DefriendPage.h">
+      <Filter>头文件\Dialog\SuperFunction</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -262,6 +265,9 @@
     </ClCompile>
     <ClCompile Include="OperatePage.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="DefriendPage.cpp">
+      <Filter>源文件\Dialog\SuperFunction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -21,6 +21,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
+	virtual BOOL OnInitDialog();
 	afx_msg void OnLbnDblclkList1();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
@@ -38,5 +39,4 @@ public:
 	CButton m_loadOptionsButton;
 	CButton m_saveOptionsButton;
 	CStatic m_currentOptionStatic;
-	virtual BOOL OnInitDialog();
 };

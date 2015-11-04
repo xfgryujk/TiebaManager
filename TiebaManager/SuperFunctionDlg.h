@@ -1,6 +1,7 @@
 #pragma once
 #include "NormalDlg.h"
 #include "LoopBanPage.h"
+#include "DefriendPage.h"
 
 
 // CSuperFunctionDlg ¶Ô»°¿ò
@@ -37,11 +38,12 @@ public:
 public:
 	CTabCtrl m_tab;
 	CLoopBanPage m_loopBanPage;
+	CDefriendPage m_defriendPage;
 	CButton m_okButton;
 	CButton m_cancelButton;
 
 	BOOL m_clearScanCache;
 protected:
-	CWnd* m_pages[1];
+	CWnd* m_pages[2];
 	CResizeControl m_pagesResize;
 };
