@@ -4,7 +4,7 @@
 
 
 // 当前版本日期，每次更新后修改
-const TCHAR UPDATE_CURRENT_VERSION[] = _T("15-10-02");
+const TCHAR UPDATE_CURRENT_VERSION[] = _T("15-11-06");
 
 // 检查更新
 CheckUpdateResult CheckUpdate()

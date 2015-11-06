@@ -24,12 +24,19 @@ public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton2();
 
 	static UINT AFX_CDECL DefriendThread(LPVOID _thiz);
 
+
+protected:
+	static CDefriendPage* m_instance;
+	static volatile BOOL m_stopFlag;
 
 public:
 	CEdit m_startPageEdit;
 	CEdit m_endPageEdit;
 	CButton m_startButton;
+	CButton m_stopButton;
+	CStatic m_stateStatic;
 };
