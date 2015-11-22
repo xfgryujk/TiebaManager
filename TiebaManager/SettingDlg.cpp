@@ -493,12 +493,12 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 		m_imagePage.m_thresholdEdit.SetWindowText(_T("2.43"));
 
 	// 信任主题
-	m_whiteListPage.m_list.ResetContent();
+	m_trustedThreadPage.m_list.ResetContent();
 	if (gzread(f, &size, sizeof(int)) == sizeof(int)) // 长度
 		for (int i = 0; i < size; i++)
 		{
 			ReadText(f, strBuf);
-			m_whiteListPage.m_list.AddString(strBuf);
+			m_trustedThreadPage.m_list.AddString(strBuf);
 		}
 
 	gzread(f, &boolBuf, sizeof(BOOL));						// 拉黑
