@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "BlackListPage.h"
-#include "Global.h"
+#include "StringHelper.h"
 #include "SettingDlg.h"
 
 
@@ -39,8 +39,8 @@ BOOL CBlackListPage::OnInitDialog()
 {
 	CRegListPage::OnInitDialog();
 
-	m_static.SetWindowText(_T("当被测文本等于文本时匹配\r\n\
-注意正则表达式.*匹配所有文本，请不要不加限制使用！！"));
+	m_static.SetWindowText(_T("当被测文本等于文本时匹配\r\n")
+						   _T("注意正则表达式.*匹配所有文本，请不要不加限制使用！！"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Update.h"
-#include "Global.h"
+#include "StringHelper.h"
+#include "NetworkHelper.h"
 
 
 // 当前版本日期，每次更新后修改
@@ -9,13 +10,13 @@ const TCHAR UPDATE_CURRENT_VERSION[] = _T("15-11-06");
 // 检查更新
 CheckUpdateResult CheckUpdate()
 {
-	static const wregex CHECK_UPDATE_REG(_T("\"fs_id\":(\\d+),\"path\":\"\\\\/\\\\u6211\\\\u7684\\\\\
-u5206\\\\u4eab\\\\/\\\\u767e\\\\u5ea6\\\\u8d34\\\\u5427\\\\u76f8\\\\u5173\\\\/\\\\u8d34\\\\u5427\\\\\
-u7ba1\\\\u7406\\\\u5668.zip\",\"server_filename\":\"\\\\u8d34\\\\u5427\\\\u7ba1\\\\u7406\\\\u5668.zip\
-\".*?\"server_ctime\":(\\d+),"));
-	CString src = HTTPGet(_T("http://pan.baidu.com/share/list?channel=chunlei&clienttype=0&web=1\
-&num=100&page=1&dir=%2F%E6%88%91%E7%9A%84%E5%88%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7\
-%E7%9B%B8%E5%85%B3&uk=436464474&shareid=497149087"), FALSE);
+	static const wregex CHECK_UPDATE_REG(_T("\"fs_id\":(\\d+),\"path\":\"\\\\/\\\\u6211\\\\u7684\\\\u5206\\\\u4eab\\\\/\\\\u767e")
+										 _T("\\\\u5ea6\\\\u8d34\\\\u5427\\\\u76f8\\\\u5173\\\\/\\\\u8d34\\\\u5427\\\\u7ba1\\\\u7")
+										 _T("406\\\\u5668.zip\",\"server_filename\":\"\\\\u8d34\\\\u5427\\\\u7ba1\\\\u7406\\\\u5")
+										 _T("668.zip\".*?\"server_ctime\":(\\d+),"));
+	CString src = HTTPGet(_T("http://pan.baidu.com/share/list?channel=chunlei&clienttype=0&web=1&num=100&page=1&dir=%2F%E6%88%91")
+						  _T("%E7%9A%84%E5%88%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%9B%B8%E5%85%B3&uk=436464474&")
+						  _T("shareid=497149087"), FALSE);
 	std::wcmatch res;
 	if (!std::regex_search((LPCTSTR)src, res, CHECK_UPDATE_REG))
 		return UPDATE_FAILED_TO_GET_FILE_ID;
@@ -50,10 +51,9 @@ u7ba1\\\\u7406\\\\u5668.zip\",\"server_filename\":\"\\\\u8d34\\\\u5427\\\\u7ba1\
 	CString sign = GetStringBetween(src, SIGN_LEFT, SIGN_RIGHT);
 	CString bdstoken = GetStringBetween(src, BDSTOKEN_LEFT, BDSTOKEN_RIGHT);
 	CString url;
-	url.Format(_T("http://pan.baidu.com/api/sharedownload?sign=%s&timestamp=%s\
-&bdstoken=%s&channel=chunlei&clienttype=0&web=1&app_id=250528"), sign, timeStamp, bdstoken);
-	src = HTTPPost(url, _T("encrypt=0&product=share&uk=436464474&primaryid=497149087&fid_list=%5B")
-		+ fs_id + _T("%5D"), FALSE);
+	url.Format(_T("http://pan.baidu.com/api/sharedownload?sign=%s&timestamp=%s&bdstoken=%s&channel=chunlei")
+			   _T("&clienttype=0&web=1&app_id=250528"), sign, timeStamp, bdstoken);
+	src = HTTPPost(url, _T("encrypt=0&product=share&uk=436464474&primaryid=497149087&fid_list=%5B") + fs_id + _T("%5D"), FALSE);
 
 	// 文件下载链接
 	CString dlink = GetStringBetween(src, DLINK_LEFT, DLINK_RIGHT);

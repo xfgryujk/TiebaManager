@@ -118,13 +118,18 @@
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="BlackListPage.h" />
+    <ClInclude Include="MiscHelper.h" />
+    <ClInclude Include="TiebaCollect.h" />
     <ClInclude Include="DefriendPage.h" />
     <ClInclude Include="ImageViewDlg.h" />
     <ClInclude Include="ListPage.h" />
     <ClInclude Include="LoopBanPage.h" />
+    <ClInclude Include="NetworkHelper.h" />
     <ClInclude Include="NormalDlg.h" />
+    <ClInclude Include="TiebaOperate.h" />
     <ClInclude Include="OperatePage.h" />
     <ClInclude Include="ResizeControl.h" />
+    <ClInclude Include="TiebaScan.h" />
     <ClInclude Include="ScanImage.h" />
     <ClInclude Include="ConfirmDlg.h" />
     <ClInclude Include="ExploreLzlPage.h" />
@@ -133,7 +138,6 @@
     <ClInclude Include="ExplorerDlg.h" />
     <ClInclude Include="ExplorerPage.h" />
     <ClInclude Include="ExploreThreadPage.h" />
-    <ClInclude Include="Global.h" />
     <ClInclude Include="ImagePage.h" />
     <ClInclude Include="KeywordsPage.h" />
     <ClInclude Include="RegListPage.h" />
@@ -144,12 +148,13 @@
     <ClInclude Include="Setting.h" />
     <ClInclude Include="SettingDlg.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StringHelper.h" />
     <ClInclude Include="SuperFunctionDlg.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextButton.h" />
-    <ClInclude Include="Tieba.h" />
     <ClInclude Include="TiebaManager.h" />
     <ClInclude Include="TiebaManagerDlg.h" />
+    <ClInclude Include="TypeHelper.h" />
     <ClInclude Include="Update.h" />
     <ClInclude Include="UsersPage.h" />
     <ClInclude Include="WhiteContentPage.h" />
@@ -161,6 +166,8 @@
     <ClCompile Include="ImageViewDlg.cpp" />
     <ClCompile Include="ListPage.cpp" />
     <ClCompile Include="LoopBanPage.cpp" />
+    <ClCompile Include="MiscHelper.cpp" />
+    <ClCompile Include="NetworkHelper.cpp" />
     <ClCompile Include="NormalDlg.cpp" />
     <ClCompile Include="OperatePage.cpp" />
     <ClCompile Include="ResizeControl.cpp" />
@@ -172,7 +179,6 @@
     <ClCompile Include="ExplorerDlg.cpp" />
     <ClCompile Include="ExplorerPage.cpp" />
     <ClCompile Include="ExploreThreadPage.cpp" />
-    <ClCompile Include="Global.cpp" />
     <ClCompile Include="ImagePage.cpp" />
     <ClCompile Include="KeywordsPage.cpp" />
     <ClCompile Include="RegListPage.cpp" />
@@ -185,11 +191,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StringHelper.cpp" />
     <ClCompile Include="SuperFunctionDlg.cpp" />
     <ClCompile Include="TextButton.cpp" />
-    <ClCompile Include="Tieba.cpp" />
+    <ClCompile Include="TiebaCollect.cpp" />
     <ClCompile Include="TiebaManager.cpp" />
     <ClCompile Include="TiebaManagerDlg.cpp" />
+    <ClCompile Include="TiebaOperate.cpp" />
+    <ClCompile Include="TiebaScan.cpp" />
     <ClCompile Include="Update.cpp" />
     <ClCompile Include="UsersPage.cpp" />
     <ClCompile Include="WhiteContentPage.cpp" />

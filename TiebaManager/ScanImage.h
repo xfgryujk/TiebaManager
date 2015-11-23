@@ -15,22 +15,35 @@ extern set<CString> g_illegalImage; // 已检查违规的图片
 const CString IMG_CACHE_PATH = _T("ImageCache\\");
 
 
-struct NameImage
-{
-	CString name;
-	Mat img;
-};
-
-
 BOOL ReadImage(const CString& path, Mat& img);
 BOOL ReadImage(const BYTE* buffer, ULONG size, CImage& img);
 BOOL ReadImage(const BYTE* buffer, ULONG size, Mat& img);
 void ReadImages(const CString& dir);
 CString GetImageName(const CString& imgUrl);
 
-void GetThreadImage(const CString& preview, const CString& portrait, vector<CString>& img);
-void GetPostImage(const CString& content, const CString& portrait, vector<CString>& img);
+class GetImagesBase
+{
+public:
+	virtual void GetImage(vector<CString>& img) = 0;
+};
 
-BOOL CheckImageIllegal(const CString& content, const CString& author, const CString& portrait, void(*GetImage)(const CString& content,
-	const CString& portrait, vector<CString>& img), CString& msg);
+class GetThreadImage : public GetImagesBase
+{
+private:
+	const CString& m_preview;
+public:
+	GetThreadImage(const CString& preview) : m_preview(preview) {}
+	void GetImage(vector<CString>& img);
+};
+
+class GetPostImage : public GetImagesBase
+{
+private:
+	const CString& m_content, m_portrait;
+public:
+	GetPostImage(const CString& content, const CString& portrait) : m_content(content), m_portrait(portrait) {}
+	void GetImage(vector<CString>& img);
+};
+
+BOOL CheckImageIllegal(const CString& author, GetImagesBase& getImage, CString& msg);
 BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg);

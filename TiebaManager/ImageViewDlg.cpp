@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "ImageViewDlg.h"
 #include "ScanImage.h"
-#include "Global.h"
+#include "NetworkHelper.h"
 
 
 // CImageViewDlg ¶Ô»°¿ò

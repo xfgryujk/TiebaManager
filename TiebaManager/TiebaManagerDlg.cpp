@@ -23,9 +23,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "SuperFunctionDlg.h"
 #include "TiebaManagerDlg.h"
 #include "Setting.h"
-#include "Global.h"
+#include "StringHelper.h"
+#include "NetworkHelper.h"
+#include "MiscHelper.h"
 #include "Update.h"
-#include "Tieba.h"
+#include "TiebaCollect.h"
+#include "TiebaScan.h"
+#include "TiebaOperate.h"
 #include "ScanImage.h"
 
 #ifdef _DEBUG
@@ -38,11 +42,11 @@ static const UINT WM_TASKBARCREATED = RegisterWindowMessage(_T("TaskbarCreated")
 static const UINT WM_TRAY = WM_APP + 1;
 
 #pragma region
-static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; \
-charset=gb2312\" /><title>日志</title><style type=\"text/css\"><!--body {border:1px solid #000000;\
-overflow:auto;margin-left:3px;margin-top:3px;margin-right:3px;margin-bottom:3px;font-family:\"宋体\",Verdana;\
-font-size:9pt;line-height:12px}body,td,th{color:#000000}a:link{text-decoration:none}a:hover{text-decoration:\
-underline}a:visited{text-decoration:none}--></style></head><body>");
+static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=gb2312\" /><title>日志")
+								 _T("</title><style type=\"text/css\"><!--body {border:1px solid #000000;overflow:auto;margin-left:3px")
+								 _T(";margin-top:3px;margin-right:3px;margin-bottom:3px;font-family:\"宋体\",Verdana;font-size:9pt;lin")
+								 _T("e-height:12px}body,td,th{color:#000000}a:link{text-decoration:none}a:hover{text-decoration:underl")
+								 _T("ine}a:visited{text-decoration:none}--></style></head><body>");
 #pragma endregion
 
 WNDPROC CTiebaManagerDlg::s_oldExplorerWndProc;
@@ -530,8 +534,11 @@ UINT AFX_CDECL CTiebaManagerDlg::AutoUpdateThread(LPVOID _thiz)
 		break;
 	case UPDATE_FAILED_TO_GET_LINK:
 		if (AfxMessageBox(_T("获取下载地址失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
-			ShellExecute(NULL, _T("open"), _T("http://pan.baidu.com/s/1hq86os8#dir/path=%2F%E6%88%91%E7%9A\
-%84%E5%88%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%9B%B8%E5%85%B3"), NULL, NULL, SW_NORMAL);
+		{
+			ShellExecute(NULL, _T("open"), _T("http://pan.baidu.com/s/1hq86os8#dir/path=%2F%E6%88%91%E7%9A%84%E5%88")
+										   _T("%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%9B%B8%E5%85%B3"),
+						 NULL, NULL, SW_NORMAL);
+		}
 	case UPDATE_NO_UPDATE:
 	case UPDATE_HAS_UPDATE:
 		thiz->m_stateStatic.SetWindowText(_T("待机中"));
@@ -610,8 +617,8 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 			if (code != _T("0"))
 			{
 				CString content;
-				content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！\
-错误代码：%s(%s)</font><a href=\"bd:%s,%s\">重试</a>"), name[i], code, GetTiebaErrorText(code), pid[i], name[i]);
+				content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
+							   _T("\"bd:%s,%s\">重试</a>"), name[i], code, GetTiebaErrorText(code), pid[i], name[i]);
 				thiz->Log(content, pDocument);
 			}
 			else

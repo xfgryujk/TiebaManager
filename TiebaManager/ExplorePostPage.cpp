@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "ExplorePostPage.h"
-#include "Tieba.h"
+#include "TiebaCollect.h"
 #include "ExplorerDlg.h"
 #include "ExploreLzlPage.h"
 #include "ScanImage.h"
@@ -108,7 +108,7 @@ void CExplorePostPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 		explorerDlg->m_edit.SetWindowText(m_posts[pNMLV->iItem].content + 
 			_T("\r\n\r\n") + m_posts[pNMLV->iItem].author);
 		vector<CString>* img = new vector<CString>();
-		GetPostImage(m_posts[pNMLV->iItem].content, m_posts[pNMLV->iItem].authorPortrait, *img);
+		GetPostImage(m_posts[pNMLV->iItem].content, m_posts[pNMLV->iItem].authorPortrait).GetImage(*img);
 		explorerDlg->ViewImages(img);
 	}
 

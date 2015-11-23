@@ -6,7 +6,7 @@ using std::set;
 #include <regex>
 using std::wregex;
 #include <zlib.h>
-struct NameImage;
+#include "TypeHelper.h"
 
 
 
@@ -18,13 +18,6 @@ extern CString	USERS_PATH;			// 确定贴吧时初始化
 extern CString	CURRENT_USER_PATH;	// 确定贴吧时初始化
 extern CString	COOKIE_PATH;		// 确定贴吧时初始化
 extern CString	CACHE_PATH;			// 确定贴吧时初始化
-
-struct RegexText
-{
-	BOOL isRegex;
-	CString text;
-	wregex regexp;
-};
 
 extern CString	g_currentUser;		// 当前账号
 extern BOOL		g_autoUpdate;		// 自动更新

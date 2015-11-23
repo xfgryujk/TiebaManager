@@ -3,10 +3,11 @@
 
 #include "stdafx.h"
 #include "LoginDlg.h"
-#include "Global.h"
+#include "StringHelper.h"
+#include "NetworkHelper.h"
 #include <WinInet.h>
 #include <Iepmapi.h>
-#include "Tieba.h"
+#include "TiebaCollect.h"
 #include "ScanImage.h"
 
 
@@ -137,11 +138,10 @@ void CLoginDlg::OnOK()
 	time_t timestamp;
 	time(&timestamp);
 	CString data;
-	data.Format(_T("staticpage=http%%3A%%2F%%2Fwww.baidu.com%%2Fcache%%2Fuser%%2Fhtml%%2Fv3Jump.html\
-&charset=utf-8&token=%s&tpl=mn&apiver=v3&tt=%I64d&codestring=%s&isPhone=false&safeflg=0\
-&u=http%%3A%%2F%%2Fwww.baidu.com%%2F&username=%s&password=%s&verifycode=%s&mem_pass=on&ppui_logintime=35219\
-&callback=parent.bd__pcbs__4y6hex"), 
-		m_token, timestamp, m_verifyStr, EncodeURI(userName), EncodeURI(password), verifyCode);
+	data.Format(_T("staticpage=http%%3A%%2F%%2Fwww.baidu.com%%2Fcache%%2Fuser%%2Fhtml%%2Fv3Jump.html&charset=utf-8&token=%s&tpl=mn")
+				_T("&apiver=v3&tt=%I64d&codestring=%s&isPhone=false&safeflg=0&u=http%%3A%%2F%%2Fwww.baidu.com%%2F&username=%s&pass")
+				_T("word=%s&verifycode=%s&mem_pass=on&ppui_logintime=35219&callback=parent.bd__pcbs__4y6hex"),
+				m_token, timestamp, m_verifyStr, EncodeURI(userName), EncodeURI(password), verifyCode);
 	CString result = HTTPPost(_T("https://passport.baidu.com/v2/api/?login"), data, TRUE, NULL, &m_cookie);
 
 	EnableWindow(TRUE);
@@ -223,8 +223,8 @@ Win10:
 // 取用户名
 void CLoginDlg::GetLoginUserName()
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=\
-%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD"), TRUE, NULL, &m_cookie);
+	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0")
+						  _T("xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD"), TRUE, NULL, &m_cookie);
 	CString tmp;
 	std::wcmatch res;
 	if (std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData.user"), _T("}"))), res, USER_NAME_REG))

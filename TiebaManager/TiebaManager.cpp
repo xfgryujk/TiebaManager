@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "TiebaManager.h"
 #include "TiebaManagerDlg.h"
-#include "Global.h"
+#include "MiscHelper.h"
 #include "Setting.h"
 
 #ifdef _DEBUG

@@ -3,8 +3,9 @@
 
 #include "stdafx.h"
 #include "LoopBanPage.h"
-#include "Global.h"
-#include "Tieba.h"
+#include "StringHelper.h"
+#include "NetworkHelper.h"
+extern CString g_encodedForumName;
 #include "SuperFunctionDlg.h"
 
 

@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "ExploreThreadPage.h"
-#include "Tieba.h"
+#include "TiebaCollect.h"
 #include "ExplorerDlg.h"
 #include "ScanImage.h"
 
@@ -100,7 +100,7 @@ void CExploreThreadPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 		explorerDlg->m_edit.SetWindowText(m_threads[pNMLV->iItem].title + _T("\r\n") 
 			+ m_threads[pNMLV->iItem].preview + _T("\r\n\r\n") + m_threads[pNMLV->iItem].author);
 		vector<CString>* img = new vector<CString>();
-		GetThreadImage(m_threads[pNMLV->iItem].preview, _T(""), *img);
+		GetThreadImage(m_threads[pNMLV->iItem].preview).GetImage(*img);
 		explorerDlg->ViewImages(img);
 	}
 

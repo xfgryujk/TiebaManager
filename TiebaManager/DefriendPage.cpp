@@ -4,8 +4,12 @@
 #include "stdafx.h"
 #include "DefriendPage.h"
 #include "TiebaManagerDlg.h"
-#include "Global.h"
-#include "Tieba.h"
+#include "StringHelper.h"
+#include "NetworkHelper.h"
+extern CString g_encodedForumName;
+#include <set>
+extern std::set<CString> g_defriendedUser; // 已拉黑的用户，要写入文件
+#include "TiebaOperate.h"
 #include <vector>
 
 
@@ -168,8 +172,8 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 		if (code != _T("0"))
 		{
 			CString content;
-			content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！\
-错误代码：%s(%s)</font><a href=\"df:%s\">重试</a>"), userName[i], code, GetTiebaErrorText(code), userID[i]);
+			content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
+						   _T("\"df:%s\">重试</a>"), userName[i], code, GetTiebaErrorText(code), userID[i]);
 			mainDlg->Log(content, pDocument);
 		}
 		else

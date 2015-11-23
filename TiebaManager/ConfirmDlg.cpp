@@ -86,9 +86,9 @@ BOOL CConfirmDlg::OnInitDialog()
 		{
 			vector<CString>* img = new vector<CString>();
 			if (m_operation->object == TBOBJ_THREAD)
-				GetThreadImage(m_operation->msg, m_operation->authorPortrait, *img);
+				GetThreadImage(m_operation->msg).GetImage(*img);
 			else //if (m_operation->object == TBOBJ_POST)
-				GetPostImage(m_operation->msg, m_operation->authorPortrait, *img);
+				GetPostImage(m_operation->msg, m_operation->authorPortrait).GetImage(*img);
 			if (!img->empty())
 			{
 				m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);

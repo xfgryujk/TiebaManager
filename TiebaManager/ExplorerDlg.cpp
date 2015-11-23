@@ -5,8 +5,10 @@
 #include "ImageViewDlg.h"
 #include "ExplorerDlg.h"
 #include "TiebaManagerDlg.h"
-#include "Tieba.h"
-#include "Global.h"
+#include "TiebaCollect.h"
+#include <set>
+extern std::set<__int64> g_deletedTID; // 已删的主题ID
+#include "TiebaOperate.h"
 #include <Mmsystem.h>
 
 

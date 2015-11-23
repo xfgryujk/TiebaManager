@@ -49,17 +49,17 @@ BOOL CAboutPage::OnInitDialog()
 	m_resize.AddControl(&m_autoCheckUpdateCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_edit);
 	m_resize.AddControl(&m_authorStatic, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_edit);
 
-	m_edit.SetWindowText(_T("软件介绍帖http://tieba.baidu.com/p/3915111330\r\n\
-\r\n\
-html代码只转换了\"'&<>还有空格，其他以网页源码为准，如换行符为<br> (不注意的话会不匹配或匹配太多)\r\n\
-\r\n\
-我的邮箱和支付宝是xfgryujk@126.com，喜欢此软件可以捐助哦\r\n\
-\r\n\
-此程序通过GPL协议开源，你可以在https://github.com/xfgryujk/TiebaManager得到源码，欢迎完善程序\r\n\
-\r\n\
-对更新日志感兴趣的话看这里https://github.com/xfgryujk/TiebaManager/commits/master\r\n\
-\r\n\
-我只是提供方便吧务管理贴吧的工具，被用来做拆吧等恶意行为造成的损失本人不负责"));
+	m_edit.SetWindowText(_T("软件介绍帖http://tieba.baidu.com/p/3915111330\r\n")
+						 _T("\r\n")
+						 _T("html代码只转换了\"'&<>还有空格，其他以网页源码为准，如换行符为<br> (不注意的话会不匹配或匹配太多)\r\n")
+						 _T("\r\n")
+						 _T("我的邮箱和支付宝是xfgryujk@126.com，喜欢此软件可以捐助哦\r\n")
+						 _T("\r\n")
+						 _T("此程序通过GPL协议开源，你可以在https://github.com/xfgryujk/TiebaManager得到源码，欢迎完善程序\r\n")
+						 _T("\r\n")
+						 _T("对更新日志感兴趣的话看这里https://github.com/xfgryujk/TiebaManager/commits/master\r\n")
+						 _T("\r\n")
+						 _T("我只是提供方便吧务管理贴吧的工具，被用来做拆吧等恶意行为造成的损失本人不负责"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -75,13 +75,19 @@ void CAboutPage::OnStnClickedStatic1()
 		break;
 	case UPDATE_FAILED_TO_GET_FILE_ID:
 		if (AfxMessageBox(_T("获取文件ID失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
-			ShellExecute(NULL, _T("open"), _T("http://pan.baidu.com/s/1hq86os8#dir/path=%2F%E6%88%91%E7%9A\
-%84%E5%88%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%9B%B8%E5%85%B3"), NULL, NULL, SW_NORMAL);
+		{
+			ShellExecute(NULL, _T("open"), _T("http://pan.baidu.com/s/1hq86os8#dir/path=%2F%E6%88%91%E7%9A%84%E5%88")
+										   _T("%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%9B%B8%E5%85%B3"), 
+						 NULL, NULL, SW_NORMAL);
+		}
 		break;
 	case UPDATE_FAILED_TO_GET_LINK:
 		if (AfxMessageBox(_T("获取下载地址失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
-			ShellExecute(NULL, _T("open"), _T("http://pan.baidu.com/s/1hq86os8#dir/path=%2F%E6%88%91%E7%9A\
-%84%E5%88%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%9B%B8%E5%85%B3"), NULL, NULL, SW_NORMAL);
+		{
+			ShellExecute(NULL, _T("open"), _T("http://pan.baidu.com/s/1hq86os8#dir/path=%2F%E6%88%91%E7%9A%84%E5%88")
+										   _T("%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%9B%B8%E5%85%B3"),
+						 NULL, NULL, SW_NORMAL);
+		}
 		break;
 	}
 }

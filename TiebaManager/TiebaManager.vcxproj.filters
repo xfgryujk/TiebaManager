@@ -19,12 +19,6 @@
     <Filter Include="源文件\Dialog">
       <UniqueIdentifier>{e81938cd-2fd1-4f21-9f11-91c8386c5d8a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\Global">
-      <UniqueIdentifier>{8169cca8-3a81-4429-ac7d-2cb71c9b1334}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Global">
-      <UniqueIdentifier>{428add1c-5e97-4533-9725-ab2c8c3583fd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\Dialog\Setting">
       <UniqueIdentifier>{00bf00b3-0753-4278-9737-3a07b382c026}</UniqueIdentifier>
     </Filter>
@@ -49,6 +43,18 @@
     <Filter Include="头文件\Dialog\SuperFunction">
       <UniqueIdentifier>{628fdca5-b0af-4b2d-ad95-2780a193694c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Helper">
+      <UniqueIdentifier>{f6b833c5-6084-445f-bf59-bbd2b3d45d17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Tieba">
+      <UniqueIdentifier>{92a52f04-0870-498e-88cc-9addc737d7c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Helper">
+      <UniqueIdentifier>{2d735068-f5a1-4836-ad11-184c413fb3b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Tieba">
+      <UniqueIdentifier>{d83135bf-1ff5-4b8f-a0ed-8472441e5fb3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -65,12 +71,6 @@
     </ClInclude>
     <ClInclude Include="TiebaManagerDlg.h">
       <Filter>头文件\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="Global.h">
-      <Filter>头文件\Global</Filter>
-    </ClInclude>
-    <ClInclude Include="Setting.h">
-      <Filter>头文件\Global</Filter>
     </ClInclude>
     <ClInclude Include="SettingDlg.h">
       <Filter>头文件\Dialog\Setting</Filter>
@@ -90,17 +90,11 @@
     <ClInclude Include="AboutPage.h">
       <Filter>头文件\Dialog\Setting</Filter>
     </ClInclude>
-    <ClInclude Include="Tieba.h">
-      <Filter>头文件\Global</Filter>
-    </ClInclude>
     <ClInclude Include="LoginDlg.h">
       <Filter>头文件\Dialog</Filter>
     </ClInclude>
     <ClInclude Include="ConfirmDlg.h">
       <Filter>头文件\Dialog</Filter>
-    </ClInclude>
-    <ClInclude Include="Update.h">
-      <Filter>头文件\Global</Filter>
     </ClInclude>
     <ClInclude Include="UsersPage.h">
       <Filter>头文件\Dialog\Setting</Filter>
@@ -122,9 +116,6 @@
     </ClInclude>
     <ClInclude Include="ImagePage.h">
       <Filter>头文件\Dialog\Setting</Filter>
-    </ClInclude>
-    <ClInclude Include="ScanImage.h">
-      <Filter>头文件\Global</Filter>
     </ClInclude>
     <ClInclude Include="ImageViewDlg.h">
       <Filter>头文件\Dialog</Filter>
@@ -162,6 +153,36 @@
     <ClInclude Include="DefriendPage.h">
       <Filter>头文件\Dialog\SuperFunction</Filter>
     </ClInclude>
+    <ClInclude Include="StringHelper.h">
+      <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkHelper.h">
+      <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="TiebaCollect.h">
+      <Filter>头文件\Tieba</Filter>
+    </ClInclude>
+    <ClInclude Include="TiebaOperate.h">
+      <Filter>头文件\Tieba</Filter>
+    </ClInclude>
+    <ClInclude Include="TiebaScan.h">
+      <Filter>头文件\Tieba</Filter>
+    </ClInclude>
+    <ClInclude Include="MiscHelper.h">
+      <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Update.h">
+      <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Setting.h">
+      <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="ScanImage.h">
+      <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeHelper.h">
+      <Filter>头文件\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -172,9 +193,6 @@
     </ClCompile>
     <ClCompile Include="TiebaManagerDlg.cpp">
       <Filter>源文件\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="Setting.cpp">
-      <Filter>源文件\Global</Filter>
     </ClCompile>
     <ClCompile Include="SettingDlg.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
@@ -194,17 +212,11 @@
     <ClCompile Include="AboutPage.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
-    <ClCompile Include="Tieba.cpp">
-      <Filter>源文件\Global</Filter>
-    </ClCompile>
     <ClCompile Include="LoginDlg.cpp">
       <Filter>源文件\Dialog</Filter>
     </ClCompile>
     <ClCompile Include="ConfirmDlg.cpp">
       <Filter>源文件\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="Update.cpp">
-      <Filter>源文件\Global</Filter>
     </ClCompile>
     <ClCompile Include="UsersPage.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
@@ -227,14 +239,8 @@
     <ClCompile Include="ImagePage.cpp">
       <Filter>源文件\Dialog\Setting</Filter>
     </ClCompile>
-    <ClCompile Include="ScanImage.cpp">
-      <Filter>源文件\Global</Filter>
-    </ClCompile>
     <ClCompile Include="ImageViewDlg.cpp">
       <Filter>源文件\Dialog</Filter>
-    </ClCompile>
-    <ClCompile Include="Global.cpp">
-      <Filter>源文件\Global</Filter>
     </ClCompile>
     <ClCompile Include="explorer1.cpp">
       <Filter>源文件\Dialog\UI</Filter>
@@ -268,6 +274,33 @@
     </ClCompile>
     <ClCompile Include="DefriendPage.cpp">
       <Filter>源文件\Dialog\SuperFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkHelper.cpp">
+      <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="StringHelper.cpp">
+      <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="TiebaCollect.cpp">
+      <Filter>源文件\Tieba</Filter>
+    </ClCompile>
+    <ClCompile Include="TiebaScan.cpp">
+      <Filter>源文件\Tieba</Filter>
+    </ClCompile>
+    <ClCompile Include="TiebaOperate.cpp">
+      <Filter>源文件\Tieba</Filter>
+    </ClCompile>
+    <ClCompile Include="MiscHelper.cpp">
+      <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Update.cpp">
+      <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Setting.cpp">
+      <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="ScanImage.cpp">
+      <Filter>源文件\Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

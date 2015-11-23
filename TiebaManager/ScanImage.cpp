@@ -3,7 +3,7 @@
 #include "Setting.h"
 #include <opencv2\imgproc\imgproc.hpp>
 #include <opencv2\imgcodecs.hpp>
-#include "Global.h"
+#include "NetworkHelper.h"
 
 
 set<CString> g_leagalImage; // 已检查不违规的图片
@@ -11,9 +11,9 @@ set<CString> g_illegalImage; // 已检查违规的图片
 
 
 // 1是图片地址
-const wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
+static const wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
 // 2是图片地址
-const wregex POST_IMG_REG(_T("<img .*?class=\"(BDE_Image|j_user_sign)\".*?src=\"(.*?)\".*?>"));
+static const wregex POST_IMG_REG(_T("<img .*?class=\"(BDE_Image|j_user_sign)\".*?src=\"(.*?)\".*?>"));
 
 
 static BOOL CImageToMat(const CImage& image, Mat& img)
@@ -152,27 +152,26 @@ CString GetImageName(const CString& img)
 
 
 // 从主题预览取图片地址
-void GetThreadImage(const CString& preview, const CString& portrait, vector<CString>& img)
+void GetThreadImage::GetImage(vector<CString>& img)
 {
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)preview, (LPCTSTR)preview
-		+ preview.GetLength(), THREAD_IMG_REG), end; it != end; it++)
+	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_preview, (LPCTSTR)m_preview + m_preview.GetLength(), THREAD_IMG_REG), 
+		end; it != end; it++)
 		img.push_back((*it)[1].str().c_str());
 }
 
 // 从帖子取图片地址
-void GetPostImage(const CString& content, const CString& portrait, vector<CString>& img)
+void GetPostImage::GetImage(vector<CString>& img)
 {
-	if (portrait != _T(""))
-		img.push_back(_T("http://tb.himg.baidu.com/sys/portrait/item/") + portrait);
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)content, (LPCTSTR)content
-		+ content.GetLength(), POST_IMG_REG), end; it != end; it++)
+	if (m_portrait != _T(""))
+		img.push_back(_T("http://tb.himg.baidu.com/sys/portrait/item/") + m_portrait);
+	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_content, (LPCTSTR)m_content + m_content.GetLength(), POST_IMG_REG), 
+		end; it != end; it++)
 		img.push_back((*it)[2].str().c_str());
 }
 
 
 // 检查图片违规1，检测信任用户、获取图片地址
-BOOL CheckImageIllegal(const CString& content, const CString& author, const CString& portrait, void(*GetImage)(const CString& content,
-	const CString& portrait, vector<CString>& img), CString& msg)
+BOOL CheckImageIllegal(const CString& author, GetImagesBase& getImage, CString& msg)
 {
 	if (g_images.empty())
 		return FALSE;
@@ -187,7 +186,7 @@ BOOL CheckImageIllegal(const CString& content, const CString& author, const CStr
 	g_optionsLock.Unlock();
 
 	vector<CString> imgs;
-	GetImage(content, portrait, imgs);
+	getImage.GetImage(imgs);
 	return DoCheckImageIllegal(imgs, msg);
 }
 
