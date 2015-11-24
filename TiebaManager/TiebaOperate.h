@@ -25,6 +25,7 @@ void AddOperation(const CString& msg, TBObject object, const CString& tid, const
 	const CString& authorPortrait = _T(""), int pos = 0, int length = 0);
 UINT AFX_CDECL OperateThread(LPVOID mainDlg);
 CString BanID(LPCTSTR userName, LPCTSTR pid);
+CString BanID(LPCTSTR userName);
 CString Defriend(LPCTSTR userID);
 CString DeleteThread(const CString& tid);
 CString DeletePost(LPCTSTR tid, LPCTSTR pid);

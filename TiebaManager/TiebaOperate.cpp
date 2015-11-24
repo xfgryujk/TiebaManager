@@ -245,7 +245,17 @@ CString BanID(LPCTSTR userName, LPCTSTR pid)
 {
 	CString data;
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&pid%%5B%%5D=%s&reason=%s"),
-		g_banDuration, g_forumID, g_tbs, EncodeURI(userName), pid, g_banReason != _T("") ? g_banReason : _T(" "));
+		g_banDuration, g_forumID, g_tbs, EncodeURI(userName), pid, g_banReason != _T("") ? g_banReason : _T("%20"));
+	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
+	return GetOperationErrorCode(src);
+}
+
+// ·âID£¬·µ»Ø´íÎó´úÂë
+CString BanID(LPCTSTR userName)
+{
+	CString data;
+	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&reason=%s"),
+		g_banDuration, g_forumID, g_tbs, EncodeURI(userName), g_banReason != _T("") ? g_banReason : _T("%20"));
 	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
 	return GetOperationErrorCode(src);
 }

@@ -616,7 +616,7 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 	for (int i = 0; i < size; i++)
 	{
-		CString code = BanID(name[i], pid[i]);
+		CString code = BanID(name[i]/*, pid[i]*/);
 		if (log)
 		{
 			if (code != _T("0"))
@@ -629,7 +629,8 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 			else
 				thiz->Log(_T("<font color=red>·â½û </font>") + name[i], pDocument);
 		}
-		Sleep(3000);
+		if (i < size - 1)
+			Sleep(3000);
 	}
 	CoUninitialize();
 	thiz->m_stateStatic.SetWindowText(_T("´ý»úÖÐ"));

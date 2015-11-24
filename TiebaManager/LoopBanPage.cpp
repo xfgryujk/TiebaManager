@@ -61,7 +61,7 @@ void CLoopBanPage::OnClickedButton1()
 		return;
 	}
 
-	CString pid = GetPID(text);
+	/*CString pid = GetPID(text);
 	if (pid == NET_TIMEOUT_TEXT)
 	{
 		AfxMessageBox(_T("连接超时"), MB_ICONERROR);
@@ -71,11 +71,11 @@ void CLoopBanPage::OnClickedButton1()
 	{
 		AfxMessageBox(_T("此用户没有在本吧发过贴"), MB_ICONERROR);
 		return;
-	}
+	}*/
 
 	int index = m_list.GetCurSel();
 	index = m_list.InsertString(index + 1, text);
-	m_pid.insert(m_pid.begin() + index, pid);
+	m_pid.insert(m_pid.begin() + index, _T("") /*pid*/);
 	m_list.SetCurSel(index);
 
 	((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
