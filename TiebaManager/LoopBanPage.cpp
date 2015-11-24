@@ -5,7 +5,7 @@
 #include "LoopBanPage.h"
 #include "StringHelper.h"
 #include "NetworkHelper.h"
-extern CString g_encodedForumName;
+#include "TiebaVariable.h"
 #include "SuperFunctionDlg.h"
 
 

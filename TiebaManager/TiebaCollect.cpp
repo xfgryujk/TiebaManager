@@ -1,15 +1,10 @@
 #include "stdafx.h"
 #include "TiebaCollect.h"
+
+#include "TiebaVariable.h"
+
 #include "StringHelper.h"
 #include "NetworkHelper.h"
-
-
-// 贴吧、用户信息
-CString g_forumName;
-CString g_encodedForumName;
-CString g_forumID;
-CString g_cookie;
-CString g_tbs;
 
 
 // 采集贴吧用的常量
@@ -80,9 +75,6 @@ const TCHAR LZL_AUTHOR_ID_RIGHT[] = _T("\"");
 const TCHAR LZL_CONTENT_LEFT[] = _T("\"content\":\"");
 const TCHAR LZL_CONTENT_RIGHT[] = _T("\",\"");
 #pragma endregion
-
-
-extern volatile BOOL g_stopScanFlag;
 
 
 // 取主题列表

@@ -183,6 +183,9 @@
     <ClInclude Include="TypeHelper.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="TiebaVariable.h">
+      <Filter>头文件\Tieba</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -301,6 +304,9 @@
     </ClCompile>
     <ClCompile Include="ScanImage.cpp">
       <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="TiebaVariable.cpp">
+      <Filter>源文件\Tieba</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

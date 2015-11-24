@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "Setting.h"
-extern CString g_cookie;
-#include "TiebaScan.h"
 #include "TiebaManagerDlg.h"
+#include "TiebaVariable.h"
 #include "ScanImage.h"
 
 

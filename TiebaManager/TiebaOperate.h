@@ -4,9 +4,6 @@
 enum TBObject { TBOBJ_THREAD, TBOBJ_POST, TBOBJ_LZL };
 
 
-extern CWinThread* g_operateThread;
-
-
 struct Operation
 {
 	CString msg;		// 提示消息

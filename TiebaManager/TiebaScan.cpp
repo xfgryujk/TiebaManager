@@ -1,13 +1,18 @@
 #include "stdafx.h"
 #include "TiebaScan.h"
+
+#include "TiebaVariable.h"
+#include "TiebaCollect.h"
 #include <queue>
 using std::queue;
-#include "TiebaCollect.h"
 #include "TiebaOperate.h"
 #include "Setting.h"
+
 #include "StringHelper.h"
 #include "NetworkHelper.h"
+
 #include "TiebaManagerDlg.h"
+
 #include "ScanImage.h"
 
 
@@ -15,23 +20,10 @@ static const TCHAR PAGE_COUNT_LEFT[] = _T(",\"total_page\":");
 static const TCHAR PAGE_COUNT_RIGHT[] = _T("}");
 
 
-volatile BOOL g_stopScanFlag = FALSE;
-CWinThread* g_scanThread = NULL;
-set<__int64> g_initIgnoredTID; // 不删的主题ID(手动忽略)，要写入文件
-set<__int64> g_initIgnoredPID; // 不删的帖子ID(手动忽略)，要写入文件
-set<__int64> g_initIgnoredLZLID; // 不删的楼中楼ID(手动忽略)，要写入文件
-set<__int64> g_ignoredTID; // 不删的主题ID(已扫描且违规)
-set<__int64> g_ignoredPID; // 不删的帖子ID(已扫描且违规)
-set<__int64> g_ignoredLZLID; // 不删的楼中楼ID(已扫描且违规)
-set<__int64> g_deletedTID; // 已删的主题ID
-map<__int64, int> g_reply; // 主题的回复数，要写入文件
-map<CString, int> g_userTrigCount; // 某用户违规次数，要写入文件
-set<CString> g_bannedUser; // 已封的用户
-set<CString> g_defriendedUser; // 已拉黑的用户，要写入文件
-
 static vector<ThreadInfo> g_threads; // 当前扫描的主题列表
 static int g_threadIndex; // 下个要扫描的主题索引
 static CCriticalSection g_threadIndexLock;
+
 
 extern queue<Operation> g_operationQueue; // 操作队列
 

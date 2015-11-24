@@ -154,6 +154,7 @@
     <ClInclude Include="TextButton.h" />
     <ClInclude Include="TiebaManager.h" />
     <ClInclude Include="TiebaManagerDlg.h" />
+    <ClInclude Include="TiebaVariable.h" />
     <ClInclude Include="TypeHelper.h" />
     <ClInclude Include="Update.h" />
     <ClInclude Include="UsersPage.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="TiebaManagerDlg.cpp" />
     <ClCompile Include="TiebaOperate.cpp" />
     <ClCompile Include="TiebaScan.cpp" />
+    <ClCompile Include="TiebaVariable.cpp" />
     <ClCompile Include="Update.cpp" />
     <ClCompile Include="UsersPage.cpp" />
     <ClCompile Include="WhiteContentPage.cpp" />

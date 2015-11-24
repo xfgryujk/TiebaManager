@@ -3,8 +3,6 @@
 using std::wregex;
 #include <vector>
 using std::vector;
-#include <map>
-using std::map;
 
 
 // 采集贴吧用的常量
@@ -19,14 +17,6 @@ const TCHAR _TBS_RIGHT[] = _T("\"");
 // 3是tbs
 const wregex TBS_REG(_T("tbs('|\")?:\\s*('|\")(.*?)('|\")"));
 #pragma endregion
-
-
-// 贴吧、用户信息
-extern CString g_forumName;
-extern CString g_encodedForumName;
-extern CString g_forumID;
-extern CString g_cookie;
-extern CString g_tbs; // 备用获取tbs地址：http://tieba.baidu.com/dc/common/tbs
 
 
 struct ThreadInfo // 主题信息

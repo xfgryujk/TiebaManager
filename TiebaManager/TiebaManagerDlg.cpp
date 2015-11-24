@@ -18,18 +18,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include "stdafx.h"
+#include "TiebaManagerDlg.h"
+
 #include "SettingDlg.h"
 #include "ExplorerDlg.h"
 #include "SuperFunctionDlg.h"
-#include "TiebaManagerDlg.h"
+
 #include "Setting.h"
 #include "StringHelper.h"
 #include "NetworkHelper.h"
 #include "MiscHelper.h"
 #include "Update.h"
+
+#include "TiebaVariable.h"
 #include "TiebaCollect.h"
 #include "TiebaScan.h"
 #include "TiebaOperate.h"
+
 #include "ScanImage.h"
 
 #ifdef _DEBUG

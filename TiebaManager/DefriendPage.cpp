@@ -6,9 +6,7 @@
 #include "TiebaManagerDlg.h"
 #include "StringHelper.h"
 #include "NetworkHelper.h"
-extern CString g_encodedForumName;
-#include <set>
-extern std::set<CString> g_defriendedUser; // 已拉黑的用户，要写入文件
+#include "TiebaVariable.h"
 #include "TiebaOperate.h"
 #include <vector>
 

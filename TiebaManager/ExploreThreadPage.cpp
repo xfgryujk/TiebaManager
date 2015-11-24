@@ -3,8 +3,9 @@
 
 #include "stdafx.h"
 #include "ExploreThreadPage.h"
-#include "TiebaCollect.h"
 #include "ExplorerDlg.h"
+#include "TiebaVariable.h"
+#include "TiebaCollect.h"
 #include "ScanImage.h"
 
 

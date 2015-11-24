@@ -1,23 +1,23 @@
 #include "stdafx.h"
-#include "TiebaOperate.h"
 #include <queue>
 using std::queue;
+#include "TiebaOperate.h"
+
+#include "TiebaVariable.h"
 #include "TiebaCollect.h"
-#include "TiebaScan.h"
+#include "Setting.h"
+
 #include "StringHelper.h"
 #include "NetworkHelper.h"
-#include "Setting.h"
+
 #include "TiebaManagerDlg.h"
 #include "ConfirmDlg.h"
+
 #include <Mmsystem.h>
 
 
-extern volatile BOOL g_stopScanFlag;
-
-
 queue<Operation> g_operationQueue; // 操作队列
-static CCriticalSection g_operationQueueLock;
-CWinThread* g_operateThread = NULL;
+CCriticalSection g_operationQueueLock;
 
 
 // 添加操作
