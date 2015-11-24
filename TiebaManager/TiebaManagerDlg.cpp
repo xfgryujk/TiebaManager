@@ -608,6 +608,7 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 		file.Close();
 	}
 
+	BOOL updatePID = FALSE;
 	// 循环封
 	thiz->m_stateStatic.SetWindowText(_T("循环封禁中"));
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -616,7 +617,20 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 	for (int i = 0; i < size; i++)
 	{
-		CString code = BanID(name[i]/*, pid[i]*/);
+		CString code;
+		if (pid[i] != _T("")) // 尝试用PID封禁
+			code = BanID(name[i], pid[i]);
+		if (pid[i] == _T("") || code != _T("0")) // 尝试不用PID封禁（用户必须为本吧会员）
+		{
+			code = BanID(name[i]);
+			if (code != _T("0")) // 尝试获取新的PID并用PID封禁
+			{
+				pid[i] = GetPIDFromUser(name[i]);
+				updatePID = TRUE;
+				code = BanID(name[i], pid[i]);
+			}
+		}
+
 		if (log)
 		{
 			if (code != _T("0"))
@@ -629,10 +643,40 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 			else
 				thiz->Log(_T("<font color=red>封禁 </font>") + name[i], pDocument);
 		}
-		if (i < size - 1)
+
+		if (code == _T("0") && i < size - 1)
 			Sleep(3000);
 	}
 	CoUninitialize();
+
+	// 更新PID
+	if (updatePID)
+	{
+		f = gzopen_w(CURRENT_USER_PATH + _T("\\options2.tb"), "wb");
+		if (f == NULL)
+		{
+			thiz->m_stateStatic.SetWindowText(_T("待机中"));
+			return 0;
+		}
+
+		// 头部
+		gzwrite(f, "TB", 2);
+
+		// 循环封
+		int size;
+		gzwrite(f, &(size = (int)name.size()), sizeof(int)); // 长度
+		for (int i = 0; i < size; i++)
+		{
+			WriteText(f, name[i]);
+			WriteText(f, pid[i]);
+		}
+
+		gzwrite(f, &log, sizeof(BOOL));		// 输出日志
+		gzwrite(f, &enable, sizeof(BOOL));	// 开启
+
+		gzclose(f);
+	}
+
 	thiz->m_stateStatic.SetWindowText(_T("待机中"));
 	return 0;
 }

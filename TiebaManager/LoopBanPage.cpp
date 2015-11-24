@@ -3,9 +3,12 @@
 
 #include "stdafx.h"
 #include "LoopBanPage.h"
+
 #include "StringHelper.h"
 #include "NetworkHelper.h"
-#include "TiebaVariable.h"
+
+#include "TiebaCollect.h"
+
 #include "SuperFunctionDlg.h"
 
 
@@ -61,21 +64,13 @@ void CLoopBanPage::OnClickedButton1()
 		return;
 	}
 
-	/*CString pid = GetPID(text);
+	CString pid = GetPIDFromUser(text);
 	if (pid == NET_TIMEOUT_TEXT)
-	{
-		AfxMessageBox(_T("连接超时"), MB_ICONERROR);
-		return;
-	}
-	if (pid == _T(""))
-	{
-		AfxMessageBox(_T("此用户没有在本吧发过贴"), MB_ICONERROR);
-		return;
-	}*/
+		pid = _T("");
 
 	int index = m_list.GetCurSel();
 	index = m_list.InsertString(index + 1, text);
-	m_pid.insert(m_pid.begin() + index, _T("") /*pid*/);
+	m_pid.insert(m_pid.begin() + index, pid);
 	m_list.SetCurSel(index);
 
 	((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
@@ -106,17 +101,9 @@ void CLoopBanPage::OnClickedButton3()
 	if (index == LB_ERR)
 		return;
 
-	CString pid = GetPID(text);
+	CString pid = GetPIDFromUser(text);
 	if (pid == NET_TIMEOUT_TEXT)
-	{
-		AfxMessageBox(_T("连接超时"), MB_ICONERROR);
-		return;
-	}
-	if (pid == _T(""))
-	{
-		AfxMessageBox(_T("此用户没有在本吧发过贴"), MB_ICONERROR);
-		return;
-	}
+		pid = _T("");
 
 	m_list.DeleteString(index);
 	index = m_list.InsertString(index, text);
@@ -124,14 +111,4 @@ void CLoopBanPage::OnClickedButton3()
 	m_list.SetCurSel(index);
 
 	((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
-}
-
-CString CLoopBanPage::GetPID(const CString& userName)
-{
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + g_encodedForumName + _T("&qw=&rn=10&un=") + userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"), FALSE);
-	if (src == NET_TIMEOUT_TEXT)
-		return NET_TIMEOUT_TEXT;
-	CString pid =  GetStringBetween(src, _T("<div class=\"s_post\">"), _T("target=\"_blank\" >"));
-	pid = GetStringBetween(pid, _T("?pid="), _T("&"));
-	return pid;
 }

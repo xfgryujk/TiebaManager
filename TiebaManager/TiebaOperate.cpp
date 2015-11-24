@@ -310,7 +310,9 @@ CString GetTiebaErrorText(const CString& errorCode)
 	if (errorCode == _T("14") || errorCode == _T("12"))
 		return _T("已被系统封禁");
 	if (errorCode == _T("74"))
-		return _T("用户不存在(可能循环封用的帖子被删除，要重新添加)");
+		return _T("用户不存在(可能帖子已被删且用户已退出本吧会员且用户已隐藏动态)");
+	if (errorCode == _T("77"))
+		return _T("操作失败");
 	if (errorCode == _T("78"))
 		return _T("参数错误");
 	if (errorCode == _T("308"))

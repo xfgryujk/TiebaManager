@@ -27,9 +27,6 @@ public:
 	afx_msg virtual void OnClickedButton2();
 	afx_msg virtual void OnClickedButton3();
 
-protected:
-	CString GetPID(const CString& userName);
-
 
 public:
 	CButton m_enableCheck;
