@@ -8,7 +8,6 @@
 #include "NetworkHelper.h"
 #include "TiebaVariable.h"
 #include "TiebaOperate.h"
-#include <vector>
 
 
 // CDefriendPage ¶Ô»°¿ò

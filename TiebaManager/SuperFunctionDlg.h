@@ -2,6 +2,7 @@
 #include "NormalDlg.h"
 #include "LoopBanPage.h"
 #include "DefriendPage.h"
+#include "LockThreadPage.h"
 
 
 // CSuperFunctionDlg ¶Ô»°¿ò
@@ -39,11 +40,12 @@ public:
 	CTabCtrl m_tab;
 	CLoopBanPage m_loopBanPage;
 	CDefriendPage m_defriendPage;
+	CLockThreadPage m_lockThreadPage;
 	CButton m_okButton;
 	CButton m_cancelButton;
 
 	BOOL m_clearScanCache;
 protected:
-	CWnd* m_pages[2];
+	CWnd* m_pages[3];
 	CResizeControl m_pagesResize;
 };
