@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "StringHelper.h"
-#import "msscript.ocx" no_namespace
+#import <msscript.ocx> no_namespace
 
 
 // 分割字符串
@@ -73,12 +73,13 @@ CString EncodeURI(const CString& src)
 	CComPtr<IScriptControl> script;
 	if (FAILED(script.CoCreateInstance(__uuidof(ScriptControl))))
 		return _T("");
-	script->PutLanguage("JScript");
+	script->put_Language(_bstr_t(_T("JScript")));
 	_variant_t param = src;
 	SAFEARRAY* params = SafeArrayCreateVector(VT_VARIANT, 0, 1);
 	LONG index = 0;
 	SafeArrayPutElement(params, &index, &param);
-	_variant_t result = script->Run(_bstr_t(_T("encodeURIComponent")), &params);
+	_variant_t result;
+	script->raw_Run(_bstr_t(_T("encodeURIComponent")), &params, result.GetAddress());
 	SafeArrayDestroy(params);
 	return (LPCTSTR)(_bstr_t)result;
 }
@@ -125,25 +126,12 @@ CString HTMLUnescape(const CString& src)
 // JS反转义，自行转义src里的双引号
 CString JSUnescape(const CString& src)
 {
-	try
-	{
-		CComPtr<IScriptControl> script;
-		if (FAILED(script.CoCreateInstance(__uuidof(ScriptControl))))
-			return _T("");
-		script->PutLanguage(_bstr_t(_T("JScript")));
-		_variant_t result;
-		result = script->Eval((LPCTSTR)(_T("\"") + src + _T("\"")));
-		return (LPCTSTR)(_bstr_t)result;
-	}
-	catch (_com_error& e)
-	{
-		CString info = _T("Description: ");
-		info += (LPCTSTR)e.Description();
-		info += _T("\r\nSource: ");
-		info += (LPCTSTR)e.Source();
-		info += _T("\r\nSource: ");
-		info += e.ErrorMessage();
-		WriteString(info, _T("error.txt"));
+	CComPtr<IScriptControl> script;
+	if (FAILED(script.CoCreateInstance(__uuidof(ScriptControl))))
 		return _T("");
-	}
+	script->put_Language(_bstr_t(_T("JScript")));
+	_variant_t result;
+	if (FAILED(script->raw_Eval(_bstr_t((LPCTSTR)(_T("\"") + src + _T("\""))), result.GetAddress())))
+		return _T("");
+	return (LPCTSTR)(_bstr_t)result;
 }
