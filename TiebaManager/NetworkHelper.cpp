@@ -8,7 +8,6 @@ using std::regex_iterator;
 #include "MiscHelper.h"
 #include <msxml2.h>
 #import <winhttp.dll> no_namespace
-//#include <winhttp.h>
 
 
 class CWinHttpBase
@@ -45,17 +44,18 @@ public:
 	static CWinHttpBase* Create();
 };
 
+template<class Class>
 class CServerXMLHTTPRequest : public CWinHttpBase
 {
 protected:
 	CComPtr<IServerXMLHTTPRequest> m_xml;
 
 public:
-	CServerXMLHTTPRequest()
+	CServerXMLHTTPRequest(const CString& className)
 	{
-		HRESULT hr = m_xml.CoCreateInstance(__uuidof(ServerXMLHTTP));
+		HRESULT hr = m_xml.CoCreateInstance(__uuidof(Class));
 		if (FAILED(hr))
-			WriteError(_T("CoCreateInstance(ServerXMLHTTP)"), hr);
+			WriteError(_T("CoCreateInstance(") + className + _T(")"), hr);
 	}
 
 	BOOL IsEmpty()
@@ -214,7 +214,7 @@ public:
 
 		HRESULT hr = m_request.CoCreateInstance(__uuidof(WinHttpRequest));
 		if (FAILED(hr))
-			WriteError(_T("CoCreateInstance(IWinHttpRequest)"), hr);
+			WriteError(_T("CoCreateInstance(WinHttpRequest)"), hr);
 
 		// 注册回调事件
 		CComPtr<IConnectionPointContainer> connectionPointContainer;
@@ -312,308 +312,31 @@ public:
 	}
 };
 
-// 接收数据没实现，心好累
-//class CWinHttpRequestAPI : public CWinHttpBase
-//{
-//protected:
-//	CCriticalSection m_lock;
-//
-//	HINTERNET m_session;
-//	HINTERNET m_connection;
-//	HINTERNET m_request;
-//
-//	long m_totalSize;
-//	BYTE* m_buffer;
-//	BYTE* m_pCurPos;
-//
-//	BOOL m_completed;
-//
-//	static VOID CALLBACK Callback(HINTERNET hInternet, DWORD_PTR dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength)
-//	{
-//		CWinHttpRequestAPI* thiz = (CWinHttpRequestAPI*)dwContext;
-//		TRACE(_T("0x%08X\n"), dwInternetStatus);
-//		switch (dwInternetStatus)
-//		{
-//		case WINHTTP_CALLBACK_STATUS_SENDREQUEST_COMPLETE:
-//			if (!WinHttpReceiveResponse(hInternet, NULL))
-//				thiz->WriteError(_T("WinHttpReceiveResponse"));
-//			break;
-//
-//		case WINHTTP_CALLBACK_STATUS_HEADERS_AVAILABLE:
-//		{
-//			CString sSize;
-//			thiz->GetAllResponseHeaders(sSize);
-//			AfxMessageBox(sSize); // chunked
-//			long size = 0;
-//			thiz->GetLongResponseHeader(WINHTTP_QUERY_CONTENT_LENGTH, &size);
-//			thiz->m_totalSize = size;
-//			if (size <= 0)
-//				break;
-//			thiz->m_lock.Lock();
-//			thiz->m_buffer = thiz->m_pCurPos = new BYTE[size];
-//			thiz->m_lock.Unlock();
-//
-//			DWORD size2 = 0;
-//			if (!WinHttpQueryDataAvailable(hInternet, &size2))
-//			{
-//				thiz->WriteError(_T("WinHttpQueryDataAvailable"));
-//				break;
-//			}
-//		}
-//			break;
-//
-//		case WINHTTP_CALLBACK_STATUS_DATA_AVAILABLE:
-//		{
-//			DWORD size = *(DWORD*)lpvStatusInformation;
-//			/*DWORD size = 0;
-//			if (!WinHttpQueryDataAvailable(hInternet, &size))
-//			{
-//				thiz->WriteError(_T("WinHttpQueryDataAvailable"));
-//				break;
-//			}*/
-//			TRACE(_T("%u\n"), size);
-//
-//			thiz->m_lock.Lock();
-//			if (!WinHttpReadData(hInternet, thiz->m_pCurPos, size, NULL))
-//			{
-//				thiz->m_lock.Unlock();
-//				thiz->WriteError(_T("WinHttpReadData"));
-//				break;
-//			}
-//			thiz->m_pCurPos += size;
-//			thiz->m_lock.Unlock();
-//
-//			// 判断传输完成
-//			if (thiz->m_pCurPos >= thiz->m_buffer + thiz->m_totalSize)
-//			{
-//				thiz->m_completed = TRUE;
-//				WinHttpSetStatusCallback(hInternet, NULL, WINHTTP_CALLBACK_FLAG_ALL_COMPLETIONS, NULL);
-//			}
-//		}
-//			break;
-//		}
-//	}
-//
-//public:
-//	CWinHttpRequestAPI()
-//	{
-//		m_session = WinHttpOpen(NULL, WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, WINHTTP_FLAG_ASYNC);
-//		if (m_session == NULL)
-//			WriteError(_T("WinHttpOpen"));
-//		m_connection = NULL;
-//		m_request = NULL;
-//		m_totalSize = 0;
-//		m_pCurPos = m_buffer = NULL;
-//		m_completed = FALSE;
-//	}
-//
-//	~CWinHttpRequestAPI()
-//	{
-//		m_lock.Lock();
-//		if (m_request != NULL)
-//			WinHttpCloseHandle(m_request);
-//		if (m_connection != NULL)
-//			WinHttpCloseHandle(m_connection);
-//		if (m_session != NULL)
-//			WinHttpCloseHandle(m_session);
-//		m_lock.Unlock();
-//	}
-//
-//	BOOL IsEmpty()
-//	{
-//		return m_session == NULL;
-//	}
-//
-//	HRESULT Open(LPCTSTR method, const CString& uri, BOOL async)
-//	{
-//		// 解析域名
-//		int left = uri.Find(_T("//"));
-//		if (left == -1)
-//			left = 0;
-//		else
-//			left += 2;
-//		int right = uri.Find(_T("/"), left);
-//		if (right == -1)
-//			right = uri.GetLength();
-//		CString host = uri.Mid(left, right - left);
-//		// 连接
-//		m_connection = WinHttpConnect(m_session, host, INTERNET_DEFAULT_PORT, 0);
-//		if (m_connection == NULL)
-//		{
-//			WriteError(_T("WinHttpConnect"));
-//			return HRESULT_FROM_WIN32(m_lastError);
-//		}
-//
-//		// 打开请求
-//		CString objectName = uri.Mid(right);
-//		if (objectName == _T(""))
-//			objectName = _T("/");
-//		m_request = WinHttpOpenRequest(m_connection, method, objectName, NULL, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
-//		if (m_request == NULL)
-//		{
-//			WriteError(_T("WinHttpOpenRequest"));
-//			return HRESULT_FROM_WIN32(m_lastError);
-//		}
-//
-//		// 设置头部
-//		static const TCHAR HEADERS[] = _T("Accept: */*\r\n")
-//									   _T("Accept-Language: en-US,en;q=0.8,zh-Hans-CN;q=0.5,zh-Hans;q=0.3\r\n")
-//									   _T("User-Agent: Mozilla/4.0 (compatible; Win32; WinHttp.WinHttpRequest.5)");
-//		if (!WinHttpAddRequestHeaders(m_request, HEADERS, -1, WINHTTP_ADDREQ_FLAG_REPLACE | WINHTTP_ADDREQ_FLAG_ADD))
-//		{
-//			WriteError(_T("WinHttpAddRequestHeaders"));
-//			return HRESULT_FROM_WIN32(m_lastError);
-//		}
-//
-//		return S_OK;
-//	}
-//
-//	HRESULT SetRequestHeader(LPCTSTR header, LPCTSTR value)
-//	{
-//		CString headers = header;
-//		headers += _T(": ");
-//		headers += value;
-//		BOOL res = WinHttpAddRequestHeaders(m_request, headers, -1, WINHTTP_ADDREQ_FLAG_REPLACE | WINHTTP_ADDREQ_FLAG_ADD);
-//		if (!res)
-//		{
-//			WriteError(_T("WinHttpAddRequestHeaders"));
-//			return HRESULT_FROM_WIN32(m_lastError);
-//		}
-//		return S_OK;
-//	}
-//
-//	HRESULT Send(const CString& data)
-//	{
-//		BOOL res;
-//		// 设置回调
-//		res = WinHttpSetStatusCallback(m_request, Callback, WINHTTP_CALLBACK_FLAG_ALL_COMPLETIONS, NULL) != WINHTTP_INVALID_STATUS_CALLBACK;
-//		if (!res)
-//		{
-//			WriteError(_T("WinHttpSetStatusCallback"));
-//			return HRESULT_FROM_WIN32(m_lastError);
-//		}
-//
-//		// 发送
-//		if (data != _T(""))
-//			res = WinHttpSendRequest(m_request, WINHTTP_NO_ADDITIONAL_HEADERS, 0, (LPVOID)(LPCTSTR)data, 
-//				data.GetLength() * sizeof(TCHAR), data.GetLength() * sizeof(TCHAR), (DWORD_PTR)this);
-//		else
-//			res = WinHttpSendRequest(m_request, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, (DWORD_PTR)this);
-//		if (!res)
-//		{
-//			WriteError(_T("WinHttpSendRequest"));
-//			return HRESULT_FROM_WIN32(m_lastError);
-//		}
-//
-//		return S_OK;
-//	}
-//
-//	BOOL IsCompleted()
-//	{
-//		return m_completed;
-//	}
-//
-//	HRESULT Abort()
-//	{
-//		return S_OK;
-//	}
-//
-//	HRESULT GetStringResponseHeader(DWORD index, CString& header)
-//	{
-//		DWORD size = 0;
-//		WinHttpQueryHeaders(m_request, index, WINHTTP_HEADER_NAME_BY_INDEX, WINHTTP_NO_OUTPUT_BUFFER, &size, WINHTTP_NO_HEADER_INDEX);
-//		if (size == 0)
-//		{
-//			header = _T("");
-//			return E_FAIL;
-//		}
-//
-//		DWORD nChar = size / sizeof(TCHAR)-1;
-//		BOOL res = WinHttpQueryHeaders(m_request, index, WINHTTP_HEADER_NAME_BY_INDEX, header.GetBuffer(nChar), &size, WINHTTP_NO_HEADER_INDEX);
-//		if (!res)
-//		{
-//			header.ReleaseBuffer(0);
-//			WriteError(_T("WinHttpQueryHeaders"));
-//			return HRESULT_FROM_WIN32(m_lastError);
-//		}
-//		header.ReleaseBuffer(nChar);
-//		return S_OK;
-//	}
-//	
-//	HRESULT GetLongResponseHeader(DWORD index, long* header)
-//	{
-//		DWORD size = sizeof(long);
-//		BOOL res = WinHttpQueryHeaders(m_request, index | WINHTTP_QUERY_FLAG_NUMBER, WINHTTP_HEADER_NAME_BY_INDEX,
-//			header, &size, WINHTTP_NO_HEADER_INDEX);
-//		if (!res)
-//		{
-//			WriteError(_T("WinHttpQueryHeaders"));
-//			return HRESULT_FROM_WIN32(m_lastError);
-//		}
-//		return S_OK;
-//	}
-//
-//	HRESULT GetAllResponseHeaders(CString& headers)
-//	{
-//		return GetStringResponseHeader(WINHTTP_QUERY_RAW_HEADERS_CRLF, headers);
-//	}
-//
-//	HRESULT GetStatus(long* status)
-//	{
-//		return GetLongResponseHeader(WINHTTP_QUERY_STATUS_CODE, status);
-//	}
-//
-//	HRESULT GetResponseLocation(CString& location)
-//	{
-//		return GetStringResponseHeader(WINHTTP_QUERY_LOCATION, location);
-//	}
-//
-//	HRESULT GetResponseText(CString& body)
-//	{
-//		BYTE* buffer;
-//		DWORD size;
-//		HRESULT res = GetResponseBody(&buffer, &size);
-//		if (FAILED(res))
-//			return res;
-//
-//		if (buffer == NULL || size == 0)
-//			body = _T("");
-//		else
-//		{
-//			body = (LPCTSTR)buffer;
-//			delete buffer;
-//		}
-//		AfxMessageBox(body);
-//		return S_OK;
-//	}
-//
-//	HRESULT GetResponseBody(BYTE** buffer, DWORD* size)
-//	{
-//		if (buffer == NULL || size == NULL)
-//			return E_FAIL;
-//
-//		*buffer = m_buffer;
-//		*size = m_totalSize;
-//		return S_OK;
-//	}
-//};
-
 CWinHttpBase* CWinHttpBase::Create()
 {
 	CWinHttpBase* res;
 
-	res = new CServerXMLHTTPRequest();
+	res = new CServerXMLHTTPRequest<ServerXMLHTTP60>(_T("ServerXMLHTTP60"));
 	if (!res->IsEmpty())
 		return res;
 	delete res;
 
-	res = new CWinHttpRequest();
-	//if (!res->IsEmpty())
+	res = new CServerXMLHTTPRequest<ServerXMLHTTP40>(_T("ServerXMLHTTP40"));
+	if (!res->IsEmpty())
 		return res;
-	/*delete res;
+	delete res;
 
-	res = new CWinHttpRequestAPI();
-	return res;*/
+	res = new CServerXMLHTTPRequest<ServerXMLHTTP30>(_T("ServerXMLHTTP30"));
+	if (!res->IsEmpty())
+		return res;
+	delete res;
+
+	res = new CServerXMLHTTPRequest<ServerXMLHTTP>(_T("ServerXMLHTTP"));
+	if (!res->IsEmpty())
+		return res;
+	delete res;
+
+	return new CWinHttpRequest();
 }
 
 
