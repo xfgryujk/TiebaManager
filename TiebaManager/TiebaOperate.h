@@ -20,9 +20,11 @@ struct Operation
 };
 
 
-void AddOperation(const CString& msg, TBObject object, const CString& tid, const CString& title,
+void AddConfirm(const CString& msg, TBObject object, const CString& tid, const CString& title,
 	const CString& floor, const CString& pid, const CString& author, const CString& authorID,
 	const CString& authorPortrait = _T(""), int pos = 0, int length = 0);
+UINT AFX_CDECL ConfirmThread(LPVOID mainDlg);
+void AddOperation(const Operation& op);
 UINT AFX_CDECL OperateThread(LPVOID mainDlg);
 CString BanID(LPCTSTR userName, LPCTSTR pid);
 CString BanID(LPCTSTR userName);

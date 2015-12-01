@@ -26,4 +26,5 @@ set<CString> g_bannedUser; // 已封的用户
 set<CString> g_defriendedUser; // 已拉黑的用户，要写入文件
 
 // 操作
+CWinThread* g_confirmThread = NULL;
 CWinThread* g_operateThread = NULL;

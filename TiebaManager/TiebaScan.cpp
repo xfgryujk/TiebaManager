@@ -25,6 +25,7 @@ static int g_threadIndex; // 下个要扫描的主题索引
 static CCriticalSection g_threadIndexLock;
 
 
+extern queue<Operation> g_confirmQueue; // 确认队列
 extern queue<Operation> g_operationQueue; // 操作队列
 
 
@@ -83,7 +84,7 @@ static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg, CComPtr<
 		if (g_ignoredTID.find(tid) == g_ignoredTID.end()
 			&& CheckImageIllegal(thread.author, GetThreadImage(thread), msg))
 		{
-			AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
+			AddConfirm(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
 				thread.title, _T("1"), _T(""), thread.author, thread.authorID);
 			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 				+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
@@ -101,9 +102,11 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	dlg->m_pageEdit.EnableWindow(FALSE);
 	dlg->m_stopButton.EnableWindow(TRUE);
 
-	// 开始操作线程
-	if (!g_operationQueue.empty() && g_operateThread == NULL)
+	// 开始操作、确认线程
+	if (g_operateThread == NULL && !g_operationQueue.empty())
 		g_operateThread = AfxBeginThread(OperateThread, mainDlg);
+	if (g_confirmThread == NULL && !g_confirmQueue.empty())
+		g_confirmThread = AfxBeginThread(ConfirmThread, mainDlg);
 
 	// 初始化日志文档
 	HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -152,7 +155,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			if (g_ignoredTID.find(tid) == g_ignoredTID.end()
 				&& CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, msg, pos, length))
 			{
-				AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
+				AddConfirm(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
 					thread.title, _T("0"), _T(""), thread.author, thread.authorID, _T(""), pos, length);
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 					+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
@@ -347,7 +350,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (g_ignoredPID.find(pid) == g_ignoredPID.end()
 			&& CheckIllegal(post.content, post.author, msg, pos, length))
 		{
-			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
+			AddConfirm(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID, _T(""), pos, length);
 			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
@@ -365,7 +368,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			__int64 lzlid = _ttoi64(lzl.pid);
 			if (g_ignoredLZLID.find(lzlid) == g_ignoredLZLID.end())
 			{
-				AddOperation(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID, _T(""), pos, length);
+				AddConfirm(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID, _T(""), pos, length);
 				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg, pDocument);
 				g_ignoredLZLID.insert(lzlid);
@@ -382,7 +385,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (g_ignoredPID.find(pid) == g_ignoredPID.end()
 			&& CheckImageIllegal(post.author, GetPostImage(post), msg))
 		{
-			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
+			AddConfirm(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID);
 			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
@@ -399,7 +402,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (g_ignoredLZLID.find(pid) == g_ignoredLZLID.end()
 			&& CheckImageIllegal(lzl.author, GetPostImage(lzl), msg))
 		{
-			AddOperation(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID);
+			AddConfirm(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID);
 			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + lzl.floor + _T("楼回复") + msg, pDocument);
 			g_ignoredLZLID.insert(pid);

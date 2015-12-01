@@ -28,4 +28,5 @@ extern set<CString> g_bannedUser; // 已封的用户
 extern set<CString> g_defriendedUser; // 已拉黑的用户，要写入文件
 
 // 操作
+extern CWinThread* g_confirmThread;
 extern CWinThread* g_operateThread;
