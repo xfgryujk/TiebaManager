@@ -81,7 +81,7 @@ static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg, CComPtr<
 			break;
 		__int64 tid = _ttoi64(thread.tid);
 		if (g_ignoredTID.find(tid) == g_ignoredTID.end()
-			&& CheckImageIllegal(thread.author, GetThreadImage(thread.preview), msg))
+			&& CheckImageIllegal(thread.author, GetThreadImage(thread), msg))
 		{
 			AddOperation(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
 				thread.title, _T("1"), _T(""), thread.author, thread.authorID);
@@ -380,7 +380,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			return FALSE;
 		__int64 pid = _ttoi64(post.pid);
 		if (g_ignoredPID.find(pid) == g_ignoredPID.end()
-			&& CheckImageIllegal(post.author, GetPostImage(post.content, post.authorPortrait), msg))
+			&& CheckImageIllegal(post.author, GetPostImage(post), msg))
 		{
 			AddOperation(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID);
@@ -397,7 +397,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			return FALSE;
 		__int64 pid = _ttoi64(lzl.pid);
 		if (g_ignoredLZLID.find(pid) == g_ignoredLZLID.end()
-			&& CheckImageIllegal(lzl.author, GetPostImage(lzl.content, lzl.authorPortrait), msg))
+			&& CheckImageIllegal(lzl.author, GetPostImage(lzl), msg))
 		{
 			AddOperation(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID);
 			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +

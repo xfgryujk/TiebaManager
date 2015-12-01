@@ -6,6 +6,7 @@ using std::vector;
 using std::set;
 #include <opencv2\core\mat.hpp>
 using cv::Mat;
+#include "TiebaCollect.h"
 
 
 extern set<CString> g_leagalImage; // 已检查不违规的图片
@@ -32,6 +33,7 @@ class GetThreadImage : public GetImagesBase
 private:
 	const CString& m_preview;
 public:
+	GetThreadImage(const ThreadInfo& thread) : m_preview(thread.preview) {}
 	GetThreadImage(const CString& preview) : m_preview(preview) {}
 	void GetImage(vector<CString>& img);
 };
@@ -41,6 +43,7 @@ class GetPostImage : public GetImagesBase
 private:
 	const CString& m_content, m_portrait;
 public:
+	GetPostImage(const PostInfo& post) : m_content(post.content), m_portrait(post.authorPortrait) {}
 	GetPostImage(const CString& content, const CString& portrait) : m_content(content), m_portrait(portrait) {}
 	void GetImage(vector<CString>& img);
 };

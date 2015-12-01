@@ -51,11 +51,11 @@ protected:
 	CComPtr<IServerXMLHTTPRequest> m_xml;
 
 public:
-	CServerXMLHTTPRequest(const CString& className)
+	CServerXMLHTTPRequest(LPCTSTR errorOutput)
 	{
 		HRESULT hr = m_xml.CoCreateInstance(__uuidof(Class));
 		if (FAILED(hr))
-			WriteError(_T("CoCreateInstance(") + className + _T(")"), hr);
+			WriteError(errorOutput, hr);
 	}
 
 	BOOL IsEmpty()
@@ -316,22 +316,22 @@ CWinHttpBase* CWinHttpBase::Create()
 {
 	CWinHttpBase* res;
 
-	res = new CServerXMLHTTPRequest<ServerXMLHTTP60>(_T("ServerXMLHTTP60"));
+	res = new CServerXMLHTTPRequest<ServerXMLHTTP60>(_T("CoCreateInstance(ServerXMLHTTP60)"));
 	if (!res->IsEmpty())
 		return res;
 	delete res;
 
-	res = new CServerXMLHTTPRequest<ServerXMLHTTP40>(_T("ServerXMLHTTP40"));
+	res = new CServerXMLHTTPRequest<ServerXMLHTTP40>(_T("CoCreateInstance(ServerXMLHTTP40)"));
 	if (!res->IsEmpty())
 		return res;
 	delete res;
 
-	res = new CServerXMLHTTPRequest<ServerXMLHTTP30>(_T("ServerXMLHTTP30"));
+	res = new CServerXMLHTTPRequest<ServerXMLHTTP30>(_T("CoCreateInstance(ServerXMLHTTP30)"));
 	if (!res->IsEmpty())
 		return res;
 	delete res;
 
-	res = new CServerXMLHTTPRequest<ServerXMLHTTP>(_T("ServerXMLHTTP"));
+	res = new CServerXMLHTTPRequest<ServerXMLHTTP>(_T("CoCreateInstance(ServerXMLHTTP)"));
 	if (!res->IsEmpty())
 		return res;
 	delete res;

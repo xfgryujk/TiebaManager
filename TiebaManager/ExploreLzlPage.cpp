@@ -68,7 +68,7 @@ void CExploreLzlPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 		explorerDlg->m_edit.SetWindowText(m_lzls[pNMLV->iItem].content +
 			_T("\r\n\r\n") + m_lzls[pNMLV->iItem].author);
 		vector<CString>* img = new vector<CString>();
-		GetPostImage(m_lzls[pNMLV->iItem].content, m_lzls[pNMLV->iItem].authorPortrait).GetImage(*img);
+		GetPostImage(m_lzls[pNMLV->iItem]).GetImage(*img);
 		explorerDlg->ViewImages(img);
 	}
 
