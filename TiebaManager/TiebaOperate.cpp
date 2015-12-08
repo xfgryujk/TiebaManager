@@ -41,9 +41,9 @@ void AddConfirm(const CString& msg, TBObject object, const CString& tid, const C
 	tmp.authorPortrait = authorPortrait;
 	g_confirmQueueLock.Lock();
 	g_confirmQueue.push(tmp);
-	g_confirmQueueLock.Unlock();
 	if (g_confirmThread == NULL)
 		g_confirmThread = AfxBeginThread(ConfirmThread, AfxGetApp()->m_pMainWnd);
+	g_confirmQueueLock.Unlock();
 }
 
 // 确认线程
@@ -59,8 +59,8 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 
 	while (!g_confirmQueue.empty() && !g_stopScanFlag)
 	{
-		Operation op = g_confirmQueue.front();
 		g_confirmQueueLock.Lock();
+		Operation op = g_confirmQueue.front();
 		g_confirmQueue.pop();
 		g_confirmQueueLock.Unlock();
 
@@ -111,9 +111,9 @@ void AddOperation(const Operation& operation)
 {
 	g_operationQueueLock.Lock();
 	g_operationQueue.push(operation);
-	g_operationQueueLock.Unlock();
 	if (g_operateThread == NULL)
 		g_operateThread = AfxBeginThread(OperateThread, AfxGetApp()->m_pMainWnd);
+	g_operationQueueLock.Unlock();
 }
 
 // 操作线程
@@ -129,8 +129,8 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 
 	while (!g_operationQueue.empty() && !g_stopScanFlag)
 	{
-		Operation op = g_operationQueue.front();
 		g_operationQueueLock.Lock();
+		Operation op = g_operationQueue.front();
 		g_operationQueue.pop();
 		g_operationQueueLock.Unlock();
 
