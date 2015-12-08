@@ -40,6 +40,7 @@ extern CString	g_imageDir;			// 违规图片目录
 extern double	g_SSIMThreshold;	// 阈值
 extern BOOL		g_defriend;			// 拉黑
 extern int		g_defriendTrigCount; // 拉黑违规次数
+extern BOOL		g_autoSaveLog;		// 自动保存日志
 extern vector<RegexText>	g_keywords;		// 违规内容
 extern vector<RegexText>	g_blackList;	// 屏蔽用户
 extern set<CString>			g_whiteList;	// 信任用户

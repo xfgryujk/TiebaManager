@@ -29,6 +29,7 @@ void CScanPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT5, m_scanPageCountEdit);
 	DDX_Control(pDX, IDC_CHECK5, m_briefLogCheck);
 	DDX_Control(pDX, IDC_EDIT2, m_threadCountEdit);
+	DDX_Control(pDX, IDC_CHECK6, m_autoSaveLogCheck);
 }
 
 

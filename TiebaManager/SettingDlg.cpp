@@ -252,6 +252,7 @@ void CSettingDlg::ShowCurrentOptions()
 	m_operatePage.OnBnClickedCheck3();
 	tmp.Format(_T("%d"), g_defriendTrigCount);
 	m_operatePage.m_defriendTrigCountEdit.SetWindowText(tmp);	// 拉黑违规次数
+	m_scanPage.m_autoSaveLogCheck.SetCheck(g_autoSaveLog);		// 自动保存日志
 
 	// 违规内容
 	m_keywordsPage.m_list.ResetContent();
@@ -325,6 +326,7 @@ void CSettingDlg::ApplyOptionsInDlg()
 	g_defriend = m_operatePage.m_defriendCheck.GetCheck();		// 拉黑
 	m_operatePage.m_defriendTrigCountEdit.GetWindowText(strBuf);
 	g_defriendTrigCount = _ttoi(strBuf);						// 拉黑违规次数
+	g_autoSaveLog = m_scanPage.m_autoSaveLogCheck.GetCheck();	// 自动保存日志
 
 	// 违规内容
 	ApplyRegexTexts(g_keywords, m_keywordsPage.m_list);
@@ -512,6 +514,10 @@ void CSettingDlg::ShowOptionsInFile(LPCTSTR path)
 	}
 	else
 		m_scanPage.m_threadCountEdit.SetWindowText(_T("5"));
+	if (gzread(f, &boolBuf, sizeof(BOOL)) == sizeof(BOOL))	// 自动保存日志
+		m_scanPage.m_autoSaveLogCheck.SetCheck(boolBuf);
+	else
+		m_scanPage.m_autoSaveLogCheck.SetCheck(FALSE);
 
 	gzclose(f);
 	return;
@@ -541,6 +547,7 @@ UseDefaultOptions:
 	m_operatePage.m_defriendCheck.SetCheck(FALSE);			// 拉黑
 	m_operatePage.OnBnClickedCheck3();
 	m_scanPage.m_threadCountEdit.SetWindowText(_T("5"));	// 拉黑违规次数
+	m_scanPage.m_autoSaveLogCheck.SetCheck(FALSE);			// 自动保存日志
 }
 
 // 把对话框中的设置写入文件
@@ -613,7 +620,7 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 	gzwrite(f, &(boolBuf = m_operatePage.m_defriendCheck.GetCheck()), sizeof(BOOL)); // 拉黑
 	m_operatePage.m_defriendTrigCountEdit.GetWindowText(strBuf);
 	gzwrite(f, &(intBuf = _ttoi(strBuf)), sizeof(int));								// 拉黑违规次数
-
+	gzwrite(f, &(boolBuf = m_scanPage.m_autoSaveLogCheck.GetCheck()), sizeof(BOOL)); // 自动保存日志
 	gzclose(f);
 }
 

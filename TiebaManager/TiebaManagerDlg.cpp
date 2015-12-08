@@ -116,6 +116,7 @@ BEGIN_MESSAGE_MAP(CTiebaManagerDlg, CNormalDlg)
 	ON_STN_CLICKED(IDC_STATIC6, &CTiebaManagerDlg::OnStnClickedStatic6)
 	ON_STN_CLICKED(IDC_STATIC7, &CTiebaManagerDlg::OnStnClickedStatic7)
 	ON_BN_CLICKED(IDC_BUTTON7, &CTiebaManagerDlg::OnBnClickedButton7)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 BEGIN_EVENTSINK_MAP(CTiebaManagerDlg, CNormalDlg)
@@ -254,7 +255,16 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
-// 释放
+// 保存储存在窗口的数据
+void CTiebaManagerDlg::OnClose()
+{
+	if (g_autoSaveLog)
+		SaveLog(_T("Log"));
+
+	CNormalDlg::OnClose();
+}
+
+// 保存其他数据、释放
 void CTiebaManagerDlg::OnDestroy()
 {
 	CNormalDlg::OnDestroy();
@@ -262,7 +272,7 @@ void CTiebaManagerDlg::OnDestroy()
 	SaveCurrentUserProfile();
 	WritePrivateProfileString(_T("Setting"), _T("UserName"), g_currentUser, ALL_PROFILE_PATH);
 
-	g_stopScanFlag = TRUE; // 实际上线程不会返回？
+	g_stopScanFlag = TRUE; // 实际上线程不会返回（返回前就崩溃了？）
 
 	g_images.clear(); // 不知道为什么不加这个Release版关闭后会崩溃...
 }
@@ -486,41 +496,48 @@ UINT AFX_CDECL CTiebaManagerDlg::SaveLogThread(LPVOID _thiz)
 		folder.ReleaseBuffer();
 		CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
-		// 取日志HTML
-		CComPtr<IHTMLDocument2> document;
-		thiz->GetLogDocument(document);
-		CComDispatchDriver documentDisp(document);
-		// document.documentElement.outerHTML
-		_variant_t res;
-		documentDisp.GetPropertyByName(OLESTR("documentElement"), res.GetAddress());
-		CComDispatchDriver documentElementDisp((IDispatch*)res);
-		documentElementDisp.GetPropertyByName(OLESTR("outerHTML"), res.GetAddress());
-		CString strHtml = (LPCTSTR)(_bstr_t)res;
-
-		// 另一种取网页HTML方法，末尾有四个乱码？
-		/*CComPtr<IPersistStreamInit> psi;
-		document->QueryInterface(&psi);
-		HGLOBAL html = GlobalAlloc(GMEM_MOVEABLE, 5 * 1024 * 1024);
-		IStream *stream;
-		CreateStreamOnHGlobal(html, TRUE, &stream);
-		psi->Save(stream, FALSE);
-		CString strHtml = (LPCTSTR)GlobalLock(html);
-		strHtml += _T("</body></html>");
-		GlobalUnlock(html);
-		stream->Release();*/
-
-		// 保存
-		CString path;
-		path.Format(_T("%s\\%d-%02d-%02d %02d：%02d：%02d.html"), folder, thiz->m_logStartTime.wYear, 
-			thiz->m_logStartTime.wMonth, thiz->m_logStartTime.wDay, thiz->m_logStartTime.wHour, 
-			thiz->m_logStartTime.wMinute, thiz->m_logStartTime.wSecond);
-		WriteString(strHtml, path);
+		thiz->SaveLog(folder);
 
 		CoUninitialize();
 	}
 
 	thiz->m_saveLogStatic.EnableWindow(TRUE);
 	return 0;
+}
+
+// 保存日志
+void CTiebaManagerDlg::SaveLog(LPCTSTR folder)
+{
+	// 取日志HTML
+	CComPtr<IHTMLDocument2> document;
+	GetLogDocument(document);
+	CComDispatchDriver documentDisp(document);
+	// document.documentElement.outerHTML
+	_variant_t res;
+	documentDisp.GetPropertyByName(OLESTR("documentElement"), res.GetAddress());
+	CComDispatchDriver documentElementDisp((IDispatch*)res);
+	documentElementDisp.GetPropertyByName(OLESTR("outerHTML"), res.GetAddress());
+	CString strHtml = (LPCTSTR)(_bstr_t)res;
+
+	// 另一种取网页HTML方法，末尾有四个乱码？
+	/*CComPtr<IPersistStreamInit> psi;
+	document->QueryInterface(&psi);
+	HGLOBAL html = GlobalAlloc(GMEM_MOVEABLE, 5 * 1024 * 1024);
+	IStream *stream;
+	CreateStreamOnHGlobal(html, TRUE, &stream);
+	psi->Save(stream, FALSE);
+	CString strHtml = (LPCTSTR)GlobalLock(html);
+	strHtml += _T("</body></html>");
+	GlobalUnlock(html);
+	stream->Release();*/
+
+	// 保存
+	if (!PathFileExists(folder))
+		CreateDirectory(folder, NULL);
+	CString path;
+	path.Format(_T("%s\\%d-%02d-%02d %02d：%02d：%02d.html"), folder, m_logStartTime.wYear, m_logStartTime.wMonth, 
+		m_logStartTime.wDay, m_logStartTime.wHour, m_logStartTime.wMinute, m_logStartTime.wSecond);
+	WriteString(strHtml, path);
 }
 #pragma endregion
 

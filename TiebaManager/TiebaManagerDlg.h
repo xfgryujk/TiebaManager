@@ -50,6 +50,7 @@ public:
 	afx_msg void OnStnClickedStatic6();
 	afx_msg void OnStnClickedStatic7();
 	afx_msg void OnBnClickedButton7();
+	afx_msg void OnClose();
 	DECLARE_EVENTSINK_MAP()
 	void BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers, BOOL* Cancel);
 
@@ -62,6 +63,7 @@ protected:
 	static BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam);
 	static LRESULT CALLBACK ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	static UINT AFX_CDECL SaveLogThread(LPVOID _thiz);
+	void SaveLog(LPCTSTR folder);
 
 	static UINT AFX_CDECL AutoUpdateThread(LPVOID _thiz);
 	static UINT AFX_CDECL LoopBanThread(LPVOID _thiz);

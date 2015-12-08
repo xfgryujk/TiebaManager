@@ -33,4 +33,5 @@ public:
 	CEdit m_scanPageCountEdit;
 	CButton m_briefLogCheck;
 	CEdit m_threadCountEdit;
+	CButton m_autoSaveLogCheck;
 };

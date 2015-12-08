@@ -35,6 +35,7 @@ CString	g_imageDir;			// 违规图片目录
 double	g_SSIMThreshold;	// 阈值
 BOOL	g_defriend;			// 拉黑
 int		g_defriendTrigCount; // 拉黑违规次数
+BOOL	g_autoSaveLog;		// 自动保存日志
 vector<RegexText>	g_keywords;		// 违规内容
 vector<RegexText>	g_blackList;	// 屏蔽用户
 set<CString>		g_whiteList;	// 信任用户
@@ -144,6 +145,8 @@ void ReadOptions(LPCTSTR path)
 		g_defriend = FALSE;
 	if (gzread(f, &g_defriendTrigCount, sizeof(int)) != sizeof(int)) // 拉黑违规次数
 		g_defriendTrigCount = 5;
+	if (gzread(f, &g_autoSaveLog, sizeof(BOOL)) != sizeof(BOOL))	// 自动保存日志
+		g_autoSaveLog = FALSE;
 
 	g_optionsLock.Unlock();
 
@@ -174,6 +177,7 @@ UseDefaultOptions:
 	g_trustedThread.clear();	// 信任主题
 	g_defriend = FALSE;			// 拉黑
 	g_defriendTrigCount = 5;	// 拉黑违规次数
+	g_autoSaveLog = FALSE;		// 自动保存日志
 	g_optionsLock.Unlock();
 }
 
@@ -227,6 +231,7 @@ void WriteOptions(LPCTSTR path)
 
 	gzwrite(f, &g_defriend, sizeof(BOOL));			// 拉黑
 	gzwrite(f, &g_defriendTrigCount, sizeof(int));	// 拉黑违规次数
+	gzwrite(f, &g_autoSaveLog, sizeof(BOOL));		// 自动保存日志
 
 	gzclose(f);
 }
