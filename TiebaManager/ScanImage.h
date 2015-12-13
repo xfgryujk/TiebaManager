@@ -25,6 +25,7 @@ CString GetImageName(const CString& imgUrl);
 class GetImagesBase
 {
 public:
+	virtual ~GetImagesBase() {}
 	virtual void GetImage(vector<CString>& img) = 0;
 };
 

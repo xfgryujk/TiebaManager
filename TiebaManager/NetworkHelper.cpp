@@ -29,6 +29,8 @@ protected:
 	}
 
 public:
+	virtual ~CWinHttpBase() {}
+
 	virtual BOOL IsEmpty() = 0;
 	virtual HRESULT Open(LPCTSTR method, const CString& uri, BOOL async) = 0;
 	virtual HRESULT SetRequestHeader(LPCTSTR header, LPCTSTR value) = 0;
@@ -424,14 +426,19 @@ CString HTTPGet(LPCTSTR URL, BOOL useCookie, volatile BOOL* stopFlag, CString* c
 	CWinHttpBase* xml = CWinHttpBase::Create();
 	HTTPRequestResult ret = HTTPRequestBase(FALSE, *xml, URL, NULL, useCookie, stopFlag, cookie);
 	if (ret != NET_SUCCESS)
-		switch (ret)
 	{
+		CString result;
+		switch (ret)
+		{
 		case NET_FAILED_TO_CREATE_INSTANCE:
-			return NET_FAILED_TO_CREATE_INSTANCE_TEXT;
+			result = NET_FAILED_TO_CREATE_INSTANCE_TEXT;
 		case NET_STOP:
-			return NET_STOP_TEXT;
+			result = NET_STOP_TEXT;
 		case NET_TIMEOUT:
-			return NET_TIMEOUT_TEXT;
+			result = NET_TIMEOUT_TEXT;
+		}
+		delete xml;
+		return result;
 	}
 
 	CString result;
@@ -446,14 +453,19 @@ CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopF
 	CWinHttpBase* xml = CWinHttpBase::Create();
 	HTTPRequestResult ret = HTTPRequestBase(TRUE, *xml, URL, data, useCookie, stopFlag, cookie);
 	if (ret != NET_SUCCESS)
-		switch (ret)
 	{
+		CString result;
+		switch (ret)
+		{
 		case NET_FAILED_TO_CREATE_INSTANCE:
-			return NET_FAILED_TO_CREATE_INSTANCE_TEXT;
+			result = NET_FAILED_TO_CREATE_INSTANCE_TEXT;
 		case NET_STOP:
-			return NET_STOP_TEXT;
+			result = NET_STOP_TEXT;
 		case NET_TIMEOUT:
-			return NET_TIMEOUT_TEXT;
+			result = NET_TIMEOUT_TEXT;
+		}
+		delete xml;
+		return result;
 	}
 
 	CString result;
@@ -468,7 +480,10 @@ HTTPRequestResult HTTPGetRaw(LPCTSTR URL, BYTE** buffer, ULONG* size, BOOL useCo
 	CWinHttpBase* xml = CWinHttpBase::Create();
 	HTTPRequestResult ret = HTTPRequestBase(FALSE, *xml, URL, NULL, useCookie, stopFlag, cookie);
 	if (ret != NET_SUCCESS)
+	{
+		delete xml;
 		return ret;
+	}
 
 	// ·µ»Ø
 	xml->GetResponseBody(buffer, size);
