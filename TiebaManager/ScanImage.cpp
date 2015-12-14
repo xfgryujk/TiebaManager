@@ -193,70 +193,75 @@ BOOL CheckImageIllegal(const CString& author, GetImagesBase& getImage, CString& 
 // SSIM算法比较图片
 static double getMSSIM(const Mat& i1, const Mat& i2)
 {
-	const double C1 = 6.5025, C2 = 58.5225;
-	/***************************** INITS **********************************/
-	int d = CV_32F;
+	static const double C1 = 6.5025, C2 = 58.5225;
+	static const int d = CV_32F;
+	try
+	{
+		Mat I1, I2;
+		i1.convertTo(I1, d);           // 不能在单字节像素上进行计算，范围不够。
+		i2.convertTo(I2, d);
 
-	Mat I1, I2;
-	i1.convertTo(I1, d);           // 不能在单字节像素上进行计算，范围不够。
-	i2.convertTo(I2, d);
+		if (I1.rows * I1.cols < I2.rows * I2.cols)
+			cv::resize(I2, I2, I1.size());
+		else
+			cv::resize(I1, I1, I2.size());
 
-	if (I1.rows * I1.cols < I2.rows * I2.cols)
-		cv::resize(I2, I2, I1.size());
-	else
-		cv::resize(I1, I1, I2.size());
+		Mat I2_2 = I2.mul(I2);        // I2^2
+		Mat I1_2 = I1.mul(I1);        // I1^2
+		Mat I1_I2 = I1.mul(I2);        // I1 * I2
 
-	Mat I2_2 = I2.mul(I2);        // I2^2
-	Mat I1_2 = I1.mul(I1);        // I1^2
-	Mat I1_I2 = I1.mul(I2);        // I1 * I2
+		///////////////////////// 初步计算 ///////////////////////////////
 
-	/***********************初步计算 ******************************/
+		Mat mu1, mu2;
+		GaussianBlur(I1, mu1, cv::Size(11, 11), 1.5);
+		I1.release();
+		GaussianBlur(I2, mu2, cv::Size(11, 11), 1.5);
+		I2.release();
 
-	Mat mu1, mu2;
-	GaussianBlur(I1, mu1, cv::Size(11, 11), 1.5);
-	I1.release();
-	GaussianBlur(I2, mu2, cv::Size(11, 11), 1.5);
-	I2.release();
+		Mat mu1_2 = mu1.mul(mu1);
+		Mat mu2_2 = mu2.mul(mu2);
+		Mat mu1_mu2 = mu1.mul(mu2);
+		mu1.release();
+		mu2.release();
 
-	Mat mu1_2 = mu1.mul(mu1);
-	Mat mu2_2 = mu2.mul(mu2);
-	Mat mu1_mu2 = mu1.mul(mu2);
-	mu1.release();
-	mu2.release();
+		Mat sigma1_2, sigma2_2, sigma12;
 
-	Mat sigma1_2, sigma2_2, sigma12;
+		GaussianBlur(I1_2, sigma1_2, cv::Size(11, 11), 1.5);
+		I1_2.release();
+		sigma1_2 -= mu1_2;
 
-	GaussianBlur(I1_2, sigma1_2, cv::Size(11, 11), 1.5);
-	I1_2.release();
-	sigma1_2 -= mu1_2;
+		GaussianBlur(I2_2, sigma2_2, cv::Size(11, 11), 1.5);
+		I2_2.release();
+		sigma2_2 -= mu2_2;
 
-	GaussianBlur(I2_2, sigma2_2, cv::Size(11, 11), 1.5);
-	I2_2.release();
-	sigma2_2 -= mu2_2;
+		GaussianBlur(I1_I2, sigma12, cv::Size(11, 11), 1.5);
+		I1_I2.release();
+		sigma12 -= mu1_mu2;
 
-	GaussianBlur(I1_I2, sigma12, cv::Size(11, 11), 1.5);
-	I1_I2.release();
-	sigma12 -= mu1_mu2;
+		///////////////////////////////// 公式 ////////////////////////////////
+		Mat t1, t2, t3;
 
-	///////////////////////////////// 公式 ////////////////////////////////
-	Mat t1, t2, t3;
+		t1 = 2 * mu1_mu2 + C1;
+		t2 = 2 * sigma12 + C2;
+		t3 = t1.mul(t2);              // t3 = ((2*mu1_mu2 + C1).*(2*sigma12 + C2))
 
-	t1 = 2 * mu1_mu2 + C1;
-	t2 = 2 * sigma12 + C2;
-	t3 = t1.mul(t2);              // t3 = ((2*mu1_mu2 + C1).*(2*sigma12 + C2))
+		t1 = mu1_2 + mu2_2 + C1;
+		t2 = sigma1_2 + sigma2_2 + C2;
+		t1 = t1.mul(t2);               // t1 =((mu1_2 + mu2_2 + C1).*(sigma1_2 + sigma2_2 + C2))
+		t2.release();
 
-	t1 = mu1_2 + mu2_2 + C1;
-	t2 = sigma1_2 + sigma2_2 + C2;
-	t1 = t1.mul(t2);               // t1 =((mu1_2 + mu2_2 + C1).*(sigma1_2 + sigma2_2 + C2))
-	t2.release();
+		Mat ssim_map;
+		divide(t3, t1, ssim_map);      // ssim_map =  t3./t1;
+		t1.release();
+		t3.release();
 
-	Mat ssim_map;
-	divide(t3, t1, ssim_map);      // ssim_map =  t3./t1;
-	t1.release();
-	t3.release();
-
-	cv::Scalar mssim = mean(ssim_map); // mssim = ssim_map的平均值
-	return mssim.val[0] + mssim.val[1] + mssim.val[2];
+		cv::Scalar mssim = mean(ssim_map); // mssim = ssim_map的平均值
+		return mssim.val[0] + mssim.val[1] + mssim.val[2];
+	}
+	catch (...) // GaussianBlur创建Mat时可能抛出异常-215？
+	{
+		return 0;
+	}
 }
 
 // 检查图片违规2，下载图片、比较图片
