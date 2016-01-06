@@ -745,6 +745,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_confirmButton.EnableWindow(FALSE);
 	m_stateStatic.SetWindowText(_T("验证贴吧中"));
 	CString src, src2, tmp, userName;
+	CStringArray bawuList;
 	std::wcmatch res;
 
 
@@ -793,13 +794,25 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
 		goto error;
 	}
-	int pos1 = src2.Find(_T("吧主<span"));
-	int pos2 = src2.Find(_T(">") + userName + _T("<"));
-	int pos3 = src2.Find(_T(">图片小编<span"));
-	if (/*pos2 == -1 || */pos2 <= pos1 || (pos3 != -1 && pos2 >= pos3))
+	SplitString(bawuList, src2, _T("class=\"bawu_single_type"));
+	BOOL hasPower = FALSE;
+	if (bawuList.GetSize() > 1)
+	{
+		bawuList[bawuList.GetSize() - 1] = GetStringBefore(bawuList[bawuList.GetSize() - 1], _T("</div></div>"));
+		for (int i = 0; i < bawuList.GetSize(); i++)
+			if ((bawuList[i].Find(_T(">吧主<span")) != -1
+				|| bawuList[i].Find(_T(">小吧主<span")) != -1
+				|| bawuList[i].Find(_T(">语音小编<span")) != -1)
+				&& bawuList[i].Find(_T(">") + userName + _T("<")) != -1)
+			{
+				hasPower = TRUE;
+				break;
+			}
+	}
+	if (!hasPower)
 	{
 		WriteString(src2, _T("admin.txt"));
-		AfxMessageBox(_T("您不是吧主或小吧主！"), MB_ICONERROR);
+		AfxMessageBox(_T("您不是吧主或小吧主或语音小编！"), MB_ICONERROR);
 		SetWindowText(_T("贴吧管理器"));
 		goto error;
 	}

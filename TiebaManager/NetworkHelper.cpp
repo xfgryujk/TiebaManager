@@ -6,8 +6,9 @@ using std::regex_iterator;
 #include "TiebaVariable.h" // extern CString g_cookie;
 #include "StringHelper.h"
 #include "MiscHelper.h"
-#include <msxml2.h>
-#import <winhttp.dll> no_namespace
+#include "msxml2.h" // C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\MsXml2.h
+//#import <winhttp.dll> no_namespace
+#import <winhttpcom.dll> no_namespace
 
 
 class CWinHttpBase
@@ -432,10 +433,13 @@ CString HTTPGet(LPCTSTR URL, BOOL useCookie, volatile BOOL* stopFlag, CString* c
 		{
 		case NET_FAILED_TO_CREATE_INSTANCE:
 			result = NET_FAILED_TO_CREATE_INSTANCE_TEXT;
+			break;
 		case NET_STOP:
 			result = NET_STOP_TEXT;
+			break;
 		case NET_TIMEOUT:
 			result = NET_TIMEOUT_TEXT;
+			break;
 		}
 		delete xml;
 		return result;
@@ -459,10 +463,13 @@ CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopF
 		{
 		case NET_FAILED_TO_CREATE_INSTANCE:
 			result = NET_FAILED_TO_CREATE_INSTANCE_TEXT;
+			break;
 		case NET_STOP:
 			result = NET_STOP_TEXT;
+			break;
 		case NET_TIMEOUT:
 			result = NET_TIMEOUT_TEXT;
+			break;
 		}
 		delete xml;
 		return result;
