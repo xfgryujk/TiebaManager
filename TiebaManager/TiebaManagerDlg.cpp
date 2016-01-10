@@ -275,6 +275,8 @@ void CTiebaManagerDlg::OnDestroy()
 	g_stopScanFlag = TRUE; // 实际上线程不会返回（返回前就崩溃了？）
 
 	g_images.clear(); // 不知道为什么不加这个Release版关闭后会崩溃...
+
+	// 还是有内存泄漏，但我找不出了...
 }
 
 #pragma region UI
@@ -800,8 +802,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	{
 		bawuList[bawuList.GetSize() - 1] = GetStringBefore(bawuList[bawuList.GetSize() - 1], _T("</div></div>"));
 		for (int i = 0; i < bawuList.GetSize(); i++)
-			if ((bawuList[i].Find(_T(">吧主<span")) != -1
-				|| bawuList[i].Find(_T(">小吧主<span")) != -1
+			if ((bawuList[i].Find(_T("吧主<span")) != -1 // WTF，怎么有这么多种吧主
 				|| bawuList[i].Find(_T(">语音小编<span")) != -1)
 				&& bawuList[i].Find(_T(">") + userName + _T("<")) != -1)
 			{
