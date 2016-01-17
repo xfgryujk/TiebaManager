@@ -75,19 +75,11 @@ void CAboutPage::OnStnClickedStatic1()
 		break;
 	case UPDATE_FAILED_TO_GET_FILE_ID:
 		if (AfxMessageBox(_T("获取文件ID失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
-		{
-			ShellExecute(NULL, _T("open"), _T("http://pan.baidu.com/s/1hq86os8#dir/path=%2F%E6%88%91%E7%9A%84%E5%88")
-										   _T("%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%9B%B8%E5%85%B3"), 
-						 NULL, NULL, SW_NORMAL);
-		}
+			ShellExecute(NULL, _T("open"), UPDATE_FULL_URL, NULL, NULL, SW_NORMAL);
 		break;
 	case UPDATE_FAILED_TO_GET_LINK:
 		if (AfxMessageBox(_T("获取下载地址失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
-		{
-			ShellExecute(NULL, _T("open"), _T("http://pan.baidu.com/s/1hq86os8#dir/path=%2F%E6%88%91%E7%9A%84%E5%88")
-										   _T("%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%9B%B8%E5%85%B3"),
-						 NULL, NULL, SW_NORMAL);
-		}
+			ShellExecute(NULL, _T("open"), UPDATE_FULL_URL, NULL, NULL, SW_NORMAL);
 		break;
 	}
 }

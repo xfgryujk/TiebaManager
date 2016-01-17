@@ -5,7 +5,7 @@
 
 
 // 当前版本日期，每次更新后修改
-const TCHAR UPDATE_CURRENT_VERSION[] = _T("16-01-10");
+const TCHAR UPDATE_CURRENT_VERSION[] = _T("16-01-17");
 
 // 检查更新
 CheckUpdateResult CheckUpdate()
@@ -46,7 +46,7 @@ CheckUpdateResult CheckUpdate()
 	static const TCHAR BDSTOKEN_RIGHT[] = _T("\"");
 	static const TCHAR DLINK_LEFT[] = _T("\"dlink\":\"");
 	static const TCHAR DLINK_RIGHT[] = _T("\"");
-	src = HTTPGet(_T("http://pan.baidu.com/s/1hq86os8"), FALSE);
+	src = HTTPGet(UPDATE_FULL_URL, FALSE);
 	CString timeStamp = GetStringBetween(src, TIME_STAMP_LEFT, TIME_STAMP_RIGHT);
 	CString sign = GetStringBetween(src, SIGN_LEFT, SIGN_RIGHT);
 	CString bdstoken = GetStringBetween(src, BDSTOKEN_LEFT, BDSTOKEN_RIGHT);

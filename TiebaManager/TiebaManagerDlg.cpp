@@ -558,11 +558,7 @@ UINT AFX_CDECL CTiebaManagerDlg::AutoUpdateThread(LPVOID _thiz)
 		break;
 	case UPDATE_FAILED_TO_GET_LINK:
 		if (AfxMessageBox(_T("获取下载地址失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
-		{
-			ShellExecute(NULL, _T("open"), _T("http://pan.baidu.com/s/1hq86os8#dir/path=%2F%E6%88%91%E7%9A%84%E5%88")
-										   _T("%86%E4%BA%AB%2F%E7%99%BE%E5%BA%A6%E8%B4%B4%E5%90%A7%E7%9B%B8%E5%85%B3"),
-						 NULL, NULL, SW_NORMAL);
-		}
+			ShellExecute(NULL, _T("open"), UPDATE_FULL_URL, NULL, NULL, SW_NORMAL);
 	case UPDATE_NO_UPDATE:
 	case UPDATE_HAS_UPDATE:
 		thiz->m_stateStatic.SetWindowText(_T("待机中"));
@@ -801,7 +797,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	if (bawuList.GetSize() > 1)
 	{
 		bawuList[bawuList.GetSize() - 1] = GetStringBefore(bawuList[bawuList.GetSize() - 1], _T("</div></div>"));
-		for (int i = 0; i < bawuList.GetSize(); i++)
+		for (int i = 1; i < bawuList.GetSize(); i++)
 			if ((bawuList[i].Find(_T("吧主<span")) != -1 // WTF，怎么有这么多种吧主
 				|| bawuList[i].Find(_T(">语音小编<span")) != -1)
 				&& bawuList[i].Find(_T(">") + userName + _T("<")) != -1)
