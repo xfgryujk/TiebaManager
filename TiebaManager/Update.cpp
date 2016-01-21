@@ -2,6 +2,7 @@
 #include "Update.h"
 #include "StringHelper.h"
 #include "NetworkHelper.h"
+#include "TiebaManagerDlg.h"
 
 
 // 当前版本日期，每次更新后修改
@@ -64,4 +65,28 @@ CheckUpdateResult CheckUpdate()
 	ShellExecute(NULL, _T("open"), dlink, NULL, NULL, SW_NORMAL);
 	AfxMessageBox(_T("下载后解压并覆盖旧版本文件，可保留当前设置"), MB_ICONINFORMATION);
 	return UPDATE_HAS_UPDATE;
+}
+
+// 自动更新线程
+UINT AFX_CDECL AutoUpdateThread(LPVOID _dlg)
+{
+	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)_dlg;
+	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	CheckUpdateResult res = CheckUpdate();
+	CoUninitialize();
+	switch (res)
+	{
+	case UPDATE_FAILED_TO_GET_FILE_ID:
+		dlg->m_stateStatic.SetWindowText(_T("检查更新失败：获取文件ID失败，在设置里手动检查更新"));
+		break;
+	case UPDATE_FAILED_TO_GET_LINK:
+		if (AfxMessageBox(_T("获取下载地址失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
+			ShellExecute(NULL, _T("open"), UPDATE_FULL_URL, NULL, NULL, SW_NORMAL);
+	case UPDATE_NO_UPDATE:
+	case UPDATE_HAS_UPDATE:
+		dlg->m_stateStatic.SetWindowText(_T("待机中"));
+		break;
+	}
+
+	return 0;
 }

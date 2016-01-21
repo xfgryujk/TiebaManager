@@ -34,3 +34,5 @@ public:
 
 	std::vector<CString> m_pid;
 };
+
+UINT AFX_CDECL LoopBanThread(LPVOID _dlg);

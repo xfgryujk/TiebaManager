@@ -4,7 +4,6 @@
 
 #pragma once
 #include "explorer1.h"
-#include <mshtml.h>
 #include "afxwin.h"
 #include "TextButton.h"
 #include "NormalDlg.h"
@@ -54,11 +53,6 @@ public:
 	afx_msg void OnClose();
 	DECLARE_EVENTSINK_MAP()
 	void BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers, BOOL* Cancel);
-
-
-protected:
-	static UINT AFX_CDECL AutoUpdateThread(LPVOID _thiz);
-	static UINT AFX_CDECL LoopBanThread(LPVOID _thiz);
 
 
 public:

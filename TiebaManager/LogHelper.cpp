@@ -51,7 +51,7 @@ void CLog::Log(LPCTSTR content)
 {
 	SYSTEMTIME time;
 	GetLocalTime(&time);
-	CString* output = new CString;
+	CString* output = new CString();
 	output->Format(_T("%02d:%02d:%02d %s<br />\r\n"), time.wHour, time.wMinute, time.wSecond, content);
 	PostMessage(m_explorerHwnd, WM_LOG, (WPARAM)this, (LPARAM)output);
 }

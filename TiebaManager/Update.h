@@ -8,3 +8,4 @@ const TCHAR UPDATE_FULL_URL[] = _T("http://pan.baidu.com/s/1i4vlYIh")
 
 enum CheckUpdateResult { UPDATE_NO_UPDATE, UPDATE_HAS_UPDATE, UPDATE_FAILED_TO_GET_FILE_ID, UPDATE_FAILED_TO_GET_LINK };
 CheckUpdateResult CheckUpdate();
+UINT AFX_CDECL AutoUpdateThread(LPVOID _dlg);
