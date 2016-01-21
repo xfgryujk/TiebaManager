@@ -21,8 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "SettingDlg.h"
 #include "TiebaManagerDlg.h"
 #include "Setting.h"
-#include <map>
-extern std::map<__int64, int> g_reply; // 主题的回复数，要写入文件
+extern map<__int64, int> g_reply; // 主题的回复数，要写入文件
 #include "ScanImage.h"
 
 

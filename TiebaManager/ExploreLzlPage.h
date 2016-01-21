@@ -1,6 +1,4 @@
 #pragma once
-#include <vector>
-using std::vector;
 #include "ExplorerPage.h"
 struct PostInfo;
 

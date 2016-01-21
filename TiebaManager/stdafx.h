@@ -56,3 +56,15 @@
 #include "resource.h"
 
 #pragma warning(disable:4819)
+
+// STL
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <regex>
+using std::vector;
+using std::queue;
+using std::set;
+using std::map;
+using std::wregex;

@@ -1,7 +1,5 @@
 #pragma once
 #include "afxwin.h"
-#include <vector>
-using std::vector;
 #include "NormalDlg.h"
 
 

@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include <queue>
-using std::queue;
 #include "TiebaOperate.h"
 
 #include "TiebaVariable.h"

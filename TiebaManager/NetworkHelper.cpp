@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "NetworkHelper.h"
-#include <regex>
-using std::wregex;
 using std::regex_iterator;
 #include "TiebaVariable.h" // extern CString g_cookie;
 #include "StringHelper.h"

@@ -1,6 +1,4 @@
 #pragma once
-#include <regex>
-using std::wregex;
 #include "TypeHelper.h"
 
 
@@ -18,7 +16,7 @@ inline BOOL StringIncludes(const CString& str, LPCTSTR content, BOOL isRegex)
 		}
 		catch (...)
 		{
-			MessageBox(NULL, _T("正则表达式错误！"), _T("贴吧管理器"), MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误！"), MB_ICONERROR);
 			return FALSE;
 		}
 	}
@@ -62,7 +60,7 @@ inline BOOL StringMatchs(const CString& str, LPCTSTR content, BOOL isRegex)
 		}
 		catch (...)
 		{
-			MessageBox(NULL, _T("正则表达式错误！"), _T("贴吧管理器"), MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误！"), MB_ICONERROR);
 			return FALSE;
 		}
 	}

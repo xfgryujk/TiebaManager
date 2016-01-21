@@ -1,7 +1,6 @@
 #pragma once
 #include "afxwin.h"
 #include "ListPage.h"
-#include <vector>
 
 
 // CLoopBanPage ¶Ô»°¿ò

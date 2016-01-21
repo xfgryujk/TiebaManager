@@ -1,9 +1,5 @@
 #pragma once
 #include <zlib.h>
-#include <vector>
-using std::vector;
-#include <set>
-using std::set;
 #include <opencv2\core\mat.hpp>
 using cv::Mat;
 #include "TiebaCollect.h"

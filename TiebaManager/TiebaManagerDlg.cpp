@@ -28,7 +28,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Setting.h"
 #include "StringHelper.h"
 #include "NetworkHelper.h"
-#include "MiscHelper.h"
 #include "Update.h"
 
 #include "TiebaVariable.h"
@@ -60,6 +59,7 @@ CTiebaManagerDlg::CTiebaManagerDlg(CWnd* pParent /*=NULL*/)
 
 	m_explorerDlg = NULL;
 	m_settingDlg = NULL;
+	m_superFunctionDlg = NULL;
 
 	// 初始化托盘图标数据
 	m_nfData.cbSize = sizeof(NOTIFYICONDATA);
@@ -240,6 +240,7 @@ void CTiebaManagerDlg::OnClose()
 {
 	if (g_autoSaveLog)
 		m_log.Save(_T("Log"));
+	m_log.Release();
 
 	CNormalDlg::OnClose();
 }

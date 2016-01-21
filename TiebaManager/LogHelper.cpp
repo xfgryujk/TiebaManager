@@ -2,7 +2,6 @@
 #include "LogHelper.h"
 
 #include "explorer1.h"
-#include <mshtml.h>
 #include "MiscHelper.h"
 #include "StringHelper.h"
 
@@ -14,7 +13,8 @@ static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type
 								 _T("a:link {text-decoration:none}\r\na:hover {text-decoration:underline}\r\na:visited {text-decoration:none}\r\n")
 								 _T("</style>\r\n</head><body>\r\n");
 
-static const UINT WM_LOG = WM_APP + 12;
+static const UINT WM_LOG = WM_APP + 2;
+
 
 WNDPROC CLog::s_oldExplorerWndProc = NULL;
 
@@ -46,9 +46,19 @@ void CLog::Init()
 	GetLocalTime(&m_logStartTime);
 }
 
+// 释放
+void CLog::Release()
+{
+	m_explorerHwnd = NULL;
+	m_logDocument.Release();
+}
+
 // 输出日志1，把内容格式化发送到消息队列
 void CLog::Log(LPCTSTR content)
 {
+	if (m_explorerHwnd == NULL)
+		return;
+
 	SYSTEMTIME time;
 	GetLocalTime(&time);
 	CString* output = new CString();
@@ -59,6 +69,12 @@ void CLog::Log(LPCTSTR content)
 // 输出日志2，在m_logExplorer写日志
 void CLog::DoLog(const CString* output)
 {
+	if (m_logDocument.p == NULL)
+	{
+		delete output;
+		return;
+	}
+
 	WriteDocument(*output);
 	delete output;
 
@@ -85,6 +101,9 @@ void CLog::DoLog(const CString* output)
 // 清空日志
 void CLog::Clear()
 {
+	if (m_logDocument.p == NULL)
+		return;
+
 	m_logDocument->open(NULL, variant_t(), variant_t(), variant_t(), NULL);
 	WriteDocument(LOG_FRAME);
 	GetSystemTime(&m_logStartTime);
@@ -93,6 +112,9 @@ void CLog::Clear()
 // 保存日志
 void CLog::Save(LPCTSTR folder)
 {
+	if (m_logDocument.p == NULL)
+		return;
+
 	// 取日志HTML
 	CComDispatchDriver documentDisp(m_logDocument);
 

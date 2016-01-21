@@ -1,4 +1,5 @@
 #pragma once
+#include <mshtml.h>
 class CExplorer1;
 struct IHTMLDocument2;
 
@@ -21,6 +22,7 @@ public:
 	}
 
 	void Init();
+	void Release();
 	void Log(LPCTSTR content);
 	void Clear();
 	void Save(LPCTSTR folder);

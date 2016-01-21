@@ -6,8 +6,7 @@
 #include "ExplorerDlg.h"
 #include "TiebaManagerDlg.h"
 #include "TiebaCollect.h"
-#include <set>
-extern std::set<__int64> g_deletedTID; // 已删的主题ID
+extern set<__int64> g_deletedTID; // 已删的主题ID
 #include "TiebaOperate.h"
 #include <Mmsystem.h>
 

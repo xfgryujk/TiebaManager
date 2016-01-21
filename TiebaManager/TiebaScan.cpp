@@ -3,8 +3,6 @@
 
 #include "TiebaVariable.h"
 #include "TiebaCollect.h"
-#include <queue>
-using std::queue;
 #include "TiebaOperate.h"
 #include "Setting.h"
 

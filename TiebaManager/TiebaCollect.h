@@ -1,8 +1,4 @@
 #pragma once
-#include <regex>
-using std::wregex;
-#include <vector>
-using std::vector;
 
 
 // 采集贴吧用的常量

@@ -1,10 +1,4 @@
 #pragma once
-#include <vector>
-using std::vector;
-#include <set>
-using std::set;
-#include <regex>
-using std::wregex;
 #include <zlib.h>
 #include "TypeHelper.h"
 
