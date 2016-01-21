@@ -66,9 +66,10 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 	m_tab.InsertItem(i++, _T("ËøÌû"));
 
 	// ³õÊ¼»¯¸÷Ò³
-	m_loopBanPage.Create(IDD_LOOP_BAN_PAGE, &m_tab);
-	m_defriendPage.Create(IDD_DEFRIEND_PAGE, &m_tab);
-	m_lockThreadPage.Create(IDD_LOCK_THREAD_PAGE, &m_tab);
+#define CREATE_PAGE(page) page.Create(page.IDD, &m_tab)
+	CREATE_PAGE(m_loopBanPage);
+	CREATE_PAGE(m_defriendPage);
+	CREATE_PAGE(m_lockThreadPage);
 
 	CRect rect;
 	m_tab.GetClientRect(&rect);

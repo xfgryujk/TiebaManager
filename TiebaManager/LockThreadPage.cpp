@@ -96,12 +96,9 @@ void CLockThreadPage::OnBnClickedButton2()
 
 UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 {
-	// 初始化日志文档
+	// 初始化
 	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	CComPtr<IHTMLDocument2> document;
-	mainDlg->GetLogDocument(document);
-	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 
 	CString tid, page, floor;
 	if (m_instance != NULL)
@@ -137,12 +134,12 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 					CString content;
 					content.Format(_T("锁帖： %s楼<font color=red> 删除失败！错误代码：%s(%s)</font><a href=\"dl:%s,%s\">重试</a>"), 
 						post.floor, code, GetTiebaErrorText(code), tid, post.pid);
-					mainDlg->Log(content, pDocument);
+					mainDlg->m_log.Log(content);
 				}
 				else
 				{
 					sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
-					mainDlg->Log(_T("<font color=red>锁帖：删除 </font>") + post.floor + _T("楼"), pDocument);
+					mainDlg->m_log.Log(_T("<font color=red>锁帖：删除 </font>") + post.floor + _T("楼"));
 					for (int i = 0; i < (int)(g_deleteInterval * 10); i++)
 					{
 						if (m_stopFlag)

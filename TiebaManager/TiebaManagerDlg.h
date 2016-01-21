@@ -8,6 +8,7 @@
 #include "afxwin.h"
 #include "TextButton.h"
 #include "NormalDlg.h"
+#include "LogHelper.h"
 class CSettingDlg;
 class CExplorerDlg;
 class CSuperFunctionDlg;
@@ -55,16 +56,7 @@ public:
 	void BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers, BOOL* Cancel);
 
 
-public:
-	void Log(LPCTSTR content, CComPtr<IHTMLDocument2>* document = NULL);
-	void GetLogDocument(CComPtr<IHTMLDocument2>& document);
 protected:
-	inline static void WriteDocument(const CString& content, CComPtr<IHTMLDocument2>& document);
-	static BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam);
-	static LRESULT CALLBACK ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static UINT AFX_CDECL SaveLogThread(LPVOID _thiz);
-	void SaveLog(LPCTSTR folder);
-
 	static UINT AFX_CDECL AutoUpdateThread(LPVOID _thiz);
 	static UINT AFX_CDECL LoopBanThread(LPVOID _thiz);
 
@@ -89,10 +81,8 @@ public:
 	CExplorerDlg* m_explorerDlg;
 	CSuperFunctionDlg* m_superFunctionDlg;
 
-protected:
-	static WNDPROC s_oldExplorerWndProc;
-	CComPtr<IHTMLDocument2> m_logDocument;
-	SYSTEMTIME m_logStartTime;
+	CLog m_log;
 
+protected:
 	NOTIFYICONDATA m_nfData;
 };

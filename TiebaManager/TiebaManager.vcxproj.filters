@@ -13,36 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="头文件\Dialog">
-      <UniqueIdentifier>{a59bd095-6dcc-4d3a-94ba-2500a67bdbeb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Dialog">
-      <UniqueIdentifier>{e81938cd-2fd1-4f21-9f11-91c8386c5d8a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\Dialog\Setting">
-      <UniqueIdentifier>{00bf00b3-0753-4278-9737-3a07b382c026}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Dialog\Setting">
-      <UniqueIdentifier>{24c46866-091f-4946-a9a7-390aa4582ec4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\Dialog\TiebaExplorer">
-      <UniqueIdentifier>{765367cc-88df-4522-a069-ab963fa4457a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Dialog\TiebaExplorer">
-      <UniqueIdentifier>{c0d4b662-7847-45e1-873f-9ff3b66ce3e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\Dialog\UI">
-      <UniqueIdentifier>{4a72c8b2-5332-4604-95f9-9f761d9e9a3c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Dialog\UI">
-      <UniqueIdentifier>{5f92a814-ed20-4ebc-8d4f-560e1a02d9a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Dialog\SuperFunction">
-      <UniqueIdentifier>{cfc04151-1699-4135-a7c2-5267823e2d3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\Dialog\SuperFunction">
-      <UniqueIdentifier>{628fdca5-b0af-4b2d-ad95-2780a193694c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\Helper">
       <UniqueIdentifier>{f6b833c5-6084-445f-bf59-bbd2b3d45d17}</UniqueIdentifier>
     </Filter>
@@ -54,6 +24,36 @@
     </Filter>
     <Filter Include="源文件\Tieba">
       <UniqueIdentifier>{d83135bf-1ff5-4b8f-a0ed-8472441e5fb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\GUI">
+      <UniqueIdentifier>{a59bd095-6dcc-4d3a-94ba-2500a67bdbeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\GUI\Setting">
+      <UniqueIdentifier>{00bf00b3-0753-4278-9737-3a07b382c026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\GUI\TiebaExplorer">
+      <UniqueIdentifier>{765367cc-88df-4522-a069-ab963fa4457a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\GUI\UIHelper">
+      <UniqueIdentifier>{4a72c8b2-5332-4604-95f9-9f761d9e9a3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\GUI\SuperFunction">
+      <UniqueIdentifier>{628fdca5-b0af-4b2d-ad95-2780a193694c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GUI">
+      <UniqueIdentifier>{e81938cd-2fd1-4f21-9f11-91c8386c5d8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GUI\Setting">
+      <UniqueIdentifier>{24c46866-091f-4946-a9a7-390aa4582ec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GUI\TiebaExplorer">
+      <UniqueIdentifier>{c0d4b662-7847-45e1-873f-9ff3b66ce3e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GUI\UIHelper">
+      <UniqueIdentifier>{5f92a814-ed20-4ebc-8d4f-560e1a02d9a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GUI\SuperFunction">
+      <UniqueIdentifier>{cfc04151-1699-4135-a7c2-5267823e2d3f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,88 +70,88 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TiebaManagerDlg.h">
-      <Filter>头文件\Dialog</Filter>
+      <Filter>头文件\GUI</Filter>
     </ClInclude>
     <ClInclude Include="SettingDlg.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="BlackListPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="KeywordsPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="WhiteContentPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="OptionsPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="AboutPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="LoginDlg.h">
-      <Filter>头文件\Dialog</Filter>
+      <Filter>头文件\GUI</Filter>
     </ClInclude>
     <ClInclude Include="ConfirmDlg.h">
-      <Filter>头文件\Dialog</Filter>
+      <Filter>头文件\GUI</Filter>
     </ClInclude>
     <ClInclude Include="UsersPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="ExplorerPage.h">
-      <Filter>头文件\Dialog\TiebaExplorer</Filter>
+      <Filter>头文件\GUI\TiebaExplorer</Filter>
     </ClInclude>
     <ClInclude Include="ExploreThreadPage.h">
-      <Filter>头文件\Dialog\TiebaExplorer</Filter>
+      <Filter>头文件\GUI\TiebaExplorer</Filter>
     </ClInclude>
     <ClInclude Include="ExplorerDlg.h">
-      <Filter>头文件\Dialog\TiebaExplorer</Filter>
+      <Filter>头文件\GUI\TiebaExplorer</Filter>
     </ClInclude>
     <ClInclude Include="ExploreLzlPage.h">
-      <Filter>头文件\Dialog\TiebaExplorer</Filter>
+      <Filter>头文件\GUI\TiebaExplorer</Filter>
     </ClInclude>
     <ClInclude Include="ExplorePostPage.h">
-      <Filter>头文件\Dialog\TiebaExplorer</Filter>
+      <Filter>头文件\GUI\TiebaExplorer</Filter>
     </ClInclude>
     <ClInclude Include="ImagePage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="ImageViewDlg.h">
-      <Filter>头文件\Dialog</Filter>
+      <Filter>头文件\GUI</Filter>
     </ClInclude>
     <ClInclude Include="explorer1.h">
-      <Filter>头文件\Dialog\UI</Filter>
+      <Filter>头文件\GUI\UIHelper</Filter>
     </ClInclude>
     <ClInclude Include="TextButton.h">
-      <Filter>头文件\Dialog\UI</Filter>
+      <Filter>头文件\GUI\UIHelper</Filter>
     </ClInclude>
     <ClInclude Include="SuperFunctionDlg.h">
-      <Filter>头文件\Dialog\SuperFunction</Filter>
+      <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
     <ClInclude Include="ListPage.h">
-      <Filter>头文件\Dialog\UI</Filter>
+      <Filter>头文件\GUI\UIHelper</Filter>
     </ClInclude>
     <ClInclude Include="ResizeControl.h">
-      <Filter>头文件\Dialog\UI</Filter>
+      <Filter>头文件\GUI\UIHelper</Filter>
     </ClInclude>
     <ClInclude Include="NormalDlg.h">
-      <Filter>头文件\Dialog\UI</Filter>
+      <Filter>头文件\GUI\UIHelper</Filter>
     </ClInclude>
     <ClInclude Include="RegListPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="LoopBanPage.h">
-      <Filter>头文件\Dialog\SuperFunction</Filter>
+      <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
     <ClInclude Include="ScanPage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="OperatePage.h">
-      <Filter>头文件\Dialog\Setting</Filter>
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="DefriendPage.h">
-      <Filter>头文件\Dialog\SuperFunction</Filter>
+      <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
     <ClInclude Include="StringHelper.h">
       <Filter>头文件\Helper</Filter>
@@ -187,7 +187,10 @@
       <Filter>头文件\Tieba</Filter>
     </ClInclude>
     <ClInclude Include="LockThreadPage.h">
-      <Filter>头文件\Dialog\SuperFunction</Filter>
+      <Filter>头文件\GUI\SuperFunction</Filter>
+    </ClInclude>
+    <ClInclude Include="LogHelper.h">
+      <Filter>头文件\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -198,88 +201,88 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="TiebaManagerDlg.cpp">
-      <Filter>源文件\Dialog</Filter>
+      <Filter>源文件\GUI</Filter>
     </ClCompile>
     <ClCompile Include="SettingDlg.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="BlackListPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="KeywordsPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="WhiteContentPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="OptionsPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="AboutPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="LoginDlg.cpp">
-      <Filter>源文件\Dialog</Filter>
+      <Filter>源文件\GUI</Filter>
     </ClCompile>
     <ClCompile Include="ConfirmDlg.cpp">
-      <Filter>源文件\Dialog</Filter>
+      <Filter>源文件\GUI</Filter>
     </ClCompile>
     <ClCompile Include="UsersPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="ExplorerPage.cpp">
-      <Filter>源文件\Dialog\TiebaExplorer</Filter>
+      <Filter>源文件\GUI\TiebaExplorer</Filter>
     </ClCompile>
     <ClCompile Include="ExploreThreadPage.cpp">
-      <Filter>源文件\Dialog\TiebaExplorer</Filter>
+      <Filter>源文件\GUI\TiebaExplorer</Filter>
     </ClCompile>
     <ClCompile Include="ExplorerDlg.cpp">
-      <Filter>源文件\Dialog\TiebaExplorer</Filter>
+      <Filter>源文件\GUI\TiebaExplorer</Filter>
     </ClCompile>
     <ClCompile Include="ExploreLzlPage.cpp">
-      <Filter>源文件\Dialog\TiebaExplorer</Filter>
+      <Filter>源文件\GUI\TiebaExplorer</Filter>
     </ClCompile>
     <ClCompile Include="ExplorePostPage.cpp">
-      <Filter>源文件\Dialog\TiebaExplorer</Filter>
+      <Filter>源文件\GUI\TiebaExplorer</Filter>
     </ClCompile>
     <ClCompile Include="ImagePage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="ImageViewDlg.cpp">
-      <Filter>源文件\Dialog</Filter>
+      <Filter>源文件\GUI</Filter>
     </ClCompile>
     <ClCompile Include="explorer1.cpp">
-      <Filter>源文件\Dialog\UI</Filter>
+      <Filter>源文件\GUI\UIHelper</Filter>
     </ClCompile>
     <ClCompile Include="TextButton.cpp">
-      <Filter>源文件\Dialog\UI</Filter>
+      <Filter>源文件\GUI\UIHelper</Filter>
     </ClCompile>
     <ClCompile Include="SuperFunctionDlg.cpp">
-      <Filter>源文件\Dialog\SuperFunction</Filter>
+      <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
     <ClCompile Include="ListPage.cpp">
-      <Filter>源文件\Dialog\UI</Filter>
+      <Filter>源文件\GUI\UIHelper</Filter>
     </ClCompile>
     <ClCompile Include="ResizeControl.cpp">
-      <Filter>源文件\Dialog\UI</Filter>
+      <Filter>源文件\GUI\UIHelper</Filter>
     </ClCompile>
     <ClCompile Include="NormalDlg.cpp">
-      <Filter>源文件\Dialog\UI</Filter>
+      <Filter>源文件\GUI\UIHelper</Filter>
     </ClCompile>
     <ClCompile Include="RegListPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="LoopBanPage.cpp">
-      <Filter>源文件\Dialog\SuperFunction</Filter>
+      <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
     <ClCompile Include="ScanPage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="OperatePage.cpp">
-      <Filter>源文件\Dialog\Setting</Filter>
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="DefriendPage.cpp">
-      <Filter>源文件\Dialog\SuperFunction</Filter>
+      <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
     <ClCompile Include="NetworkHelper.cpp">
       <Filter>源文件\Helper</Filter>
@@ -312,7 +315,10 @@
       <Filter>源文件\Tieba</Filter>
     </ClCompile>
     <ClCompile Include="LockThreadPage.cpp">
-      <Filter>源文件\Dialog\SuperFunction</Filter>
+      <Filter>源文件\GUI\SuperFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="LogHelper.cpp">
+      <Filter>源文件\Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -120,9 +120,10 @@ BOOL CExplorerDlg::OnInitDialog()
 	m_tab.InsertItem(i++, _T("楼中楼"));
 
 	// 初始化各页
-	m_exploreThreadPage.Create(IDD_EXPLORER_PAGE, &m_tab);
-	m_explorePostPage.Create(IDD_EXPLORER_PAGE, &m_tab);
-	m_exploreLzlPage.Create(IDD_EXPLORER_PAGE, &m_tab);
+#define CREATE_PAGE(page) page.Create(page.IDD, &m_tab)
+	CREATE_PAGE(m_exploreThreadPage);
+	CREATE_PAGE(m_explorePostPage);
+	CREATE_PAGE(m_exploreLzlPage);
 
 	CRect rect;
 	m_tab.GetClientRect(&rect);
@@ -247,7 +248,7 @@ void CExplorerDlg::ViewImages(vector<CString>* img)
 	if (m_imageViewDlg == NULL)
 	{
 		m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);
-		m_imageViewDlg->Create(IDD_IMAGE_VIEW_DIALOG, this);
+		m_imageViewDlg->Create(m_imageViewDlg->IDD, this);
 	}
 	m_imageViewDlg->SetImages(img);
 }

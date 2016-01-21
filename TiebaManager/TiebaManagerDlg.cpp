@@ -46,20 +46,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 static const UINT WM_TASKBARCREATED = RegisterWindowMessage(_T("TaskbarCreated"));
 static const UINT WM_TRAY = WM_APP + 1;
 
-#pragma region
-static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=gb2312\" /><title>日志")
-								 _T("</title><style type=\"text/css\"><!--body {border:1px solid #000000;overflow:auto;margin-left:3px")
-								 _T(";margin-top:3px;margin-right:3px;margin-bottom:3px;font-family:\"宋体\",Verdana;font-size:9pt;lin")
-								 _T("e-height:12px}body,td,th{color:#000000}a:link{text-decoration:none}a:hover{text-decoration:underl")
-								 _T("ine}a:visited{text-decoration:none}--></style></head><body>");
-#pragma endregion
-
-WNDPROC CTiebaManagerDlg::s_oldExplorerWndProc;
-
 
 // 构造函数
 CTiebaManagerDlg::CTiebaManagerDlg(CWnd* pParent /*=NULL*/)
-	: CNormalDlg(CTiebaManagerDlg::IDD, pParent)
+	: CNormalDlg(CTiebaManagerDlg::IDD, pParent), 
+	m_log(m_logExplorer)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
@@ -75,9 +66,6 @@ CTiebaManagerDlg::CTiebaManagerDlg(CWnd* pParent /*=NULL*/)
 	_tcscpy_s(m_nfData.szTip, _T("贴吧管理器"));
 	m_nfData.uCallbackMessage = WM_TRAY;
 	m_nfData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-
-	// 日志开始时间
-	GetLocalTime(&m_logStartTime);
 }
 
 #pragma region MFC
@@ -190,16 +178,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	m_nfData.hWnd = m_hWnd;
 
 	// 初始化日志
-	m_logExplorer.Navigate(_T("about:blank"), NULL, NULL, NULL, NULL);
-	do
-	{
-		Delay(1);
-		GetLogDocument(m_logDocument);
-	} while (m_logDocument.p == NULL);
-	WriteDocument(LOG_FRAME, m_logDocument);
-	HWND ExplorerHwnd = m_logExplorer.m_hWnd;
-	EnumChildWindows(ExplorerHwnd, EnumChildProc, (LPARAM)&ExplorerHwnd);
-	s_oldExplorerWndProc = (WNDPROC)SetWindowLong(ExplorerHwnd, GWL_WNDPROC, (LONG)ExplorerWndProc);
+	m_log.Init();
 
 	// 读取设置
 	TCHAR buffer[260];
@@ -217,7 +196,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	{
 		WritePrivateProfileString(_T("Setting"), _T("FirstRun"), _T("0"), ALL_PROFILE_PATH);
 		m_settingDlg = new CSettingDlg();
-		m_settingDlg->Create(IDD_SETTING_DIALOG, this);
+		m_settingDlg->Create(m_settingDlg->IDD, this);
 		m_settingDlg->m_tab.SetCurSel(SETTING_DLG_PAGE_COUNT - 1);
 		LRESULT tmp;
 		m_settingDlg->OnTcnSelchangeTab1(NULL, &tmp);
@@ -259,7 +238,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 void CTiebaManagerDlg::OnClose()
 {
 	if (g_autoSaveLog)
-		SaveLog(_T("Log"));
+		m_log.Save(_T("Log"));
 
 	CNormalDlg::OnClose();
 }
@@ -281,14 +260,6 @@ void CTiebaManagerDlg::OnDestroy()
 
 #pragma region UI
 // 窗口 /////////////////////////////////////////////////////////////////////////////////
-
-// 屏蔽日志右键菜单
-LRESULT CALLBACK CTiebaManagerDlg::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	if (uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP)
-		return 0;
-	return CallWindowProc(s_oldExplorerWndProc, hwnd, uMsg, wParam, lParam);
-}
 
 // 限制最小尺寸
 void CTiebaManagerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
@@ -336,77 +307,6 @@ LRESULT CTiebaManagerDlg::OnTaskBarCreated(WPARAM wParam, LPARAM lParam)
 #pragma endregion
 
 #pragma region 日志
-// 取日志document，为了线程安全不要用m_logExplorer.get_Document()
-void CTiebaManagerDlg::GetLogDocument(CComPtr<IHTMLDocument2>& document)
-{
-	static HWND ExplorerHwnd = NULL;
-	if (ExplorerHwnd == NULL)
-		EnumChildWindows(m_logExplorer.m_hWnd, EnumChildProc, (LPARAM)&ExplorerHwnd);
-	LRESULT lRes;
-	UINT nMsg = RegisterWindowMessage(_T("WM_HTML_GETOBJECT"));
-	SendMessageTimeout(ExplorerHwnd, nMsg, 0L, 0L, SMTO_ABORTIFHUNG, 1000, (DWORD*)&lRes);
-	ObjectFromLresult(lRes, IID_IHTMLDocument2, 0, (void**)&document);
-}
-
-// 枚举寻找Internet Explorer_Server窗口
-BOOL CALLBACK CTiebaManagerDlg::EnumChildProc(HWND hwnd, LPARAM lParam)
-{
-	TCHAR buf[30];
-	GetClassName(hwnd, buf, _countof(buf));
-	if (_tcscmp(buf, _T("Internet Explorer_Server")) == 0)
-	{
-		*(HWND*)lParam = hwnd;
-		return FALSE;
-	}
-	else
-		return TRUE;
-}
-
-// 写HTML到document
-void CTiebaManagerDlg::WriteDocument(const CString& content, CComPtr<IHTMLDocument2>& document)
-{
-	SAFEARRAY *arr = SafeArrayCreateVector(VT_VARIANT, 0, 1);
-	VARIANT *str;
-	SafeArrayAccessData(arr, (LPVOID*)&str);
-	str->vt = VT_BSTR;
-	str->bstrVal = content.AllocSysString();
-	SafeArrayUnaccessData(arr);
-	document->write(arr);
-	SafeArrayDestroy(arr);
-}
-
-// 输出日志
-void CTiebaManagerDlg::Log(LPCTSTR content, CComPtr<IHTMLDocument2>* document)
-{
-	if (document == NULL)
-		document = (CComPtr<IHTMLDocument2>*)&(int&)m_logDocument;
-
-	SYSTEMTIME time;
-	GetLocalTime(&time);
-	CString output;
-	output.Format(_T("%02d:%02d:%02d %s<br>"), time.wHour, time.wMinute, time.wSecond, content);
-	WriteDocument(output, *document);
-
-	// 滚动到底端
-	CComPtr<IHTMLElement> body;
-	(*document)->get_body(&body);
-	// 取ID
-	static LPOLESTR scrollHeightName = OLESTR("scrollHeight"), scrollTopName = OLESTR("scrollTop");
-	static DISPID scrollHeightID = -1, scrollTopID = -1;
-	if (scrollHeightID == -1)
-		body->GetIDsOfNames(IID_NULL, &scrollHeightName, 1, LOCALE_SYSTEM_DEFAULT, &scrollHeightID);
-	if (scrollTopID == -1)
-		body->GetIDsOfNames(IID_NULL, &scrollTopName, 1, LOCALE_SYSTEM_DEFAULT, &scrollTopID);
-	// body.scrollTop = body.scrollHeight
-	DISPPARAMS params = {};
-	_variant_t scrollHeight;
-	body->Invoke(scrollHeightID, IID_NULL, LOCALE_SYSTEM_DEFAULT, DISPATCH_PROPERTYGET, &params,
-		scrollHeight.GetAddress(), NULL, NULL);
-	params.cArgs = 1;
-	params.rgvarg = &scrollHeight;
-	body->Invoke(scrollTopID, IID_NULL, LOCALE_SYSTEM_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, NULL, NULL);
-}
-
 // 日志浏览器将导航
 void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers, BOOL* Cancel)
 {
@@ -420,9 +320,9 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	{
 		CString code = DeleteThread(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
-			Log(_T("<font color=green>删除成功！</font>"));
+			m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
-			Log(_T("<font color=red>删除失败！</font>"));
+			m_log.Log(_T("<font color=red>删除失败！</font>"));
 	}
 	else if (prefix == _T("dp:")) // 删帖子
 	{
@@ -430,9 +330,9 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
 		CString code = DeletePost(args[0], args[1]);
 		if (code == _T("0"))
-			Log(_T("<font color=green>删除成功！</font>"));
+			m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
-			Log(_T("<font color=red>删除失败！</font>"));
+			m_log.Log(_T("<font color=red>删除失败！</font>"));
 	}
 	else if (prefix == _T("dl:")) // 删楼中楼
 	{
@@ -440,9 +340,9 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
 		CString code = DeleteLZL(args[0], args[1]);
 		if (code == _T("0"))
-			Log(_T("<font color=green>删除成功！</font>"));
+			m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
-			Log(_T("<font color=red>删除失败！</font>"));
+			m_log.Log(_T("<font color=red>删除失败！</font>"));
 	}
 	else if (prefix == _T("bd:")) // 封ID
 	{
@@ -450,17 +350,17 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
 		CString code = BanID(args[1], args[0]);
 		if (code == _T("0"))
-			Log(_T("<font color=green>封禁成功！</font>"));
+			m_log.Log(_T("<font color=green>封禁成功！</font>"));
 		else
-			Log(_T("<font color=red>封禁失败！</font>"));
+			m_log.Log(_T("<font color=red>封禁失败！</font>"));
 	}
 	else if (prefix == _T("df:")) // 拉黑
 	{
 		CString code = Defriend(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
-			Log(_T("<font color=green>拉黑成功！</font>"));
+			m_log.Log(_T("<font color=green>拉黑成功！</font>"));
 		else
-			Log(_T("<font color=red>拉黑失败！</font>"));
+			m_log.Log(_T("<font color=red>拉黑失败！</font>"));
 	}
 	else
 		ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
@@ -469,22 +369,13 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 // 清空日志
 void CTiebaManagerDlg::OnStnClickedStatic6()
 {
-	m_logDocument->open(NULL, variant_t(), variant_t(), variant_t(), NULL);
-	WriteDocument(LOG_FRAME, m_logDocument);
-	GetSystemTime(&m_logStartTime);
+	m_log.Clear();
 }
 
 // 保存日志
 void CTiebaManagerDlg::OnStnClickedStatic7()
 {
 	m_saveLogStatic.EnableWindow(FALSE);
-	AfxBeginThread(SaveLogThread, this);
-}
-
-// 保存日志线程
-UINT AFX_CDECL CTiebaManagerDlg::SaveLogThread(LPVOID _thiz)
-{
-	CTiebaManagerDlg* thiz = (CTiebaManagerDlg*)_thiz;
 	BROWSEINFO bi;
 	ZeroMemory(&bi, sizeof(bi));
 	bi.lpszTitle = _T("要保存的目录：");
@@ -498,48 +389,12 @@ UINT AFX_CDECL CTiebaManagerDlg::SaveLogThread(LPVOID _thiz)
 		folder.ReleaseBuffer();
 		CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
-		thiz->SaveLog(folder);
+		m_log.Save(folder);
 
 		CoUninitialize();
 	}
 
-	thiz->m_saveLogStatic.EnableWindow(TRUE);
-	return 0;
-}
-
-// 保存日志
-void CTiebaManagerDlg::SaveLog(LPCTSTR folder)
-{
-	// 取日志HTML
-	CComPtr<IHTMLDocument2> document;
-	GetLogDocument(document);
-	CComDispatchDriver documentDisp(document);
-	// document.documentElement.outerHTML
-	_variant_t res;
-	documentDisp.GetPropertyByName(OLESTR("documentElement"), res.GetAddress());
-	CComDispatchDriver documentElementDisp((IDispatch*)res);
-	documentElementDisp.GetPropertyByName(OLESTR("outerHTML"), res.GetAddress());
-	CString strHtml = (LPCTSTR)(_bstr_t)res;
-
-	// 另一种取网页HTML方法，末尾有四个乱码？
-	/*CComPtr<IPersistStreamInit> psi;
-	document->QueryInterface(&psi);
-	HGLOBAL html = GlobalAlloc(GMEM_MOVEABLE, 5 * 1024 * 1024);
-	IStream *stream;
-	CreateStreamOnHGlobal(html, TRUE, &stream);
-	psi->Save(stream, FALSE);
-	CString strHtml = (LPCTSTR)GlobalLock(html);
-	strHtml += _T("</body></html>");
-	GlobalUnlock(html);
-	stream->Release();*/
-
-	// 保存
-	if (!PathFileExists(folder))
-		CreateDirectory(folder, NULL);
-	CString path;
-	path.Format(_T("%s\\%d-%02d-%02d %02d：%02d：%02d.html"), folder, m_logStartTime.wYear, m_logStartTime.wMonth, 
-		m_logStartTime.wDay, m_logStartTime.wHour, m_logStartTime.wMinute, m_logStartTime.wSecond);
-	WriteString(strHtml, path);
+	m_saveLogStatic.EnableWindow(TRUE);
 }
 #pragma endregion
 
@@ -627,9 +482,6 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 	// 循环封
 	thiz->m_stateStatic.SetWindowText(_T("循环封禁中"));
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	CComPtr<IHTMLDocument2> document;
-	thiz->GetLogDocument(document);
-	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 	for (int i = 0; i < size; i++)
 	{
 		CString code;
@@ -653,10 +505,10 @@ UINT AFX_CDECL CTiebaManagerDlg::LoopBanThread(LPVOID _thiz)
 				CString content;
 				content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
 							   _T("\"bd:%s,%s\">重试</a>"), name[i], code, GetTiebaErrorText(code), pid[i], name[i]);
-				thiz->Log(content, pDocument);
+				thiz->m_log.Log(content);
 			}
 			else
-				thiz->Log(_T("<font color=red>封禁 </font>") + name[i], pDocument);
+				thiz->m_log.Log(_T("<font color=red>封禁 </font>") + name[i]);
 		}
 
 		if (code == _T("0") && i < size - 1)
@@ -702,7 +554,7 @@ void CTiebaManagerDlg::OnBnClickedButton7()
 	if (m_explorerDlg == NULL)
 	{
 		m_explorerDlg = new CExplorerDlg();
-		m_explorerDlg->Create(IDD_EXPLORER_DIALOG, GetDesktopWindow());
+		m_explorerDlg->Create(m_explorerDlg->IDD, GetDesktopWindow());
 	}
 }
 
@@ -712,7 +564,7 @@ void CTiebaManagerDlg::OnBnClickedButton4()
 	if (m_superFunctionDlg == NULL)
 	{
 		m_superFunctionDlg = new CSuperFunctionDlg();
-		m_superFunctionDlg->Create(IDD_SETTING_DIALOG, this);
+		m_superFunctionDlg->Create(m_superFunctionDlg->IDD, this);
 	}
 }
 
@@ -722,7 +574,7 @@ void CTiebaManagerDlg::OnBnClickedButton5()
 	if (m_settingDlg == NULL)
 	{
 		m_settingDlg = new CSettingDlg();
-		m_settingDlg->Create(IDD_SETTING_DIALOG, this);
+		m_settingDlg->Create(m_settingDlg->IDD, this);
 	}
 }
 #pragma endregion
@@ -836,7 +688,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_explorerButton.EnableWindow(TRUE);
 	m_superFunctionButton.EnableWindow(TRUE);
 	WritePrivateProfileString(_T("Setting"), _T("ForumName"), g_forumName, USER_PROFILE_PATH);
-	Log(_T("<font color=green>确认监控贴吧：</font>") + g_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));
+	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + g_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));
 	// 开始循环封
 	AfxBeginThread(LoopBanThread, this);
 	return;

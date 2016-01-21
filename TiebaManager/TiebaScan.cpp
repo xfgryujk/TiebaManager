@@ -74,7 +74,7 @@ BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg, int& pos, int& 
 }
 
 // 扫描主题图片
-static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocument2>* pDocument)
+static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg)
 {
 	for (const ThreadInfo& thread : g_threads)
 	{
@@ -86,8 +86,8 @@ static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg, CComPtr<
 		{
 			AddConfirm(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
 				thread.title, _T("1"), _T(""), thread.author, thread.authorID);
-			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
-				+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
+			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
+				+ HTMLEscape(thread.title) + _T("</a>") + msg);
 			g_ignoredTID.insert(tid);
 		}
 	}
@@ -108,7 +108,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	if (g_confirmThread == NULL && !g_confirmQueue.empty())
 		g_confirmThread = AfxBeginThread(ConfirmThread, mainDlg);
 
-	// 初始化日志文档
+	// 初始化
 	HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	if (FAILED(hr))
 	{
@@ -116,9 +116,6 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		code.Format(_T("CoInitializeEx: 0x%08X"), hr);
 		WriteString(code, _T("error.txt"));
 	}
-	CComPtr<IHTMLDocument2> document;
-	dlg->GetLogDocument(document);
-	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 
 	// 初始化页数
 	CString sPage;
@@ -134,7 +131,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		DWORD startTime = GetTickCount();
 		dlg->m_stateStatic.SetWindowText(_T("扫描主题中"));
 		if (!g_briefLog)
-			dlg->Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + g_currentOption, pDocument);
+			dlg->m_log.Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + g_currentOption);
 
 		// 获取主题列表
 		if (!GetThreads(g_forumName, ignoreThread, g_threads))
@@ -142,7 +139,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			if (g_stopScanFlag)
 				break;
 			if (!g_briefLog)
-				dlg->Log(_T("<font color=red>获取主题列表失败，重新开始本轮</font>"), pDocument);
+				dlg->m_log.Log(_T("<font color=red>获取主题列表失败，重新开始本轮</font>"));
 			continue;
 		}
 
@@ -157,8 +154,8 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			{
 				AddConfirm(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
 					thread.title, _T("0"), _T(""), thread.author, thread.authorID, _T(""), pos, length);
-				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
-					+ HTMLEscape(thread.title) + _T("</a>") + msg, pDocument);
+				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
+					+ HTMLEscape(thread.title) + _T("</a>") + msg);
 				g_ignoredTID.insert(tid);
 			}
 		}
@@ -167,7 +164,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		if (g_onlyScanTitle && scanImage)
 		{
 			scanImage = FALSE;
-			ScanThreadImage(msg, dlg, pDocument);
+			ScanThreadImage(msg, dlg);
 		}
 
 		// 扫描帖子
@@ -189,7 +186,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			}
 			// 等待扫描帖子时扫描主题图片
 			if (scanImage)
-				ScanThreadImage(msg, dlg, pDocument);
+				ScanThreadImage(msg, dlg);
 			WaitForMultipleObjects(threadCount, threadHandles, TRUE, INFINITE);
 
 			// 释放线程
@@ -208,7 +205,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		{
 			CString content;
 			content.Format(_T("<font color=green>本轮扫描结束，用时%.3f秒</font>"), (float)(GetTickCount() - startTime) / 1000.0f);
-			dlg->Log(content, pDocument);
+			dlg->m_log.Log(content);
 		}
 
 		// 延时
@@ -223,7 +220,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	g_stopScanFlag = FALSE;
 
 	if (!g_briefLog)
-		dlg->Log(_T("<font color=green>扫描结束</font>"), pDocument);
+		dlg->m_log.Log(_T("<font color=green>扫描结束</font>"));
 	CoUninitialize();
 	dlg->m_stopButton.EnableWindow(FALSE);
 	dlg->m_startButton.EnableWindow(TRUE);
@@ -239,11 +236,8 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 {
 	int threadID = (int)_threadID;
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
-	// 初始化日志文档
+	// 初始化
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	CComPtr<IHTMLDocument2> document;
-	dlg->GetLogDocument(document);
-	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 
 	CString pageCount, src;
 	map<__int64, int>::iterator historyReplyIt;
@@ -279,8 +273,8 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		if (src == NET_TIMEOUT_TEXT)
 		{
 			if (!g_briefLog)
-				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
-				+ _T("</a> <font color=red>获取贴子列表失败(超时)，暂时跳过</font>"), pDocument);
+				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
+				+ _T("</a> <font color=red>获取贴子列表失败(超时)，暂时跳过</font>"));
 			goto next;
 		}
 
@@ -290,16 +284,16 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		{
 			WriteString(src, _T("thread.txt"));
 			if (!g_briefLog)
-				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
-				+ _T("</a> <font color=red>获取贴子列表失败(可能已被删)，暂时跳过</font>"), pDocument);
+				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
+				+ _T("</a> <font color=red>获取贴子列表失败(可能已被删)，暂时跳过</font>"));
 			goto next;
 		}
 
 		// 扫描帖子页
 		int iPageCount = _ttoi(pageCount);
-		BOOL res = ScanPostPage(thread.tid, 1, thread.title, hasHistoryReply, 0, src, threadID, dlg, pDocument);
+		BOOL res = ScanPostPage(thread.tid, 1, thread.title, hasHistoryReply, 0, src, threadID, dlg);
 		if (iPageCount > 1 && !g_stopScanFlag)
-			res = ScanPostPage(thread.tid, iPageCount, thread.title, hasHistoryReply, 0, _T(""), threadID, dlg, pDocument);
+			res = ScanPostPage(thread.tid, iPageCount, thread.title, hasHistoryReply, 0, _T(""), threadID, dlg);
 
 		// 记录历史回复
 		if (res)
@@ -318,7 +312,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 
 // 扫描帖子页
 BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHistoryReply,
-	int ScanedCount, const CString& src, int threadID, CTiebaManagerDlg* dlg, CComPtr<IHTMLDocument2>* pDocument)
+	int ScanedCount, const CString& src, int threadID, CTiebaManagerDlg* dlg)
 {
 	CString sPage;
 	sPage.Format(_T("%d"), page);
@@ -332,9 +326,9 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	{
 	case GET_POSTS_TIMEOUT:
 	case GET_POSTS_DELETED:
-		dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + title
+		dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + title
 			+ _T("</a> <font color=red>获取贴子列表失败(") + (res == GET_POSTS_TIMEOUT ? _T("超时") :
-			_T("可能已被删")) + _T(")，暂时跳过</font>"), pDocument);
+			_T("可能已被删")) + _T(")，暂时跳过</font>"));
 	case GET_POSTS_STOP:
 		return FALSE;
 	}
@@ -352,8 +346,8 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		{
 			AddConfirm(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID, _T(""), pos, length);
-			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
-				_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
+			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
+				_T("</a> ") + post.floor + _T("楼") + msg);
 			g_ignoredPID.insert(pid);
 		}
 	}
@@ -369,8 +363,8 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			if (g_ignoredLZLID.find(lzlid) == g_ignoredLZLID.end())
 			{
 				AddConfirm(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID, _T(""), pos, length);
-				dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
-					_T("</a> ") + lzl.floor + _T("楼回复") + msg, pDocument);
+				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
+					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 				g_ignoredLZLID.insert(lzlid);
 			}
 		}
@@ -387,8 +381,8 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		{
 			AddConfirm(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID);
-			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
-				_T("</a> ") + post.floor + _T("楼") + msg, pDocument);
+			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
+				_T("</a> ") + post.floor + _T("楼") + msg);
 			g_ignoredPID.insert(pid);
 		}
 	}
@@ -403,8 +397,8 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			&& CheckImageIllegal(lzl.author, GetPostImage(lzl), msg))
 		{
 			AddConfirm(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID);
-			dlg->Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
-				_T("</a> ") + lzl.floor + _T("楼回复") + msg, pDocument);
+			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
+				_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 			g_ignoredLZLID.insert(pid);
 		}
 	}
@@ -416,7 +410,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		{
 			if (--page < 2) // 扫描完
 				return TRUE;
-			return ScanPostPage(tid, page, title, FALSE, ScanedCount, _T(""), threadID, dlg, pDocument);
+			return ScanPostPage(tid, page, title, FALSE, ScanedCount, _T(""), threadID, dlg);
 		}
 	}
 	return TRUE;

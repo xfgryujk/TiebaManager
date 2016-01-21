@@ -92,7 +92,7 @@ BOOL CConfirmDlg::OnInitDialog()
 			if (!img->empty())
 			{
 				m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);
-				m_imageViewDlg->Create(IDD_IMAGE_VIEW_DIALOG, this);
+				m_imageViewDlg->Create(m_imageViewDlg->IDD, this);
 				m_imageViewDlg->SetImages(img);
 			}
 			else

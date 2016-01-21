@@ -51,11 +51,8 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 {
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)mainDlg;
 
-	// 初始化日志文档
+	// 初始化
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	CComPtr<IHTMLDocument2> document;
-	dlg->GetLogDocument(document);
-	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 
 	while (!g_confirmQueue.empty() && !g_stopScanFlag)
 	{
@@ -79,18 +76,18 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 					if (op.floor == _T("1"))
 						goto casePost;
 					g_initIgnoredTID.insert(_ttoi64(op.tid));
-					dlg->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-						+ _T("\">") + HTMLEscape(op.title) + _T("</a>"), pDocument);
+					dlg->m_log.Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+						+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
 					break;
 				case TBOBJ_POST:
 				casePost : g_initIgnoredPID.insert(_ttoi64(op.pid));
-					dlg->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼"), pDocument);
+					dlg->m_log.Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼"));
 					break;
 				case TBOBJ_LZL:
 					g_initIgnoredLZLID.insert(_ttoi64(op.pid));
-					dlg->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼回复"), pDocument);
+					dlg->m_log.Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼回复"));
 					break;
 				}
 				continue;
@@ -121,11 +118,8 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 {
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)mainDlg;
 
-	// 初始化日志文档
+	// 初始化
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	CComPtr<IHTMLDocument2> document;
-	dlg->GetLogDocument(document);
-	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 
 	while (!g_operationQueue.empty() && !g_stopScanFlag)
 	{
@@ -159,8 +153,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			}
 			if (op.pid == _T(""))
 			{
-				dlg->Log(_T("<font color=red>封禁 </font>") + op.author + _T("<font color=red> 失败！(获取帖子ID失败)</font>")
-						 , pDocument);
+				dlg->m_log.Log(_T("<font color=red>封禁 </font>") + op.author + _T("<font color=red> 失败！(获取帖子ID失败)</font>"));
 			}
 			else
 			{
@@ -170,13 +163,13 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 					CString content;
 					content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
 								   _T("\"bd:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.pid, op.author);
-					dlg->Log(content, pDocument);
+					dlg->m_log.Log(content);
 				}
 				else
 				{
 					sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
 					g_bannedUser.insert(op.author);
-					dlg->Log(_T("<font color=red>封禁 </font>") + op.author, pDocument);
+					dlg->m_log.Log(_T("<font color=red>封禁 </font>") + op.author);
 				}
 			}
 		}
@@ -190,13 +183,13 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				CString content;
 				content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
 							   _T("\"df:%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.authorID);
-				dlg->Log(content, pDocument);
+				dlg->m_log.Log(content);
 			}
 			else
 			{
 				sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
 				g_defriendedUser.insert(op.author);
-				dlg->Log(_T("<font color=red>拉黑 </font>") + op.author, pDocument);
+				dlg->m_log.Log(_T("<font color=red>拉黑 </font>") + op.author);
 			}
 		}
 
@@ -216,14 +209,14 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				CString content;
 				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a><font color=red> 删除失败！错误代码：%s(%s)</font><a href=")
 							   _T("\"dt:%s\">重试</a>"), op.tid, HTMLEscape(op.title), code, GetTiebaErrorText(code), op.tid);
-				dlg->Log(content, pDocument);
+				dlg->m_log.Log(content);
 			}
 			else
 			{
 				sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
 				g_deletedTID.insert(_ttoi64(op.tid));
-				dlg->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-					+ _T("\">") + HTMLEscape(op.title) + _T("</a>"), pDocument);
+				dlg->m_log.Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+					+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
 				Sleep((DWORD)(g_deleteInterval * 1000));
 			}
 		}
@@ -236,13 +229,13 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼<font color=red> 删除失败！错误代码：%s(%s)</font>")
 							   _T("<a href=\"dp:%s,%s\">重试</a>"), op.tid, HTMLEscape(op.title), op.floor, code, GetTiebaErrorText(code), 
 							   op.tid, op.pid);
-				dlg->Log(content, pDocument);
+				dlg->m_log.Log(content);
 			}
 			else
 			{
 				sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
-				dlg->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-					+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼"), pDocument);
+				dlg->m_log.Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+					+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼"));
 				Sleep((DWORD)(g_deleteInterval * 1000));
 			}
 		}
@@ -255,13 +248,13 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼回复<font color=red> 删除失败！错误代码：")
 							   _T("%s(%s)</font><a href=\"dl:%s,%s\">重试</a>"), op.tid, HTMLEscape(op.title), op.floor, code,
 							   GetTiebaErrorText(code), op.tid, op.pid);
-				dlg->Log(content, pDocument);
+				dlg->m_log.Log(content);
 			}
 			else
 			{
 				sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
-				dlg->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-					+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼回复"), pDocument);
+				dlg->m_log.Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+					+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼回复"));
 				Sleep((DWORD)(g_deleteInterval * 1000));
 			}
 		}

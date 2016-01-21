@@ -119,6 +119,7 @@
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="LockThreadPage.h" />
+    <ClInclude Include="LogHelper.h" />
     <ClInclude Include="MiscHelper.h" />
     <ClInclude Include="TiebaCollect.h" />
     <ClInclude Include="DefriendPage.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="ImageViewDlg.cpp" />
     <ClCompile Include="ListPage.cpp" />
     <ClCompile Include="LockThreadPage.cpp" />
+    <ClCompile Include="LogHelper.cpp" />
     <ClCompile Include="LoopBanPage.cpp" />
     <ClCompile Include="MiscHelper.cpp" />
     <ClCompile Include="NetworkHelper.cpp" />

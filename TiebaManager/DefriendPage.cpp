@@ -94,12 +94,9 @@ void CDefriendPage::OnBnClickedButton2()
 
 UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 {
-	// 初始化日志文档
+	// 初始化
 	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	CComPtr<IHTMLDocument2> document;
-	mainDlg->GetLogDocument(document);
-	CComPtr<IHTMLDocument2>* pDocument = (CComPtr<IHTMLDocument2>*)&(int&)document;
 
 	CString sStartPage, sEndPage;
 	if (m_instance != NULL)
@@ -171,12 +168,12 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 			CString content;
 			content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
 						   _T("\"df:%s\">重试</a>"), userName[i], code, GetTiebaErrorText(code), userID[i]);
-			mainDlg->Log(content, pDocument);
+			mainDlg->m_log.Log(content);
 		}
 		else
 		{
 			g_defriendedUser.insert(userName[i]);
-			mainDlg->Log(_T("<font color=red>拉黑 </font>") + userName[i], pDocument);
+			mainDlg->m_log.Log(_T("<font color=red>拉黑 </font>") + userName[i]);
 		}
 
 		if (i % 20 == 19 && i < userName.size() - 1)

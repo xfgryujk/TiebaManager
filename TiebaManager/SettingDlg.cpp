@@ -98,22 +98,23 @@ BOOL CSettingDlg::OnInitDialog()
 	m_tab.InsertItem(i++, _T("关于&&更新"));
 
 	// 初始化各页
-	m_scanPage.Create(IDD_SCAN_PAGE, &m_tab);
-	m_operatePage.Create(IDD_OPERATE_PAGE, &m_tab);
-	m_keywordsPage.Create(IDD_REG_LIST_PAGE, &m_tab);
-	m_imagePage.Create(IDD_IMAGE_PAGE, &m_tab);
-	m_blackListPage.Create(IDD_REG_LIST_PAGE, &m_tab);
-	m_whiteListPage.Create(IDD_LIST_PAGE, &m_tab);
+#define CREATE_PAGE(page) page.Create(page.IDD, &m_tab)
+	CREATE_PAGE(m_scanPage);
+	CREATE_PAGE(m_operatePage);
+	CREATE_PAGE(m_keywordsPage);
+	CREATE_PAGE(m_imagePage);
+	CREATE_PAGE(m_blackListPage);
+	CREATE_PAGE(m_whiteListPage);
 	m_whiteListPage.m_contentStatic.SetWindowText(_T("用户名："));
 	m_whiteListPage.m_static.SetWindowText(_T("当被测文本等于文本时匹配(无正则)"));
-	m_whiteContentPage.Create(IDD_REG_LIST_PAGE, &m_tab);
-	m_trustedThreadPage.Create(IDD_LIST_PAGE, &m_tab);
+	CREATE_PAGE(m_whiteContentPage);
+	CREATE_PAGE(m_trustedThreadPage);
 	m_trustedThreadPage.m_contentStatic.SetWindowText(_T("主题ID："));
 	m_trustedThreadPage.m_edit.ModifyStyle(NULL, ES_NUMBER);
 	m_trustedThreadPage.m_static.SetWindowText(_T("添加的主题不会扫描，主题ID是网址中\"p/\"后面跟的数字"));
-	m_optionsPage.Create(IDD_OPTIONS_PAGE, &m_tab);
-	m_usersPage.Create(IDD_USERS_PAGE, &m_tab);
-	m_aboutPage.Create(IDD_ABOUT_PAGE, &m_tab);
+	CREATE_PAGE(m_optionsPage);
+	CREATE_PAGE(m_usersPage);
+	CREATE_PAGE(m_aboutPage);
 
 	CRect rect;
 	m_tab.GetClientRect(&rect);
@@ -368,7 +369,7 @@ void CSettingDlg::ApplyOptionsInDlg()
 	if (m_clearScanCache)
 	{
 		if (!g_briefLog)
-			((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->Log(_T("<font color=green>清除历史回复</font>"));
+			((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_log.Log(_T("<font color=green>清除历史回复</font>"));
 		g_reply.clear();
 	}
 }
