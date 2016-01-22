@@ -596,6 +596,7 @@ XMLElement& COption<map<CString, int> >::operator >> (XMLElement& root) const
 	return root;
 }
 
+// ≈‰÷√∂¡–¥ µœ÷ ///////////////////////////////////////////////////////////////////////////
 
 BOOL CUserCache::Load(LPCTSTR path)
 {

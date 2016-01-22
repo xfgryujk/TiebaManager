@@ -214,7 +214,7 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 
 	// ±È¿˙¬•≤„
 	int iLzls = 0;
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)splitedSrc[0], (LPCTSTR)splitedSrc[0] + splitedSrc[0].GetLength(), LZL_FLOOR_REG), end; it != end; it++)
+	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)splitedSrc[0], (LPCTSTR)splitedSrc[0] + splitedSrc[0].GetLength(), LZL_FLOOR_REG), end; it != end; ++it)
 	{
 		// ≤È’“∏√≤„¬•≤„
 		CString pid = (*it)[1].str().c_str(); // ∏√≤„PID

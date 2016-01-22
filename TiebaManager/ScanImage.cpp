@@ -156,7 +156,7 @@ CString GetImageName(const CString& img)
 void GetThreadImage::GetImage(vector<CString>& img)
 {
 	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_preview, (LPCTSTR)m_preview + m_preview.GetLength(), THREAD_IMG_REG), 
-		end; it != end; it++)
+		end; it != end; ++it)
 		img.push_back((*it)[1].str().c_str());
 }
 
@@ -166,7 +166,7 @@ void GetPostImage::GetImage(vector<CString>& img)
 	if (m_portrait != _T(""))
 		img.push_back(_T("http://tb.himg.baidu.com/sys/portrait/item/") + m_portrait);
 	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_content, (LPCTSTR)m_content + m_content.GetLength(), POST_IMG_REG), 
-		end; it != end; it++)
+		end; it != end; ++it)
 		img.push_back((*it)[2].str().c_str());
 }
 

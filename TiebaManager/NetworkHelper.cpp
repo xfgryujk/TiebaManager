@@ -341,7 +341,7 @@ unique_ptr<CWinHttpBase> CWinHttpBase::Create()
 static void ReceiveCookie(LPCTSTR headers, CString& cookie)
 {
 	static const wregex cookieExp(_T("Set-Cookie: (.*?)=(.*?);"));
-	for (regex_iterator<LPCTSTR> it(headers, headers + _tcslen(headers), cookieExp), end; it != end; it++)
+	for (regex_iterator<LPCTSTR> it(headers, headers + _tcslen(headers), cookieExp), end; it != end; ++it)
 	{
 		CString name = (*it)[1].str().c_str();
 		CString value = (*it)[2].str().c_str();
