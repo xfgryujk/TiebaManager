@@ -100,13 +100,13 @@ class COption : public COptionBase
 public:
 	const T m_default;
 	T m_value;
-	typedef BOOL (*IsValidFunc)(T& value);
+	typedef BOOL (*IsValidFunc)(const T& value);
 	const IsValidFunc IsValid;
 	
-	COption(LPCSTR name, IsValidFunc _isValid = [](T&){ return TRUE; }) 
+	COption(LPCSTR name, IsValidFunc _isValid = [](const T&){ return TRUE; })
 		: COptionBase(name), m_default(), IsValid(_isValid)
 	{}
-	COption(LPCSTR name, const T& _default, IsValidFunc _isValid = [](T&){ return TRUE; }) 
+	COption(LPCSTR name, const T& _default, IsValidFunc _isValid = [](const T&){ return TRUE; })
 		: COptionBase(name), m_default(_default), IsValid(_isValid)
 	{}
 

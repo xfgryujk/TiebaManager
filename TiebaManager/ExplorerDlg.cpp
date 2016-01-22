@@ -242,7 +242,7 @@ void CExplorerDlg::OnBnClickedButton3()
 }
 
 // 打开浏览图片对话框
-void CExplorerDlg::ViewImages(vector<CString>* img)
+void CExplorerDlg::ViewImages(unique_ptr<vector<CString> > img)
 {
 	if (m_imageViewDlg == NULL)
 	{

@@ -7,6 +7,7 @@
 #include "Setting.h"
 #include "SettingDlg.h"
 #include "TiebaManagerDlg.h"
+#include "MiscHelper.h"
 
 
 // CUsersPage 对话框
@@ -70,10 +71,7 @@ void CUsersPage::OnBnClickedButton1()
 	if (loginDlg.DoModal() != IDOK)
 		return;
 	// 创建目录
-	if (!PathFileExists(USERS_PATH))
-		CreateDirectory(USERS_PATH, NULL);
-	if (!PathFileExists(USERS_PATH + loginDlg.m_userName))
-		CreateDirectory(USERS_PATH + loginDlg.m_userName, NULL);
+	CreateDir(USERS_PATH + loginDlg.m_userName);
 	// 保存Cookie
 	gzFile f = gzopen_w(USERS_PATH + loginDlg.m_userName + _T("\\ck.tb"), "wb");
 	if (f != NULL)

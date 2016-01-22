@@ -63,8 +63,10 @@
 #include <set>
 #include <map>
 #include <regex>
+#include <memory>
 using std::vector;
 using std::queue;
 using std::set;
 using std::map;
 using std::wregex;
+using std::unique_ptr;

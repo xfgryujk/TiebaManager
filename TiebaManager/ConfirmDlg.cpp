@@ -84,7 +84,7 @@ BOOL CConfirmDlg::OnInitDialog()
 
 		if (m_operation->object != TBOBJ_LZL)
 		{
-			vector<CString>* img = new vector<CString>();
+			unique_ptr<vector<CString> > img(new vector<CString>());
 			if (m_operation->object == TBOBJ_THREAD)
 				GetThreadImage(m_operation->msg).GetImage(*img);
 			else //if (m_operation->object == TBOBJ_POST)
@@ -95,8 +95,6 @@ BOOL CConfirmDlg::OnInitDialog()
 				m_imageViewDlg->Create(m_imageViewDlg->IDD, this);
 				m_imageViewDlg->SetImages(img);
 			}
-			else
-				delete img;
 		}
 	}
 	MessageBeep(MB_ICONQUESTION);

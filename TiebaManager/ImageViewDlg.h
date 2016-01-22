@@ -30,7 +30,7 @@ public:
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButton3();
 
-	void SetImages(vector<CString>* imageURL);
+	void SetImages(unique_ptr<vector<CString> >& imageURL);
 	void SetCurImage(int index);
 
 
@@ -43,7 +43,7 @@ public:
 protected:
 	CImageViewDlg** m_pThis;
 
-	vector<CString>* m_imageURL;
+	unique_ptr<vector<CString> > m_imageURL;
 	int m_curImageIndex;
 	CImage m_curImage;
 };

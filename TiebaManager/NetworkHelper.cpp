@@ -5,8 +5,7 @@ using std::regex_iterator;
 #include "StringHelper.h"
 #include "MiscHelper.h"
 #include "msxml2.h" // C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\MsXml2.h
-//#import <winhttp.dll> no_namespace
-#import <winhttpcom.dll> no_namespace
+#import <winhttpcom.dll> no_namespace //#import <winhttp.dll> no_namespace
 
 
 class CWinHttpBase
@@ -40,9 +39,9 @@ public:
 	virtual HRESULT GetStatus(long* status) = 0;
 	virtual HRESULT GetResponseLocation(CString& location) = 0;
 	virtual HRESULT GetResponseText(CString& body) = 0;
-	virtual HRESULT GetResponseBody(BYTE** buffer, DWORD* size) = 0;
+	virtual HRESULT GetResponseBody(unique_ptr<BYTE[]>* buffer, DWORD* size) = 0;
 
-	static CWinHttpBase* Create();
+	static unique_ptr<CWinHttpBase> Create();
 };
 
 template<class Class>
@@ -120,7 +119,7 @@ public:
 		return res;
 	}
 
-	HRESULT GetResponseBody(BYTE** buffer, DWORD* size)
+	HRESULT GetResponseBody(unique_ptr<BYTE[]>* buffer, DWORD* size)
 	{
 		if (buffer != NULL)
 			*buffer = NULL;
@@ -136,8 +135,8 @@ public:
 			if (SUCCEEDED(SafeArrayAccessData(body.parray, (void**)&p)))
 			{
 				*size = body.parray->rgsabound[0].cElements;
-				*buffer = new BYTE[*size];
-				memcpy(*buffer, p, *size);
+				buffer->reset(new BYTE[*size]);
+				memcpy(buffer->get(), p, *size);
 				SafeArrayUnaccessData(body.parray);
 			}
 		}
@@ -287,7 +286,7 @@ public:
 		return res;
 	}
 
-	HRESULT GetResponseBody(BYTE** buffer, DWORD* size)
+	HRESULT GetResponseBody(unique_ptr<BYTE[]>* buffer, DWORD* size)
 	{
 		if (buffer != NULL)
 			*buffer = NULL;
@@ -303,8 +302,8 @@ public:
 			if (SUCCEEDED(SafeArrayAccessData(body.parray, (void**)&p)))
 			{
 				*size = body.parray->rgsabound[0].cElements;
-				*buffer = new BYTE[*size];
-				memcpy(*buffer, p, *size);
+				buffer->reset(new BYTE[*size]);
+				memcpy(buffer->get(), p, *size);
 				SafeArrayUnaccessData(body.parray);
 			}
 		}
@@ -313,31 +312,28 @@ public:
 	}
 };
 
-CWinHttpBase* CWinHttpBase::Create()
+unique_ptr<CWinHttpBase> CWinHttpBase::Create()
 {
-	CWinHttpBase* res;
+	unique_ptr<CWinHttpBase> res;
 
-	res = new CServerXMLHTTPRequest<ServerXMLHTTP60>(_T("CoCreateInstance(ServerXMLHTTP60)"));
+	res.reset(new CServerXMLHTTPRequest<ServerXMLHTTP60>(_T("CoCreateInstance(ServerXMLHTTP60)")));
 	if (!res->IsEmpty())
 		return res;
-	delete res;
 
-	res = new CServerXMLHTTPRequest<ServerXMLHTTP40>(_T("CoCreateInstance(ServerXMLHTTP40)"));
+	res.reset(new CServerXMLHTTPRequest<ServerXMLHTTP40>(_T("CoCreateInstance(ServerXMLHTTP40)")));
 	if (!res->IsEmpty())
 		return res;
-	delete res;
 
-	res = new CServerXMLHTTPRequest<ServerXMLHTTP30>(_T("CoCreateInstance(ServerXMLHTTP30)"));
+	res.reset(new CServerXMLHTTPRequest<ServerXMLHTTP30>(_T("CoCreateInstance(ServerXMLHTTP30)")));
 	if (!res->IsEmpty())
 		return res;
-	delete res;
 
-	res = new CServerXMLHTTPRequest<ServerXMLHTTP>(_T("CoCreateInstance(ServerXMLHTTP)"));
+	res.reset(new CServerXMLHTTPRequest<ServerXMLHTTP>(_T("CoCreateInstance(ServerXMLHTTP)")));
 	if (!res->IsEmpty())
 		return res;
-	delete res;
 
-	return new CWinHttpRequest();
+	res.reset(new CWinHttpRequest());
+	return res;
 }
 
 
@@ -422,7 +418,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 // HTTP GET请求
 CString HTTPGet(LPCTSTR URL, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
 {
-	CWinHttpBase* xml = CWinHttpBase::Create();
+	unique_ptr<CWinHttpBase> xml(CWinHttpBase::Create());
 	HTTPRequestResult ret = HTTPRequestBase(FALSE, *xml, URL, NULL, useCookie, stopFlag, cookie);
 	if (ret != NET_SUCCESS)
 	{
@@ -439,20 +435,18 @@ CString HTTPGet(LPCTSTR URL, BOOL useCookie, volatile BOOL* stopFlag, CString* c
 			result = NET_TIMEOUT_TEXT;
 			break;
 		}
-		delete xml;
 		return result;
 	}
 
 	CString result;
 	xml->GetResponseText(result);
-	delete xml;
 	return result;
 }
 
 // HTTP POST请求
 CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
 {
-	CWinHttpBase* xml = CWinHttpBase::Create();
+	unique_ptr<CWinHttpBase> xml(CWinHttpBase::Create());
 	HTTPRequestResult ret = HTTPRequestBase(TRUE, *xml, URL, data, useCookie, stopFlag, cookie);
 	if (ret != NET_SUCCESS)
 	{
@@ -469,29 +463,23 @@ CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopF
 			result = NET_TIMEOUT_TEXT;
 			break;
 		}
-		delete xml;
 		return result;
 	}
 
 	CString result;
 	xml->GetResponseText(result);
-	delete xml;
 	return result;
 }
 
-// HTTP GET请求，取得原始数据，注意自行delete buffer!!!
-HTTPRequestResult HTTPGetRaw(LPCTSTR URL, BYTE** buffer, ULONG* size, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
+// HTTP GET请求，取得原始数据
+HTTPRequestResult HTTPGetRaw(LPCTSTR URL, unique_ptr<BYTE[]>* buffer, ULONG* size, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
 {
-	CWinHttpBase* xml = CWinHttpBase::Create();
+	unique_ptr<CWinHttpBase> xml(CWinHttpBase::Create());
 	HTTPRequestResult ret = HTTPRequestBase(FALSE, *xml, URL, NULL, useCookie, stopFlag, cookie);
 	if (ret != NET_SUCCESS)
-	{
-		delete xml;
 		return ret;
-	}
 
 	// 返回
 	xml->GetResponseBody(buffer, size);
-	delete xml;
 	return NET_SUCCESS;
 }

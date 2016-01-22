@@ -4,6 +4,7 @@
 #include <opencv2\imgproc\imgproc.hpp>
 #include <opencv2\imgcodecs.hpp>
 #include "NetworkHelper.h"
+#include "MiscHelper.h"
 
 
 set<CString> g_leagalImage; // 已检查不违规的图片
@@ -287,18 +288,16 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 		else
 		{
 			// 下载图片
-			BYTE* buffer;
+			unique_ptr<BYTE[]> buffer;
 			ULONG size;
 			if (HTTPGetRaw(img, &buffer, &size) == NET_SUCCESS)
 			{
-				ReadImage(buffer, size, image);
+				ReadImage(buffer.get(), size, image);
 
-				if (!PathFileExists(IMG_CACHE_PATH))
-					CreateDirectory(IMG_CACHE_PATH, NULL);
+				CreateDir(IMG_CACHE_PATH);
 				CFile file;
 				if (file.Open(IMG_CACHE_PATH + imgName, CFile::modeCreate | CFile::modeWrite))
-				file.Write(buffer, size);
-				delete buffer;
+					file.Write(buffer.get(), size);
 			}
 		}
 

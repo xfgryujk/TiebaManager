@@ -36,7 +36,7 @@ public:
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButton3();
 
-	void ViewImages(vector<CString>* img);
+	void ViewImages(unique_ptr<vector<CString> > img);
 
 
 public:

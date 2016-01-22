@@ -79,7 +79,7 @@ void CLoginDlg::OnStnClickedStatic4()
 	m_verifyStr = GetStringBetween(src, _T("\"verifyStr\" : \""), _T("\""));
 	
 	// œ¬‘ÿÕº∆¨
-	BYTE* buffer;
+	unique_ptr<BYTE[]> buffer;
 	ULONG size;
 	HTTPGetRaw(_T("https://passport.baidu.com/cgi-bin/genimage?") + m_verifyStr, &buffer, &size, TRUE, NULL, &m_cookie);
 	if (buffer == NULL)
@@ -88,8 +88,7 @@ void CLoginDlg::OnStnClickedStatic4()
 		return;
 	}
 
-	ReadImage(buffer, size, m_verifyImage);
-	delete buffer;
+	ReadImage(buffer.get(), size, m_verifyImage);
 
 	// œ‘ æÕº∆¨
 	m_verifyCodePicture.Invalidate();

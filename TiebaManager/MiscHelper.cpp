@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MiscHelper.h"
 #include <Dbghelp.h>
+#include <direct.h>
 
 // 不阻塞消息的延迟
 void Delay(DWORD time)
@@ -39,4 +40,10 @@ LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 	}
 	AfxMessageBox(_T("程序崩溃了，请把exception.dmp文件发到xfgryujk@126.com帮助调试"), MB_ICONERROR);
 	return EXCEPTION_CONTINUE_SEARCH;
+}
+
+// 创建目录
+void CreateDir(const CString& path)
+{
+	_mkdir(CStringA(path));
 }

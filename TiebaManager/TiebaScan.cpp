@@ -172,12 +172,12 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			g_threadIndex = 0;
 			// 创建线程扫描帖子
 			int threadCount = g_threadCount; // g_threadCount会变
-			CWinThread** threadObjects = new CWinThread*[threadCount];
-			HANDLE* threadHandles = new HANDLE[threadCount];
+			unique_ptr<unique_ptr<CWinThread>[]> threadObjects(new unique_ptr<CWinThread>[threadCount]);
+			HANDLE* threadHandles(new HANDLE[threadCount]);
 			for (int i = 0; i < threadCount; i++)
 			{
 				dlg->m_stateList.AddString(_T("准备中"));
-				threadObjects[i] = AfxBeginThread(ScanPostThread, (LPVOID)i, 0, 0, CREATE_SUSPENDED);
+				threadObjects[i].reset(AfxBeginThread(ScanPostThread, (LPVOID)i, 0, 0, CREATE_SUSPENDED));
 				threadObjects[i]->m_bAutoDelete = FALSE;
 				threadHandles[i] = threadObjects[i]->m_hThread;
 				threadObjects[i]->ResumeThread();
@@ -187,14 +187,8 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 				ScanThreadImage(msg, dlg);
 			WaitForMultipleObjects(threadCount, threadHandles, TRUE, INFINITE);
 
-			// 释放线程
-			for (int i = 0; i < threadCount; i++)
-			{
-				//CloseHandle(threadHandles[i]); // 下面这句自动释放？，加上会异常
-				delete threadObjects[i];
-			}
+			// 释放
 			delete threadHandles;
-			delete threadObjects;
 			dlg->m_stateList.ResetContent();
 		}
 

@@ -100,9 +100,9 @@ void CExploreThreadPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 		CExplorerDlg* explorerDlg = (CExplorerDlg*)GetParent()->GetParent();
 		explorerDlg->m_edit.SetWindowText(m_threads[pNMLV->iItem].title + _T("\r\n") 
 			+ m_threads[pNMLV->iItem].preview + _T("\r\n\r\n") + m_threads[pNMLV->iItem].author);
-		vector<CString>* img = new vector<CString>();
+		unique_ptr<vector<CString> > img(new vector<CString>());
 		GetThreadImage(m_threads[pNMLV->iItem]).GetImage(*img);
-		explorerDlg->ViewImages(img);
+		explorerDlg->ViewImages(std::move(img));
 	}
 
 	*pResult = 0;

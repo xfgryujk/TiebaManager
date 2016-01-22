@@ -5,6 +5,7 @@ using namespace tinyxml2;
 #include "TiebaManagerDlg.h"
 #include "TiebaVariable.h"
 #include "ScanImage.h"
+#include "MiscHelper.h"
 
 
 // 配置文件路径
@@ -288,10 +289,7 @@ static inline void WriteTextSet(const gzFile& f, const set<CString>& TextSet)
 void SaveCurrentUserProfile()
 {
 	// 创建目录
-	if (!PathFileExists(USERS_PATH))
-		CreateDirectory(USERS_PATH, NULL);
-	if (!PathFileExists(USERS_PATH + g_currentUser))
-		CreateDirectory(USERS_PATH + g_currentUser, NULL);
+	CreateDir(USERS_PATH + g_currentUser);
 
 	// 保存Cookie
 	gzFile f = gzopen_w(COOKIE_PATH, "wb");

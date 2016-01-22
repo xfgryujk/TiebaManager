@@ -5,6 +5,7 @@
 #include "ImageViewDlg.h"
 #include "ScanImage.h"
 #include "NetworkHelper.h"
+#include "MiscHelper.h"
 
 
 // CImageViewDlg ∂‘ª∞øÚ
@@ -23,8 +24,6 @@ CImageViewDlg::CImageViewDlg(CImageViewDlg** pThis, CWnd* pParent /*=NULL*/)
 #pragma region MFC
 CImageViewDlg::~CImageViewDlg()
 {
-	if (m_imageURL != NULL)
-		delete m_imageURL;
 }
 
 void CImageViewDlg::DoDataExchange(CDataExchange* pDX)
@@ -96,11 +95,9 @@ BOOL CImageViewDlg::OnInitDialog()
 }
 
 // …Ë÷√Õº∆¨
-void CImageViewDlg::SetImages(vector<CString>* imageURL)
+void CImageViewDlg::SetImages(unique_ptr<vector<CString> >& imageURL)
 {
-	if (m_imageURL != NULL)
-		delete m_imageURL;
-	m_imageURL = imageURL;
+	m_imageURL = std::move(imageURL);
 	SetCurImage(0);
 }
 
@@ -128,18 +125,16 @@ void CImageViewDlg::SetCurImage(int index)
 	else
 	{
 		// œ¬‘ÿÕº∆¨
-		BYTE* buffer;
+		unique_ptr<BYTE[]> buffer;
 		ULONG size;
 		if (HTTPGetRaw((*m_imageURL)[m_curImageIndex], &buffer, &size) == NET_SUCCESS)
 		{
-			ReadImage(buffer, size, m_curImage);
+			ReadImage(buffer.get(), size, m_curImage);
 
-			if (!PathFileExists(IMG_CACHE_PATH))
-				CreateDirectory(IMG_CACHE_PATH, NULL);
+			CreateDir(IMG_CACHE_PATH);
 			CFile file;
 			if (file.Open(IMG_CACHE_PATH + imgName, CFile::modeCreate | CFile::modeWrite))
-				file.Write(buffer, size);
-			delete buffer;
+				file.Write(buffer.get(), size);
 		}
 	}
 

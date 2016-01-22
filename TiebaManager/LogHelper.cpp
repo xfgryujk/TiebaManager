@@ -138,8 +138,7 @@ void CLog::Save(LPCTSTR folder)
 	stream->Release();*/
 
 	// ±£´æ
-	if (!PathFileExists(folder))
-		CreateDirectory(folder, NULL);
+	CreateDir(folder);
 	CString path;
 	path.Format(_T("%s\\%d-%02d-%02d %02d£º%02d£º%02d.html"), folder, m_logStartTime.wYear, m_logStartTime.wMonth,
 		m_logStartTime.wDay, m_logStartTime.wHour, m_logStartTime.wMinute, m_logStartTime.wSecond);

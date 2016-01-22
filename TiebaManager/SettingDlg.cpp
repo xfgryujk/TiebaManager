@@ -23,6 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Setting.h"
 #include "TiebaVariable.h"
 #include "ScanImage.h"
+#include "MiscHelper.h"
 
 
 // CSettingDlg ¶Ô»°¿ò
@@ -630,8 +631,7 @@ void CSettingDlg::OnOK()
 	CString tmp;
 	m_optionsPage.m_currentOptionStatic.GetWindowText(tmp);
 	g_currentOption = tmp.Right(tmp.GetLength() - 5);
-	if (!PathFileExists(OPTIONS_PATH))
-		CreateDirectory(OPTIONS_PATH, NULL);
+	CreateDir(OPTIONS_PATH);
 	SaveOptionsInDlg(OPTIONS_PATH + g_currentOption + _T(".tb"));
 	ApplyOptionsInDlg();
 	WritePrivateProfileString(_T("Setting"), _T("Option"), g_currentOption, USER_PROFILE_PATH);

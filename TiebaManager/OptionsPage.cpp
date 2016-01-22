@@ -5,6 +5,7 @@
 #include "OptionsPage.h"
 #include "Setting.h"
 #include "SettingDlg.h"
+#include "MiscHelper.h"
 
 
 // COptionsPage 对话框
@@ -84,8 +85,8 @@ void COptionsPage::OnBnClickedButton1()
 		AfxMessageBox(_T("方案名不能为空！"), MB_ICONERROR);
 		return;
 	}
-	if (!PathFileExists(OPTIONS_PATH))
-		CreateDirectory(OPTIONS_PATH, NULL);
+	
+	CreateDir(OPTIONS_PATH);
 	if (PathFileExists(OPTIONS_PATH + name + _T(".tb")))
 	{
 		AfxMessageBox(_T("方案已存在！"), MB_ICONERROR);
@@ -174,8 +175,7 @@ void COptionsPage::OnBnClickedButton4()
 		AfxMessageBox(_T("请选择一个方案！"), MB_ICONERROR);
 		return;
 	}
-	if (!PathFileExists(OPTIONS_PATH))
-		CreateDirectory(OPTIONS_PATH, NULL);
+	CreateDir(OPTIONS_PATH);
 	CString name;
 	m_list.GetText(index, name);
 	((CSettingDlg*)GetParent()->GetParent())->SaveOptionsInDlg(OPTIONS_PATH + name + _T(".tb"));
