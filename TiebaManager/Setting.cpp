@@ -600,91 +600,45 @@ XMLElement& COption<map<CString, int> >::operator >> (XMLElement& root) const
 
 // 配置读写实现 ///////////////////////////////////////////////////////////////////////////
 
-BOOL CUserCache::LoadOld(const CString& path)
-{
-	gzFile f = gzopen_w(path, "rb");
-	if (f != NULL)
-	{
-		int size;
-		// 历史回复
-		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
-		{
-			__int64 tid;
-			int reply;
-			for (int i = 0; i < size; i++)
-			{
-				gzread(f, &tid, sizeof(__int64));
-				gzread(f, &reply, sizeof(int));
-				g_userCache.m_reply.m_value[tid] = reply;
-			}
-		}
-		// 忽略ID
-		ReadIDSet(f, g_userCache.m_initIgnoredTID);
-		g_userCache.m_ignoredTID = g_userCache.m_initIgnoredTID;
-		ReadIDSet(f, g_userCache.m_initIgnoredPID);
-		g_userCache.m_ignoredPID = g_userCache.m_initIgnoredPID;
-		ReadIDSet(f, g_userCache.m_initIgnoredLZLID);
-		g_userCache.m_ignoredLZLID = g_userCache.m_initIgnoredLZLID;
-		// 违规次数
-		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
-		{
-			CString userName;
-			int count;
-			for (int i = 0; i < size; i++)
-			{
-				ReadText(f, userName);
-				gzread(f, &count, sizeof(int));
-				g_userCache.m_userTrigCount.m_value[userName] = count;
-			}
-		}
-		// 拉黑用户
-		ReadTextSet(f, g_userCache.m_defriendedUser);
-		gzclose(f);
-	}
-	return TRUE;
-}
-
-BOOL CUserCache::Load(const CString& path)
+BOOL CConfigBase::Load(const CString& path)
 {
 	FILE* f = NULL;
 	if (_tfopen_s(&f, path, _T("rb")) != 0)
 	{
 		CString oldPath = path.Left(path.GetLength() - 3) + _T("tb");
-		LoadOld(oldPath);
+		BOOL res = LoadOld(oldPath);
 		Save(path);
 		DeleteFile(oldPath);
-		return TRUE;
+		if (res)
+			OnChange();
+		else
+			UseDefault();
+		return res;
 	}
 
 	tinyxml2::XMLDocument doc;
 	if (doc.LoadFile(f) != XML_NO_ERROR)
 	{
 		fclose(f);
+		UseDefault();
 		return FALSE;
 	}
 	fclose(f);
 
-	XMLElement* root = doc.FirstChildElement("Cache");
+	XMLElement* root = doc.FirstChildElement(m_name);
 	if (root == NULL)
+	{
+		UseDefault();
 		return FALSE;
+	}
 
-	m_initIgnoredTID << *root;
-	m_initIgnoredPID << *root;
-	m_initIgnoredLZLID << *root;
-	m_reply << *root;
-	m_userTrigCount << *root;
-	m_bannedUser << *root;
-	m_defriendedUser << *root;
-
-	m_ignoredTID = m_initIgnoredTID;
-	m_ignoredPID = m_initIgnoredPID;
-	m_ignoredLZLID = m_initIgnoredLZLID;
-	//m_deletedTID.clear();
-
+	for (COptionBase* i : m_options)
+		*i << *root;
+	OnChange();
 	return TRUE;
 }
 
-BOOL CUserCache::Save(const CString& path) const
+BOOL CConfigBase::Save(const CString& path) const
 {
 	FILE* f = NULL;
 	if (_tfopen_s(&f, path, _T("wb")) != 0)
@@ -692,18 +646,64 @@ BOOL CUserCache::Save(const CString& path) const
 
 	tinyxml2::XMLDocument doc;
 	doc.LinkEndChild(doc.NewDeclaration("xml version=\"1.0\" encoding=\"GBK\""));
-	tinyxml2::XMLElement* root = doc.NewElement("Cache");
+	tinyxml2::XMLElement* root = doc.NewElement(m_name);
 	doc.LinkEndChild(root);
 
-	m_initIgnoredTID >> *root;
-	m_initIgnoredPID >> *root;
-	m_initIgnoredLZLID >> *root;
-	m_reply >> *root;
-	m_userTrigCount >> *root;
-	m_bannedUser >> *root;
-	m_defriendedUser >> *root;
+	for (const COptionBase* i : m_options)
+		*i >> *root;
 
 	BOOL res = doc.SaveFile(f) == XML_NO_ERROR;
 	fclose(f);
 	return res;
+}
+
+void CConfigBase::UseDefault()
+{
+	for (COptionBase* i : m_options)
+		i->UseDefault();
+	OnChange();
+}
+
+BOOL CUserCache::LoadOld(const CString& path)
+{
+	gzFile f = gzopen_w(path, "rb");
+	if (f == NULL)
+		return FALSE;
+
+	int size;
+	// 历史回复
+	if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
+	{
+		__int64 tid;
+		int reply;
+		for (int i = 0; i < size; i++)
+		{
+			gzread(f, &tid, sizeof(__int64));
+			gzread(f, &reply, sizeof(int));
+			g_userCache.m_reply.m_value[tid] = reply;
+		}
+	}
+	// 忽略ID
+	ReadIDSet(f, g_userCache.m_initIgnoredTID);
+	g_userCache.m_ignoredTID = g_userCache.m_initIgnoredTID;
+	ReadIDSet(f, g_userCache.m_initIgnoredPID);
+	g_userCache.m_ignoredPID = g_userCache.m_initIgnoredPID;
+	ReadIDSet(f, g_userCache.m_initIgnoredLZLID);
+	g_userCache.m_ignoredLZLID = g_userCache.m_initIgnoredLZLID;
+	// 违规次数
+	if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
+	{
+		CString userName;
+		int count;
+		for (int i = 0; i < size; i++)
+		{
+			ReadText(f, userName);
+			gzread(f, &count, sizeof(int));
+			g_userCache.m_userTrigCount.m_value[userName] = count;
+		}
+	}
+	// 拉黑用户
+	ReadTextSet(f, g_userCache.m_defriendedUser);
+	gzclose(f);
+	return TRUE;
 }

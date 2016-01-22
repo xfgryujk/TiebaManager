@@ -90,6 +90,7 @@ public:
 	COptionBase(LPCSTR name) : m_name(name) {}
 	virtual ~COptionBase() {}
 
+	virtual void UseDefault() = 0;
 	virtual tinyxml2::XMLElement& operator << (tinyxml2::XMLElement& root) = 0;
 	virtual tinyxml2::XMLElement& operator >> (tinyxml2::XMLElement& root) const = 0;
 };
@@ -120,4 +121,22 @@ public:
 
 	tinyxml2::XMLElement& operator << (tinyxml2::XMLElement& root);
 	tinyxml2::XMLElement& operator >> (tinyxml2::XMLElement& root) const;
+};
+
+class CConfigBase
+{
+protected:
+	vector<COptionBase*> m_options;
+
+public:
+	const LPCSTR m_name;
+
+	CConfigBase(LPCSTR name) : m_name(name) {}
+	virtual ~CConfigBase() {}
+
+	virtual BOOL LoadOld(const CString& path) = 0; // 万恶的历史遗留问题
+	BOOL Load(const CString& path);
+	BOOL Save(const CString& path) const;
+	void UseDefault();
+	virtual void OnChange() {}
 };
