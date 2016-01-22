@@ -207,7 +207,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	// 每24小时清除已封名单、开始循环封
 	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
 		{
-			g_bannedUser.clear();
+			g_userCache.m_bannedUser->clear();
 			AfxBeginThread(LoopBanThread, (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd);
 		});
 

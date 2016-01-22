@@ -172,7 +172,7 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 		}
 		else
 		{
-			g_defriendedUser.insert(userName[i]);
+			g_userCache.m_defriendedUser->insert(userName[i]);
 			mainDlg->m_log.Log(_T("<font color=red>À­ºÚ </font>") + userName[i]);
 		}
 

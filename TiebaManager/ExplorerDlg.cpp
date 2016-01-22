@@ -5,8 +5,8 @@
 #include "ImageViewDlg.h"
 #include "ExplorerDlg.h"
 #include "TiebaManagerDlg.h"
+#include "TiebaVariable.h"
 #include "TiebaCollect.h"
-extern set<__int64> g_deletedTID; // 已删的主题ID
 #include "TiebaOperate.h"
 #include <Mmsystem.h>
 
@@ -159,7 +159,7 @@ void CExplorerDlg::OnBnClickedButton1()
 		ThreadInfo& thread = m_exploreThreadPage.m_threads[index];
 		code = DeleteThread(thread.tid);
 		if (code == _T("0"))
-			g_deletedTID.insert(_ttoi64(thread.tid));
+			g_userCache.m_deletedTID.insert(_ttoi64(thread.tid));
 	}
 	else if (tabIndex == 1) // 帖子
 		code = DeletePost(m_explorePostPage.m_tid, m_explorePostPage.m_posts[index].pid);

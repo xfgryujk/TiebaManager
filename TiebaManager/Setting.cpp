@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Setting.h"
+#include <tinyxml2.h>
+using namespace tinyxml2;
 #include "TiebaManagerDlg.h"
 #include "TiebaVariable.h"
 #include "ScanImage.h"
@@ -300,32 +302,7 @@ void SaveCurrentUserProfile()
 	}
 
 	// 保存历史回复、忽略ID等
-	f = gzopen_w(CACHE_PATH, "wb");
-	if (f != NULL)
-	{
-		int len;
-		// 历史回复
-		gzwrite(f, &(len = g_reply.size()), sizeof(int)); // 长度
-		for (auto& i : g_reply)
-		{
-			gzwrite(f, &i.first, sizeof(__int64)); // 主题ID
-			gzwrite(f, &i.second, sizeof(int)); // 回复数
-		}
-		// 忽略ID
-		WriteIDSet(f, g_initIgnoredTID);
-		WriteIDSet(f, g_initIgnoredPID);
-		WriteIDSet(f, g_initIgnoredLZLID);
-		// 违规次数
-		gzwrite(f, &(len = g_userTrigCount.size()), sizeof(int)); // 长度
-		for (auto& i : g_userTrigCount)
-		{
-			WriteText(f, i.first); // 用户名
-			gzwrite(f, &i.second, sizeof(int)); // 违规次数
-		}
-		// 拉黑用户
-		WriteTextSet(f, g_defriendedUser);
-		gzclose(f);
-	}
+	g_userCache.Save(CACHE_PATH);
 }
 
 // 设置当前账号
@@ -360,43 +337,322 @@ void SetCurrentUser(LPCTSTR userName)
 	}
 
 	// 历史回复、忽略ID等
-	f = gzopen_w(CACHE_PATH, "rb");
-	if (f != NULL)
+	g_userCache.Load(CACHE_PATH);
+}
+
+// COption实现 ///////////////////////////////////////////////////////////////////////////
+
+// 读基本类型
+
+XMLElement& COption<int>::operator << (XMLElement& root)
+{
+	XMLElement* optionNode = root.FirstChildElement(m_name);
+	if (optionNode == NULL)
 	{
-		int size;
-		// 历史回复
-		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
-		{
-			__int64 tid;
-			int reply;
-			for (int i = 0; i < size; i++)
-			{
-				gzread(f, &tid, sizeof(__int64));
-				gzread(f, &reply, sizeof(int));
-				g_reply[tid] = reply;
-			}
-		}
-		// 忽略ID
-		ReadIDSet(f, g_initIgnoredTID);
-		g_ignoredTID = g_initIgnoredTID;
-		ReadIDSet(f, g_initIgnoredPID);
-		g_ignoredPID = g_initIgnoredPID;
-		ReadIDSet(f, g_initIgnoredLZLID);
-		g_ignoredLZLID = g_initIgnoredLZLID;
-		// 违规次数
-		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
-		{
-			CString userName;
-			int count;
-			for (int i = 0; i < size; i++)
-			{
-				ReadText(f, userName);
-				gzread(f, &count, sizeof(int));
-				g_userTrigCount[userName] = count;
-			}
-		}
-		// 拉黑用户
-		ReadTextSet(f, g_defriendedUser);
-		gzclose(f);
+		UseDefault();
+		return root;
 	}
+
+	LPCSTR value = optionNode->FirstChild()->ToText()->Value();
+	m_value = atoi(value);
+	if (!IsValid(m_value))
+		UseDefault();
+	return root;
+}
+
+XMLElement& COption<__int64>::operator << (XMLElement& root)
+{
+	XMLElement* optionNode = root.FirstChildElement(m_name);
+	if (optionNode == NULL)
+	{
+		UseDefault();
+		return root;
+	}
+
+	LPCSTR value = optionNode->FirstChild()->ToText()->Value();
+	m_value = _atoi64(value);
+	if (!IsValid(m_value))
+		UseDefault();
+	return root;
+}
+
+XMLElement& COption<CString>::operator << (XMLElement& root)
+{
+	XMLElement* optionNode = root.FirstChildElement(m_name);
+	if (optionNode == NULL)
+	{
+		UseDefault();
+		return root;
+	}
+
+	LPCSTR value = optionNode->FirstChild()->ToText()->Value();
+	m_value = value;
+	if (!IsValid(m_value))
+		UseDefault();
+	return root;
+}
+
+// 读set
+
+XMLElement& COption<set<__int64> >::operator << (XMLElement& root)
+{
+	XMLElement* optionNode = root.FirstChildElement(m_name);
+	if (optionNode == NULL)
+	{
+		UseDefault();
+		return root;
+	}
+
+	m_value.clear();
+	COption<__int64> value("value");
+	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
+	{
+		value << *item;
+		m_value.insert(value);
+	}
+	if (!IsValid(m_value))
+		UseDefault();
+	return root;
+}
+
+XMLElement& COption<set<CString> >::operator << (XMLElement& root)
+{
+	XMLElement* optionNode = root.FirstChildElement(m_name);
+	if (optionNode == NULL)
+	{
+		UseDefault();
+		return root;
+	}
+
+	m_value.clear();
+	COption<CString> value("value");
+	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
+	{
+		value << *item;
+		m_value.insert(value);
+	}
+	if (!IsValid(m_value))
+		UseDefault();
+	return root;
+}
+
+// 读map
+
+XMLElement& COption<map<__int64, int> >::operator << (XMLElement& root)
+{
+	XMLElement* optionNode = root.FirstChildElement(m_name);
+	if (optionNode == NULL)
+	{
+		UseDefault();
+		return root;
+	}
+
+	m_value.clear();
+	COption<__int64> key("key");
+	COption<int> value("value");
+	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
+	{
+		key << *item;
+		value << *item;
+		m_value[key] = value;
+	}
+	if (!IsValid(m_value))
+		UseDefault();
+	return root;
+}
+
+XMLElement& COption<map<CString, int> >::operator << (XMLElement& root)
+{
+	XMLElement* optionNode = root.FirstChildElement(m_name);
+	if (optionNode == NULL)
+	{
+		UseDefault();
+		return root;
+	}
+
+	m_value.clear();
+	COption<CString> key("key");
+	COption<int> value("value");
+	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
+	{
+		key << *item;
+		value << *item;
+		m_value[key] = value;
+	}
+	if (!IsValid(m_value))
+		UseDefault();
+	return root;
+}
+
+// 写基本类型
+
+XMLElement& COption<int>::operator >> (XMLElement& root) const
+{
+	tinyxml2::XMLDocument* doc = root.GetDocument();
+	XMLElement* optionNode = doc->NewElement(m_name);
+	root.LinkEndChild(optionNode);
+
+	char buffer[15];
+	_itoa_s(m_value, buffer, _countof(buffer), 10);
+	optionNode->LinkEndChild(doc->NewText(buffer));
+	return root;
+}
+
+XMLElement& COption<__int64>::operator >> (XMLElement& root) const
+{
+	tinyxml2::XMLDocument* doc = root.GetDocument();
+	XMLElement* optionNode = doc->NewElement(m_name);
+	root.LinkEndChild(optionNode);
+
+	char buffer[25];
+	_i64toa_s(m_value, buffer, _countof(buffer), 10);
+	optionNode->LinkEndChild(doc->NewText(buffer));
+	return root;
+}
+
+XMLElement& COption<CString>::operator >> (XMLElement& root) const
+{
+	tinyxml2::XMLDocument* doc = root.GetDocument();
+	XMLElement* optionNode = doc->NewElement(m_name);
+	root.LinkEndChild(optionNode);
+
+	optionNode->LinkEndChild(doc->NewText(CStringA(m_value)));
+	return root;
+}
+
+// 写set
+
+XMLElement& COption<set<__int64> >::operator >> (XMLElement& root) const
+{
+	tinyxml2::XMLDocument* doc = root.GetDocument();
+	XMLElement* optionNode = doc->NewElement(m_name);
+	root.LinkEndChild(optionNode);
+
+	COption<__int64> value("value");
+	for (const __int64& i : m_value)
+	{
+		XMLElement* item = doc->NewElement("item");
+		optionNode->LinkEndChild(item);
+		*value = i;
+		value >> *item;
+	}
+	return root;
+}
+
+XMLElement& COption<set<CString> >::operator >> (XMLElement& root) const
+{
+	tinyxml2::XMLDocument* doc = root.GetDocument();
+	XMLElement* optionNode = doc->NewElement(m_name);
+	root.LinkEndChild(optionNode);
+
+	COption<CString> value("value");
+	for (const CString& i : m_value)
+	{
+		XMLElement* item = doc->NewElement("item");
+		optionNode->LinkEndChild(item);
+		*value = i;
+		value >> *item;
+	}
+	return root;
+}
+
+// 写map
+
+XMLElement& COption<map<__int64, int> >::operator >> (XMLElement& root) const
+{
+	tinyxml2::XMLDocument* doc = root.GetDocument();
+	XMLElement* optionNode = doc->NewElement(m_name);
+	root.LinkEndChild(optionNode);
+
+	COption<__int64> key("key");
+	COption<int> value("value");
+	for (const auto& i : m_value)
+	{
+		XMLElement* item = doc->NewElement("item");
+		optionNode->LinkEndChild(item);
+		*key = i.first;
+		key >> *item;
+		*value = i.second;
+		value >> *item;
+	}
+	return root;
+}
+
+XMLElement& COption<map<CString, int> >::operator >> (XMLElement& root) const
+{
+	tinyxml2::XMLDocument* doc = root.GetDocument();
+	XMLElement* optionNode = doc->NewElement(m_name);
+	root.LinkEndChild(optionNode);
+
+	COption<CString> key("key");
+	COption<int> value("value");
+	for (const auto& i : m_value)
+	{
+		XMLElement* item = doc->NewElement("item");
+		optionNode->LinkEndChild(item);
+		*key = i.first;
+		key >> *item;
+		*value = i.second;
+		value >> *item;
+	}
+	return root;
+}
+
+
+BOOL CUserCache::Load(LPCTSTR path)
+{
+	FILE* f = NULL;
+	if (_tfopen_s(&f, path, _T("rb")) != 0)
+		return FALSE;
+
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile(f) != XML_NO_ERROR)
+	{
+		fclose(f);
+		return FALSE;
+	}
+	fclose(f);
+
+	XMLElement* root = doc.FirstChildElement("Cache");
+	if (root == NULL)
+		return FALSE;
+
+	m_initIgnoredTID << *root;
+	m_initIgnoredPID << *root;
+	m_initIgnoredLZLID << *root;
+	m_reply << *root;
+	m_userTrigCount << *root;
+	m_bannedUser << *root;
+	m_defriendedUser << *root;
+
+	m_ignoredTID = m_initIgnoredTID;
+	m_ignoredPID = m_initIgnoredPID;
+	m_ignoredLZLID = m_initIgnoredLZLID;
+	//m_deletedTID.clear();
+
+	return TRUE;
+}
+
+BOOL CUserCache::Save(LPCTSTR path) const
+{
+	FILE* f = NULL;
+	if (_tfopen_s(&f, path, _T("wb")) != 0)
+		return FALSE;
+
+	tinyxml2::XMLDocument doc;
+	doc.LinkEndChild(doc.NewDeclaration("xml version=\"1.0\" encoding=\"UTF-8\""));
+	tinyxml2::XMLElement* root = doc.NewElement("Cache");
+	doc.LinkEndChild(root);
+
+	m_initIgnoredTID >> *root;
+	m_initIgnoredPID >> *root;
+	m_initIgnoredLZLID >> *root;
+	m_reply >> *root;
+	m_userTrigCount >> *root;
+	m_bannedUser >> *root;
+	m_defriendedUser >> *root;
+
+	BOOL res = doc.SaveFile(f) == XML_NO_ERROR;
+	fclose(f);
+	return res;
 }

@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "SettingDlg.h"
 #include "TiebaManagerDlg.h"
 #include "Setting.h"
-extern map<__int64, int> g_reply; // 主题的回复数，要写入文件
+#include "TiebaVariable.h"
 #include "ScanImage.h"
 
 
@@ -369,7 +369,7 @@ void CSettingDlg::ApplyOptionsInDlg()
 	{
 		if (!g_briefLog)
 			((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_log.Log(_T("<font color=green>清除历史回复</font>"));
-		g_reply.clear();
+		g_userCache.m_reply->clear();
 	}
 }
 

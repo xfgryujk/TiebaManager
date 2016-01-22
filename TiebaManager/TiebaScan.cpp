@@ -79,14 +79,14 @@ static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg)
 		if (g_stopScanFlag)
 			break;
 		__int64 tid = _ttoi64(thread.tid);
-		if (g_ignoredTID.find(tid) == g_ignoredTID.end()
+		if (g_userCache.m_ignoredTID.find(tid) == g_userCache.m_ignoredTID.end()
 			&& CheckImageIllegal(thread.author, GetThreadImage(thread), msg))
 		{
 			AddConfirm(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
 				thread.title, _T("1"), _T(""), thread.author, thread.authorID);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 				+ HTMLEscape(thread.title) + _T("</a>") + msg);
-			g_ignoredTID.insert(tid);
+			g_userCache.m_ignoredTID.insert(tid);
 		}
 	}
 }
@@ -147,14 +147,14 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			if (g_stopScanFlag)
 				break;
 			__int64 tid = _ttoi64(thread.tid);
-			if (g_ignoredTID.find(tid) == g_ignoredTID.end()
+			if (g_userCache.m_ignoredTID.find(tid) == g_userCache.m_ignoredTID.end()
 				&& CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, msg, pos, length))
 			{
 				AddConfirm(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
 					thread.title, _T("0"), _T(""), thread.author, thread.authorID, _T(""), pos, length);
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 					+ HTMLEscape(thread.title) + _T("</a>") + msg);
-				g_ignoredTID.insert(tid);
+				g_userCache.m_ignoredTID.insert(tid);
 			}
 		}
 		// 扫描主题图片
@@ -244,7 +244,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 	{
 		ThreadInfo& thread = g_threads[g_threadIndex++];
 		g_threadIndexLock.Unlock();
-		if (g_deletedTID.find(_ttoi64(thread.tid)) != g_deletedTID.end()) // 已删
+		if (g_userCache.m_deletedTID.find(_ttoi64(thread.tid)) != g_userCache.m_deletedTID.end()) // 已删
 			goto next;
 		g_optionsLock.Lock();
 		if (g_trustedThread.find(thread.tid) != g_trustedThread.end()) // 信任
@@ -256,8 +256,8 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 
 		__int64 tid = _ttoi64(thread.tid);
 		int reply = _ttoi(thread.reply);
-		historyReplyIt = g_reply.find(tid);
-		BOOL hasHistoryReply = historyReplyIt != g_reply.end();
+		historyReplyIt = g_userCache.m_reply->find(tid);
+		BOOL hasHistoryReply = historyReplyIt != g_userCache.m_reply->end();
 		if (hasHistoryReply && reply <= historyReplyIt->second) // 无新回复
 		{
 			historyReplyIt->second = reply;
@@ -295,7 +295,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 
 		// 记录历史回复
 		if (res)
-			g_reply[tid] = reply;
+			g_userCache.m_reply.m_value[tid] = reply;
 
 	next:
 		g_threadIndexLock.Lock();
@@ -339,14 +339,14 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (g_stopScanFlag)
 			return FALSE;
 		__int64 pid = _ttoi64(post.pid);
-		if (g_ignoredPID.find(pid) == g_ignoredPID.end()
+		if (g_userCache.m_ignoredPID.find(pid) == g_userCache.m_ignoredPID.end()
 			&& CheckIllegal(post.content, post.author, msg, pos, length))
 		{
 			AddConfirm(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID, _T(""), pos, length);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + post.floor + _T("楼") + msg);
-			g_ignoredPID.insert(pid);
+			g_userCache.m_ignoredPID.insert(pid);
 		}
 	}
 
@@ -358,12 +358,12 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (CheckIllegal(lzl.content, lzl.author, msg, pos, length))
 		{
 			__int64 lzlid = _ttoi64(lzl.pid);
-			if (g_ignoredLZLID.find(lzlid) == g_ignoredLZLID.end())
+			if (g_userCache.m_ignoredLZLID.find(lzlid) == g_userCache.m_ignoredLZLID.end())
 			{
 				AddConfirm(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID, _T(""), pos, length);
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
-				g_ignoredLZLID.insert(lzlid);
+				g_userCache.m_ignoredLZLID.insert(lzlid);
 			}
 		}
 	}
@@ -374,14 +374,14 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (g_stopScanFlag)
 			return FALSE;
 		__int64 pid = _ttoi64(post.pid);
-		if (g_ignoredPID.find(pid) == g_ignoredPID.end()
+		if (g_userCache.m_ignoredPID.find(pid) == g_userCache.m_ignoredPID.end()
 			&& CheckImageIllegal(post.author, GetPostImage(post), msg))
 		{
 			AddConfirm(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + post.floor + _T("楼") + msg);
-			g_ignoredPID.insert(pid);
+			g_userCache.m_ignoredPID.insert(pid);
 		}
 	}
 
@@ -391,13 +391,13 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (g_stopScanFlag)
 			return FALSE;
 		__int64 pid = _ttoi64(lzl.pid);
-		if (g_ignoredLZLID.find(pid) == g_ignoredLZLID.end()
+		if (g_userCache.m_ignoredLZLID.find(pid) == g_userCache.m_ignoredLZLID.end()
 			&& CheckImageIllegal(lzl.author, GetPostImage(lzl), msg))
 		{
 			AddConfirm(lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + lzl.floor + _T("楼回复") + msg);
-			g_ignoredLZLID.insert(pid);
+			g_userCache.m_ignoredLZLID.insert(pid);
 		}
 	}
 

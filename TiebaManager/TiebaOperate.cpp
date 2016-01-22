@@ -73,17 +73,17 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 				case TBOBJ_THREAD:
 					if (op.floor == _T("1"))
 						goto casePost;
-					g_initIgnoredTID.insert(_ttoi64(op.tid));
+					g_userCache.m_initIgnoredTID->insert(_ttoi64(op.tid));
 					dlg->m_log.Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
 					break;
 				case TBOBJ_POST:
-				casePost : g_initIgnoredPID.insert(_ttoi64(op.pid));
+				casePost : g_userCache.m_initIgnoredPID->insert(_ttoi64(op.pid));
 					dlg->m_log.Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼"));
 					break;
 				case TBOBJ_LZL:
-					g_initIgnoredLZLID.insert(_ttoi64(op.pid));
+					g_userCache.m_initIgnoredLZLID->insert(_ttoi64(op.pid));
 					dlg->m_log.Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼回复"));
 					break;
@@ -131,16 +131,17 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			continue;
 
 		// 增加违规次数
-		auto countIt = g_userTrigCount.find(op.author);
-		BOOL hasHistory = countIt != g_userTrigCount.end();
+		auto countIt = g_userCache.m_userTrigCount->find(op.author);
+		BOOL hasHistory = countIt != g_userCache.m_userTrigCount->end();
 		int count = hasHistory ? (countIt->second + 1) : 1;
 		if (hasHistory)
 			countIt->second = count;
 		else
-			g_userTrigCount[op.author] = 1;
+			g_userCache.m_userTrigCount.m_value[op.author] = 1;
 
 		// 封禁
-		if (g_banID && count >= g_banTrigCount && g_bannedUser.find(op.author) == g_bannedUser.end()) // 达到封禁违规次数且未封
+		if (g_banID && count >= g_banTrigCount 
+			&& g_userCache.m_bannedUser->find(op.author) == g_userCache.m_bannedUser->end()) // 达到封禁违规次数且未封
 		{
 			if (op.pid == _T(""))
 			{
@@ -166,14 +167,15 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				else
 				{
 					sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
-					g_bannedUser.insert(op.author);
+					g_userCache.m_bannedUser->insert(op.author);
 					dlg->m_log.Log(_T("<font color=red>封禁 </font>") + op.author);
 				}
 			}
 		}
 
 		// 拉黑
-		if (g_defriend && count >= g_defriendTrigCount && g_defriendedUser.find(op.author) == g_defriendedUser.end()) // 达到拉黑违规次数且未拉黑
+		if (g_defriend && count >= g_defriendTrigCount 
+			&& g_userCache.m_defriendedUser->find(op.author) == g_userCache.m_defriendedUser->end()) // 达到拉黑违规次数且未拉黑
 		{
 			CString code = Defriend(op.authorID);
 			if (code != _T("0"))
@@ -186,14 +188,14 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			else
 			{
 				sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
-				g_defriendedUser.insert(op.author);
+				g_userCache.m_defriendedUser->insert(op.author);
 				dlg->m_log.Log(_T("<font color=red>拉黑 </font>") + op.author);
 			}
 		}
 
 		// 主题已被删则不再删帖
 		__int64 tid = _ttoi64(op.tid);
-		if (g_deletedTID.find(tid) != g_deletedTID.end())
+		if (g_userCache.m_deletedTID.find(tid) != g_userCache.m_deletedTID.end())
 			continue;
 
 		// 删帖
@@ -212,7 +214,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			else
 			{
 				sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
-				g_deletedTID.insert(_ttoi64(op.tid));
+				g_userCache.m_deletedTID.insert(_ttoi64(op.tid));
 				dlg->m_log.Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 					+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
 				Sleep((DWORD)(g_deleteInterval * 1000));
