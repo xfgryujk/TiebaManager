@@ -36,8 +36,9 @@ public:
 		m_bannedUser("BannedUser"),
 		m_defriendedUser("DefriendedUser")
 	{}
-	BOOL Load(LPCTSTR path);
-	BOOL Save(LPCTSTR path) const;
+	BOOL LoadOld(const CString& path); // 万恶的历史遗留问题
+	BOOL Load(const CString& path);
+	BOOL Save(const CString& path) const;
 };
 extern CUserCache g_userCache;
 

@@ -315,7 +315,7 @@ void SetCurrentUser(LPCTSTR userName)
 	CURRENT_USER_PATH = USERS_PATH + userName;
 	USER_PROFILE_PATH = CURRENT_USER_PATH + _T("\\options.tb");
 	COOKIE_PATH = CURRENT_USER_PATH + _T("\\ck.tb");
-	CACHE_PATH = CURRENT_USER_PATH + _T("\\cache.tb");
+	CACHE_PATH = CURRENT_USER_PATH + _T("\\cache.xml");
 
 	// 读取设置
 	TCHAR buffer[260];
@@ -338,6 +338,7 @@ void SetCurrentUser(LPCTSTR userName)
 	g_userCache.Load(CACHE_PATH);
 }
 
+#pragma region COption
 // COption实现 ///////////////////////////////////////////////////////////////////////////
 
 // 读基本类型
@@ -595,14 +596,65 @@ XMLElement& COption<map<CString, int> >::operator >> (XMLElement& root) const
 	}
 	return root;
 }
+#pragma endregion
 
 // 配置读写实现 ///////////////////////////////////////////////////////////////////////////
 
-BOOL CUserCache::Load(LPCTSTR path)
+BOOL CUserCache::LoadOld(const CString& path)
+{
+	gzFile f = gzopen_w(path, "rb");
+	if (f != NULL)
+	{
+		int size;
+		// 历史回复
+		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
+		{
+			__int64 tid;
+			int reply;
+			for (int i = 0; i < size; i++)
+			{
+				gzread(f, &tid, sizeof(__int64));
+				gzread(f, &reply, sizeof(int));
+				g_userCache.m_reply.m_value[tid] = reply;
+			}
+		}
+		// 忽略ID
+		ReadIDSet(f, g_userCache.m_initIgnoredTID);
+		g_userCache.m_ignoredTID = g_userCache.m_initIgnoredTID;
+		ReadIDSet(f, g_userCache.m_initIgnoredPID);
+		g_userCache.m_ignoredPID = g_userCache.m_initIgnoredPID;
+		ReadIDSet(f, g_userCache.m_initIgnoredLZLID);
+		g_userCache.m_ignoredLZLID = g_userCache.m_initIgnoredLZLID;
+		// 违规次数
+		if (gzread(f, &size, sizeof(int)) == sizeof(int) && 0 < size && size < 100000) // 长度
+		{
+			CString userName;
+			int count;
+			for (int i = 0; i < size; i++)
+			{
+				ReadText(f, userName);
+				gzread(f, &count, sizeof(int));
+				g_userCache.m_userTrigCount.m_value[userName] = count;
+			}
+		}
+		// 拉黑用户
+		ReadTextSet(f, g_userCache.m_defriendedUser);
+		gzclose(f);
+	}
+	return TRUE;
+}
+
+BOOL CUserCache::Load(const CString& path)
 {
 	FILE* f = NULL;
 	if (_tfopen_s(&f, path, _T("rb")) != 0)
-		return FALSE;
+	{
+		CString oldPath = path.Left(path.GetLength() - 3) + _T("tb");
+		LoadOld(oldPath);
+		Save(path);
+		DeleteFile(oldPath);
+		return TRUE;
+	}
 
 	tinyxml2::XMLDocument doc;
 	if (doc.LoadFile(f) != XML_NO_ERROR)
@@ -632,14 +684,14 @@ BOOL CUserCache::Load(LPCTSTR path)
 	return TRUE;
 }
 
-BOOL CUserCache::Save(LPCTSTR path) const
+BOOL CUserCache::Save(const CString& path) const
 {
 	FILE* f = NULL;
 	if (_tfopen_s(&f, path, _T("wb")) != 0)
 		return FALSE;
 
 	tinyxml2::XMLDocument doc;
-	doc.LinkEndChild(doc.NewDeclaration("xml version=\"1.0\" encoding=\"UTF-8\""));
+	doc.LinkEndChild(doc.NewDeclaration("xml version=\"1.0\" encoding=\"GBK\""));
 	tinyxml2::XMLElement* root = doc.NewElement("Cache");
 	doc.LinkEndChild(root);
 
