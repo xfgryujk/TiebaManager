@@ -347,11 +347,15 @@ XMLElement& COption<int>::operator << (XMLElement& root)
 	XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
+UseDefault:
 		UseDefault();
 		return root;
 	}
+	XMLNode* content = optionNode->FirstChild();
+	if (content == NULL)
+		goto UseDefault;
+	LPCSTR value = content->ToText()->Value();
 
-	LPCSTR value = optionNode->FirstChild()->ToText()->Value();
 	m_value = atoi(value);
 	if (!IsValid(m_value))
 		UseDefault();
@@ -363,11 +367,15 @@ XMLElement& COption<__int64>::operator << (XMLElement& root)
 	XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
+UseDefault:
 		UseDefault();
 		return root;
 	}
+	XMLNode* content = optionNode->FirstChild();
+	if (content == NULL)
+		goto UseDefault;
+	LPCSTR value = content->ToText()->Value();
 
-	LPCSTR value = optionNode->FirstChild()->ToText()->Value();
 	m_value = _atoi64(value);
 	if (!IsValid(m_value))
 		UseDefault();
@@ -379,11 +387,15 @@ XMLElement& COption<CString>::operator << (XMLElement& root)
 	XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
+UseDefault:
 		UseDefault();
 		return root;
 	}
+	XMLNode* content = optionNode->FirstChild();
+	if (content == NULL)
+		goto UseDefault;
+	LPCSTR value = content->ToText()->Value();
 
-	LPCSTR value = optionNode->FirstChild()->ToText()->Value();
 	m_value = value;
 	if (!IsValid(m_value))
 		UseDefault();
