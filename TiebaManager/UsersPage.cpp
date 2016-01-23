@@ -5,6 +5,7 @@
 #include "UsersPage.h"
 #include "LoginDlg.h"
 #include "Setting.h"
+#include "TiebaVariable.h"
 #include "SettingDlg.h"
 #include "TiebaManagerDlg.h"
 #include "MiscHelper.h"
@@ -72,13 +73,11 @@ void CUsersPage::OnBnClickedButton1()
 		return;
 	// ´´½¨Ä¿Â¼
 	CreateDir(USERS_PATH + loginDlg.m_userName);
+	
 	// ±£´æCookie
-	gzFile f = gzopen_w(USERS_PATH + loginDlg.m_userName + _T("\\ck.tb"), "wb");
-	if (f != NULL)
-	{
-		WriteText(f, loginDlg.m_cookie);
-		gzclose(f);
-	}
+	CUserTiebaInfo ck;
+	*ck.m_cookie = loginDlg.m_cookie;
+	ck.Save(USERS_PATH + loginDlg.m_userName + _T("\\ck.xml"));
 
 	int index = m_list.FindStringExact(-1, loginDlg.m_userName);
 	if (index == LB_ERR)
@@ -102,7 +101,7 @@ void CUsersPage::OnBnClickedButton2()
 		return;
 	}
 	CString path = USERS_PATH + name + _T("\\");
-	if (!DeleteFile(path + _T("ck.tb")) || !DeleteFile(path + _T("cache.tb")))
+	if ((!DeleteFile(path + _T("ck.xml")) && !DeleteFile(path + _T("ck.tb"))) || !DeleteFile(path + _T("cache.tb")))
 	{
 		AfxMessageBox(_T("É¾³ýÕËºÅÊ§°Ü£¡"), MB_ICONERROR);
 		return;

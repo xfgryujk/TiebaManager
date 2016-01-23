@@ -150,7 +150,9 @@ BOOL CSettingDlg::OnInitDialog()
 	while (flag)
 	{
 		flag = fileFind.FindNextFile();
-		if (fileFind.IsDirectory() && !fileFind.IsDots() && PathFileExists(fileFind.GetFilePath() + _T("\\ck.tb")))
+		if (fileFind.IsDirectory() && !fileFind.IsDots() 
+			&& (PathFileExists(fileFind.GetFilePath() + _T("\\ck.tb"))
+			|| PathFileExists(fileFind.GetFilePath() + _T("\\ck.xml"))))
 		{
 			CString name = fileFind.GetFileName();
 			if (name != _T("[NULL]"))
