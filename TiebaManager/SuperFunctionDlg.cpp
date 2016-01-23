@@ -222,7 +222,7 @@ void CSuperFunctionDlg::ApplyOptionsInDlg()
 	gzclose(f);
 
 	if (m_clearScanCache)
-		DeleteFile(CURRENT_USER_PATH + _T("\\LoopBanDate.tb"));
+		DeleteFile(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
 }
 
 // х╥хо

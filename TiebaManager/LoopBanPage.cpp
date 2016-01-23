@@ -119,19 +119,48 @@ void CLoopBanPage::OnClickedButton3()
 // 循环封线程
 UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 {
+	class CLoopBanDate : public CConfigBase
+	{
+	public:
+		COption<int> m_year;
+		COption<int> m_month;
+		COption<int> m_day;
+
+		CLoopBanDate()
+			: CConfigBase("LoopBanDate"),
+			m_year("Year"),
+			m_month("Month"),
+			m_day("Day")
+		{
+			m_options.push_back(&m_year);
+			m_options.push_back(&m_month);
+			m_options.push_back(&m_day);
+		}
+
+		BOOL LoadOld(const CString& path)
+		{
+			CFile file;
+			if (!file.Open(path, CFile::modeCreate | CFile::modeNoTruncate | CFile::modeReadWrite))
+				return FALSE;
+			SYSTEMTIME lastTime = {};
+			file.Read(&lastTime, sizeof(lastTime));
+			*m_year = lastTime.wYear;
+			*m_month = lastTime.wMonth;
+			*m_day = lastTime.wDay;
+			return TRUE;
+		}
+	};
+
+
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)_dlg;
 
 	// 一天内循环封过不再封
-	SYSTEMTIME time;
+	SYSTEMTIME time = {};
 	GetLocalTime(&time);
-	CFile file;
-	if (file.Open(CURRENT_USER_PATH + _T("\\LoopBanDate.tb"), CFile::modeCreate | CFile::modeNoTruncate | CFile::modeReadWrite))
-	{
-		SYSTEMTIME lastTime;
-		file.Read(&lastTime, sizeof(lastTime));
-		if (time.wDay == lastTime.wDay && time.wMonth == lastTime.wMonth && time.wYear == lastTime.wYear)
-			return 0;
-	}
+	CLoopBanDate lastTime;
+	lastTime.Load(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
+	if (time.wDay == lastTime.m_day && time.wMonth == lastTime.m_month && time.wYear == lastTime.m_year)
+		return 0;
 
 	gzFile f = gzopen_w(CURRENT_USER_PATH + _T("\\options2.tb"), "rb");
 	if (f == NULL)
@@ -164,12 +193,10 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 		return 0;
 
 	// 更新时间
-	if (file.m_hFile != NULL)
-	{
-		file.SeekToBegin();
-		file.Write(&time, sizeof(time));
-		file.Close();
-	}
+	*lastTime.m_year = time.wYear;
+	*lastTime.m_month = time.wMonth;
+	*lastTime.m_day = time.wDay;
+	lastTime.Save(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
 
 	BOOL updatePID = FALSE;
 	// 循环封
