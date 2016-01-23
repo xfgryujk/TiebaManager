@@ -84,7 +84,7 @@ void CUsersPage::OnBnClickedButton1()
 	if (index == LB_ERR)
 		index = m_list.AddString(loginDlg.m_userName);
 	m_list.SetCurSel(index);
-	if (g_currentUser == _T("[NULL]"))
+	if (g_globalConfig.m_currentUser == _T("[NULL]"))
 		OnBnClickedButton3();
 }
 
@@ -96,7 +96,7 @@ void CUsersPage::OnBnClickedButton2()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (name == g_currentUser)
+	if (name == g_globalConfig.m_currentUser)
 	{
 		AfxMessageBox(_T("不能删除当前账号！"), MB_ICONERROR);
 		return;
@@ -124,5 +124,5 @@ void CUsersPage::OnBnClickedButton3()
 	m_list.GetText(index, name);
 	SetCurrentUser(name);
 	((CSettingDlg*)GetParent()->GetParent())->ShowCurrentOptions();
-	m_currentUserStatic.SetWindowText(_T("当前账号：") + g_currentUser);
+	m_currentUserStatic.SetWindowText(_T("当前账号：") + g_globalConfig.m_currentUser);
 }

@@ -143,7 +143,7 @@ BOOL CSettingDlg::OnInitDialog()
 		m_optionsPage.m_list.AddString(fileFind.GetFileTitle());
 	}
 
-	m_usersPage.m_currentUserStatic.SetWindowText(_T("当前账号：") + g_currentUser); // 当前账号
+	m_usersPage.m_currentUserStatic.SetWindowText(_T("当前账号：") + g_globalConfig.m_currentUser); // 当前账号
 	// 账号
 	m_usersPage.m_list.AddString(_T("[NULL]"));
 	flag = fileFind.FindFile(USERS_PATH + _T("*"));
@@ -158,7 +158,7 @@ BOOL CSettingDlg::OnInitDialog()
 		}
 	}
 
-	m_aboutPage.m_autoCheckUpdateCheck.SetCheck(g_autoUpdate); // 自动更新
+	m_aboutPage.m_autoCheckUpdateCheck.SetCheck(g_globalConfig.m_autoUpdate); // 自动更新
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -635,8 +635,8 @@ void CSettingDlg::OnOK()
 	SaveOptionsInDlg(OPTIONS_PATH + g_currentOption + _T(".tb"));
 	ApplyOptionsInDlg();
 	WritePrivateProfileString(_T("Setting"), _T("Option"), g_currentOption, USER_PROFILE_PATH);
-	WritePrivateProfileString(_T("Setting"), _T("AutoUpdate"), 
-		m_aboutPage.m_autoCheckUpdateCheck.GetCheck() ? _T("1") : _T("0"), ALL_PROFILE_PATH);
+	*g_globalConfig.m_autoUpdate = m_aboutPage.m_autoCheckUpdateCheck.GetCheck();
+	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
 
 	DestroyWindow();
 }

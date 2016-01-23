@@ -12,5 +12,5 @@ Library
 使用库：
 * [zlib](http://www.zlib.net/) 1.2.8  
 * [OpenCV](http://opencv.org/) 3.0.0  
-* [TinyXML2](http://www.grinninglizard.com/tinyxml2/index.html)
+* [TinyXML2](http://www.grinninglizard.com/tinyxml2/index.html)  
 请自行下载OpenCV库并设置环境变量

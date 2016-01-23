@@ -73,7 +73,7 @@ BOOL CTiebaManagerApp::InitInstance()
 	// 初始化配置文件路径
 	TCHAR cd[MAX_PATH];
 	GetCurrentDirectory(_countof(cd), cd);
-	ALL_PROFILE_PATH = cd + ALL_PROFILE_PATH;
+	GLOBAL_CONFIG_PATH = cd + GLOBAL_CONFIG_PATH;
 	USERS_PATH = cd + USERS_PATH;
 
 	// 载入主窗口

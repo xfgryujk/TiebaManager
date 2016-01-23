@@ -182,20 +182,18 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	m_log.Init();
 
 	// 读取设置
-	TCHAR buffer[260];
-	// 账号
-	GetPrivateProfileString(_T("Setting"), _T("UserName"), _T("[NULL]"), buffer, _countof(buffer), ALL_PROFILE_PATH);
-	SetCurrentUser(buffer);
+	g_globalConfig.Load(GLOBAL_CONFIG_PATH);
+	SetCurrentUser(g_globalConfig.m_currentUser);
 	
 	// 自动更新
-	g_autoUpdate = GetPrivateProfileInt(_T("Setting"), _T("AutoUpdate"), 1, ALL_PROFILE_PATH) != 0;
-	if (g_autoUpdate)
+	if (g_globalConfig.m_autoUpdate)
 		AfxBeginThread(AutoUpdateThread, this);
 
 	// 初次运行先看关于
-	if (GetPrivateProfileInt(_T("Setting"), _T("FirstRun"), 1, ALL_PROFILE_PATH) != 0)
+	if (g_globalConfig.m_firstRun)
 	{
-		WritePrivateProfileString(_T("Setting"), _T("FirstRun"), _T("0"), ALL_PROFILE_PATH);
+		*g_globalConfig.m_firstRun = FALSE;
+		g_globalConfig.Save(GLOBAL_CONFIG_PATH);
 		m_settingDlg = new CSettingDlg();
 		m_settingDlg->Create(m_settingDlg->IDD, this);
 		m_settingDlg->m_tab.SetCurSel(SETTING_DLG_PAGE_COUNT - 1);
@@ -251,7 +249,7 @@ void CTiebaManagerDlg::OnDestroy()
 	CNormalDlg::OnDestroy();
 
 	SaveCurrentUserProfile();
-	WritePrivateProfileString(_T("Setting"), _T("UserName"), g_currentUser, ALL_PROFILE_PATH);
+	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
 
 	g_stopScanFlag = TRUE; // 实际上线程不会返回（返回前就崩溃了？）
 

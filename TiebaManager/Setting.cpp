@@ -9,16 +9,15 @@ using namespace tinyxml2;
 
 
 // 配置文件路径
-CString		ALL_PROFILE_PATH = _T("\\options.tb");	// 程序运行时初始化
-CString		USER_PROFILE_PATH;						// 确定贴吧时初始化
+CString		GLOBAL_CONFIG_PATH = _T("\\options.xml");	// 程序运行时初始化
+CString		USER_PROFILE_PATH;							// 确定贴吧时初始化
 CString		OPTIONS_PATH = _T("Option\\");
-CString		USERS_PATH = _T("\\User\\");			// 程序运行时初始化
-CString		CURRENT_USER_PATH;						// 确定贴吧时初始化
-CString		COOKIE_PATH;							// 确定贴吧时初始化
-CString		CACHE_PATH;								// 确定贴吧时初始化
+CString		USERS_PATH = _T("\\User\\");				// 程序运行时初始化
+CString		CURRENT_USER_PATH;							// 确定贴吧时初始化
+CString		COOKIE_PATH;								// 确定贴吧时初始化
+CString		CACHE_PATH;									// 确定贴吧时初始化
 
-CString	g_currentUser;		// 当前账号
-BOOL	g_autoUpdate;		// 自动更新
+CGlobalConfig g_globalConfig;
 
 // 方案
 CString	g_currentOption;	// 当前方案
@@ -289,7 +288,7 @@ static inline void WriteTextSet(const gzFile& f, const set<CString>& TextSet)
 void SaveCurrentUserProfile()
 {
 	// 创建目录
-	CreateDir(USERS_PATH + g_currentUser);
+	CreateDir(USERS_PATH + g_globalConfig.m_currentUser);
 
 	// 保存Cookie
 	gzFile f = gzopen_w(COOKIE_PATH, "wb");
@@ -304,14 +303,14 @@ void SaveCurrentUserProfile()
 }
 
 // 设置当前账号
-void SetCurrentUser(LPCTSTR userName)
+void SetCurrentUser(const CString& userName)
 {
 	// 保存当前账号配置
-	if (g_currentUser != _T(""))
+	if (g_globalConfig.m_currentUser != _T(""))
 		SaveCurrentUserProfile();
 
 	// 设置配置路径
-	g_currentUser = userName;
+	*g_globalConfig.m_currentUser = userName;
 	CURRENT_USER_PATH = USERS_PATH + userName;
 	USER_PROFILE_PATH = CURRENT_USER_PATH + _T("\\options.tb");
 	COOKIE_PATH = CURRENT_USER_PATH + _T("\\ck.tb");
@@ -662,6 +661,16 @@ void CConfigBase::UseDefault()
 	for (COptionBase* i : m_options)
 		i->UseDefault();
 	OnChange();
+}
+
+BOOL CGlobalConfig::LoadOld(const CString& path)
+{
+	*m_firstRun = GetPrivateProfileInt(_T("Setting"), _T("FirstRun"), TRUE, path) != FALSE;
+	TCHAR buffer[260];
+	GetPrivateProfileString(_T("Setting"), _T("UserName"), _T("[NULL]"), buffer, _countof(buffer), path);
+	*m_currentUser = buffer;
+	*m_autoUpdate = GetPrivateProfileInt(_T("Setting"), _T("AutoUpdate"), TRUE, path) != FALSE;
+	return TRUE;
 }
 
 BOOL CUserCache::LoadOld(const CString& path)

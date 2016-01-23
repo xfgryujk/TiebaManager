@@ -3,9 +3,8 @@
 #include "TypeHelper.h"
 
 
-
 // 配置文件路径
-extern CString	ALL_PROFILE_PATH;	// 程序运行时初始化
+extern CString	GLOBAL_CONFIG_PATH;	// 程序运行时初始化
 extern CString	USER_PROFILE_PATH;	// 确定贴吧时初始化
 extern CString	OPTIONS_PATH;
 extern CString	USERS_PATH;			// 确定贴吧时初始化
@@ -13,8 +12,91 @@ extern CString	CURRENT_USER_PATH;	// 确定贴吧时初始化
 extern CString	COOKIE_PATH;		// 确定贴吧时初始化
 extern CString	CACHE_PATH;			// 确定贴吧时初始化
 
-extern CString	g_currentUser;		// 当前账号
-extern BOOL		g_autoUpdate;		// 自动更新
+
+// Option、Config类声明 //////////////////////////////////////////////////////////////
+namespace tinyxml2{ class XMLElement; }
+
+class COptionBase
+{
+public:
+	const LPCSTR m_name;
+
+	COptionBase(LPCSTR name) : m_name(name) {}
+	virtual ~COptionBase() {}
+
+	virtual void UseDefault() = 0;
+	virtual tinyxml2::XMLElement& operator << (tinyxml2::XMLElement& root) = 0;
+	virtual tinyxml2::XMLElement& operator >> (tinyxml2::XMLElement& root) const = 0;
+};
+
+template <class T>
+class COption : public COptionBase
+{
+public:
+	const T m_default;
+	T m_value;
+	typedef BOOL(*IsValidFunc)(const T& value);
+	const IsValidFunc IsValid;
+
+	COption(LPCSTR name, IsValidFunc _isValid = [](const T&){ return TRUE; })
+		: COptionBase(name), m_default(), IsValid(_isValid)
+	{}
+	COption(LPCSTR name, const T& _default, IsValidFunc _isValid = [](const T&){ return TRUE; })
+		: COptionBase(name), m_default(_default), IsValid(_isValid)
+	{}
+
+	operator const T& () const{ return m_value; }
+	operator T& (){ return m_value; }
+	const T& operator * () const{ return m_value; }
+	T& operator * (){ return m_value; }
+	const T* operator -> () const{ return &m_value; }
+	T* operator -> (){ return &m_value; }
+	void UseDefault(){ m_value = m_default; }
+
+	tinyxml2::XMLElement& operator << (tinyxml2::XMLElement& root);
+	tinyxml2::XMLElement& operator >> (tinyxml2::XMLElement& root) const;
+};
+
+class CConfigBase
+{
+protected:
+	vector<COptionBase*> m_options;
+
+public:
+	const LPCSTR m_name;
+
+	CConfigBase(LPCSTR name) : m_name(name) {}
+	virtual ~CConfigBase() {}
+
+	virtual BOOL LoadOld(const CString& path) = 0; // 万恶的历史遗留问题
+	BOOL Load(const CString& path);
+	BOOL Save(const CString& path) const;
+	void UseDefault();
+	virtual void OnChange() {}
+};
+
+// 全局配置
+class CGlobalConfig : public CConfigBase
+{
+public:
+	COption<BOOL> m_firstRun;			// 第一次运行
+	COption<CString> m_currentUser;		// 当前账号
+	COption<BOOL> m_autoUpdate;			// 自动更新
+
+	CGlobalConfig()
+		: CConfigBase("Global"),
+		m_firstRun("FirstRun", TRUE),
+		m_currentUser("UserName", _T("[NULL]"), [](const CString& value)->BOOL{ return value != _T(""); }),
+		m_autoUpdate("AutoUpdate", TRUE)
+	{
+		m_options.push_back(&m_firstRun);
+		m_options.push_back(&m_currentUser);
+		m_options.push_back(&m_autoUpdate);
+	}
+
+	BOOL LoadOld(const CString& path);
+};
+extern CGlobalConfig g_globalConfig;
 
 // 方案
 extern CString	g_currentOption;	// 当前方案
@@ -74,69 +156,4 @@ void WriteOptions(LPCTSTR path);
 // 保存当前账号配置
 void SaveCurrentUserProfile();
 // 设置当前账号
-void SetCurrentUser(LPCTSTR userName);
-
-
-namespace tinyxml2
-{
-	class XMLElement;
-}
-
-class COptionBase
-{
-public:
-	const LPCSTR m_name;
-
-	COptionBase(LPCSTR name) : m_name(name) {}
-	virtual ~COptionBase() {}
-
-	virtual void UseDefault() = 0;
-	virtual tinyxml2::XMLElement& operator << (tinyxml2::XMLElement& root) = 0;
-	virtual tinyxml2::XMLElement& operator >> (tinyxml2::XMLElement& root) const = 0;
-};
-
-template <class T>
-class COption : public COptionBase
-{
-public:
-	const T m_default;
-	T m_value;
-	typedef BOOL (*IsValidFunc)(const T& value);
-	const IsValidFunc IsValid;
-	
-	COption(LPCSTR name, IsValidFunc _isValid = [](const T&){ return TRUE; })
-		: COptionBase(name), m_default(), IsValid(_isValid)
-	{}
-	COption(LPCSTR name, const T& _default, IsValidFunc _isValid = [](const T&){ return TRUE; })
-		: COptionBase(name), m_default(_default), IsValid(_isValid)
-	{}
-
-	operator const T& () const{ return m_value; }
-	operator T& (){ return m_value; }
-	const T& operator * () const{ return m_value; }
-	T& operator * (){ return m_value; }
-	const T* operator -> () const{ return &m_value; }
-	T* operator -> (){ return &m_value; }
-	void UseDefault(){ m_value = m_default; }
-
-	tinyxml2::XMLElement& operator << (tinyxml2::XMLElement& root);
-	tinyxml2::XMLElement& operator >> (tinyxml2::XMLElement& root) const;
-};
-
-class CConfigBase
-{
-protected:
-	vector<COptionBase*> m_options;
-
-public:
-	const LPCSTR m_name;
-
-	CConfigBase(LPCSTR name) : m_name(name) {}
-	virtual ~CConfigBase() {}
-
-	virtual BOOL LoadOld(const CString& path) = 0; // 万恶的历史遗留问题
-	BOOL Load(const CString& path);
-	BOOL Save(const CString& path) const;
-	void UseDefault();
-	virtual void OnChange() {}
-};
+void SetCurrentUser(const CString& userName);
