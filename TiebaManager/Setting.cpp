@@ -18,9 +18,9 @@ CString		COOKIE_PATH;								// 确定贴吧时初始化
 CString		CACHE_PATH;									// 确定贴吧时初始化
 
 CGlobalConfig g_globalConfig;
+CUserConfig g_userConfig;
 
 // 方案
-CString	g_currentOption;	// 当前方案
 int		g_scanInterval;		// 扫描间隔
 BOOL	g_banID;			// 封ID
 int		g_banDuration;		// 封禁时长
@@ -262,19 +262,16 @@ void SetCurrentUser(const CString& userName)
 	// 设置配置路径
 	*g_globalConfig.m_currentUser = userName;
 	CURRENT_USER_PATH = USERS_PATH + userName;
-	USER_PROFILE_PATH = CURRENT_USER_PATH + _T("\\options.tb");
+	USER_PROFILE_PATH = CURRENT_USER_PATH + _T("\\options.xml");
 	COOKIE_PATH = CURRENT_USER_PATH + _T("\\ck.xml");
 	CACHE_PATH = CURRENT_USER_PATH + _T("\\cache.xml");
 
 	// 读取设置
-	TCHAR buffer[260];
+	g_userConfig.Load(USER_PROFILE_PATH);
 	// 方案
-	GetPrivateProfileString(_T("Setting"), _T("Option"), _T("默认"), g_currentOption.GetBuffer(MAX_PATH), MAX_PATH, USER_PROFILE_PATH);
-	g_currentOption.ReleaseBuffer();
-	ReadOptions(OPTIONS_PATH + g_currentOption + _T(".tb"));
+	ReadOptions(OPTIONS_PATH + g_userConfig.m_plan + _T(".tb"));
 	// 贴吧名
-	GetPrivateProfileString(_T("Setting"), _T("ForumName"), _T(""), buffer, _countof(buffer), USER_PROFILE_PATH);
-	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_forumNameEdit.SetWindowText(buffer);
+	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_forumNameEdit.SetWindowText(*g_userConfig.m_forumName);
 
 	// Cookie
 	g_userTiebaInfo.Load(COOKIE_PATH);
@@ -661,14 +658,4 @@ void CConfigBase::UseDefault()
 	for (COptionBase* i : m_options)
 		i->UseDefault();
 	OnChange();
-}
-
-BOOL CGlobalConfig::LoadOld(const CString& path)
-{
-	*m_firstRun = GetPrivateProfileInt(_T("Setting"), _T("FirstRun"), TRUE, path) != FALSE;
-	TCHAR buffer[260];
-	GetPrivateProfileString(_T("Setting"), _T("UserName"), _T("[NULL]"), buffer, _countof(buffer), path);
-	*m_currentUser = buffer;
-	*m_autoUpdate = GetPrivateProfileInt(_T("Setting"), _T("AutoUpdate"), TRUE, path) != FALSE;
-	return TRUE;
 }

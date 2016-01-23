@@ -133,7 +133,7 @@ BOOL CSettingDlg::OnInitDialog()
 	ShowCurrentOptions();
 	m_clearScanCache = FALSE; // 在m_scanPage.m_scanPageCountEdit.SetWindowText后初始化
 
-	m_optionsPage.m_currentOptionStatic.SetWindowText(_T("当前方案：") + g_currentOption); // 当前方案
+	m_optionsPage.m_currentOptionStatic.SetWindowText(_T("当前方案：") + g_userConfig.m_plan); // 当前方案
 	// 方案
 	CFileFind fileFind;
 	BOOL flag = fileFind.FindFile(OPTIONS_PATH + _T("*.tb"));
@@ -630,15 +630,17 @@ void CSettingDlg::SaveOptionsInDlg(LPCTSTR path)
 // 确认
 void CSettingDlg::OnOK()
 {
-	CString tmp;
-	m_optionsPage.m_currentOptionStatic.GetWindowText(tmp);
-	g_currentOption = tmp.Right(tmp.GetLength() - 5);
-	CreateDir(OPTIONS_PATH);
-	SaveOptionsInDlg(OPTIONS_PATH + g_currentOption + _T(".tb"));
-	ApplyOptionsInDlg();
-	WritePrivateProfileString(_T("Setting"), _T("Option"), g_currentOption, USER_PROFILE_PATH);
 	*g_globalConfig.m_autoUpdate = m_aboutPage.m_autoCheckUpdateCheck.GetCheck();
 	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
+
+	CString tmp;
+	m_optionsPage.m_currentOptionStatic.GetWindowText(tmp);
+	*g_userConfig.m_plan = tmp.Right(tmp.GetLength() - 5);
+	g_userConfig.Save(USER_PROFILE_PATH);
+
+	CreateDir(OPTIONS_PATH);
+	SaveOptionsInDlg(OPTIONS_PATH + g_userConfig.m_plan + _T(".tb"));
+	ApplyOptionsInDlg();
 
 	DestroyWindow();
 }

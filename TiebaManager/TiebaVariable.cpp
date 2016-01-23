@@ -16,17 +16,6 @@ CWinThread* g_confirmThread = NULL;
 CWinThread* g_operateThread = NULL;
 
 
-BOOL CUserTiebaInfo::LoadOld(const CString& path)
-{
-	gzFile f = gzopen_w(path, "rb");
-	if (f == NULL)
-		return FALSE;
-	
-	ReadText(f, m_cookie);
-	gzclose(f);
-	return TRUE;
-}
-
 static inline void ReadIDSet(const gzFile& f, set<__int64>& IDSet)
 {
 	IDSet.clear();

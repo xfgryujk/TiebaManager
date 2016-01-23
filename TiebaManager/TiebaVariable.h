@@ -19,7 +19,16 @@ public:
 		m_options.push_back(&m_cookie);
 	}
 
-	BOOL LoadOld(const CString& path);
+	BOOL LoadOld(const CString& path)
+	{
+		gzFile f = gzopen_w(path, "rb");
+		if (f == NULL)
+			return FALSE;
+
+		ReadText(f, m_cookie);
+		gzclose(f);
+		return TRUE;
+	}
 };
 extern CUserTiebaInfo g_userTiebaInfo;
 

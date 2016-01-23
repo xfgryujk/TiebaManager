@@ -141,9 +141,9 @@ void COptionsPage::OnBnClickedButton3()
 		AfxMessageBox(_T("重命名方案失败！"), MB_ICONERROR);
 		return;
 	}
-	if (g_currentOption == name)
+	if (g_userConfig.m_plan == name)
 	{
-		g_currentOption = newName;
+		*g_userConfig.m_plan = newName;
 		m_currentOptionStatic.SetWindowText(_T("当前方案：") + newName);
 	}
 	m_list.DeleteString(index);

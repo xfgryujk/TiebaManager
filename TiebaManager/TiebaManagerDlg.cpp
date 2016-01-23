@@ -538,7 +538,8 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_pageEdit.EnableWindow(TRUE);
 	m_explorerButton.EnableWindow(TRUE);
 	m_superFunctionButton.EnableWindow(TRUE);
-	WritePrivateProfileString(_T("Setting"), _T("ForumName"), g_userTiebaInfo.m_forumName, USER_PROFILE_PATH);
+	*g_userConfig.m_forumName = g_userTiebaInfo.m_forumName;
+	g_userConfig.Save(USER_PROFILE_PATH);
 	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + g_userTiebaInfo.m_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));
 	// 开始循环封
 	AfxBeginThread(LoopBanThread, this);

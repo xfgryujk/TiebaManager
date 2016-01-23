@@ -129,7 +129,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		DWORD startTime = GetTickCount();
 		dlg->m_stateStatic.SetWindowText(_T("扫描主题中"));
 		if (!g_briefLog)
-			dlg->m_log.Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + g_currentOption);
+			dlg->m_log.Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + g_userConfig.m_plan);
 
 		// 获取主题列表
 		if (!GetThreads(g_userTiebaInfo.m_forumName, ignoreThread, g_threads))

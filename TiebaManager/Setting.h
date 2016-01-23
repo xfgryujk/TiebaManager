@@ -45,6 +45,7 @@ public:
 		: COptionBase(name), m_default(_default), IsValid(_isValid)
 	{}
 
+	bool operator == (const COption&) const = delete;
 	operator const T& () const{ return m_value; }
 	operator T& (){ return m_value; }
 	const T& operator * () const{ return m_value; }
@@ -94,12 +95,46 @@ public:
 		m_options.push_back(&m_autoUpdate);
 	}
 
-	BOOL LoadOld(const CString& path);
+	BOOL LoadOld(const CString& path)
+	{
+		*m_firstRun = GetPrivateProfileInt(_T("Setting"), _T("FirstRun"), TRUE, path) != FALSE;
+		TCHAR buffer[260];
+		GetPrivateProfileString(_T("Setting"), _T("UserName"), _T("[NULL]"), buffer, _countof(buffer), path);
+		*m_currentUser = buffer;
+		*m_autoUpdate = GetPrivateProfileInt(_T("Setting"), _T("AutoUpdate"), TRUE, path) != FALSE;
+		return TRUE;
+	}
 };
 extern CGlobalConfig g_globalConfig;
 
+// 用户配置
+class CUserConfig : public CConfigBase
+{
+public:
+	COption<CString> m_plan;		// 当前方案
+	COption<CString> m_forumName;	// 贴吧名
+
+	CUserConfig()
+		: CConfigBase("User"),
+		m_plan("Plan", _T("默认")),
+		m_forumName("ForumName")
+	{
+		m_options.push_back(&m_plan);
+		m_options.push_back(&m_forumName);
+	}
+
+	BOOL LoadOld(const CString& path)
+	{
+		GetPrivateProfileString(_T("Setting"), _T("Option"), _T("默认"), m_plan->GetBuffer(MAX_PATH), MAX_PATH, path);
+		m_plan->ReleaseBuffer();
+		GetPrivateProfileString(_T("Setting"), _T("ForumName"), _T(""), m_forumName->GetBuffer(MAX_PATH), MAX_PATH, path);
+		m_forumName->ReleaseBuffer();
+		return TRUE;
+	}
+};
+extern CUserConfig g_userConfig;
+
 // 方案
-extern CString	g_currentOption;	// 当前方案
 extern int		g_scanInterval;		// 扫描间隔
 extern BOOL		g_banID;			// 封ID
 extern int		g_banDuration;		// 封禁时长
