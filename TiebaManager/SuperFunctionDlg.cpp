@@ -155,71 +155,33 @@ void CSuperFunctionDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 // 显示当前设置
 void CSuperFunctionDlg::ShowCurrentOptions()
 {
-	gzFile f = gzopen_w(CURRENT_USER_PATH + _T("\\options2.tb"), "rb");
-	if (f == NULL)
-		return;
-
-	// 头部
-	char header[2];
-	gzread(f, header, sizeof(header));
-	if (header[0] != 'T' || header[1] != 'B')
-	{
-		gzclose(f);
-		return;
-	}
-
 	// 循环封
-	int size;
-	gzread(f, &size, sizeof(int)); // 长度
-	m_loopBanPage.m_list.ResetContent();
-	m_loopBanPage.m_pid.resize(size);
-	CString strBuf;
-	for (int i = 0; i < size; i++)
-	{
-		ReadText(f, strBuf);
-		m_loopBanPage.m_list.AddString(strBuf);
-		ReadText(f, m_loopBanPage.m_pid[i]);
-	}
-
-	BOOL boolBuf;
-	if (gzread(f, &boolBuf, sizeof(BOOL)) == sizeof(BOOL))		// 输出日志
-		m_loopBanPage.m_logCheck.SetCheck(boolBuf);
-	else
-		m_loopBanPage.m_logCheck.SetCheck(FALSE);
-	if (gzread(f, &boolBuf, sizeof(BOOL)) == sizeof(BOOL))		// 开启
-		m_loopBanPage.m_enableCheck.SetCheck(boolBuf);
-	else
-		m_loopBanPage.m_enableCheck.SetCheck(TRUE);
-
-	gzclose(f);
+	CLoopBanConfig loopBanConfig;
+	loopBanConfig.Load(CURRENT_USER_PATH + _T("\\options2.xml"));
+	
+	m_loopBanPage.m_list.ResetContent();							// 用户名
+	for (const CString& i : loopBanConfig.m_userList.m_value)
+		m_loopBanPage.m_list.AddString(i);
+	m_loopBanPage.m_pid = std::move(loopBanConfig.m_pidList.m_value); // PID
+	m_loopBanPage.m_logCheck.SetCheck(loopBanConfig.m_log);			// 输出日志
+	m_loopBanPage.m_enableCheck.SetCheck(loopBanConfig.m_enable);	// 开启
 }
 
 // 应用对话框中的设置
 void CSuperFunctionDlg::ApplyOptionsInDlg()
 {
-	gzFile f = gzopen_w(CURRENT_USER_PATH + _T("\\options2.tb"), "wb");
-	if (f == NULL)
-		return;
-
-	// 头部
-	gzwrite(f, "TB", 2);
-
 	// 循环封
-	int size;
-	gzwrite(f, &(size = m_loopBanPage.m_list.GetCount()), sizeof(int)); // 长度
-	CString strBuf;
+	CLoopBanConfig loopBanConfig;
+
+	int size = m_loopBanPage.m_list.GetCount();
+	loopBanConfig.m_userList->resize(size);								// 用户名
 	for (int i = 0; i < size; i++)
-	{
-		m_loopBanPage.m_list.GetText(i, strBuf);
-		WriteText(f, strBuf);
-		WriteText(f, m_loopBanPage.m_pid[i]);
-	}
+		m_loopBanPage.m_list.GetText(i, (*loopBanConfig.m_userList)[i]);
+	*loopBanConfig.m_pidList = m_loopBanPage.m_pid;						// PID
+	*loopBanConfig.m_log = m_loopBanPage.m_logCheck.GetCheck();			// 输出日志
+	*loopBanConfig.m_enable = m_loopBanPage.m_enableCheck.GetCheck();	// 开启
 
-	BOOL boolBuf;
-	gzwrite(f, &(boolBuf = m_loopBanPage.m_logCheck.GetCheck()), sizeof(BOOL));		// 输出日志
-	gzwrite(f, &(boolBuf = m_loopBanPage.m_enableCheck.GetCheck()), sizeof(BOOL));	// 开启
-
-	gzclose(f);
+	loopBanConfig.Save(CURRENT_USER_PATH + _T("\\options2.xml"));
 
 	if (m_clearScanCache)
 		DeleteFile(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));

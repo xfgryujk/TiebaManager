@@ -348,6 +348,29 @@ UseDefault:
 	return root;
 }
 
+// ¶Ávector
+
+XMLElement& COption<vector<CString> >::operator << (XMLElement& root)
+{
+	XMLElement* optionNode = root.FirstChildElement(m_name);
+	if (optionNode == NULL)
+	{
+		UseDefault();
+		return root;
+	}
+
+	m_value.clear();
+	COption<CString> value("value");
+	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
+	{
+		value << *item;
+		m_value.push_back(value);
+	}
+	if (!IsValid(m_value))
+		UseDefault();
+	return root;
+}
+
 // ¶Áset
 
 XMLElement& COption<set<__int64> >::operator << (XMLElement& root)
@@ -473,6 +496,25 @@ XMLElement& COption<CString>::operator >> (XMLElement& root) const
 	root.LinkEndChild(optionNode);
 
 	optionNode->LinkEndChild(doc->NewText(CStringA(m_value)));
+	return root;
+}
+
+// Ð´vector
+
+XMLElement& COption<vector<CString> >::operator >> (XMLElement& root) const
+{
+	tinyxml2::XMLDocument* doc = root.GetDocument();
+	XMLElement* optionNode = doc->NewElement(m_name);
+	root.LinkEndChild(optionNode);
+
+	COption<CString> value("value");
+	for (const CString& i : m_value)
+	{
+		XMLElement* item = doc->NewElement("item");
+		optionNode->LinkEndChild(item);
+		*value = i;
+		value >> *item;
+	}
 	return root;
 }
 

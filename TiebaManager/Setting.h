@@ -68,10 +68,10 @@ public:
 	CConfigBase(LPCSTR name) : m_name(name) {}
 	virtual ~CConfigBase() {}
 
-	virtual BOOL LoadOld(const CString& path) = 0; // 万恶的历史遗留问题
-	BOOL Load(const CString& path);
-	BOOL Save(const CString& path) const;
-	void UseDefault();
+	virtual BOOL LoadOld(const CString& path) { return FALSE; }; // 万恶的历史遗留问题
+	virtual BOOL Load(const CString& path);
+	virtual BOOL Save(const CString& path) const;
+	virtual void UseDefault();
 	virtual void OnChange() {}
 };
 

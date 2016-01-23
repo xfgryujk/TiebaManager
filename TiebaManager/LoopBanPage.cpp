@@ -162,34 +162,9 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	if (time.wDay == lastTime.m_day && time.wMonth == lastTime.m_month && time.wYear == lastTime.m_year)
 		return 0;
 
-	gzFile f = gzopen_w(CURRENT_USER_PATH + _T("\\options2.tb"), "rb");
-	if (f == NULL)
-		return 0;
-
-	// 头部
-	char header[2];
-	gzread(f, header, sizeof(header));
-	if (header[0] != 'T' || header[1] != 'B')
-	{
-		gzclose(f);
-		return 0;
-	}
-
-	// 读取名单、设置
-	int size;
-	gzread(f, &size, sizeof(int)); // 长度
-	vector<CString> name(size), pid(size);
-	for (int i = 0; i < size; i++)
-	{
-		ReadText(f, name[i]);
-		ReadText(f, pid[i]);
-	}
-	BOOL log = FALSE, enable;
-	gzread(f, &log, sizeof(BOOL)); // 输出日志
-	if (gzread(f, &enable, sizeof(BOOL)) != sizeof(BOOL)) // 开启
-		enable = TRUE;
-	gzclose(f);
-	if (!enable)
+	CLoopBanConfig config;
+	config.Load(CURRENT_USER_PATH + _T("\\options2.xml"));
+	if (!config.m_enable)
 		return 0;
 
 	// 更新时间
@@ -202,67 +177,44 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	// 循环封
 	dlg->m_stateStatic.SetWindowText(_T("循环封禁中"));
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	for (int i = 0; i < size; i++)
+	for (UINT i = 0; i < config.m_userList->size(); i++)
 	{
 		CString code;
-		if (pid[i] != _T("")) // 尝试用PID封禁
-			code = BanID(name[i], pid[i]);
-		if (pid[i] == _T("") || code != _T("0")) // 尝试不用PID封禁（用户必须为本吧会员）
+		if ((*config.m_pidList)[i] != _T("")) // 尝试用PID封禁
+			code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
+		if ((*config.m_pidList)[i] == _T("") || code != _T("0")) // 尝试不用PID封禁（用户必须为本吧会员）
 		{
-			code = BanID(name[i]);
+			code = BanID((*config.m_userList)[i]);
 			if (code != _T("0")) // 尝试获取新的PID并用PID封禁
 			{
-				pid[i] = GetPIDFromUser(name[i]);
+				(*config.m_pidList)[i] = GetPIDFromUser((*config.m_userList)[i]);
 				updatePID = TRUE;
-				code = BanID(name[i], pid[i]);
+				code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
 			}
 		}
 
-		if (log)
+		if (config.m_log)
 		{
 			if (code != _T("0"))
 			{
 				CString content;
 				content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
-					_T("\"bd:%s,%s\">重试</a>"), name[i], code, GetTiebaErrorText(code), pid[i], name[i]);
+					_T("\"bd:%s,%s\">重试</a>"), (*config.m_userList)[i], code, GetTiebaErrorText(code), (*config.m_pidList)[i], 
+					(*config.m_userList)[i]);
 				dlg->m_log.Log(content);
 			}
 			else
-				dlg->m_log.Log(_T("<font color=red>封禁 </font>") + name[i]);
+				dlg->m_log.Log(_T("<font color=red>封禁 </font>") + (*config.m_userList)[i]);
 		}
 
-		if (code == _T("0") && i < size - 1)
+		if (code == _T("0") && i < config.m_userList->size() - 1)
 			Sleep(3000);
 	}
 	CoUninitialize();
 
 	// 更新PID
 	if (updatePID)
-	{
-		f = gzopen_w(CURRENT_USER_PATH + _T("\\options2.tb"), "wb");
-		if (f == NULL)
-		{
-			dlg->m_stateStatic.SetWindowText(_T("待机中"));
-			return 0;
-		}
-
-		// 头部
-		gzwrite(f, "TB", 2);
-
-		// 循环封
-		int size;
-		gzwrite(f, &(size = (int)name.size()), sizeof(int)); // 长度
-		for (int i = 0; i < size; i++)
-		{
-			WriteText(f, name[i]);
-			WriteText(f, pid[i]);
-		}
-
-		gzwrite(f, &log, sizeof(BOOL));		// 输出日志
-		gzwrite(f, &enable, sizeof(BOOL));	// 开启
-
-		gzclose(f);
-	}
+		config.Save(CURRENT_USER_PATH + _T("\\options2.xml"));
 
 	dlg->m_stateStatic.SetWindowText(_T("待机中"));
 	return 0;
