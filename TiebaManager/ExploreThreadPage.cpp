@@ -76,7 +76,7 @@ void CExploreThreadPage::OnBnClickedButton1()
 	CString ignoreThread; // 忽略前几个主题
 	ignoreThread.Format(_T("%d"), (iPage - 1) * 50);
 
-	GetThreads(g_forumName, ignoreThread, m_threads);
+	GetThreads(g_userTiebaInfo.m_forumName, ignoreThread, m_threads);
 	m_list.DeleteAllItems();
 	((CExplorerDlg*)GetParent()->GetParent())->m_edit.SetWindowText(_T(""));
 	for (const ThreadInfo& i : m_threads)

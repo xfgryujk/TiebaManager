@@ -132,7 +132,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			dlg->m_log.Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + g_currentOption);
 
 		// 获取主题列表
-		if (!GetThreads(g_forumName, ignoreThread, g_threads))
+		if (!GetThreads(g_userTiebaInfo.m_forumName, ignoreThread, g_threads))
 		{
 			if (g_stopScanFlag)
 				break;

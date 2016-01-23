@@ -3,15 +3,30 @@
 
 
 // 贴吧、用户信息
-extern CString g_forumName;
-extern CString g_encodedForumName;
-extern CString g_forumID;
-extern CString g_cookie;
-extern CString g_tbs; // 备用获取tbs地址：http://tieba.baidu.com/dc/common/tbs
+class CUserTiebaInfo : public CConfigBase
+{
+public:
+	CString m_forumName;
+	CString m_encodedForumName;
+	CString m_forumID;
+	COption<CString> m_cookie;
+	CString m_tbs; // 备用获取tbs地址：http://tieba.baidu.com/dc/common/tbs
+
+	CUserTiebaInfo()
+		: CConfigBase("Cookie"),
+		m_cookie("Cookie")
+	{
+		m_options.push_back(&m_cookie);
+	}
+
+	BOOL LoadOld(const CString& path);
+};
+extern CUserTiebaInfo g_userTiebaInfo;
 
 // 扫描
 extern volatile BOOL g_stopScanFlag;
 extern CWinThread* g_scanThread;
+// 缓存
 class CUserCache : public CConfigBase
 {
 public:

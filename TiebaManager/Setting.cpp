@@ -291,12 +291,7 @@ void SaveCurrentUserProfile()
 	CreateDir(USERS_PATH + g_globalConfig.m_currentUser);
 
 	// 保存Cookie
-	gzFile f = gzopen_w(COOKIE_PATH, "wb");
-	if (f != NULL)
-	{
-		WriteText(f, g_cookie);
-		gzclose(f);
-	}
+	g_userTiebaInfo.Save(COOKIE_PATH);
 
 	// 保存历史回复、忽略ID等
 	g_userCache.Save(CACHE_PATH);
@@ -313,7 +308,7 @@ void SetCurrentUser(const CString& userName)
 	*g_globalConfig.m_currentUser = userName;
 	CURRENT_USER_PATH = USERS_PATH + userName;
 	USER_PROFILE_PATH = CURRENT_USER_PATH + _T("\\options.tb");
-	COOKIE_PATH = CURRENT_USER_PATH + _T("\\ck.tb");
+	COOKIE_PATH = CURRENT_USER_PATH + _T("\\ck.xml");
 	CACHE_PATH = CURRENT_USER_PATH + _T("\\cache.xml");
 
 	// 读取设置
@@ -325,13 +320,9 @@ void SetCurrentUser(const CString& userName)
 	// 贴吧名
 	GetPrivateProfileString(_T("Setting"), _T("ForumName"), _T(""), buffer, _countof(buffer), USER_PROFILE_PATH);
 	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_forumNameEdit.SetWindowText(buffer);
+
 	// Cookie
-	gzFile f = gzopen_w(COOKIE_PATH, "rb");
-	if (f != NULL)
-	{
-		ReadText(f, g_cookie);
-		gzclose(f);
-	}
+	g_userTiebaInfo.Load(COOKIE_PATH);
 
 	// 历史回复、忽略ID等
 	g_userCache.Load(CACHE_PATH);
@@ -682,6 +673,17 @@ BOOL CGlobalConfig::LoadOld(const CString& path)
 	GetPrivateProfileString(_T("Setting"), _T("UserName"), _T("[NULL]"), buffer, _countof(buffer), path);
 	*m_currentUser = buffer;
 	*m_autoUpdate = GetPrivateProfileInt(_T("Setting"), _T("AutoUpdate"), TRUE, path) != FALSE;
+	return TRUE;
+}
+
+BOOL CUserTiebaInfo::LoadOld(const CString& path)
+{
+	gzFile f = gzopen_w(path, "rb");
+	if (f == NULL)
+		return FALSE;
+	
+	ReadText(f, m_cookie);
+	gzclose(f);
 	return TRUE;
 }
 

@@ -4,11 +4,7 @@
 
 
 // 贴吧、用户信息
-CString g_forumName;
-CString g_encodedForumName;
-CString g_forumID;
-CString g_cookie;
-CString g_tbs;
+CUserTiebaInfo g_userTiebaInfo;
 
 // 扫描
 volatile BOOL g_stopScanFlag = FALSE;

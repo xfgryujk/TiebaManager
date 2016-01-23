@@ -124,7 +124,7 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 		if (m_instance != NULL)
 			m_instance->m_stateStatic.SetWindowText(state);
 		CString url;
-		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), g_encodedForumName, page);
+		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), g_userTiebaInfo.m_encodedForumName, page);
 		CString src = HTTPGet(url);
 		if (m_stopFlag)
 			break;

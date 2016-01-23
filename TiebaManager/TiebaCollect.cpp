@@ -193,7 +193,7 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 	time_t timestamp;
 	time(&timestamp);
 	CString url;
-	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), timestamp, tid, g_forumID, page);
+	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), timestamp, tid, g_userTiebaInfo.m_forumID, page);
 	CString src = HTTPGet(url, FALSE, &g_stopScanFlag);
 	//WriteString(src, _T("lzl.txt"));
 	CStringArray splitedSrc; // 0楼中楼，1用户
@@ -245,7 +245,7 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 // 取用户发的帖子ID
 CString GetPIDFromUser(const CString& userName)
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + g_encodedForumName + _T("&qw=&rn=10&un=") 
+	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + g_userTiebaInfo.m_encodedForumName + _T("&qw=&rn=10&un=")
 		+ userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"), FALSE);
 	if (src == NET_TIMEOUT_TEXT)
 		return NET_TIMEOUT_TEXT;
