@@ -1,6 +1,7 @@
 #pragma once
 #include "afxcmn.h"
 #include "afxwin.h"
+#include "Setting.h"
 #include "ScanPage.h"
 #include "OperatePage.h"
 #include "KeywordsPage.h"
@@ -43,10 +44,10 @@ public:
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnClose();
 
-	void ShowCurrentOptions();
-	void ApplyOptionsInDlg();
-	void ShowOptionsInFile(LPCTSTR path);
-	void SaveOptionsInDlg(LPCTSTR path);
+	void ShowPlan(const CPlan& plan);
+	void ApplyPlanInDlg(CPlan& plan);
+	void ShowPlanInFile(const CString& path);
+	void SavePlanInDlg(const CString& path);
 
 
 public:

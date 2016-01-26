@@ -140,7 +140,7 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 				{
 					sndPlaySound(_T("É¾Ìù.wav"), SND_ASYNC | SND_NODEFAULT);
 					mainDlg->m_log.Log(_T("<font color=red>ËøÌû£ºÉ¾³ı </font>") + post.floor + _T("Â¥"));
-					for (int i = 0; i < (int)(g_deleteInterval * 10); i++)
+					for (int i = 0; i < (int)(g_plan.m_deleteInterval * 10); i++)
 					{
 						if (m_stopFlag)
 							break;

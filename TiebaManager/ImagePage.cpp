@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "ImagePage.h"
+#include "Setting.h"
 #include "SettingDlg.h"
 
 
@@ -13,7 +14,7 @@ IMPLEMENT_DYNAMIC(CImagePage, CNormalDlg)
 CImagePage::CImagePage(CWnd* pParent /*=NULL*/)
 	: CNormalDlg(CImagePage::IDD, pParent)
 {
-	m_updateImage = FALSE;
+	g_plan.m_updateImage = FALSE;
 }
 
 #pragma region MFC
@@ -75,7 +76,7 @@ void CImagePage::OnBnClickedButton1()
 // ¸üÐÂÍ¼Æ¬
 void CImagePage::OnBnClickedButton2()
 {
-	m_updateImage = TRUE;
+	g_plan.m_updateImage = TRUE;
 	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 }
 

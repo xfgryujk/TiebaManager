@@ -101,7 +101,7 @@ void CUsersPage::OnBnClickedButton2()
 		return;
 	}
 	CString path = USERS_PATH + name + _T("\\");
-	if ((!DeleteFile(path + _T("ck.xml")) && !DeleteFile(path + _T("ck.tb"))) || !DeleteFile(path + _T("cache.tb")))
+	if (!DeleteFile(path + _T("ck.xml")) && !DeleteFile(path + _T("ck.tb")))
 	{
 		AfxMessageBox(_T("…æ≥˝’À∫≈ ß∞‹£°"), MB_ICONERROR);
 		return;
@@ -121,7 +121,7 @@ void CUsersPage::OnBnClickedButton3()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	SetCurrentUser(name);
-	((CSettingDlg*)GetParent()->GetParent())->ShowCurrentOptions();
+	SetCurrentUser(name, TRUE);
+	((CSettingDlg*)GetParent()->GetParent())->ShowPlan(g_plan);
 	m_currentUserStatic.SetWindowText(_T("µ±«∞’À∫≈£∫") + g_globalConfig.m_currentUser);
 }

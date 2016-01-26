@@ -39,17 +39,17 @@ extern CWinThread* g_scanThread;
 class CUserCache : public CConfigBase
 {
 public:
-	COption<set<__int64> > m_initIgnoredTID; // 不删的主题ID(手动忽略)，要写入文件
-	COption<set<__int64> > m_initIgnoredPID; // 不删的帖子ID(手动忽略)，要写入文件
-	COption<set<__int64> > m_initIgnoredLZLID; // 不删的楼中楼ID(手动忽略)，要写入文件
-	set<__int64> m_ignoredTID; // 不删的主题ID(已扫描且违规)
-	set<__int64> m_ignoredPID; // 不删的帖子ID(已扫描且违规)
-	set<__int64> m_ignoredLZLID; // 不删的楼中楼ID(已扫描且违规)
-	set<__int64> m_deletedTID; // 已删的主题ID
-	COption<map<__int64, int> > m_reply; // 主题的回复数，要写入文件
-	COption<map<CString, int> > m_userTrigCount; // 某用户违规次数，要写入文件
-	COption<set<CString> > m_bannedUser; // 已封的用户，要写入文件
-	COption<set<CString> > m_defriendedUser; // 已拉黑的用户，要写入文件
+	COption<set<__int64> > m_initIgnoredTID;		// 不删的主题ID(手动忽略)，要写入文件
+	COption<set<__int64> > m_initIgnoredPID;		// 不删的帖子ID(手动忽略)，要写入文件
+	COption<set<__int64> > m_initIgnoredLZLID;		// 不删的楼中楼ID(手动忽略)，要写入文件
+	set<__int64> m_ignoredTID;						// 不删的主题ID(已扫描且违规)
+	set<__int64> m_ignoredPID;						// 不删的帖子ID(已扫描且违规)
+	set<__int64> m_ignoredLZLID;					// 不删的楼中楼ID(已扫描且违规)
+	set<__int64> m_deletedTID;						// 已删的主题ID
+	COption<map<__int64, int> > m_reply;			// 主题的回复数，要写入文件
+	COption<map<CString, int> > m_userTrigCount;	// 某用户违规次数，要写入文件
+	COption<set<CString> > m_bannedUser;			// 已封的用户，要写入文件
+	COption<set<CString> > m_defriendedUser;		// 已拉黑的用户，要写入文件
 
 	CUserCache()
 		: CConfigBase("Cache"),
@@ -70,7 +70,7 @@ public:
 		m_options.push_back(&m_defriendedUser);
 	}
 
-	void OnChange()
+	void PostChange()
 	{
 		m_ignoredTID = m_initIgnoredTID;
 		m_ignoredPID = m_initIgnoredPID;

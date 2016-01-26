@@ -33,6 +33,4 @@ public:
 	CButton m_updateButton;
 	CStatic m_static;
 	CEdit m_thresholdEdit;
-
-	BOOL m_updateImage;
 };

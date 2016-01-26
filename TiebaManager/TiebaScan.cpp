@@ -30,44 +30,44 @@ extern queue<Operation> g_operationQueue; // 操作队列
 // 检查违规
 BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg, int& pos, int& length)
 {
-	g_optionsLock.Lock();
+	g_plan.m_optionsLock.Lock();
 
 	// 信任用户
-	if (g_whiteList.find(author) != g_whiteList.end())
+	if (g_plan.m_whiteList->find(author) != g_plan.m_whiteList->end())
 	{
-		g_optionsLock.Unlock();
+		g_plan.m_optionsLock.Unlock();
 		return FALSE;
 	}
 
 	// 信任内容
-	for (const RegexText& whiteContent : g_whiteContent)
-	if (StringIncludes(content, whiteContent))
-	{
-		g_optionsLock.Unlock();
-		return FALSE;
-	}
+	for (const RegexText& whiteContent : *g_plan.m_whiteContent)
+		if (StringIncludes(content, whiteContent))
+		{
+			g_plan.m_optionsLock.Unlock();
+			return FALSE;
+		}
 
 	// 违规内容
-	for (const RegexText& keyword : g_keywords)
-	if (StringIncludes(content, keyword, &pos, &length))
-	{
-		msg = _T("<font color=red> 触发违禁词 </font>") + HTMLEscape(keyword.text);
-		g_optionsLock.Unlock();
-		return TRUE;
-	}
+	for (const RegexText& keyword : *g_plan.m_keywords)
+		if (StringIncludes(content, keyword, &pos, &length))
+		{
+			msg = _T("<font color=red> 触发违禁词 </font>") + HTMLEscape(keyword.text);
+			g_plan.m_optionsLock.Unlock();
+			return TRUE;
+		}
 
 	// 屏蔽用户
-	for (const RegexText& blackList : g_blackList)
-	if (StringMatchs(author, blackList))
-	{
-		pos = 0;
-		length = 0;
-		msg = _T("<font color=red> 触发屏蔽用户 </font>") + HTMLEscape(blackList.text);
-		g_optionsLock.Unlock();
-		return TRUE;
-	}
+	for (const RegexText& blackList : *g_plan.m_blackList)
+		if (StringMatchs(author, blackList))
+		{
+			pos = 0;
+			length = 0;
+			msg = _T("<font color=red> 触发屏蔽用户 </font>") + HTMLEscape(blackList.text);
+			g_plan.m_optionsLock.Unlock();
+			return TRUE;
+		}
 
-	g_optionsLock.Unlock();
+	g_plan.m_optionsLock.Unlock();
 	return FALSE;
 }
 
@@ -128,7 +128,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	{
 		DWORD startTime = GetTickCount();
 		dlg->m_stateStatic.SetWindowText(_T("扫描主题中"));
-		if (!g_briefLog)
+		if (!g_plan.m_briefLog)
 			dlg->m_log.Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + g_userConfig.m_plan);
 
 		// 获取主题列表
@@ -136,7 +136,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		{
 			if (g_stopScanFlag)
 				break;
-			if (!g_briefLog)
+			if (!g_plan.m_briefLog)
 				dlg->m_log.Log(_T("<font color=red>获取主题列表失败，重新开始本轮</font>"));
 			continue;
 		}
@@ -158,20 +158,20 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			}
 		}
 		// 扫描主题图片
-		BOOL scanImage = !g_images.empty();
-		if (g_onlyScanTitle && scanImage)
+		BOOL scanImage = !g_plan.m_images.empty();
+		if (g_plan.m_onlyScanTitle && scanImage)
 		{
 			scanImage = FALSE;
 			ScanThreadImage(msg, dlg);
 		}
 
 		// 扫描帖子
-		if (!g_onlyScanTitle)
+		if (!g_plan.m_onlyScanTitle)
 		{
 			dlg->m_stateStatic.SetWindowText(_T("扫描帖子中"));
 			g_threadIndex = 0;
 			// 创建线程扫描帖子
-			int threadCount = g_threadCount; // g_threadCount会变
+			int threadCount = g_plan.m_threadCount; // g_threadCount会变
 			unique_ptr<unique_ptr<CWinThread>[]> threadObjects(new unique_ptr<CWinThread>[threadCount]);
 			HANDLE* threadHandles(new HANDLE[threadCount]);
 			for (int i = 0; i < threadCount; i++)
@@ -193,7 +193,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		}
 
 		dlg->m_stateStatic.SetWindowText(_T("延时中"));
-		if (!g_briefLog)
+		if (!g_plan.m_briefLog)
 		{
 			CString content;
 			content.Format(_T("<font color=green>本轮扫描结束，用时%.3f秒</font>"), (float)(GetTickCount() - startTime) / 1000.0f);
@@ -201,7 +201,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		}
 
 		// 延时
-		int count = g_scanInterval * 10;
+		int count = g_plan.m_scanInterval * 10;
 		for (int i = 0; i < count; i++)
 		{
 			if (g_stopScanFlag)
@@ -211,7 +211,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	}
 	g_stopScanFlag = FALSE;
 
-	if (!g_briefLog)
+	if (!g_plan.m_briefLog)
 		dlg->m_log.Log(_T("<font color=green>扫描结束</font>"));
 	CoUninitialize();
 	dlg->m_stopButton.EnableWindow(FALSE);
@@ -240,13 +240,13 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		g_threadIndexLock.Unlock();
 		if (g_userCache.m_deletedTID.find(_ttoi64(thread.tid)) != g_userCache.m_deletedTID.end()) // 已删
 			goto next;
-		g_optionsLock.Lock();
-		if (g_trustedThread.find(thread.tid) != g_trustedThread.end()) // 信任
+		g_plan.m_optionsLock.Lock();
+		if (g_plan.m_trustedThread->find(thread.tid) != g_plan.m_trustedThread->end()) // 信任
 		{
-			g_optionsLock.Unlock();
+			g_plan.m_optionsLock.Unlock();
 			goto next;
 		}
-		g_optionsLock.Unlock();
+		g_plan.m_optionsLock.Unlock();
 
 		__int64 tid = _ttoi64(thread.tid);
 		int reply = _ttoi(thread.reply);
@@ -264,7 +264,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 			goto next;
 		if (src == NET_TIMEOUT_TEXT)
 		{
-			if (!g_briefLog)
+			if (!g_plan.m_briefLog)
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
 				+ _T("</a> <font color=red>获取贴子列表失败(超时)，暂时跳过</font>"));
 			goto next;
@@ -275,7 +275,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		if (pageCount == _T(""))
 		{
 			WriteString(src, _T("thread.txt"));
-			if (!g_briefLog)
+			if (!g_plan.m_briefLog)
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
 				+ _T("</a> <font color=red>获取贴子列表失败(可能已被删)，暂时跳过</font>"));
 			goto next;
@@ -289,7 +289,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 
 		// 记录历史回复
 		if (res)
-			g_userCache.m_reply.m_value[tid] = reply;
+			(*g_userCache.m_reply)[tid] = reply;
 
 	next:
 		g_threadIndexLock.Lock();
@@ -398,7 +398,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	// 递归扫描上一页
 	if (!hasHistoryReply) // 如果有历史回复前面几页很可能被扫描过了，不递归
 	{
-		if (++ScanedCount < g_scanPageCount) // 没达到最大扫描页数
+		if (++ScanedCount < g_plan.m_scanPageCount) // 没达到最大扫描页数
 		{
 			if (--page < 2) // 扫描完
 				return TRUE;

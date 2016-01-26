@@ -183,7 +183,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 
 	// 读取设置
 	g_globalConfig.Load(GLOBAL_CONFIG_PATH);
-	SetCurrentUser(g_globalConfig.m_currentUser);
+	SetCurrentUser(g_globalConfig.m_currentUser, FALSE);
 	
 	// 自动更新
 	if (g_globalConfig.m_autoUpdate)
@@ -236,7 +236,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 // 保存储存在窗口的数据
 void CTiebaManagerDlg::OnClose()
 {
-	if (g_autoSaveLog)
+	if (g_plan.m_autoSaveLog)
 		m_log.Save(_T("Log"));
 	m_log.Release();
 
@@ -253,7 +253,7 @@ void CTiebaManagerDlg::OnDestroy()
 
 	g_stopScanFlag = TRUE; // 实际上线程不会返回（返回前就崩溃了？）
 
-	g_images.clear(); // 不知道为什么不加这个Release版关闭后会崩溃...
+	g_plan.m_images.clear(); // 不知道为什么不加这个Release版关闭后会崩溃...
 
 	// 还是有内存泄漏，但我找不出了...
 }
@@ -518,7 +518,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	}
 
 	// 加入信任用户
-	g_whiteList.insert(userName);
+	g_plan.m_whiteList->insert(userName);
 
 	// 取tbs(口令号)
 	g_userTiebaInfo.m_tbs = GetStringBetween(src, _TBS_LEFT, _TBS_RIGHT);
@@ -554,7 +554,7 @@ error:
 // 开始
 void CTiebaManagerDlg::OnBnClickedButton2()
 {
-	if (g_keywords.empty() && g_images.empty() && g_blackList.empty())
+	if (g_plan.m_keywords->empty() && g_plan.m_images.empty() && g_plan.m_blackList->empty())
 	{
 		AfxMessageBox(_T("至少设置一个违规内容或屏蔽用户！"), MB_ICONERROR);
 		OnBnClickedButton5();

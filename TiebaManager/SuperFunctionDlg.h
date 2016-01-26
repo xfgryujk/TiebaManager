@@ -97,8 +97,8 @@ public:
 			ReadText(f, (*m_pidList)[i]);
 		}
 		*m_log = FALSE;
-		gzread(f, &m_log.m_value, sizeof(BOOL)); // 输出日志
-		if (gzread(f, &m_enable.m_value, sizeof(BOOL)) != sizeof(BOOL)) // 开启
+		gzread(f, &*m_log, sizeof(BOOL)); // 输出日志
+		if (gzread(f, &*m_enable, sizeof(BOOL)) != sizeof(BOOL)) // 开启
 			*m_enable = TRUE;
 
 		gzclose(f);

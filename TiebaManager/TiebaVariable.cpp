@@ -62,7 +62,7 @@ BOOL CUserCache::LoadOld(const CString& path)
 		{
 			gzread(f, &tid, sizeof(__int64));
 			gzread(f, &reply, sizeof(int));
-			g_userCache.m_reply.m_value[tid] = reply;
+			(*g_userCache.m_reply)[tid] = reply;
 		}
 	}
 	// ºöÂÔID
@@ -81,7 +81,7 @@ BOOL CUserCache::LoadOld(const CString& path)
 		{
 			ReadText(f, userName);
 			gzread(f, &count, sizeof(int));
-			g_userCache.m_userTrigCount.m_value[userName] = count;
+			(*g_userCache.m_userTrigCount)[userName] = count;
 		}
 	}
 	// À­ºÚÓÃ»§

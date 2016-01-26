@@ -87,7 +87,7 @@ void COptionsPage::OnBnClickedButton1()
 	}
 	
 	CreateDir(OPTIONS_PATH);
-	if (PathFileExists(OPTIONS_PATH + name + _T(".tb")))
+	if (PathFileExists(OPTIONS_PATH + name + _T(".xml")) || PathFileExists(OPTIONS_PATH + name + _T(".tb")))
 	{
 		AfxMessageBox(_T("方案已存在！"), MB_ICONERROR);
 		return;
@@ -105,7 +105,7 @@ void COptionsPage::OnBnClickedButton2()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (!DeleteFile(OPTIONS_PATH + name + _T(".tb")))
+	if (!DeleteFile(OPTIONS_PATH + name + _T(".xml")) && !DeleteFile(OPTIONS_PATH + name + _T(".tb")))
 	{
 		AfxMessageBox(_T("删除方案失败！"), MB_ICONERROR);
 		return;
@@ -114,8 +114,8 @@ void COptionsPage::OnBnClickedButton2()
 	m_list.SetCurSel(index == 0 ? 0 : index - 1);
 	if (m_list.GetCurSel() == LB_ERR)
 	{
-		ReadOptions(_T(""));
-		((CSettingDlg*)GetParent()->GetParent())->ShowCurrentOptions();
+		g_plan.UseDefault();
+		((CSettingDlg*)GetParent()->GetParent())->ShowPlan(g_plan);
 	}
 	else
 		OnBnClickedButton6();
@@ -136,7 +136,8 @@ void COptionsPage::OnBnClickedButton3()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (!MoveFile(OPTIONS_PATH + name + _T(".tb"), OPTIONS_PATH + newName + _T(".tb")))
+	if (!MoveFile(OPTIONS_PATH + name + _T(".xml"), OPTIONS_PATH + newName + _T(".xml")) 
+		&& !MoveFile(OPTIONS_PATH + name + _T(".tb"), OPTIONS_PATH + newName + _T(".tb")))
 	{
 		AfxMessageBox(_T("重命名方案失败！"), MB_ICONERROR);
 		return;
@@ -162,7 +163,7 @@ void COptionsPage::OnBnClickedButton6()
 	}
 	CString name;
 	m_list.GetText(index, name);
-	((CSettingDlg*)GetParent()->GetParent())->ShowOptionsInFile(OPTIONS_PATH + name + _T(".tb"));
+	((CSettingDlg*)GetParent()->GetParent())->ShowPlanInFile(OPTIONS_PATH + name + _T(".xml"));
 	m_currentOptionStatic.SetWindowText(_T("当前方案：") + name);
 }
 
@@ -178,5 +179,5 @@ void COptionsPage::OnBnClickedButton4()
 	CreateDir(OPTIONS_PATH);
 	CString name;
 	m_list.GetText(index, name);
-	((CSettingDlg*)GetParent()->GetParent())->SaveOptionsInDlg(OPTIONS_PATH + name + _T(".tb"));
+	((CSettingDlg*)GetParent()->GetParent())->SavePlanInDlg(OPTIONS_PATH + name + _T(".xml"));
 }

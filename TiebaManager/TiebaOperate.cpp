@@ -60,11 +60,11 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 		g_confirmQueueLock.Unlock();
 
 		// 没有操作
-		if (!g_delete && !g_banID && !g_defriend)
+		if (!g_plan.m_delete && !g_plan.m_banID && !g_plan.m_defriend)
 			continue;
 
 		// 确认是否操作
-		if (g_confirm)
+		if (g_plan.m_confirm)
 		{
 			if (CConfirmDlg(&op).DoModal() == IDCANCEL)
 			{
@@ -127,7 +127,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		g_operationQueueLock.Unlock();
 
 		// 没有操作
-		if (!g_delete && !g_banID && !g_defriend)
+		if (!g_plan.m_delete && !g_plan.m_banID && !g_plan.m_defriend)
 			continue;
 
 		// 增加违规次数
@@ -137,10 +137,10 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		if (hasHistory)
 			countIt->second = count;
 		else
-			g_userCache.m_userTrigCount.m_value[op.author] = 1;
+			(*g_userCache.m_userTrigCount)[op.author] = 1;
 
 		// 封禁
-		if (g_banID && count >= g_banTrigCount 
+		if (g_plan.m_banID && count >= g_plan.m_banTrigCount
 			&& g_userCache.m_bannedUser->find(op.author) == g_userCache.m_bannedUser->end()) // 达到封禁违规次数且未封
 		{
 			if (op.pid == _T(""))
@@ -174,7 +174,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		}
 
 		// 拉黑
-		if (g_defriend && count >= g_defriendTrigCount 
+		if (g_plan.m_defriend && count >= g_plan.m_defriendTrigCount
 			&& g_userCache.m_defriendedUser->find(op.author) == g_userCache.m_defriendedUser->end()) // 达到拉黑违规次数且未拉黑
 		{
 			CString code = Defriend(op.authorID);
@@ -199,7 +199,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			continue;
 
 		// 删帖
-		if (!g_delete)
+		if (!g_plan.m_delete)
 			continue;
 		if (op.object == TBOBJ_THREAD) // 主题
 		{
@@ -217,7 +217,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				g_userCache.m_deletedTID.insert(_ttoi64(op.tid));
 				dlg->m_log.Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 					+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
-				Sleep((DWORD)(g_deleteInterval * 1000));
+				Sleep((DWORD)(g_plan.m_deleteInterval * 1000));
 			}
 		}
 		else if (op.object == TBOBJ_POST) // 帖子
@@ -236,7 +236,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
 				dlg->m_log.Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 					+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼"));
-				Sleep((DWORD)(g_deleteInterval * 1000));
+				Sleep((DWORD)(g_plan.m_deleteInterval * 1000));
 			}
 		}
 		else /*if (op.object == TBOBJ_POST)*/ // 楼中楼
@@ -255,7 +255,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
 				dlg->m_log.Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 					+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("楼回复"));
-				Sleep((DWORD)(g_deleteInterval * 1000));
+				Sleep((DWORD)(g_plan.m_deleteInterval * 1000));
 			}
 		}
 	}
@@ -281,8 +281,8 @@ CString BanID(LPCTSTR userName, LPCTSTR pid)
 {
 	CString data;
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&pid%%5B%%5D=%s&reason=%s"),
-		g_banDuration, g_userTiebaInfo.m_forumID, g_userTiebaInfo.m_tbs, EncodeURI(userName), pid, 
-		g_banReason != _T("") ? g_banReason : _T("%20"));
+		*g_plan.m_banDuration, g_userTiebaInfo.m_forumID, g_userTiebaInfo.m_tbs, EncodeURI(userName), pid,
+		*g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
 	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
 	return GetOperationErrorCode(src);
 }
@@ -292,8 +292,8 @@ CString BanID(LPCTSTR userName)
 {
 	CString data;
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&reason=%s"),
-		g_banDuration, g_userTiebaInfo.m_forumID, g_userTiebaInfo.m_tbs, EncodeURI(userName), 
-		g_banReason != _T("") ? g_banReason : _T("%20"));
+		*g_plan.m_banDuration, g_userTiebaInfo.m_forumID, g_userTiebaInfo.m_tbs, EncodeURI(userName),
+		*g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
 	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
 	return GetOperationErrorCode(src);
 }

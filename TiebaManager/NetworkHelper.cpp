@@ -364,7 +364,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 	if (xml.IsEmpty())
 		return NET_FAILED_TO_CREATE_INSTANCE;
 	if (cookie == NULL)
-		cookie = &g_userTiebaInfo.m_cookie.m_value;
+		cookie = &*g_userTiebaInfo.m_cookie;
 
 	if (postMethod)
 	{

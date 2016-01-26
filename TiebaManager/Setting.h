@@ -74,6 +74,7 @@ public:
 	virtual BOOL Save(const CString& path) const;
 	virtual void UseDefault();
 	virtual void OnChange() {}
+	virtual void PostChange() {}
 };
 
 // 全局配置
@@ -135,31 +136,42 @@ public:
 extern CUserConfig g_userConfig;
 
 // 方案
-extern int		g_scanInterval;		// 扫描间隔
-extern BOOL		g_banID;			// 封ID
-extern int		g_banDuration;		// 封禁时长
-extern int		g_banTrigCount;		// 封禁违规次数
-extern BOOL		g_onlyScanTitle;	// 只扫描标题
-extern float	g_deleteInterval;	// 删帖间隔
-extern BOOL		g_confirm;			// 操作前提示
-extern int		g_scanPageCount;	// 扫描最后页数
-extern BOOL		g_briefLog;			// 只输出删帖封号
-extern BOOL		g_delete;			// 删帖
-extern int		g_threadCount;		// 线程数
-extern CString	g_banReason;		// 封号原因
-extern CString	g_imageDir;			// 违规图片目录
-extern double	g_SSIMThreshold;	// 阈值
-extern BOOL		g_defriend;			// 拉黑
-extern int		g_defriendTrigCount; // 拉黑违规次数
-extern BOOL		g_autoSaveLog;		// 自动保存日志
-extern vector<RegexText>	g_keywords;		// 违规内容
-extern vector<RegexText>	g_blackList;	// 屏蔽用户
-extern set<CString>			g_whiteList;	// 信任用户
-extern vector<RegexText>	g_whiteContent;	// 信任内容
-extern vector<NameImage>	g_images;		// 违规图片
-extern set<CString>			g_trustedThread;// 信任主题
+class CPlan : public CConfigBase
+{
+public:
+	CCriticalSection m_optionsLock; // 方案临界区
+	BOOL m_updateImage; // 读取后更新违规图片
 
-extern CCriticalSection g_optionsLock; // 方案临界区
+	COption<int>		m_scanInterval;			// 扫描间隔
+	COption<BOOL>		m_onlyScanTitle;		// 只扫描标题
+	COption<int>		m_scanPageCount;		// 扫描最后页数
+	COption<BOOL>		m_briefLog;				// 只输出删帖封号
+	COption<int>		m_threadCount;			// 线程数
+	COption<BOOL>		m_autoSaveLog;			// 自动保存日志
+	COption<BOOL>		m_delete;				// 删帖
+	COption<BOOL>		m_banID;				// 封ID
+	COption<BOOL>		m_defriend;				// 拉黑
+	COption<float>		m_deleteInterval;		// 删帖间隔
+	COption<int>		m_banDuration;			// 封禁时长
+	COption<CString>	m_banReason;			// 封号原因
+	COption<int>		m_banTrigCount;			// 封禁违规次数
+	COption<int>		m_defriendTrigCount;	// 拉黑违规次数
+	COption<BOOL>		m_confirm;				// 操作前提示
+	COption<vector<RegexText> >	m_keywords;		// 违规内容
+	vector<NameImage>			m_images;		// 违规图片
+	COption<CString>	m_imageDir;				// 违规图片目录
+	COption<double>		m_SSIMThreshold;		// 阈值
+	COption<vector<RegexText> >	m_blackList;	// 屏蔽用户
+	COption<set<CString> >		m_whiteList;	// 信任用户
+	COption<vector<RegexText> >	m_whiteContent;	// 信任内容
+	COption<set<CString> >		m_trustedThread;// 信任主题
+
+	CPlan();
+	BOOL LoadOld(const CString& path);
+	void OnChange(){ m_optionsLock.Lock(); }
+	void PostChange();
+};
+extern CPlan g_plan;
 
 
 // 读字符串
@@ -186,9 +198,8 @@ inline void WriteText(const gzFile& f, const CString& text)
 	gzwrite(f, &size, sizeof(int)); // 字符串长度
 	gzwrite(f, (LPCTSTR)text, size * sizeof(TCHAR)); // 字符串
 }
-void ReadOptions(LPCTSTR path);
-void WriteOptions(LPCTSTR path);
+
 // 保存当前账号配置
 void SaveCurrentUserProfile();
 // 设置当前账号
-void SetCurrentUser(const CString& userName);
+void SetCurrentUser(const CString& userName, BOOL save);

@@ -160,9 +160,9 @@ void CSuperFunctionDlg::ShowCurrentOptions()
 	loopBanConfig.Load(CURRENT_USER_PATH + _T("\\options2.xml"));
 	
 	m_loopBanPage.m_list.ResetContent();							// 用户名
-	for (const CString& i : loopBanConfig.m_userList.m_value)
+	for (const CString& i : *loopBanConfig.m_userList)
 		m_loopBanPage.m_list.AddString(i);
-	m_loopBanPage.m_pid = std::move(loopBanConfig.m_pidList.m_value); // PID
+	m_loopBanPage.m_pid = std::move(*loopBanConfig.m_pidList);		// PID
 	m_loopBanPage.m_logCheck.SetCheck(loopBanConfig.m_log);			// 输出日志
 	m_loopBanPage.m_enableCheck.SetCheck(loopBanConfig.m_enable);	// 开启
 }
