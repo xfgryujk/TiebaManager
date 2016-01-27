@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "MiscHelper.h"
 #include <Dbghelp.h>
-#include <direct.h>
 
 // 不阻塞消息的延迟
 void Delay(DWORD time)
@@ -43,7 +42,16 @@ LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 }
 
 // 创建目录
-void CreateDir(const CString& path)
+BOOL CreateDir(const CString& path)
 {
-	_mkdir(CStringA(path));
+	if (PathFileExists(path))
+		return TRUE;
+	int pos = path.ReverseFind(_T('\\'));
+	if (pos != -1)
+	{
+		CString parent = path.Left(pos);
+		if (!CreateDir(parent))
+			return FALSE;
+	}
+	return CreateDirectory(path, NULL);
 }

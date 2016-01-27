@@ -65,6 +65,7 @@ BOOL CUsersPage::OnInitDialog()
 	// “Ï≥£:  OCX  Ù–‘“≥”¶∑µªÿ FALSE
 }
 
+#include "StringHelper.h"
 // µ«¬º
 void CUsersPage::OnBnClickedButton1()
 {
@@ -77,7 +78,11 @@ void CUsersPage::OnBnClickedButton1()
 	// ±£¥ÊCookie
 	CUserTiebaInfo ck;
 	*ck.m_cookie = loginDlg.m_cookie;
-	ck.Save(USERS_PATH + loginDlg.m_userName + _T("\\ck.xml"));
+	if (!ck.Save(USERS_PATH + loginDlg.m_userName + _T("\\ck.xml")))
+	{
+		AfxMessageBox(_T("±£¥Ê’À∫≈ ß∞‹£°"), MB_ICONERROR);
+		return;
+	}
 
 	int index = m_list.FindStringExact(-1, loginDlg.m_userName);
 	if (index == LB_ERR)

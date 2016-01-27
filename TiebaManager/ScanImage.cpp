@@ -305,7 +305,7 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 			continue;
 		// 判断和违规图片比较大于阈值
 		g_plan.m_optionsLock.Lock();
-		for (const NameImage i : g_plan.m_images)
+		for (const NameImage& i : g_plan.m_images)
 		{
 			double mssim = getMSSIM(image, i.img);
 			if (mssim > g_plan.m_SSIMThreshold)

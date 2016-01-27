@@ -7,5 +7,5 @@ del 贴吧管理器.zip >nul 2>nul
 
 :Restore
 ping 127.0.0.1 -n 3 >nul
-move 贴吧管理器\TiebaManager.exe Release >nul 2>nul || goto Restore
+move 贴吧管理器\TiebaManager.exe Release\TiebaManager旧版.exe >nul 2>nul || goto Restore
 ren 贴吧管理器 发布用 2>nul || goto Restore

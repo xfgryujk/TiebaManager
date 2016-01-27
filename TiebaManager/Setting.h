@@ -88,7 +88,7 @@ public:
 	CGlobalConfig()
 		: CConfigBase("Global"),
 		m_firstRun("FirstRun", TRUE),
-		m_currentUser("UserName", _T("[NULL]"), [](const CString& value)->BOOL{ return value != _T(""); }),
+		m_currentUser("UserName", _T("[NULL]"), [](const CString& value)->BOOL{ return value != _T("") && PathFileExists(USERS_PATH + value + _T("\\ck.xml")); }),
 		m_autoUpdate("AutoUpdate", TRUE)
 	{
 		m_options.push_back(&m_firstRun);
