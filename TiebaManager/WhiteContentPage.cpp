@@ -11,7 +11,7 @@
 IMPLEMENT_DYNAMIC(CWhiteContentPage, CRegListPage)
 
 CWhiteContentPage::CWhiteContentPage(CWnd* pParent /*=NULL*/)
-	: CRegListPage(pParent)
+	: CRegListPage(_T("пехндзхщё╨"), pParent)
 {
 
 }

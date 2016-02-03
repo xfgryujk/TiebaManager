@@ -55,6 +55,12 @@
     <Filter Include="源文件\GUI\SuperFunction">
       <UniqueIdentifier>{cfc04151-1699-4135-a7c2-5267823e2d3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\GUI\UIHelper\ListPage">
+      <UniqueIdentifier>{693bc208-62e8-4918-a984-60a6036004d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GUI\UIHelper\ListPage">
+      <UniqueIdentifier>{2e9391c3-017f-451e-b8fd-2dbb2acb7953}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -129,17 +135,11 @@
     <ClInclude Include="SuperFunctionDlg.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
-    <ClInclude Include="ListPage.h">
-      <Filter>头文件\GUI\UIHelper</Filter>
-    </ClInclude>
     <ClInclude Include="ResizeControl.h">
       <Filter>头文件\GUI\UIHelper</Filter>
     </ClInclude>
     <ClInclude Include="NormalDlg.h">
       <Filter>头文件\GUI\UIHelper</Filter>
-    </ClInclude>
-    <ClInclude Include="RegListPage.h">
-      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="LoopBanPage.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
@@ -191,6 +191,21 @@
     </ClInclude>
     <ClInclude Include="LogHelper.h">
       <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalListPage.h">
+      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
+    </ClInclude>
+    <ClInclude Include="ListTestPage.h">
+      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
+    </ClInclude>
+    <ClInclude Include="ListPage.h">
+      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
+    </ClInclude>
+    <ClInclude Include="InputDlg.h">
+      <Filter>头文件\GUI\UIHelper</Filter>
+    </ClInclude>
+    <ClInclude Include="RegListPage.h">
+      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -260,17 +275,11 @@
     <ClCompile Include="SuperFunctionDlg.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
-    <ClCompile Include="ListPage.cpp">
-      <Filter>源文件\GUI\UIHelper</Filter>
-    </ClCompile>
     <ClCompile Include="ResizeControl.cpp">
       <Filter>源文件\GUI\UIHelper</Filter>
     </ClCompile>
     <ClCompile Include="NormalDlg.cpp">
       <Filter>源文件\GUI\UIHelper</Filter>
-    </ClCompile>
-    <ClCompile Include="RegListPage.cpp">
-      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="LoopBanPage.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>
@@ -319,6 +328,21 @@
     </ClCompile>
     <ClCompile Include="LogHelper.cpp">
       <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="ListPage.cpp">
+      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
+    </ClCompile>
+    <ClCompile Include="ListTestPage.cpp">
+      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalListPage.cpp">
+      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
+    </ClCompile>
+    <ClCompile Include="InputDlg.cpp">
+      <Filter>源文件\GUI\UIHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="RegListPage.cpp">
+      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

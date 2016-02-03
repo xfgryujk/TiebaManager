@@ -13,7 +13,7 @@ public:
 	virtual ~CBlackListPage();
 
 // 对话框数据
-	enum { IDD = IDD_REG_LIST_PAGE };
+	enum { IDD = IDD_LIST_TEST_PAGE };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
@@ -21,7 +21,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
-	afx_msg void OnKillfocusEdit1();
 
 protected:
 	virtual BOOL CheckMatchTooMuch(const CString& text, BOOL isRegex);

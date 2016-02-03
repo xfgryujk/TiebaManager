@@ -12,7 +12,7 @@
 IMPLEMENT_DYNAMIC(CKeywordsPage, CRegListPage)
 
 CKeywordsPage::CKeywordsPage(CWnd* pParent /*=NULL*/)
-	: CRegListPage(pParent)
+	: CRegListPage(_T("Î¥¹æÄÚÈÝ£º"), pParent)
 {
 
 }

@@ -1,11 +1,11 @@
 #pragma once
 #include "afxwin.h"
-#include "ListPage.h"
+#include "NormalListPage.h"
 
 
 // CLoopBanPage ¶Ô»°¿ò
 
-class CLoopBanPage : public CListPage
+class CLoopBanPage : public CNormalListPage
 {
 	DECLARE_DYNAMIC(CLoopBanPage)
 

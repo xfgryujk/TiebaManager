@@ -17,10 +17,10 @@
 
 // CLoopBanPage 对话框
 
-IMPLEMENT_DYNAMIC(CLoopBanPage, CListPage)
+IMPLEMENT_DYNAMIC(CLoopBanPage, CNormalListPage)
 
 CLoopBanPage::CLoopBanPage(CWnd* pParent /*=NULL*/)
-	: CListPage(CLoopBanPage::IDD, pParent)
+	: CNormalListPage(_T("用户名："), CLoopBanPage::IDD, pParent)
 {
 
 }
@@ -32,13 +32,13 @@ CLoopBanPage::~CLoopBanPage()
 
 void CLoopBanPage::DoDataExchange(CDataExchange* pDX)
 {
-	CListPage::DoDataExchange(pDX);
+	CNormalListPage::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_CHECK6, m_logCheck);
 	DDX_Control(pDX, IDC_CHECK7, m_enableCheck);
 }
 
 
-BEGIN_MESSAGE_MAP(CLoopBanPage, CListPage)
+BEGIN_MESSAGE_MAP(CLoopBanPage, CNormalListPage)
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -47,7 +47,7 @@ END_MESSAGE_MAP()
 // 初始化
 BOOL CLoopBanPage::OnInitDialog()
 {
-	CListPage::OnInitDialog();
+	CNormalListPage::OnInitDialog();
 
 	m_resize.AddControl(&m_enableCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 	m_resize.AddControl(&m_logCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
@@ -59,61 +59,40 @@ BOOL CLoopBanPage::OnInitDialog()
 // 添加
 void CLoopBanPage::OnClickedButton1()
 {
-	CString text;
-	m_edit.GetWindowText(text);
-	if (text == _T(""))
+	int index = m_list.GetSelectionMark() + 1;
+	index = m_list.InsertItem(index, NULL);
+	if (SetItem(index))
 	{
-		AfxMessageBox(_T("内容不能为空！"), MB_ICONERROR);
-		return;
+		m_pid.insert(m_pid.begin() + index, _T("")); // 优先尝试不用PID封禁
+		m_list.SetSelectionMark(index);
+		((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 	}
-
-	CString pid = GetPIDFromUser(text);
-	if (pid == NET_TIMEOUT_TEXT)
-		pid = _T("");
-
-	int index = m_list.GetCurSel();
-	index = m_list.InsertString(index + 1, text);
-	m_pid.insert(m_pid.begin() + index, pid);
-	m_list.SetCurSel(index);
-
-	((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+	else
+		m_list.DeleteItem(index);
 }
 
 // 删除
 void CLoopBanPage::OnClickedButton2()
 {
-	int index = m_list.GetCurSel();
+	int index = m_list.GetSelectionMark();
 	if (index == LB_ERR)
 		return;
-	m_list.DeleteString(index);
+	m_list.DeleteItem(index);
 	m_pid.erase(m_pid.begin() + index);
-	m_list.SetCurSel(index == 0 ? 0 : index - 1);
+	m_list.SetSelectionMark(index > 0 ? index - 1 : index);
 }
 
 // 修改
 void CLoopBanPage::OnClickedButton3()
 {
-	CString text;
-	m_edit.GetWindowText(text);
-	if (text == _T(""))
-	{
-		AfxMessageBox(_T("内容不能为空！"), MB_ICONERROR);
-		return;
-	}
-	int index = m_list.GetCurSel();
+	int index = m_list.GetSelectionMark();
 	if (index == LB_ERR)
 		return;
-
-	CString pid = GetPIDFromUser(text);
-	if (pid == NET_TIMEOUT_TEXT)
-		pid = _T("");
-
-	m_list.DeleteString(index);
-	index = m_list.InsertString(index, text);
-	m_pid.insert(m_pid.begin() + index, pid);
-	m_list.SetCurSel(index);
-
-	((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+	if (SetItem(index))
+	{
+		m_pid[index] = _T(""); // 优先尝试不用PID封禁
+		((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+	}
 }
 
 // 循环封线程

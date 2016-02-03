@@ -23,19 +23,23 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnDblclkList1();
 	afx_msg virtual void OnClickedButton1();
 	afx_msg virtual void OnClickedButton2();
 	afx_msg virtual void OnClickedButton3();
+	afx_msg void OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg virtual void OnClickedButton4() = 0;
+	afx_msg virtual void OnClickedButton5() = 0;
+
+	virtual BOOL SetItem(int index) = 0;
 
 
 public:
-	CListBox m_list;
-	CStatic m_contentStatic;
-	CEdit m_edit;
+	CListCtrl m_list;
 	CButton m_addButton;
 	CButton m_deleteButton;
 	CButton m_changeButton;
+	CButton m_exportButton;
+	CButton m_importButton;
 	CStatic m_static;
 protected:
 	COLORREF m_staticColor;

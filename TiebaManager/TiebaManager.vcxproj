@@ -118,9 +118,12 @@
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="BlackListPage.h" />
+    <ClInclude Include="InputDlg.h" />
     <ClInclude Include="LockThreadPage.h" />
     <ClInclude Include="LogHelper.h" />
     <ClInclude Include="MiscHelper.h" />
+    <ClInclude Include="NormalListPage.h" />
+    <ClInclude Include="RegListPage.h" />
     <ClInclude Include="TiebaCollect.h" />
     <ClInclude Include="DefriendPage.h" />
     <ClInclude Include="ImageViewDlg.h" />
@@ -142,7 +145,7 @@
     <ClInclude Include="ExploreThreadPage.h" />
     <ClInclude Include="ImagePage.h" />
     <ClInclude Include="KeywordsPage.h" />
-    <ClInclude Include="RegListPage.h" />
+    <ClInclude Include="ListTestPage.h" />
     <ClInclude Include="LoginDlg.h" />
     <ClInclude Include="OptionsPage.h" />
     <ClInclude Include="ScanPage.h" />
@@ -167,6 +170,7 @@
     <ClCompile Include="BlackListPage.cpp" />
     <ClCompile Include="DefriendPage.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />
+    <ClCompile Include="InputDlg.cpp" />
     <ClCompile Include="ListPage.cpp" />
     <ClCompile Include="LockThreadPage.cpp" />
     <ClCompile Include="LogHelper.cpp" />
@@ -174,7 +178,9 @@
     <ClCompile Include="MiscHelper.cpp" />
     <ClCompile Include="NetworkHelper.cpp" />
     <ClCompile Include="NormalDlg.cpp" />
+    <ClCompile Include="NormalListPage.cpp" />
     <ClCompile Include="OperatePage.cpp" />
+    <ClCompile Include="RegListPage.cpp" />
     <ClCompile Include="ResizeControl.cpp" />
     <ClCompile Include="ScanImage.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
@@ -186,7 +192,7 @@
     <ClCompile Include="ExploreThreadPage.cpp" />
     <ClCompile Include="ImagePage.cpp" />
     <ClCompile Include="KeywordsPage.cpp" />
-    <ClCompile Include="RegListPage.cpp" />
+    <ClCompile Include="ListTestPage.cpp" />
     <ClCompile Include="LoginDlg.cpp" />
     <ClCompile Include="OptionsPage.cpp" />
     <ClCompile Include="ScanPage.cpp" />

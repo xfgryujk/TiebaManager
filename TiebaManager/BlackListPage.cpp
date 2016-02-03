@@ -12,7 +12,7 @@
 IMPLEMENT_DYNAMIC(CBlackListPage, CRegListPage)
 
 CBlackListPage::CBlackListPage(CWnd* pParent /*=NULL*/)
-	: CRegListPage(pParent)
+	: CRegListPage(_T("用户名："), pParent)
 {
 
 }
@@ -28,7 +28,6 @@ void CBlackListPage::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CBlackListPage, CRegListPage)
-	ON_EN_KILLFOCUS(IDC_EDIT1, &CBlackListPage::OnKillfocusEdit1)
 END_MESSAGE_MAP()
 
 
@@ -60,13 +59,4 @@ void CBlackListPage::PostChangeList()
 BOOL CBlackListPage::TestMatch(const CString& test, const CString& text, BOOL isRegex)
 {
 	return StringMatchs(test, text, isRegex);
-}
-
-// 去掉复制用户名时带的空格
-void CBlackListPage::OnKillfocusEdit1()
-{
-	CString text;
-	m_edit.GetWindowText(text);
-	text.Replace(_T(" "), _T(""));
-	m_edit.SetWindowText(text);
 }

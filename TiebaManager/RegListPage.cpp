@@ -1,169 +1,140 @@
-// ListTestPage.cpp : 实现文件
+// RegListPage.cpp : 实现文件
 //
 
 #include "stdafx.h"
 #include "RegListPage.h"
+#include "Setting.h"
+#include "InputDlg.h"
+#include "StringHelper.h"
 
 
 // CRegListPage 对话框
 
-IMPLEMENT_DYNAMIC(CRegListPage, CNormalDlg)
+IMPLEMENT_DYNAMIC(CRegListPage, CListTestPage)
 
-CRegListPage::CRegListPage(CWnd* pParent /*=NULL*/)
-	: CNormalDlg(CRegListPage::IDD, pParent)
+CRegListPage::CRegListPage(const CString& inputTitle, CWnd* pParent /*=NULL*/)
+	: CListTestPage(pParent), 
+	m_inputTitle(inputTitle)
 {
-	m_staticColor = RGB(255, 0, 0);
 }
 
-#pragma region MFC
 CRegListPage::~CRegListPage()
 {
 }
 
 void CRegListPage::DoDataExchange(CDataExchange* pDX)
 {
-	CNormalDlg::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_LIST1, m_list);
-	DDX_Control(pDX, IDC_EDIT1, m_edit);
-	DDX_Control(pDX, IDC_CHECK1, m_regexCheck);
-	DDX_Control(pDX, IDC_BUTTON1, m_addButton);
-	DDX_Control(pDX, IDC_BUTTON2, m_deleteButton);
-	DDX_Control(pDX, IDC_BUTTON3, m_changeButton);
-	DDX_Control(pDX, IDC_EDIT6, m_testEdit);
-	DDX_Control(pDX, IDC_STATIC1, m_static);
-	DDX_Control(pDX, IDC_BUTTON6, m_testButton);
+	CListTestPage::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CRegListPage, CNormalDlg)
-	ON_WM_CTLCOLOR()
-	ON_LBN_DBLCLK(IDC_LIST1, &CRegListPage::OnDblclkList1)
-	ON_BN_CLICKED(IDC_BUTTON1, &CRegListPage::OnClickedButton1)
-	ON_BN_CLICKED(IDC_BUTTON2, &CRegListPage::OnClickedButton2)
-	ON_BN_CLICKED(IDC_BUTTON3, &CRegListPage::OnClickedButton3)
-	ON_BN_CLICKED(IDC_BUTTON6, &CRegListPage::OnClickedButton6)
+BEGIN_MESSAGE_MAP(CRegListPage, CListTestPage)
 END_MESSAGE_MAP()
-#pragma endregion
+
 
 // CRegListPage 消息处理程序
 
-#pragma region UI
-// 控件颜色
-HBRUSH CRegListPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
-{
-	HBRUSH hbr = CNormalDlg::OnCtlColor(pDC, pWnd, nCtlColor);
 
-	if (pWnd->m_hWnd == m_static.m_hWnd)
-		pDC->SetTextColor(m_staticColor);
-
-	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
-	return hbr;
-}
-#pragma endregion
-
-// 初始化
 BOOL CRegListPage::OnInitDialog()
 {
-	CNormalDlg::OnInitDialog();
+	CListTestPage::OnInitDialog();
 
-	m_resize.AddControl(&m_list, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
-	m_resize.AddControl(&m_edit, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list, RT_KEEP_DIST_TO_RIGHT, this);
-	m_resize.AddControl(&m_regexCheck, RT_KEEP_DIST_TO_RIGHT, &m_edit, RT_KEEP_DIST_TO_BOTTOM, &m_list);
-	m_resize.AddControl(&m_addButton, RT_KEEP_DIST_TO_RIGHT, &m_edit, RT_KEEP_DIST_TO_BOTTOM, &m_list);
-	m_resize.AddControl(&m_deleteButton, RT_KEEP_DIST_TO_RIGHT, &m_edit, RT_KEEP_DIST_TO_BOTTOM, &m_list);
-	m_resize.AddControl(&m_changeButton, RT_KEEP_DIST_TO_RIGHT, &m_edit, RT_KEEP_DIST_TO_BOTTOM, &m_list);
-	m_resize.AddControl(&m_testEdit, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list, RT_KEEP_DIST_TO_RIGHT, this);
-	m_resize.AddControl(&m_static, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list, RT_KEEP_DIST_TO_RIGHT, this);
-	m_resize.AddControl(&m_testButton, RT_KEEP_DIST_TO_RIGHT, &m_static, RT_KEEP_DIST_TO_BOTTOM, &m_testEdit);
-
-	m_testEdit.SetWindowText(_T("欲测试文本"));
+	int i = 0;
+	m_list.InsertColumn(i++, _T("内容"), LVCFMT_LEFT, 500);
+	m_list.InsertColumn(i++, _T("正则"), LVCFMT_LEFT, 50);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
 
-// 双击列表
-void CRegListPage::OnDblclkList1()
+class CRegListFile : public CConfigBase
 {
-	CString tmp;
-	m_list.GetText(m_list.GetCurSel(), tmp);
-	m_regexCheck.SetCheck(tmp.Left(REGEX_PREFIX_LENGTH) == IS_REGEX_PREFIX);
-	m_edit.SetWindowText(tmp.Right(tmp.GetLength() - REGEX_PREFIX_LENGTH));
+public:
+	COption<vector<RegexText> > m_list;
+
+	CRegListFile()
+		: CConfigBase("RegList"),
+		m_list("RegList")
+	{
+		m_options.push_back(&m_list);
+	}
+};
+
+// 导出
+void CRegListPage::OnClickedButton4()
+{
+	CFileDialog dlg(FALSE, _T("xml"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+		_T("XML文件 (*.xml)|*.xml|所有文件 (*.*)|*.*||"), this);
+	if (dlg.DoModal() == IDOK)
+	{
+		CRegListFile tmp;
+		ApplyList(tmp.m_list);
+		if (!tmp.Save(dlg.GetPathName()))
+			AfxMessageBox(_T("保存失败！"), MB_ICONERROR);
+	}
 }
 
-// 添加
-void CRegListPage::OnClickedButton1()
+// 导入
+void CRegListPage::OnClickedButton5()
 {
-	CString text;
-	m_edit.GetWindowText(text);
-	if (text == _T(""))
+	CFileDialog dlg(TRUE, _T("xml"), NULL, 0,
+		_T("XML文件 (*.xml)|*.xml|所有文件 (*.*)|*.*||"), this);
+	if (dlg.DoModal() == IDOK)
 	{
-		AfxMessageBox(_T("内容不能为空！"), MB_ICONERROR);
-		return;
+		CRegListFile tmp;
+		if (!tmp.Load(dlg.GetPathName()))
+			AfxMessageBox(_T("读取失败！"), MB_ICONERROR);
+		else
+			ShowList(tmp.m_list);
 	}
-	BOOL isRegex = m_regexCheck.GetCheck();
-	if (CheckMatchTooMuch(text, isRegex))
-	{
-		AfxMessageBox(_T("匹配太多啦！"), MB_ICONERROR);
-		return;
-	}
-	int index = m_list.GetCurSel();
-	index = m_list.InsertString(index + 1, (isRegex ? IS_REGEX_PREFIX : NOT_REGEX_PREFIX) + text);
-	m_list.SetCurSel(index);
-	PostChangeList();
 }
 
-// 删除
-void CRegListPage::OnClickedButton2()
+BOOL CRegListPage::SetItem(int index)
 {
-	int index = m_list.GetCurSel();
-	if (index == LB_ERR)
-		return;
-	m_list.DeleteString(index);
-	m_list.SetCurSel(index == 0 ? 0 : index - 1);
+	CString content = m_list.GetItemText(index, 0);
+	BOOL isRegex = m_list.GetItemText(index, 1) == IS_REGEX_TEXT;
+	CInputDlg dlg(m_inputTitle, content, &isRegex, TRUE, this);
+	if (dlg.DoModal() == IDOK && content != _T(""))
+	{
+		if (CheckMatchTooMuch(content, isRegex))
+		{
+			AfxMessageBox(_T("匹配太多了！"), MB_ICONERROR);
+			return FALSE;
+		}
+		m_list.SetItemText(index, 0, content);
+		m_list.SetItemText(index, 1, isRegex ? IS_REGEX_TEXT : _T(""));
+		PostChangeList();
+		return TRUE;
+	}
+	return FALSE;
 }
 
-// 修改
-void CRegListPage::OnClickedButton3()
+BOOL CRegListPage::TestMatch(int index)
 {
-	CString text;
-	m_edit.GetWindowText(text);
-	if (text == _T(""))
-	{
-		AfxMessageBox(_T("内容不能为空！"), MB_ICONERROR);
-		return;
-	}
-	BOOL isRegex = m_regexCheck.GetCheck();
-	if (CheckMatchTooMuch(text, isRegex))
-	{
-		AfxMessageBox(_T("匹配太多啦！"), MB_ICONERROR);
-		return;
-	}
-	int index = m_list.GetCurSel();
-	if (index == LB_ERR)
-		return;
-	m_list.DeleteString(index);
-	index = m_list.InsertString(index, (isRegex ? IS_REGEX_PREFIX : NOT_REGEX_PREFIX) + text);
-	m_list.SetCurSel(index);
-	PostChangeList();
-}
-
-// 测试
-void CRegListPage::OnClickedButton6()
-{
-	CString text;
-	m_edit.GetWindowText(text);
-	BOOL isRegex = m_regexCheck.GetCheck();
 	CString test;
 	m_testEdit.GetWindowText(test);
-	if (TestMatch(test, text, isRegex))
+	BOOL isRegex = m_list.GetItemText(index, 1) == IS_REGEX_TEXT;
+	CString text = m_list.GetItemText(index, 0);
+	return TestMatch(test, text, isRegex);
+}
+
+void CRegListPage::ShowList(const vector<RegexText>& list)
+{
+	m_list.DeleteAllItems();
+	for (UINT i = 0; i < list.size(); i++)
 	{
-		m_staticColor = RGB(0, 255, 0);
-		m_static.SetWindowText(_T("匹配成功！"));
+		m_list.InsertItem(i, list[i].text);
+		m_list.SetItemText(i, 1, list[i].isRegex ? IS_REGEX_TEXT : _T(""));
 	}
-	else
+}
+
+void CRegListPage::ApplyList(vector<RegexText>& list)
+{
+	int size = m_list.GetItemCount();
+	list.resize(size);
+	for (int i = 0; i < size; i++)
 	{
-		m_staticColor = RGB(255, 0, 0);
-		m_static.SetWindowText(_T("匹配失败，请检查匹配文本！"));
+		list[i].text = m_list.GetItemText(i, 0);
+		list[i].isRegex = m_list.GetItemText(i, 1) == IS_REGEX_TEXT;
 	}
 }

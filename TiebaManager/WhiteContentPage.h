@@ -13,7 +13,7 @@ public:
 	virtual ~CWhiteContentPage();
 
 // 对话框数据
-	enum { IDD = IDD_REG_LIST_PAGE };
+	enum { IDD = IDD_LIST_TEST_PAGE };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持

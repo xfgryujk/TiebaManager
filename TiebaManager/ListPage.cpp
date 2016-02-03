@@ -30,21 +30,23 @@ void CListPage::DoDataExchange(CDataExchange* pDX)
 {
 	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_list);
-	DDX_Control(pDX, IDC_STATIC2, m_contentStatic);
-	DDX_Control(pDX, IDC_EDIT1, m_edit);
 	DDX_Control(pDX, IDC_BUTTON1, m_addButton);
 	DDX_Control(pDX, IDC_BUTTON2, m_deleteButton);
 	DDX_Control(pDX, IDC_BUTTON3, m_changeButton);
+	DDX_Control(pDX, IDC_BUTTON4, m_exportButton);
+	DDX_Control(pDX, IDC_BUTTON5, m_importButton);
 	DDX_Control(pDX, IDC_STATIC1, m_static);
 }
 
 
 BEGIN_MESSAGE_MAP(CListPage, CNormalDlg)
 	ON_WM_CTLCOLOR()
-	ON_LBN_DBLCLK(IDC_LIST1, &CListPage::OnDblclkList1)
 	ON_BN_CLICKED(IDC_BUTTON1, &CListPage::OnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CListPage::OnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CListPage::OnClickedButton3)
+	ON_NOTIFY(NM_DBLCLK, IDC_LIST1, &CListPage::OnNMDblclkList1)
+	ON_BN_CLICKED(IDC_BUTTON4, &CListPage::OnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON5, &CListPage::OnClickedButton5)
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -70,64 +72,53 @@ BOOL CListPage::OnInitDialog()
 	CNormalDlg::OnInitDialog();
 
 	m_resize.AddControl(&m_list, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
-	m_resize.AddControl(&m_contentStatic, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
-	m_resize.AddControl(&m_edit, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list, RT_KEEP_DIST_TO_RIGHT, this);
-	m_resize.AddControl(&m_addButton, RT_KEEP_DIST_TO_RIGHT, &m_edit, RT_KEEP_DIST_TO_BOTTOM, &m_list);
-	m_resize.AddControl(&m_deleteButton, RT_KEEP_DIST_TO_RIGHT, &m_edit, RT_KEEP_DIST_TO_BOTTOM, &m_list);
-	m_resize.AddControl(&m_changeButton, RT_KEEP_DIST_TO_RIGHT, &m_edit, RT_KEEP_DIST_TO_BOTTOM, &m_list);
-	m_resize.AddControl(&m_static, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list, RT_KEEP_DIST_TO_RIGHT, this);
+	m_resize.AddControl(&m_addButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_deleteButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_changeButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_exportButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_importButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_static, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this, RT_KEEP_DIST_TO_RIGHT, this);
+
+	m_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
 
-// 双击列表
-void CListPage::OnDblclkList1()
-{
-	CString tmp;
-	m_list.GetText(m_list.GetCurSel(), tmp);
-	m_edit.SetWindowText(tmp);
-}
-
 // 添加
 void CListPage::OnClickedButton1()
 {
-	CString text;
-	m_edit.GetWindowText(text);
-	if (text == _T(""))
-	{
-		AfxMessageBox(_T("内容不能为空！"), MB_ICONERROR);
-		return;
-	}
-	int index = m_list.GetCurSel();
-	index = m_list.InsertString(index + 1, text);
-	m_list.SetCurSel(index);
+	int index = m_list.GetSelectionMark() + 1;
+	index = m_list.InsertItem(index, NULL);
+	if (SetItem(index))
+		m_list.SetSelectionMark(index);
+	else
+		m_list.DeleteItem(index);
 }
 
 // 删除
 void CListPage::OnClickedButton2()
 {
-	int index = m_list.GetCurSel();
+	int index = m_list.GetSelectionMark();
 	if (index == LB_ERR)
 		return;
-	m_list.DeleteString(index);
-	m_list.SetCurSel(index == 0 ? 0 : index - 1);
+	m_list.DeleteItem(index);
+	m_list.SetSelectionMark(index > 0 ? index - 1 : index);
 }
 
 // 修改
 void CListPage::OnClickedButton3()
 {
-	CString text;
-	m_edit.GetWindowText(text);
-	if (text == _T(""))
-	{
-		AfxMessageBox(_T("内容不能为空！"), MB_ICONERROR);
-		return;
-	}
-	int index = m_list.GetCurSel();
+	int index = m_list.GetSelectionMark();
 	if (index == LB_ERR)
 		return;
-	m_list.DeleteString(index);
-	index = m_list.InsertString(index, text);
-	m_list.SetCurSel(index);
+	SetItem(index);
+}
+
+// 双击
+void CListPage::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	OnClickedButton3();
+	*pResult = 0;
 }

@@ -26,7 +26,7 @@ CDefriendPage::~CDefriendPage()
 
 void CDefriendPage::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
+	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_startPageEdit);
 	DDX_Control(pDX, IDC_EDIT2, m_endPageEdit);
 	DDX_Control(pDX, IDC_BUTTON1, m_startButton);

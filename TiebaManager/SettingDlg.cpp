@@ -33,7 +33,9 @@ IMPLEMENT_DYNAMIC(CSettingDlg, CNormalDlg)
 // 构造函数
 CSettingDlg::CSettingDlg(CWnd* pParent /*=NULL*/)
 	: CNormalDlg(CSettingDlg::IDD, pParent),
-	m_pagesResize(&m_tab)
+	m_pagesResize(&m_tab), 
+	m_whiteListPage(_T("用户名：")), 
+	m_trustedThreadPage(_T("主题ID："))
 {
 	// 初始化m_pages
 	int i = 0;
@@ -105,12 +107,9 @@ BOOL CSettingDlg::OnInitDialog()
 	CREATE_PAGE(m_imagePage);
 	CREATE_PAGE(m_blackListPage);
 	CREATE_PAGE(m_whiteListPage);
-	m_whiteListPage.m_contentStatic.SetWindowText(_T("用户名："));
 	m_whiteListPage.m_static.SetWindowText(_T("当被测文本等于文本时匹配(无正则)"));
 	CREATE_PAGE(m_whiteContentPage);
 	CREATE_PAGE(m_trustedThreadPage);
-	m_trustedThreadPage.m_contentStatic.SetWindowText(_T("主题ID："));
-	m_trustedThreadPage.m_edit.ModifyStyle(NULL, ES_NUMBER);
 	m_trustedThreadPage.m_static.SetWindowText(_T("添加的主题不会扫描，主题ID是网址中\"p/\"后面跟的数字"));
 	CREATE_PAGE(m_optionsPage);
 	CREATE_PAGE(m_usersPage);
@@ -264,43 +263,19 @@ void CSettingDlg::ShowPlan(const CPlan& plan)
 	m_scanPage.m_autoSaveLogCheck.SetCheck(plan.m_autoSaveLog);		// 自动保存日志
 
 	// 违规内容
-	m_keywordsPage.m_list.ResetContent();
-	for (const RegexText& i : *plan.m_keywords)
-		m_keywordsPage.m_list.AddString((i.isRegex ? IS_REGEX_PREFIX : NOT_REGEX_PREFIX) + i.text);
+	m_keywordsPage.ShowList(plan.m_keywords);
 
 	// 屏蔽用户
-	m_blackListPage.m_list.ResetContent();
-	for (const RegexText& i : *plan.m_blackList)
-		m_blackListPage.m_list.AddString((i.isRegex ? IS_REGEX_PREFIX : NOT_REGEX_PREFIX) + i.text);
+	m_blackListPage.ShowList(plan.m_blackList);
 
 	// 信任用户
-	m_whiteListPage.m_list.ResetContent();
-	for (const CString& i : *plan.m_whiteList)
-		m_whiteListPage.m_list.AddString(i);
+	m_whiteListPage.ShowList(plan.m_whiteList);
 
 	// 信任内容
-	m_whiteContentPage.m_list.ResetContent();
-	for (const RegexText& i : *plan.m_whiteContent)
-		m_whiteContentPage.m_list.AddString((i.isRegex ? IS_REGEX_PREFIX : NOT_REGEX_PREFIX) + i.text);
+	m_whiteContentPage.ShowList(plan.m_whiteContent);
 
 	// 信任主题
-	m_trustedThreadPage.m_list.ResetContent();
-	for (const CString& i : *plan.m_trustedThread)
-		m_trustedThreadPage.m_list.AddString(i);
-}
-
-static inline void ApplyRegexTexts(vector<RegexText>& vec, CListBox& list)
-{
-	int size = list.GetCount();
-	vec.resize(size);
-	CString tmp;
-	for (int i = 0; i < size; i++)
-	{
-		list.GetText(i, tmp);
-		vec[i].isRegex = tmp.Left(REGEX_PREFIX_LENGTH) == IS_REGEX_PREFIX;
-		vec[i].text = tmp.Right(tmp.GetLength() - REGEX_PREFIX_LENGTH);
-		vec[i].regexp = vec[i].isRegex ? vec[i].text : _T("");
-	}
+	m_trustedThreadPage.ShowList(plan.m_trustedThread);
 }
 
 // 应用对话框中的设置
@@ -338,31 +313,19 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 	*plan.m_autoSaveLog = m_scanPage.m_autoSaveLogCheck.GetCheck();		// 自动保存日志
 
 	// 违规内容
-	ApplyRegexTexts(plan.m_keywords, m_keywordsPage.m_list);
+	m_keywordsPage.ApplyList(plan.m_keywords);
 
 	// 屏蔽用户
-	ApplyRegexTexts(plan.m_blackList, m_blackListPage.m_list);
+	m_blackListPage.ApplyList(plan.m_blackList);
 
 	// 信任用户
-	int size = m_whiteListPage.m_list.GetCount();
-	plan.m_whiteList->clear();
-	for (int i = 0; i < size; i++)
-	{
-		m_whiteListPage.m_list.GetText(i, strBuf);
-		plan.m_whiteList->insert(strBuf);
-	}
+	m_whiteListPage.ApplyList(plan.m_whiteList);
 
 	// 信任内容
-	ApplyRegexTexts(plan.m_whiteContent, m_whiteContentPage.m_list);
+	m_whiteContentPage.ApplyList(plan.m_whiteContent);
 
 	// 信任主题
-	size = m_trustedThreadPage.m_list.GetCount();
-	plan.m_trustedThread->clear();
-	for (int i = 0; i < size; i++)
-	{
-		m_trustedThreadPage.m_list.GetText(i, strBuf);
-		plan.m_trustedThread->insert(strBuf);
-	}
+	m_trustedThreadPage.ApplyList(plan.m_trustedThread);
 
 	// 违规图片
 	if (&plan == &g_plan && plan.m_updateImage)
@@ -378,37 +341,6 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 		if (!plan.m_briefLog)
 			((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_log.Log(_T("<font color=green>清除历史回复</font>"));
 		g_userCache.m_reply->clear();
-	}
-}
-
-static inline void ReadRegexTexts(const gzFile& f, CListBox& list)
-{
-	int size;
-	gzread(f, &size, sizeof(int)); // 长度
-	list.ResetContent();
-	CString strBuf;
-	for (int i = 0; i < size; i++)
-	{
-		int isRegex;
-		gzread(f, &isRegex, sizeof(int)); // 是正则
-		ReadText(f, strBuf);
-		list.AddString((isRegex != 0 ? IS_REGEX_PREFIX : NOT_REGEX_PREFIX) + strBuf);
-	}
-}
-
-static inline void WriteRegexTexts(const gzFile& f, CListBox& list)
-{
-	int size;
-	gzwrite(f, &(size = list.GetCount()), sizeof(int)); // 长度
-	CString strBuf;
-	for (int i = 0; i < size; i++)
-	{
-		list.GetText(i, strBuf);
-		BOOL isRegex = strBuf.Left(REGEX_PREFIX_LENGTH) == IS_REGEX_PREFIX;
-		int intBuf;
-		gzwrite(f, &(intBuf = isRegex ? 1 : 0), sizeof(int)); // 是正则
-		strBuf = strBuf.Right(strBuf.GetLength() - REGEX_PREFIX_LENGTH);
-		WriteText(f, strBuf);
 	}
 }
 
