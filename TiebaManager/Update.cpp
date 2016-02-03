@@ -47,7 +47,7 @@ CheckUpdateResult CheckUpdate()
 	static const TCHAR BDSTOKEN_RIGHT[] = _T("\"");
 	static const TCHAR DLINK_LEFT[] = _T("\"dlink\":\"");
 	static const TCHAR DLINK_RIGHT[] = _T("\"");
-	src = HTTPGet(UPDATE_FULL_URL, FALSE);
+	src = HTTPGet(UPDATE_URL, FALSE);
 	CString timeStamp = GetStringBetween(src, TIME_STAMP_LEFT, TIME_STAMP_RIGHT);
 	CString sign = GetStringBetween(src, SIGN_LEFT, SIGN_RIGHT);
 	CString bdstoken = GetStringBetween(src, BDSTOKEN_LEFT, BDSTOKEN_RIGHT);
