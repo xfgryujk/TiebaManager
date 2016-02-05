@@ -91,7 +91,10 @@ void CListPage::OnClickedButton1()
 	int index = m_list.GetSelectionMark() + 1;
 	index = m_list.InsertItem(index, NULL);
 	if (SetItem(index))
+	{
 		m_list.SetSelectionMark(index);
+		m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
+	}
 	else
 		m_list.DeleteItem(index);
 }
@@ -103,7 +106,9 @@ void CListPage::OnClickedButton2()
 	if (index == LB_ERR)
 		return;
 	m_list.DeleteItem(index);
-	m_list.SetSelectionMark(index > 0 ? index - 1 : index);
+	index = index > 0 ? index - 1 : index;
+	m_list.SetSelectionMark(index);
+	m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
 }
 
 // ÐÞ¸Ä
@@ -119,6 +124,7 @@ void CListPage::OnClickedButton3()
 void CListPage::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	OnClickedButton3();
+	if (pNMItemActivate->iItem != LB_ERR)
+		OnClickedButton3();
 	*pResult = 0;
 }

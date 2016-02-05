@@ -65,6 +65,7 @@ void CLoopBanPage::OnClickedButton1()
 	{
 		m_pid.insert(m_pid.begin() + index, _T("")); // 优先尝试不用PID封禁
 		m_list.SetSelectionMark(index);
+		m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
 		((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 	}
 	else
@@ -79,7 +80,9 @@ void CLoopBanPage::OnClickedButton2()
 		return;
 	m_list.DeleteItem(index);
 	m_pid.erase(m_pid.begin() + index);
-	m_list.SetSelectionMark(index > 0 ? index - 1 : index);
+	index = index > 0 ? index - 1 : index;
+	m_list.SetSelectionMark(index);
+	m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
 }
 
 // 修改

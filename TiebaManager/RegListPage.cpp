@@ -133,8 +133,5 @@ void CRegListPage::ApplyList(vector<RegexText>& list)
 	int size = m_list.GetItemCount();
 	list.resize(size);
 	for (int i = 0; i < size; i++)
-	{
-		list[i].text = m_list.GetItemText(i, 0);
-		list[i].isRegex = m_list.GetItemText(i, 1) == IS_REGEX_TEXT;
-	}
+		list[i].Set(m_list.GetItemText(i, 1) == IS_REGEX_TEXT, m_list.GetItemText(i, 0));
 }

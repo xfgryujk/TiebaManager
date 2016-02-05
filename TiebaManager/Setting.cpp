@@ -190,9 +190,7 @@ XMLElement& COption<RegexText>::operator << (XMLElement& root)
 	isRegex << *optionNode;
 	text << *optionNode;
 	
-	m_value.isRegex = isRegex;
-	m_value.text = text;
-	m_value.regexp = isRegex ? *text : _T("");
+	m_value.Set(isRegex, text);
 
 	if (!IsValid(m_value))
 		UseDefault();
