@@ -170,7 +170,7 @@ UseDefault:
 		goto UseDefault;
 	LPCSTR value = content->ToText()->Value();
 
-	m_value = value;
+	m_value = GBK2W(value);
 	if (!IsValid(m_value))
 		UseDefault();
 	return root;
@@ -389,7 +389,7 @@ XMLElement& COption<CString>::operator >> (XMLElement& root) const
 	XMLElement* optionNode = doc->NewElement(m_name);
 	root.LinkEndChild(optionNode);
 
-	optionNode->LinkEndChild(doc->NewText(CStringA(m_value)));
+	optionNode->LinkEndChild(doc->NewText(W2GBK(m_value)));
 	return root;
 }
 

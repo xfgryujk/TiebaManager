@@ -78,6 +78,8 @@ CString GetStringBetween(const CString& src, const CString& left, LPCTSTR right,
 CString GetStringBetween2(const CString& src, const CString& left, const CString& right, int startPos = 0);
 CString GetStringBefore(const CString& src, LPCTSTR right, int startPos = 0);
 BOOL WriteString(const CString& src, LPCTSTR path);
+CStringA W2GBK(const CStringW& src);
+CStringW GBK2W(const CStringA& src);
 CString EncodeURI(const CString& src);
 //CString EncodeURI_GBK(const CString& src);
 CString HTMLEscape(const CString& src);

@@ -8,5 +8,5 @@ del Ìù°É¹ÜÀíÆ÷.zip >nul 2>nul
 :Restore
 ping 127.0.0.1 -n 3 >nul
 move Ìù°É¹ÜÀíÆ÷\TiebaManager.exe Release\TiebaManager¾É°æ.exe >nul 2>nul || goto Restore
-move Release\TiebaManager.pdb TiebaManager¾É°æ.pdb >nul 2>nul || goto Restore
+move Release\TiebaManager.pdb Release\TiebaManager¾É°æ.pdb >nul 2>nul || goto Restore
 ren Ìù°É¹ÜÀíÆ÷ ·¢²¼ÓÃ 2>nul || goto Restore

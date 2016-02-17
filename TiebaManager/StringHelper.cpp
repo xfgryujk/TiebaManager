@@ -67,6 +67,30 @@ BOOL WriteString(const CString& src, LPCTSTR path)
 	return TRUE;
 }
 
+// Unicode×ªGBK
+CStringA W2GBK(const CStringW& src)
+{
+	int dstLen = WideCharToMultiByte(936, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
+	if (dstLen == 0)
+		return "";
+	CStringA res;
+	WideCharToMultiByte(936, 0, src, src.GetLength(), res.GetBuffer(dstLen), dstLen, NULL, NULL);
+	res.ReleaseBuffer(dstLen);
+	return res;
+}
+
+// GBK×ªUnicode
+CStringW GBK2W(const CStringA& src)
+{
+	int dstLen = MultiByteToWideChar(936, 0, src, src.GetLength(), NULL, 0);
+	if (dstLen == 0)
+		return L"";
+	CStringW res;
+	MultiByteToWideChar(936, 0, src, src.GetLength(), res.GetBuffer(dstLen), dstLen);
+	res.ReleaseBuffer(dstLen);
+	return res;
+}
+
 // URL±àÂë
 CString EncodeURI(const CString& src)
 {
