@@ -29,7 +29,16 @@ inline BOOL StringIncludes(const CString& str, const RegexText& content, int* _p
 	if (content.isRegex)
 	{
 		std::wcmatch res;
-		result = std::regex_search((LPCTSTR)str, res, content.regexp);
+		try
+		{
+			result = std::regex_search((LPCTSTR)str, res, content.regexp);
+		}
+		catch (...)
+		{
+			AfxMessageBox(_T("正则表达式错误！"), MB_ICONERROR);
+			return FALSE;
+		}
+
 		if (result && _pos != NULL && length != NULL)
 		{
 			*_pos = res.position();
@@ -70,7 +79,17 @@ inline BOOL StringMatchs(const CString& str, LPCTSTR content, BOOL isRegex)
 inline BOOL StringMatchs(const CString& str, const RegexText& content)
 {
 	if (content.isRegex)
-		return std::regex_match((LPCTSTR)str, content.regexp);
+	{
+		try
+		{
+			return std::regex_match((LPCTSTR)str, content.regexp);
+		}
+		catch (...)
+		{
+			AfxMessageBox(_T("正则表达式错误！"), MB_ICONERROR);
+			return FALSE;
+		}
+	}
 	else
 		return str == content.text;
 }
