@@ -261,6 +261,8 @@ void CSettingDlg::ShowPlan(const CPlan& plan)
 	tmp.Format(_T("%d"), *plan.m_defriendTrigCount);
 	m_operatePage.m_defriendTrigCountEdit.SetWindowText(tmp);		// 拉黑违规次数
 	m_scanPage.m_autoSaveLogCheck.SetCheck(plan.m_autoSaveLog);		// 自动保存日志
+	tmp.Format(_T("%d"), *plan.m_illegalLevel);
+	m_scanPage.m_illegalLevelEdit.SetWindowText(tmp);				// 违规等级
 
 	// 违规内容
 	m_keywordsPage.ShowList(plan.m_keywords);
@@ -311,6 +313,8 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 	m_operatePage.m_defriendTrigCountEdit.GetWindowText(strBuf);
 	*plan.m_defriendTrigCount = _ttoi(strBuf);							// 拉黑违规次数
 	*plan.m_autoSaveLog = m_scanPage.m_autoSaveLogCheck.GetCheck();		// 自动保存日志
+	m_scanPage.m_illegalLevelEdit.GetWindowText(strBuf);
+	*plan.m_illegalLevel = _ttoi(strBuf);								// 违规等级
 
 	// 违规内容
 	m_keywordsPage.ApplyList(plan.m_keywords);

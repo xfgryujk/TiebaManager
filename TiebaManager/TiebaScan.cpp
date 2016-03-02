@@ -28,7 +28,7 @@ extern queue<Operation> g_operationQueue; // 操作队列
 
 
 // 检查违规
-BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg, int& pos, int& length)
+BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, const CString& authorLevel, CString& msg, int& pos, int& length)
 {
 	g_plan.m_optionsLock.Lock();
 
@@ -38,6 +38,28 @@ BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg, int& pos, int& 
 		g_plan.m_optionsLock.Unlock();
 		return FALSE;
 	}
+
+	// 违规等级
+	if (g_plan.m_illegalLevel > 0 && authorLevel != _T("") && _ttoi(authorLevel) <= g_plan.m_illegalLevel)
+	{
+		pos = 0;
+		length = 0;
+		msg.Format(_T("<font color=red> 触发等级小于或等于 </font>%d"), *g_plan.m_illegalLevel);
+		g_plan.m_optionsLock.Unlock();
+		return TRUE;
+	}
+
+	// 屏蔽用户
+	for (const RegexText& blackList : *g_plan.m_blackList)
+		if (StringMatchs(author, blackList))
+		{
+			pos = 0;
+			length = 0;
+			msg = _T("<font color=red> 触发屏蔽用户 </font>") + HTMLEscape(blackList.text);
+			g_plan.m_optionsLock.Unlock();
+			return TRUE;
+		}
+
 
 	// 信任内容
 	for (const RegexText& whiteContent : *g_plan.m_whiteContent)
@@ -55,18 +77,6 @@ BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, CString& msg, int& pos, int& 
 			g_plan.m_optionsLock.Unlock();
 			return TRUE;
 		}
-
-	// 屏蔽用户
-	for (const RegexText& blackList : *g_plan.m_blackList)
-		if (StringMatchs(author, blackList))
-		{
-			pos = 0;
-			length = 0;
-			msg = _T("<font color=red> 触发屏蔽用户 </font>") + HTMLEscape(blackList.text);
-			g_plan.m_optionsLock.Unlock();
-			return TRUE;
-		}
-
 	g_plan.m_optionsLock.Unlock();
 	return FALSE;
 }
@@ -148,7 +158,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 				break;
 			__int64 tid = _ttoi64(thread.tid);
 			if (g_userCache.m_ignoredTID.find(tid) == g_userCache.m_ignoredTID.end()
-				&& CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, msg, pos, length))
+				&& CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, _T(""), msg, pos, length))
 			{
 				AddConfirm(thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
 					thread.title, _T("0"), _T(""), thread.author, thread.authorID, _T(""), pos, length);
@@ -334,7 +344,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			return FALSE;
 		__int64 pid = _ttoi64(post.pid);
 		if (g_userCache.m_ignoredPID.find(pid) == g_userCache.m_ignoredPID.end()
-			&& CheckIllegal(post.content, post.author, msg, pos, length))
+			&& CheckIllegal(post.content, post.author, post.authorLevel, msg, pos, length))
 		{
 			AddConfirm(post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID, _T(""), pos, length);
@@ -349,7 +359,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	{
 		if (g_stopScanFlag)
 			return FALSE;
-		if (CheckIllegal(lzl.content, lzl.author, msg, pos, length))
+		if (CheckIllegal(lzl.content, lzl.author, _T(""), msg, pos, length))
 		{
 			__int64 lzlid = _ttoi64(lzl.pid);
 			if (g_userCache.m_ignoredLZLID.find(lzlid) == g_userCache.m_ignoredLZLID.end())

@@ -601,6 +601,7 @@ CPlan::CPlan()
 	m_briefLog			("BriefLog",			FALSE),
 	m_threadCount		("ThreadCount",			2,		[](const int& value)->BOOL{ return 1 <= value && value <= 16; }),
 	m_autoSaveLog		("AutoSaveLog",			FALSE),
+	m_illegalLevel		("IllegalLevel",		0,		[](const int& value)->BOOL{ return 0 <= value && value <= 6; }),
 	m_delete			("Delete",				TRUE),
 	m_banID				("BanID",				FALSE),
 	m_defriend			("Defriend",			FALSE),
@@ -639,6 +640,7 @@ CPlan::CPlan()
 	m_options.push_back(&m_briefLog);
 	m_options.push_back(&m_threadCount);
 	m_options.push_back(&m_autoSaveLog);
+	m_options.push_back(&m_illegalLevel);
 	m_options.push_back(&m_delete);
 	m_options.push_back(&m_banID);
 	m_options.push_back(&m_defriend);

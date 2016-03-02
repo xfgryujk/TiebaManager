@@ -148,6 +148,7 @@ public:
 	COption<BOOL>		m_briefLog;				// 只输出删帖封号
 	COption<int>		m_threadCount;			// 线程数
 	COption<BOOL>		m_autoSaveLog;			// 自动保存日志
+	COption<int>		m_illegalLevel;			// 违规等级
 	COption<BOOL>		m_delete;				// 删帖
 	COption<BOOL>		m_banID;				// 封ID
 	COption<BOOL>		m_defriend;				// 拉黑

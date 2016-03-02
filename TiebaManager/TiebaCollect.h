@@ -31,6 +31,7 @@ struct PostInfo // 帖子信息
 	CString floor;		// 楼层
 	CString author;		// 作者
 	CString authorID;	// 作者ID
+	CString authorLevel; // 作者等级
 	CString authorPortrait;	// 作者头像哈希
 	CString content;	// 内容
 };

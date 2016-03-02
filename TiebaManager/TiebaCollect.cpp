@@ -10,19 +10,6 @@
 // 采集贴吧用的常量
 // 正则表达式太慢所以不用
 #pragma region 主题列表
-//// 今日话题
-//const TCHAR TOPIC_LEFT[] = _T("<div class=\"interview");
-//const TCHAR TOPIC_RIGHT[] = _T("<dd class=\"listBtnCnt hide\">");
-//const TCHAR TOPIC_TID_LEFT[] = _T("href=\"http://tieba.baidu.com/p/");
-//const TCHAR TOPIC_TID_RIGHT[] = _T("\"");
-//const TCHAR TOPIC_REPLY_LEFT[] = _T("title=\"");
-//const TCHAR TOPIC_REPLY_RIGHT[] = _T("个回复\"");
-//const TCHAR TOPIC_TITLE_LEFT[] = _T("\">\r\n                ");
-//const TCHAR TOPIC_TITLE_RIGHT[] = _T("            </a>");
-//const TCHAR TOPIC_PREVIEW_LEFT[] = _T("<dd class=\"listDescCnt\"> ");
-//const TCHAR TOPIC_PREVIEW_RIGHT[] = _T("</dd>");
-
-// 普通主题
 const TCHAR THREAD_SPLIT[] = _T("data-field='{&quot;author_name&quot;:&quot;");
 const TCHAR THREAD_END[] = _T("<div id=\"frs_list_pager\"");
 const TCHAR THREAD_TID_LEFT[] = _T("&quot;id&quot;:");
@@ -52,6 +39,8 @@ const TCHAR POST_AUTHOR_ID_LEFT[] = _T("&quot;user_id&quot;:");
 const TCHAR POST_AUTHOR_ID_RIGHT[] = _T(",");
 const TCHAR POST_AUTHOR_PORTRAIT_LEFT[] = _T("=\"http://tb.himg.baidu.com/sys/portrait/item/");
 const TCHAR POST_AUTHOR_PORTRAIT_RIGHT[] = _T("\"");
+const TCHAR POST_AUTHOR_LEVEL_LEFT[] = _T("<div class=\"d_badge_lv\">");
+const TCHAR POST_AUTHOR_LEVEL_RIGHT[] = _T("</div>");
 const TCHAR POST_CONTENT_LEFT[] = _T("<cc>");
 const TCHAR POST_CONTENT_RIGHT[] = _T("</cc>");
 const TCHAR POST_SIGN_LEFT[] = _T("<img class=\"j_user_sign\"");
@@ -92,30 +81,9 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 		return FALSE;
 	}
 
-	int iThreads;
-	//// 今日主题
-	//CString topic = GetStringBetween(rawThreads[0], TOPIC_LEFT, TOPIC_RIGHT);
-	//if (topic != _T(""))
-	//{
-	//	threads.resize(rawThreads.GetSize());
-	//	int pos = topic.Find(TOPIC_TID_LEFT);
-	//	threads[0].tid = GetStringBetween(topic, TOPIC_TID_LEFT, TOPIC_TID_RIGHT, pos);
-	//	threads[0].reply = GetStringBetween(topic, TOPIC_REPLY_LEFT, TOPIC_REPLY_RIGHT);
-	//	threads[0].title = GetStringBetween(topic, TOPIC_TITLE_LEFT, TOPIC_TITLE_RIGHT, pos);
-	//	threads[0].preview = GetStringBetween(topic, TOPIC_PREVIEW_LEFT, TOPIC_PREVIEW_RIGHT, pos);
-	//	threads[0].author = _T("");
-
-	//	iThreads = 1;
-	//}
-	//else
-	//{
-	threads.resize(rawThreads.GetSize() - 1);
-	iThreads = 0;
-	//}
-
-	// 普通主题
 	rawThreads[rawThreads.GetSize() - 1] = GetStringBefore(rawThreads[rawThreads.GetSize() - 1], THREAD_END);
-	for (int iRawThreads = 1; iRawThreads < rawThreads.GetSize(); iRawThreads++, iThreads++)
+	threads.resize(rawThreads.GetSize() - 1);
+	for (int iRawThreads = 1, iThreads = 0; iRawThreads < rawThreads.GetSize(); iRawThreads++, iThreads++)
 	{
 		threads[iThreads].tid = GetStringBetween(rawThreads[iRawThreads], THREAD_TID_LEFT, THREAD_TID_RIGHT);
 		threads[iThreads].reply = GetStringBetween(rawThreads[iRawThreads], THREAD_REPLY_LEFT, THREAD_REPLY_RIGHT);
@@ -154,8 +122,8 @@ GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& 
 		posts[iPosts].floor = GetStringBetween(rawPosts[iRawPosts], POST_FLOOR_LEFT, POST_FLOOR_RIGHT);
 		posts[iPosts].author = JSUnescape(GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_LEFT, POST_AUTHOR_RIGHT));
 		posts[iPosts].authorID = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_ID_LEFT, POST_AUTHOR_ID_RIGHT);
+		posts[iPosts].authorLevel = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_LEVEL_LEFT, POST_AUTHOR_LEVEL_RIGHT);
 		posts[iPosts].authorPortrait = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_PORTRAIT_LEFT, POST_AUTHOR_PORTRAIT_RIGHT);
-		//posts[iPosts].content = GetStringBetween(rawPosts[iRawPosts], POST_CONTENT_LEFT, POST_CONTENT_RIGHT);
 
 		int left = rawPosts[iRawPosts].Find(POST_CONTENT_LEFT) + _tcslen(POST_CONTENT_LEFT);
 		left = rawPosts[iRawPosts].Find(_T(">"), left) + 1;

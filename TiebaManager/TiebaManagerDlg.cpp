@@ -225,7 +225,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	// 测试
 	/*vector<ThreadInfo> threads;
 	GetThreads(_T("一个极其隐秘只有xfgryujk知道的地方"), _T("0"), threads);
-	g_forumID = _T("309740");
+	g_userTiebaInfo.m_forumID = _T("309740");
 	vector<PostInfo> posts, lzls;
 	GetPosts(_T("3033489261"), _T(""), _T("1"), posts, lzls);*/
 
@@ -554,9 +554,9 @@ error:
 // 开始
 void CTiebaManagerDlg::OnBnClickedButton2()
 {
-	if (g_plan.m_keywords->empty() && g_plan.m_images.empty() && g_plan.m_blackList->empty())
+	if (g_plan.m_keywords->empty() && g_plan.m_images.empty() && g_plan.m_blackList->empty() && g_plan.m_illegalLevel <= 0)
 	{
-		AfxMessageBox(_T("至少设置一个违规内容或屏蔽用户！"), MB_ICONERROR);
+		AfxMessageBox(_T("至少设置一个违规规则！"), MB_ICONERROR);
 		OnBnClickedButton5();
 		return;
 	}
