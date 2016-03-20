@@ -287,7 +287,7 @@ CString BanID(LPCTSTR userName, LPCTSTR pid)
 	return GetOperationErrorCode(src);
 }
 
-// 封ID，返回错误代码
+// 封ID，不用PID（用户必须为本吧会员），返回错误代码
 CString BanID(LPCTSTR userName)
 {
 	CString data;
@@ -295,6 +295,18 @@ CString BanID(LPCTSTR userName)
 		*g_plan.m_banDuration, g_userTiebaInfo.m_forumID, g_userTiebaInfo.m_tbs, EncodeURI(userName),
 		*g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
 	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
+	return GetOperationErrorCode(src);
+}
+
+// 封ID，WAP接口，不用PID，返回错误代码
+CString BanIDWap(LPCTSTR userName)
+{
+	CString url;
+	url.Format(_T("http://tieba.baidu.com/mo/q/m?tn=bdFIL&ntn=banid&day=%d&un=%s&tbs=%s")
+			   _T("&word=%s&fid=%s&z=4426261107&$el=%%5Bobject%%20Array%%5D&reason=%s"),
+		*g_plan.m_banDuration, EncodeURI(userName), g_userTiebaInfo.m_tbs, g_userTiebaInfo.m_encodedForumName, 
+		g_userTiebaInfo.m_forumID, *g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
+	CString src = HTTPGet(url);
 	return GetOperationErrorCode(src);
 }
 

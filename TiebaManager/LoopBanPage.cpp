@@ -162,18 +162,19 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	for (UINT i = 0; i < config.m_userList->size(); i++)
 	{
 		CString code;
-		if ((*config.m_pidList)[i] != _T("")) // 尝试用PID封禁
-			code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
-		if ((*config.m_pidList)[i] == _T("") || code != _T("0")) // 尝试不用PID封禁（用户必须为本吧会员）
-		{
-			code = BanID((*config.m_userList)[i]);
-			if (code != _T("0")) // 尝试获取新的PID并用PID封禁
-			{
-				(*config.m_pidList)[i] = GetPIDFromUser((*config.m_userList)[i]);
-				updatePID = TRUE;
-				code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
-			}
-		}
+		//if ((*config.m_pidList)[i] != _T("")) // 尝试用PID封禁
+		//	code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
+		//if ((*config.m_pidList)[i] == _T("") || code != _T("0")) // 尝试不用PID封禁（用户必须为本吧会员）
+		//{
+		//	code = BanID((*config.m_userList)[i]);
+		//	if (code != _T("0")) // 尝试获取新的PID并用PID封禁
+		//	{
+		//		(*config.m_pidList)[i] = GetPIDFromUser((*config.m_userList)[i]);
+		//		updatePID = TRUE;
+		//		code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
+		//	}
+		//}
+		code = BanIDWap((*config.m_userList)[i]); // 用WAP接口封禁
 
 		if (config.m_log)
 		{

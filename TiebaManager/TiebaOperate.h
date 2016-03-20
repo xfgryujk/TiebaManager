@@ -28,6 +28,7 @@ void AddOperation(const Operation& op);
 UINT AFX_CDECL OperateThread(LPVOID mainDlg);
 CString BanID(LPCTSTR userName, LPCTSTR pid);
 CString BanID(LPCTSTR userName);
+CString BanIDWap(LPCTSTR userName);
 CString Defriend(LPCTSTR userID);
 CString DeleteThread(const CString& tid);
 CString DeletePost(LPCTSTR tid, LPCTSTR pid);
