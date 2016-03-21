@@ -23,15 +23,12 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg virtual void OnClickedButton1();
-	afx_msg virtual void OnClickedButton2();
 	afx_msg virtual void OnClickedButton3();
 
 
 public:
 	CButton m_enableCheck;
 	CButton m_logCheck;
-
-	std::vector<CString> m_pid;
 };
 
 UINT AFX_CDECL LoopBanThread(LPVOID _dlg);

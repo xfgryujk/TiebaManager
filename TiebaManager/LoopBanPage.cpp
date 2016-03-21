@@ -63,26 +63,12 @@ void CLoopBanPage::OnClickedButton1()
 	index = m_list.InsertItem(index, NULL);
 	if (SetItem(index))
 	{
-		m_pid.insert(m_pid.begin() + index, _T("")); // 优先尝试不用PID封禁
 		m_list.SetSelectionMark(index);
 		m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
 		((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 	}
 	else
 		m_list.DeleteItem(index);
-}
-
-// 删除
-void CLoopBanPage::OnClickedButton2()
-{
-	int index = m_list.GetSelectionMark();
-	if (index == LB_ERR)
-		return;
-	m_list.DeleteItem(index);
-	m_pid.erase(m_pid.begin() + index);
-	index = index > 0 ? index - 1 : index;
-	m_list.SetSelectionMark(index);
-	m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
 }
 
 // 修改
@@ -92,10 +78,7 @@ void CLoopBanPage::OnClickedButton3()
 	if (index == LB_ERR)
 		return;
 	if (SetItem(index))
-	{
-		m_pid[index] = _T(""); // 优先尝试不用PID封禁
 		((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
-	}
 }
 
 // 循环封线程
@@ -149,32 +132,12 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	if (!config.m_enable)
 		return 0;
 
-	// 更新时间
-	*lastTime.m_year = time.wYear;
-	*lastTime.m_month = time.wMonth;
-	*lastTime.m_day = time.wDay;
-	lastTime.Save(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
-
-	BOOL updatePID = FALSE;
 	// 循环封
 	dlg->m_stateStatic.SetWindowText(_T("循环封禁中"));
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	for (UINT i = 0; i < config.m_userList->size(); i++)
 	{
-		CString code;
-		//if ((*config.m_pidList)[i] != _T("")) // 尝试用PID封禁
-		//	code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
-		//if ((*config.m_pidList)[i] == _T("") || code != _T("0")) // 尝试不用PID封禁（用户必须为本吧会员）
-		//{
-		//	code = BanID((*config.m_userList)[i]);
-		//	if (code != _T("0")) // 尝试获取新的PID并用PID封禁
-		//	{
-		//		(*config.m_pidList)[i] = GetPIDFromUser((*config.m_userList)[i]);
-		//		updatePID = TRUE;
-		//		code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
-		//	}
-		//}
-		code = BanIDWap((*config.m_userList)[i]); // 用WAP接口封禁
+		CString code = BanIDWap((*config.m_userList)[i]); // 用WAP接口封禁
 
 		if (config.m_log)
 		{
@@ -182,8 +145,7 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 			{
 				CString content;
 				content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
-					_T("\"bd:%s,%s\">重试</a>"), (*config.m_userList)[i], code, GetTiebaErrorText(code), (*config.m_pidList)[i], 
-					(*config.m_userList)[i]);
+					_T("\"bd:%s,\">重试</a>"), (*config.m_userList)[i], code, GetTiebaErrorText(code), (*config.m_userList)[i]);
 				dlg->m_log.Log(content);
 			}
 			else
@@ -195,9 +157,11 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	}
 	CoUninitialize();
 
-	// 更新PID
-	if (updatePID)
-		config.Save(CURRENT_USER_PATH + _T("\\options2.xml"));
+	// 更新时间
+	*lastTime.m_year = time.wYear;
+	*lastTime.m_month = time.wMonth;
+	*lastTime.m_day = time.wDay;
+	lastTime.Save(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
 
 	dlg->m_stateStatic.SetWindowText(_T("待机中"));
 	return 0;

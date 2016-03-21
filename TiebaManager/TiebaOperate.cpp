@@ -143,7 +143,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		if (g_plan.m_banID && count >= g_plan.m_banTrigCount
 			&& g_userCache.m_bannedUser->find(op.author) == g_userCache.m_bannedUser->end()) // 达到封禁违规次数且未封
 		{
-			if (op.pid == _T(""))
+			/*if (op.pid == _T(""))
 			{
 				vector<PostInfo> posts, lzls;
 				GetPosts(op.tid, _T(""), _T("1"), posts, lzls);
@@ -154,14 +154,15 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			{
 				dlg->m_log.Log(_T("<font color=red>封禁 </font>") + op.author + _T("<font color=red> 失败！(获取帖子ID失败)</font>"));
 			}
-			else
+			else*/
 			{
-				CString code = BanID(op.author, op.pid);
+				//CString code = BanID(op.author, op.pid);
+				CString code = BanIDWap(op.author);
 				if (code != _T("0"))
 				{
 					CString content;
 					content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
-								   _T("\"bd:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.pid, op.author);
+								   _T("\"bd:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.author, op.pid);
 					dlg->m_log.Log(content);
 				}
 				else

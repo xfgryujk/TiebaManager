@@ -57,19 +57,16 @@ public:
 	COption<BOOL> m_enable;					// 开启
 	COption<BOOL> m_log;					// 输出日志
 	COption<vector<CString> > m_userList;	// 用户列表
-	COption<vector<CString> > m_pidList;	// PID列表
 
 	CLoopBanConfig()
 		: CConfigBase("LoopBan"),
 		m_enable("Enable", TRUE),
 		m_log("Log"),
-		m_userList("Name"),
-		m_pidList("PID")
+		m_userList("Name")
 	{
 		m_options.push_back(&m_enable);
 		m_options.push_back(&m_log);
 		m_options.push_back(&m_userList);
-		m_options.push_back(&m_pidList);
 	}
 
 	BOOL LoadOld(const CString& path)
@@ -90,11 +87,11 @@ public:
 		int size;
 		gzread(f, &size, sizeof(int)); // 长度
 		m_userList->resize(size);
-		m_pidList->resize(size);
+		CString tmp;
 		for (int i = 0; i < size; i++)
 		{
 			ReadText(f, (*m_userList)[i]);
-			ReadText(f, (*m_pidList)[i]);
+			ReadText(f, tmp);
 		}
 		*m_log = FALSE;
 		gzread(f, &*m_log, sizeof(BOOL)); // 输出日志
