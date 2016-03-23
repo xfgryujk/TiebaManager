@@ -200,6 +200,12 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 		LRESULT tmp;
 		m_settingDlg->OnTcnSelchangeTab1(NULL, &tmp);
 	}
+	else if (g_globalConfig.m_firstRunAfterUpdate) // 弹出更新日志
+	{
+		*g_globalConfig.m_firstRunAfterUpdate = FALSE;
+		g_globalConfig.Save(GLOBAL_CONFIG_PATH);
+		AfxMessageBox(UPDATE_LOG, MB_ICONINFORMATION);
+	}
 
 
 	// 每24小时清除已封名单、开始循环封

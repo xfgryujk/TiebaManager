@@ -6,7 +6,11 @@
 
 
 // 当前版本日期，每次更新后修改
-const TCHAR UPDATE_CURRENT_VERSION[] = _T("16-03-02");
+const CString UPDATE_CURRENT_VERSION = _T("16-03-23");
+// 更新日志
+const TCHAR UPDATE_LOG[] = _T("没有更新日志总觉得有点奇怪，从这个版本开始写吧\r\n")
+						   _T("1. 如果只封禁1天则采用WAP接口，不用获取PID了\r\n")
+						   _T("2. 循环封使用WAP接口，改为无延迟（原来延迟3s）");
 
 // 检查更新
 CheckUpdateResult CheckUpdate()
@@ -32,7 +36,7 @@ CheckUpdateResult CheckUpdate()
 	localtime_s(&tmServer_ctime, &tServer_ctime);
 	// 上传时间
 	CString time;
-	time.Format(_T("%d-%02d-%02d"), tmServer_ctime.tm_year % 100, tmServer_ctime.tm_mon + 1, tmServer_ctime.tm_mday);
+	time.Format(_T("%02d-%02d-%02d"), tmServer_ctime.tm_year % 100, tmServer_ctime.tm_mon + 1, tmServer_ctime.tm_mday);
 	if (time == UPDATE_CURRENT_VERSION)
 		return UPDATE_NO_UPDATE;
 

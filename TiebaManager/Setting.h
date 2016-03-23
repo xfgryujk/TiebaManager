@@ -1,6 +1,7 @@
 #pragma once
 #include <zlib.h>
 #include "TypeHelper.h"
+#include "Update.h"
 
 
 // 配置文件路径
@@ -19,9 +20,9 @@ namespace tinyxml2{ class XMLElement; }
 class COptionBase
 {
 public:
-	const LPCSTR m_name;
+	const CStringA m_name;
 
-	COptionBase(LPCSTR name) : m_name(name) {}
+	COptionBase(const CStringA& name) : m_name(name) {}
 	virtual ~COptionBase() {}
 
 	virtual void UseDefault() = 0;
@@ -38,10 +39,10 @@ public:
 	typedef BOOL(*IsValidFunc)(const T& value);
 	const IsValidFunc IsValid;
 
-	COption(LPCSTR name, IsValidFunc _isValid = [](const T&){ return TRUE; })
+	COption(const CStringA& name, IsValidFunc _isValid = [](const T&){ return TRUE; })
 		: COptionBase(name), m_default(), IsValid(_isValid)
 	{}
-	COption(LPCSTR name, const T& _default, IsValidFunc _isValid = [](const T&){ return TRUE; })
+	COption(const CStringA& name, const T& _default, IsValidFunc _isValid = [](const T&){ return TRUE; })
 		: COptionBase(name), m_default(_default), IsValid(_isValid)
 	{}
 
@@ -82,16 +83,19 @@ class CGlobalConfig : public CConfigBase
 {
 public:
 	COption<BOOL> m_firstRun;			// 第一次运行
+	COption<BOOL> m_firstRunAfterUpdate;// 更新后第一次运行
 	COption<CString> m_currentUser;		// 当前账号
 	COption<BOOL> m_autoUpdate;			// 自动更新
 
 	CGlobalConfig()
 		: CConfigBase("Global"),
 		m_firstRun("FirstRun", TRUE),
+		m_firstRunAfterUpdate("FirstRunAfter" + CStringA(UPDATE_CURRENT_VERSION), TRUE),
 		m_currentUser("UserName", _T("[NULL]"), [](const CString& value)->BOOL{ return value != _T("") && PathFileExists(USERS_PATH + value + _T("\\ck.xml")); }),
 		m_autoUpdate("AutoUpdate", TRUE)
 	{
 		m_options.push_back(&m_firstRun);
+		m_options.push_back(&m_firstRunAfterUpdate);
 		m_options.push_back(&m_currentUser);
 		m_options.push_back(&m_autoUpdate);
 	}
