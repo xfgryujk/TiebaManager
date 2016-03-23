@@ -152,8 +152,9 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 				dlg->m_log.Log(_T("<font color=red>封禁 </font>") + (*config.m_userList)[i]);
 		}
 
-		if (code == _T("0") && i < config.m_userList->size() - 1)
-			Sleep(3000);
+		// 貌似无延迟也没问题，以后加延迟设置吧
+		/*if (code == _T("0") && i < config.m_userList->size() - 1)
+			Sleep(3000);*/
 	}
 	CoUninitialize();
 

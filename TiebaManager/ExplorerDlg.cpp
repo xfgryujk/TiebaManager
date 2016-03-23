@@ -183,24 +183,29 @@ void CExplorerDlg::OnBnClickedButton2()
 	int index = m_pages[tabIndex]->m_list.GetNextSelectedItem(pos);
 
 
-	CString author/*, pid*/;
+	CString author, pid;
 	if (tabIndex == 0) // Ö÷Ìâ
 	{
 		author = m_exploreThreadPage.m_threads[index].author;
-		/*vector<PostInfo> posts, lzls;
-		GetPosts(m_exploreThreadPage.m_threads[index].tid, _T(""), _T("1"), posts, lzls);
-		if (posts.size() > 0)
-			pid = posts[0].pid;*/
+		if (g_plan.m_banDuration != 1)
+		{
+			vector<PostInfo> posts, lzls;
+			GetPosts(m_exploreThreadPage.m_threads[index].tid, _T(""), _T("1"), posts, lzls);
+			if (posts.size() > 0)
+				pid = posts[0].pid;
+		}
 	}
 	else if (tabIndex == 1) // Ìû×Ó
 	{
 		author = m_explorePostPage.m_posts[index].author;
-		//pid = m_explorePostPage.m_posts[index].pid;
+		if (g_plan.m_banDuration != 1)
+			pid = m_explorePostPage.m_posts[index].pid;
 	}
 	else // Â¥ÖÐÂ¥
 	{
 		author = m_exploreLzlPage.m_lzls[index].author;
-		//pid = m_exploreLzlPage.m_lzls[index].pid;
+		if (g_plan.m_banDuration != 1)
+			pid = m_exploreLzlPage.m_lzls[index].pid;
 	}
 
 
@@ -209,8 +214,7 @@ void CExplorerDlg::OnBnClickedButton2()
 		AfxMessageBox(_T("·â½ûÊ§°Ü(»ñÈ¡Ìû×ÓIDÊ§°Ü)"), MB_ICONERROR);
 		return;
 	}*/
-	//CString code = BanID(author, pid);
-	CString code = BanIDWap(author);
+	CString code = pid == _T("") ? BanIDWap(author) : BanID(author, pid);
 	if (code != _T("0"))
 		AfxMessageBox(_T("·â½ûÊ§°Ü£¬´íÎó´úÂë" + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
 	else

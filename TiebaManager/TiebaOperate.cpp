@@ -143,21 +143,21 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		if (g_plan.m_banID && count >= g_plan.m_banTrigCount
 			&& g_userCache.m_bannedUser->find(op.author) == g_userCache.m_bannedUser->end()) // 达到封禁违规次数且未封
 		{
-			/*if (op.pid == _T(""))
+			// 封禁时长不为1必须获取PID
+			if (g_plan.m_banDuration != 1 && op.pid == _T(""))
 			{
 				vector<PostInfo> posts, lzls;
 				GetPosts(op.tid, _T(""), _T("1"), posts, lzls);
 				if (posts.size() > 0)
 					op.pid = posts[0].pid;
 			}
-			if (op.pid == _T(""))
+			if (g_plan.m_banDuration != 1 && op.pid == _T(""))
 			{
 				dlg->m_log.Log(_T("<font color=red>封禁 </font>") + op.author + _T("<font color=red> 失败！(获取帖子ID失败)</font>"));
 			}
-			else*/
+			else
 			{
-				//CString code = BanID(op.author, op.pid);
-				CString code = BanIDWap(op.author);
+				CString code = g_plan.m_banDuration == 1 ? BanIDWap(op.author) : BanID(op.author, op.pid);
 				if (code != _T("0"))
 				{
 					CString content;
@@ -299,13 +299,13 @@ CString BanID(LPCTSTR userName)
 	return GetOperationErrorCode(src);
 }
 
-// 封ID，WAP接口，不用PID，返回错误代码
+// 封ID，WAP接口，不用PID，只能封1天，返回错误代码
 CString BanIDWap(LPCTSTR userName)
 {
 	CString url;
-	url.Format(_T("http://tieba.baidu.com/mo/q/m?tn=bdFIL&ntn=banid&day=%d&un=%s&tbs=%s")
+	url.Format(_T("http://tieba.baidu.com/mo/q/m?tn=bdFIL&ntn=banid&day=1&un=%s&tbs=%s")
 			   _T("&word=%s&fid=%s&z=4426261107&$el=%%5Bobject%%20Array%%5D&reason=%s"),
-		*g_plan.m_banDuration, EncodeURI(userName), g_userTiebaInfo.m_tbs, g_userTiebaInfo.m_encodedForumName, 
+		EncodeURI(userName), g_userTiebaInfo.m_tbs, g_userTiebaInfo.m_encodedForumName, 
 		g_userTiebaInfo.m_forumID, *g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
 	CString src = HTTPGet(url);
 	return GetOperationErrorCode(src);
