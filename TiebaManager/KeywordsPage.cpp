@@ -51,7 +51,7 @@ BOOL CKeywordsPage::CheckMatchTooMuch(const CString& text, BOOL isRegex)
 		&& StringIncludes(MATCH_TOO_MUCH_CONTENT_TEST2, text, isRegex);
 }
 
-void CKeywordsPage::PostChangeList()
+void CKeywordsPage::OnAdd(int index)
 {
 	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 }

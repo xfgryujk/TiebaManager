@@ -605,7 +605,7 @@ CPlan::CPlan()
 	m_delete			("Delete",				TRUE),
 	m_banID				("BanID",				FALSE),
 	m_defriend			("Defriend",			FALSE),
-	m_deleteInterval	("DeleteInterval",		2.0f,	[](const float& value)->BOOL{ return 0.0f <= value && value <= 60.0f; }),
+	m_deleteInterval	("DeleteInterval",		2.5f,	[](const float& value)->BOOL{ return 0.0f <= value && value <= 60.0f; }),
 	m_banDuration		("BanDuration",			1,		[](const int& value)->BOOL{ return value == 1 || value == 3 || value == 10; }),
 	m_banReason			("BanReason",			_T("")),
 	m_banTrigCount		("BanTrigCount",		1,		[](const int& value)->BOOL{ return 1 <= value; }),
@@ -774,7 +774,7 @@ UseDefaultOptions:
 	*m_banDuration = 1;			// 封禁时长
 	*m_banTrigCount = 1;		// 封禁违规次数
 	*m_onlyScanTitle = FALSE;	// 只扫描标题
-	*m_deleteInterval = 2.0f;	// 删帖间隔
+	*m_deleteInterval = 2.5f;	// 删帖间隔
 	*m_confirm = TRUE;			// 操作前提示
 	*m_scanPageCount = 1;		// 扫描最后页数
 	*m_briefLog = FALSE;		// 只输出删帖封号

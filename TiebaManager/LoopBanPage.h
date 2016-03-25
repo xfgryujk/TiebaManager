@@ -22,13 +22,16 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
-	afx_msg virtual void OnClickedButton1();
-	afx_msg virtual void OnClickedButton3();
+
+	virtual void OnAdd(int index);
 
 
 public:
 	CButton m_enableCheck;
 	CButton m_logCheck;
+	CStatic m_static2;
+	CEdit m_banIntervalEdit;
+	CStatic m_static3;
 };
 
 UINT AFX_CDECL LoopBanThread(LPVOID _dlg);

@@ -6,7 +6,8 @@
 
 
 // 当前版本日期，每次更新后修改
-const CString UPDATE_CURRENT_VERSION = _T("16-03-23");
+const char UPDATE_CURRENT_VERSION_A[] = "16-03-23";
+const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
 // 更新日志
 const TCHAR UPDATE_LOG[] = _T("没有更新日志总觉得有点奇怪，从这个版本开始写吧\r\n")
 						   _T("1. 如果只封禁1天则采用WAP接口，不用获取PID了\r\n")

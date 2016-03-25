@@ -51,7 +51,7 @@ BOOL CBlackListPage::CheckMatchTooMuch(const CString& text, BOOL isRegex)
 		&& StringMatchs(MATCH_TOO_MUCH_USERNAME_TEST2, text, isRegex);
 }
 
-void CBlackListPage::PostChangeList()
+void CBlackListPage::OnAdd(int index)
 {
 	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 }

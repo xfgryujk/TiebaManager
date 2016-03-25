@@ -288,7 +288,7 @@ CString BanID(LPCTSTR userName, LPCTSTR pid)
 	return GetOperationErrorCode(src);
 }
 
-// 封ID，不用PID（用户必须为本吧会员），返回错误代码
+// 封ID，返回错误代码，不用PID（用户必须为本吧会员）
 CString BanID(LPCTSTR userName)
 {
 	CString data;
@@ -299,12 +299,12 @@ CString BanID(LPCTSTR userName)
 	return GetOperationErrorCode(src);
 }
 
-// 封ID，WAP接口，不用PID，只能封1天，返回错误代码
+// 封ID，返回错误代码，WAP接口，不用PID，只能封1天（否则要用TID）
 CString BanIDWap(LPCTSTR userName)
 {
 	CString url;
 	url.Format(_T("http://tieba.baidu.com/mo/q/m?tn=bdFIL&ntn=banid&day=1&un=%s&tbs=%s")
-			   _T("&word=%s&fid=%s&z=4426261107&$el=%%5Bobject%%20Array%%5D&reason=%s"),
+			   _T("&word=%s&fid=%s&z=2&$el=%%5Bobject%%20Array%%5D&reason=%s"),
 		EncodeURI(userName), g_userTiebaInfo.m_tbs, g_userTiebaInfo.m_encodedForumName, 
 		g_userTiebaInfo.m_forumID, *g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
 	CString src = HTTPGet(url);

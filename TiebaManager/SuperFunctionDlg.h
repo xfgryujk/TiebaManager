@@ -45,7 +45,7 @@ public:
 	CButton m_okButton;
 	CButton m_cancelButton;
 
-	BOOL m_clearScanCache;
+	BOOL m_clearCache;
 protected:
 	CWnd* m_pages[3];
 	CResizeControl m_pagesResize;
@@ -56,16 +56,19 @@ class CLoopBanConfig : public CConfigBase
 public:
 	COption<BOOL> m_enable;					// 开启
 	COption<BOOL> m_log;					// 输出日志
+	COption<float> m_banInterval;			// 封禁间隔
 	COption<vector<CString> > m_userList;	// 用户列表
 
 	CLoopBanConfig()
 		: CConfigBase("LoopBan"),
 		m_enable("Enable", TRUE),
 		m_log("Log"),
+		m_banInterval("BanInterval", 0.0f, [](const float& value)->BOOL{ return 0.0f <= value && value <= 60.0f; }),
 		m_userList("Name")
 	{
 		m_options.push_back(&m_enable);
 		m_options.push_back(&m_log);
+		m_options.push_back(&m_banInterval);
 		m_options.push_back(&m_userList);
 	}
 

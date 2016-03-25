@@ -23,12 +23,12 @@ void CListTestPage::DoDataExchange(CDataExchange* pDX)
 {
 	CListPage::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_testEdit);
-	DDX_Control(pDX, IDC_BUTTON6, m_testButton);
+	DDX_Control(pDX, IDC_BUTTON7, m_testButton);
 }
 
 
 BEGIN_MESSAGE_MAP(CListTestPage, CListPage)
-	ON_BN_CLICKED(IDC_BUTTON6, &CListTestPage::OnClickedButton6)
+	ON_BN_CLICKED(IDC_BUTTON7, &CListTestPage::OnClickedButton7)
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -49,7 +49,7 @@ BOOL CListTestPage::OnInitDialog()
 }
 
 // ≤‚ ‘
-void CListTestPage::OnClickedButton6()
+void CListTestPage::OnClickedButton7()
 {
 	int index = m_list.GetSelectionMark();
 	if (index == LB_ERR)

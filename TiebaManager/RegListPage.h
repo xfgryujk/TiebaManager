@@ -30,7 +30,6 @@ public:
 	virtual void ApplyList(vector<RegexText>& list);
 protected:
 	virtual BOOL CheckMatchTooMuch(const CString& text, BOOL isRegex){ return FALSE; };
-	virtual void PostChangeList(){}
 	virtual BOOL TestMatch(int index);
 	virtual BOOL TestMatch(const CString& test, const CString& text, BOOL isRegex) = 0;
 

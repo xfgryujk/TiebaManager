@@ -193,6 +193,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	if (g_globalConfig.m_firstRun)
 	{
 		*g_globalConfig.m_firstRun = FALSE;
+		*g_globalConfig.m_firstRunAfterUpdate = FALSE;
 		g_globalConfig.Save(GLOBAL_CONFIG_PATH);
 		m_settingDlg = new CSettingDlg();
 		m_settingDlg->Create(m_settingDlg->IDD, this);

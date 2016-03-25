@@ -29,8 +29,11 @@ public:
 	afx_msg void OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg virtual void OnClickedButton4() = 0;
 	afx_msg virtual void OnClickedButton5() = 0;
+	afx_msg virtual void OnClickedButton6();
 
 	virtual BOOL SetItem(int index) = 0;
+	virtual void OnAdd(int index) {}
+	virtual void OnDelete(int index) {}
 
 
 public:
@@ -40,6 +43,7 @@ public:
 	CButton m_changeButton;
 	CButton m_exportButton;
 	CButton m_importButton;
+	CButton m_clearButton;
 	CStatic m_static;
 protected:
 	COLORREF m_staticColor;

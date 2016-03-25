@@ -35,6 +35,7 @@ void CListPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON3, m_changeButton);
 	DDX_Control(pDX, IDC_BUTTON4, m_exportButton);
 	DDX_Control(pDX, IDC_BUTTON5, m_importButton);
+	DDX_Control(pDX, IDC_BUTTON6, m_clearButton);
 	DDX_Control(pDX, IDC_STATIC1, m_static);
 }
 
@@ -47,6 +48,7 @@ BEGIN_MESSAGE_MAP(CListPage, CNormalDlg)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST1, &CListPage::OnNMDblclkList1)
 	ON_BN_CLICKED(IDC_BUTTON4, &CListPage::OnClickedButton4)
 	ON_BN_CLICKED(IDC_BUTTON5, &CListPage::OnClickedButton5)
+	ON_BN_CLICKED(IDC_BUTTON6, &CListPage::OnClickedButton6)
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -77,6 +79,7 @@ BOOL CListPage::OnInitDialog()
 	m_resize.AddControl(&m_changeButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
 	m_resize.AddControl(&m_exportButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
 	m_resize.AddControl(&m_importButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_clearButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
 	m_resize.AddControl(&m_static, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this, RT_KEEP_DIST_TO_RIGHT, this);
 
 	m_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
@@ -94,6 +97,7 @@ void CListPage::OnClickedButton1()
 	{
 		m_list.SetSelectionMark(index);
 		m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
+		OnAdd(index);
 	}
 	else
 		m_list.DeleteItem(index);
@@ -106,6 +110,7 @@ void CListPage::OnClickedButton2()
 	if (index == LB_ERR)
 		return;
 	m_list.DeleteItem(index);
+	OnDelete(index);
 	index = index > 0 ? index - 1 : index;
 	m_list.SetSelectionMark(index);
 	m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
@@ -117,7 +122,8 @@ void CListPage::OnClickedButton3()
 	int index = m_list.GetSelectionMark();
 	if (index == LB_ERR)
 		return;
-	SetItem(index);
+	if (SetItem(index))
+		OnAdd(index);
 }
 
 // Ë«»÷
@@ -127,4 +133,11 @@ void CListPage::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 	if (pNMItemActivate->iItem != LB_ERR)
 		OnClickedButton3();
 	*pResult = 0;
+}
+
+// Çå³ý
+void CListPage::OnClickedButton6()
+{
+	m_list.DeleteAllItems();
+	OnDelete(-1);
 }

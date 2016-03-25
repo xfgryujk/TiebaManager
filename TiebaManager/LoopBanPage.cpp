@@ -35,6 +35,9 @@ void CLoopBanPage::DoDataExchange(CDataExchange* pDX)
 	CNormalListPage::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_CHECK6, m_logCheck);
 	DDX_Control(pDX, IDC_CHECK7, m_enableCheck);
+	DDX_Control(pDX, IDC_EDIT9, m_banIntervalEdit);
+	DDX_Control(pDX, IDC_STATIC2, m_static2);
+	DDX_Control(pDX, IDC_STATIC3, m_static3);
 }
 
 
@@ -51,34 +54,18 @@ BOOL CLoopBanPage::OnInitDialog()
 
 	m_resize.AddControl(&m_enableCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 	m_resize.AddControl(&m_logCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_static2, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_banIntervalEdit, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
+	m_resize.AddControl(&m_static3, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
 
 // 添加
-void CLoopBanPage::OnClickedButton1()
+void CLoopBanPage::OnAdd(int index)
 {
-	int index = m_list.GetSelectionMark() + 1;
-	index = m_list.InsertItem(index, NULL);
-	if (SetItem(index))
-	{
-		m_list.SetSelectionMark(index);
-		m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
-		((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
-	}
-	else
-		m_list.DeleteItem(index);
-}
-
-// 修改
-void CLoopBanPage::OnClickedButton3()
-{
-	int index = m_list.GetSelectionMark();
-	if (index == LB_ERR)
-		return;
-	if (SetItem(index))
-		((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+	((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearCache = TRUE;
 }
 
 // 循环封线程
@@ -152,9 +139,8 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 				dlg->m_log.Log(_T("<font color=red>封禁 </font>") + (*config.m_userList)[i]);
 		}
 
-		// 貌似无延迟也没问题，以后加延迟设置吧
-		/*if (code == _T("0") && i < config.m_userList->size() - 1)
-			Sleep(3000);*/
+		if (code == _T("0") && i < config.m_userList->size() - 1)
+			Sleep((DWORD)(config.m_banInterval * 1000));
 	}
 	CoUninitialize();
 

@@ -86,7 +86,7 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 
 	// 显示配置
 	ShowCurrentOptions();
-	m_clearScanCache = FALSE;
+	m_clearCache = FALSE;
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -155,6 +155,7 @@ void CSuperFunctionDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 // 显示当前设置
 void CSuperFunctionDlg::ShowCurrentOptions()
 {
+	CString tmp;
 	// 循环封
 	CLoopBanConfig loopBanConfig;
 	loopBanConfig.Load(CURRENT_USER_PATH + _T("\\options2.xml"));
@@ -162,21 +163,26 @@ void CSuperFunctionDlg::ShowCurrentOptions()
 	m_loopBanPage.ShowList(loopBanConfig.m_userList);				// 用户名
 	m_loopBanPage.m_logCheck.SetCheck(loopBanConfig.m_log);			// 输出日志
 	m_loopBanPage.m_enableCheck.SetCheck(loopBanConfig.m_enable);	// 开启
+	tmp.Format(_T("%g"), *loopBanConfig.m_banInterval);
+	m_loopBanPage.m_banIntervalEdit.SetWindowText(tmp);				// 封禁间隔
 }
 
 // 应用对话框中的设置
 void CSuperFunctionDlg::ApplyOptionsInDlg()
 {
+	CString strBuf;
 	// 循环封
 	CLoopBanConfig loopBanConfig;
 
 	m_loopBanPage.ApplyList(loopBanConfig.m_userList);					// 用户名
 	*loopBanConfig.m_log = m_loopBanPage.m_logCheck.GetCheck();			// 输出日志
 	*loopBanConfig.m_enable = m_loopBanPage.m_enableCheck.GetCheck();	// 开启
+	m_loopBanPage.m_banIntervalEdit.GetWindowText(strBuf);
+	*loopBanConfig.m_banInterval = (float)_ttof(strBuf);				// 封禁间隔
 
 	loopBanConfig.Save(CURRENT_USER_PATH + _T("\\options2.xml"));
 
-	if (m_clearScanCache)
+	if (m_clearCache)
 		DeleteFile(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
 }
 

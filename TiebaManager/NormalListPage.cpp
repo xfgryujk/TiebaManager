@@ -89,7 +89,10 @@ void CNormalListPage::OnClickedButton5()
 		if (!tmp.Load(dlg.GetPathName()))
 			AfxMessageBox(_T("∂¡»° ß∞‹£°"), MB_ICONERROR);
 		else
+		{
 			ShowList(tmp.m_list);
+			OnAdd(-1);
+		}
 	}
 }
 

@@ -85,7 +85,10 @@ void CRegListPage::OnClickedButton5()
 		if (!tmp.Load(dlg.GetPathName()))
 			AfxMessageBox(_T("∂¡»° ß∞‹£°"), MB_ICONERROR);
 		else
+		{
 			ShowList(tmp.m_list);
+			OnAdd(-1);
+		}
 	}
 }
 
@@ -103,7 +106,6 @@ BOOL CRegListPage::SetItem(int index)
 		}
 		m_list.SetItemText(index, 0, content);
 		m_list.SetItemText(index, 1, isRegex ? IS_REGEX_TEXT : _T(""));
-		PostChangeList();
 		return TRUE;
 	}
 	return FALSE;

@@ -24,6 +24,6 @@ public:
 
 protected:
 	virtual BOOL CheckMatchTooMuch(const CString& text, BOOL isRegex);
-	virtual void PostChangeList();
+	virtual void OnAdd(int index);
 	virtual BOOL TestMatch(const CString& test, const CString& text, BOOL isRegex);
 };

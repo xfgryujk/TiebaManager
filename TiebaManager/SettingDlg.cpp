@@ -254,7 +254,7 @@ void CSettingDlg::ShowPlan(const CPlan& plan)
 	m_scanPage.m_threadCountEdit.SetWindowText(tmp);				// 线程数
 	m_operatePage.m_banReasonEdit.SetWindowText(*plan.m_banReason);	// 封禁原因
 	m_imagePage.m_dirEdit.SetWindowText(*plan.m_imageDir);			// 违规图片目录
-	tmp.Format(_T("%lf"), *plan.m_SSIMThreshold);
+	tmp.Format(_T("%g"), *plan.m_SSIMThreshold);
 	m_imagePage.m_thresholdEdit.SetWindowText(tmp);					// 阈值
 	m_operatePage.m_defriendCheck.SetCheck(plan.m_defriend);		// 拉黑
 	m_operatePage.OnBnClickedCheck3();
