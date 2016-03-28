@@ -65,7 +65,28 @@ BOOL CLoopBanPage::OnInitDialog()
 // 添加
 void CLoopBanPage::OnAdd(int index)
 {
+	if (index >= 0)
+	{
+		if (m_pid.size() != m_list.GetItemCount())
+			m_pid.insert(m_pid.begin() + index, _T("")); // 优先不使用PID封禁
+		else
+			m_pid[index] = _T("");
+	}
+	else
+	{
+		m_pid.clear();
+		m_pid.resize(m_list.GetItemCount());
+	}
 	((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearCache = TRUE;
+}
+
+// 删除
+void CLoopBanPage::OnDelete(int index)
+{
+	if (index >= 0)
+		m_pid.erase(m_pid.begin() + index);
+	else
+		m_pid.clear();
 }
 
 // 循环封线程
@@ -119,13 +140,31 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	if (!config.m_enable)
 		return 0;
 
+	BOOL updatePID = FALSE;
 	// 循环封
 	dlg->m_stateStatic.SetWindowText(_T("循环封禁中"));
 	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	for (UINT i = 0; i < config.m_userList->size(); i++)
 	{
-		CString code = BanIDWap((*config.m_userList)[i]); // 用WAP接口封禁
-
+		CString code;
+		if (g_plan.m_wapBanInterface)
+			code = BanIDWap((*config.m_userList)[i]); // 用WAP接口封禁
+		else
+		{
+			if ((*config.m_pidList)[i] != _T("")) // 尝试用PID封禁
+				code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
+			if ((*config.m_pidList)[i] == _T("") || code != _T("0")) // 尝试不用PID封禁（用户必须为本吧会员）
+			{
+				code = BanID((*config.m_userList)[i]);
+				if (code != _T("0")) // 尝试获取新的PID并用PID封禁
+				{
+					(*config.m_pidList)[i] = GetPIDFromUser((*config.m_userList)[i]);
+					updatePID = TRUE;
+					code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
+				}
+			}
+		}
+		
 		if (config.m_log)
 		{
 			if (code != _T("0"))
@@ -143,6 +182,10 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 			Sleep((DWORD)(config.m_banInterval * 1000));
 	}
 	CoUninitialize();
+
+	// 更新PID
+	if (updatePID)
+		config.Save(CURRENT_USER_PATH + _T("\\options2.xml"));
 
 	// 更新时间
 	*lastTime.m_year = time.wYear;

@@ -187,7 +187,7 @@ void CExplorerDlg::OnBnClickedButton2()
 	if (tabIndex == 0) // 主题
 	{
 		author = m_exploreThreadPage.m_threads[index].author;
-		if (g_plan.m_banDuration != 1)
+		if (!g_plan.m_wapBanInterface || g_plan.m_banDuration != 1)
 		{
 			vector<PostInfo> posts, lzls;
 			GetPosts(m_exploreThreadPage.m_threads[index].tid, _T(""), _T("1"), posts, lzls);
@@ -198,13 +198,13 @@ void CExplorerDlg::OnBnClickedButton2()
 	else if (tabIndex == 1) // 帖子
 	{
 		author = m_explorePostPage.m_posts[index].author;
-		if (g_plan.m_banDuration != 1)
+		if (!g_plan.m_wapBanInterface || g_plan.m_banDuration != 1)
 			pid = m_explorePostPage.m_posts[index].pid;
 	}
 	else // 楼中楼
 	{
 		author = m_exploreLzlPage.m_lzls[index].author;
-		if (g_plan.m_banDuration != 1)
+		if (!g_plan.m_wapBanInterface || g_plan.m_banDuration != 1)
 			pid = m_exploreLzlPage.m_lzls[index].pid;
 	}
 

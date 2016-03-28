@@ -24,6 +24,7 @@ public:
 	virtual BOOL OnInitDialog();
 
 	virtual void OnAdd(int index);
+	virtual void OnDelete(int index);
 
 
 public:
@@ -32,6 +33,8 @@ public:
 	CStatic m_static2;
 	CEdit m_banIntervalEdit;
 	CStatic m_static3;
+
+	std::vector<CString> m_pid;
 };
 
 UINT AFX_CDECL LoopBanThread(LPVOID _dlg);

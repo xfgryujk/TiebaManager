@@ -58,18 +58,29 @@ public:
 	COption<BOOL> m_log;					// 输出日志
 	COption<float> m_banInterval;			// 封禁间隔
 	COption<vector<CString> > m_userList;	// 用户列表
+	COption<vector<CString> > m_pidList;	// PID列表
 
 	CLoopBanConfig()
 		: CConfigBase("LoopBan"),
 		m_enable("Enable", TRUE),
 		m_log("Log"),
 		m_banInterval("BanInterval", 0.0f, [](const float& value)->BOOL{ return 0.0f <= value && value <= 60.0f; }),
-		m_userList("Name")
+		m_userList("Name"),
+		m_pidList("PID")
 	{
 		m_options.push_back(&m_enable);
 		m_options.push_back(&m_log);
 		m_options.push_back(&m_banInterval);
 		m_options.push_back(&m_userList);
+		m_options.push_back(&m_pidList);
+	}
+
+	virtual BOOL Load(const CString& path)
+	{
+		BOOL res = CConfigBase::Load(path);
+		if (m_pidList->size() != m_userList->size())
+			m_pidList->resize(m_userList->size());
+		return res;
 	}
 
 	BOOL LoadOld(const CString& path)
@@ -90,11 +101,11 @@ public:
 		int size;
 		gzread(f, &size, sizeof(int)); // 长度
 		m_userList->resize(size);
-		CString tmp;
+		m_pidList->resize(size);
 		for (int i = 0; i < size; i++)
 		{
 			ReadText(f, (*m_userList)[i]);
-			ReadText(f, tmp);
+			ReadText(f, (*m_pidList)[i]);
 		}
 		*m_log = FALSE;
 		gzread(f, &*m_log, sizeof(BOOL)); // 输出日志

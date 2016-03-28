@@ -161,6 +161,7 @@ void CSuperFunctionDlg::ShowCurrentOptions()
 	loopBanConfig.Load(CURRENT_USER_PATH + _T("\\options2.xml"));
 	
 	m_loopBanPage.ShowList(loopBanConfig.m_userList);				// 用户名
+	m_loopBanPage.m_pid = std::move(*loopBanConfig.m_pidList);		// PID
 	m_loopBanPage.m_logCheck.SetCheck(loopBanConfig.m_log);			// 输出日志
 	m_loopBanPage.m_enableCheck.SetCheck(loopBanConfig.m_enable);	// 开启
 	tmp.Format(_T("%g"), *loopBanConfig.m_banInterval);
@@ -175,6 +176,7 @@ void CSuperFunctionDlg::ApplyOptionsInDlg()
 	CLoopBanConfig loopBanConfig;
 
 	m_loopBanPage.ApplyList(loopBanConfig.m_userList);					// 用户名
+	*loopBanConfig.m_pidList = m_loopBanPage.m_pid;						// PID
 	*loopBanConfig.m_log = m_loopBanPage.m_logCheck.GetCheck();			// 输出日志
 	*loopBanConfig.m_enable = m_loopBanPage.m_enableCheck.GetCheck();	// 开启
 	m_loopBanPage.m_banIntervalEdit.GetWindowText(strBuf);

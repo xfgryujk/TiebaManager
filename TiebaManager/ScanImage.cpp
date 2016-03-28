@@ -163,11 +163,11 @@ void GetThreadImage::GetImage(vector<CString>& img)
 // 从帖子取图片地址
 void GetPostImage::GetImage(vector<CString>& img)
 {
-	if (m_portrait != _T(""))
-		img.push_back(_T("http://tb.himg.baidu.com/sys/portrait/item/") + m_portrait);
 	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_content, (LPCTSTR)m_content + m_content.GetLength(), POST_IMG_REG), 
 		end; it != end; ++it)
 		img.push_back((*it)[2].str().c_str());
+	if (m_portrait != _T(""))
+		img.push_back(_T("http://tb.himg.baidu.com/sys/portrait/item/") + m_portrait);
 }
 
 

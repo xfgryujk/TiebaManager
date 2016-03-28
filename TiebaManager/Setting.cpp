@@ -611,6 +611,7 @@ CPlan::CPlan()
 	m_banTrigCount		("BanTrigCount",		1,		[](const int& value)->BOOL{ return 1 <= value; }),
 	m_defriendTrigCount	("DefriendTrigCount",	5,		[](const int& value)->BOOL{ return 1 <= value; }),
 	m_confirm			("Confirm",				TRUE),
+	m_wapBanInterface	("WapBanInterface",		FALSE),
 	m_keywords			("IllegalContent", [](const vector<RegexText>& value)->BOOL
 											{
 												for (const RegexText& i : value)
@@ -650,6 +651,7 @@ CPlan::CPlan()
 	m_options.push_back(&m_banTrigCount);
 	m_options.push_back(&m_defriendTrigCount);
 	m_options.push_back(&m_confirm);
+	m_options.push_back(&m_wapBanInterface);
 	m_options.push_back(&m_keywords);
 	m_options.push_back(&m_imageDir);
 	m_options.push_back(&m_SSIMThreshold);

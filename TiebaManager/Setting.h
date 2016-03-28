@@ -162,6 +162,7 @@ public:
 	COption<int>		m_banTrigCount;			// 封禁违规次数
 	COption<int>		m_defriendTrigCount;	// 拉黑违规次数
 	COption<BOOL>		m_confirm;				// 操作前提示
+	COption<BOOL>		m_wapBanInterface;		// 封禁用WAP接口
 	COption<vector<RegexText> >	m_keywords;		// 违规内容
 	vector<NameImage>			m_images;		// 违规图片
 	COption<CString>	m_imageDir;				// 违规图片目录

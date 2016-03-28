@@ -246,6 +246,7 @@ void CSettingDlg::ShowPlan(const CPlan& plan)
 	tmp.Format(_T("%g"), *plan.m_deleteInterval);
 	m_operatePage.m_deleteIntervalEdit.SetWindowText(tmp);			// 删帖间隔
 	m_operatePage.m_confirmCheck.SetCheck(plan.m_confirm);			// 操作前提示
+	m_operatePage.m_wapBanInterfaceCheck.SetCheck(plan.m_wapBanInterface);	// 封禁使用WAP接口
 	tmp.Format(_T("%d"), *plan.m_scanPageCount);
 	m_scanPage.m_scanPageCountEdit.SetWindowText(tmp);				// 扫描最后页数
 	m_scanPage.m_briefLogCheck.SetCheck(plan.m_briefLog);			// 只输出删帖封号
@@ -298,6 +299,7 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 	m_operatePage.m_deleteIntervalEdit.GetWindowText(strBuf);
 	*plan.m_deleteInterval = (float)_ttof(strBuf);						// 删帖间隔
 	*plan.m_confirm = m_operatePage.m_confirmCheck.GetCheck();			// 操作前提示
+	*plan.m_wapBanInterface = m_operatePage.m_wapBanInterfaceCheck.GetCheck();	// 封禁使用WAP接口
 	m_scanPage.m_scanPageCountEdit.GetWindowText(strBuf);
 	*plan.m_scanPageCount = _ttoi(strBuf);								// 扫描最后页数
 	*plan.m_briefLog = m_scanPage.m_briefLogCheck.GetCheck();			// 只输出删帖封号

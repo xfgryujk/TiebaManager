@@ -39,4 +39,5 @@ public:
 	CEdit m_defriendTrigCountEdit;
 	CEdit m_deleteIntervalEdit;
 	CButton m_confirmCheck;
+	CButton m_wapBanInterfaceCheck;
 };
