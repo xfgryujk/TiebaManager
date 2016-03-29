@@ -257,6 +257,7 @@ void CTiebaManagerDlg::OnDestroy()
 
 	SaveCurrentUserProfile();
 	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
+	g_plan.Save(OPTIONS_PATH + g_userConfig.m_plan + _T(".xml"));
 
 	g_stopScanFlag = TRUE; // 实际上线程不会返回（返回前就崩溃了？）
 

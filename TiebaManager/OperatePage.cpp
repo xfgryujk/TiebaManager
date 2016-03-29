@@ -34,6 +34,7 @@ void COperatePage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK3, m_defriendCheck);
 	DDX_Control(pDX, IDC_EDIT8, m_defriendTrigCountEdit);
 	DDX_Control(pDX, IDC_CHECK5, m_wapBanInterfaceCheck);
+	DDX_Control(pDX, IDC_CHECK6, m_autoLoopBanCheck);
 }
 
 

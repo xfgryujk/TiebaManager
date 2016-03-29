@@ -3,7 +3,7 @@ class CTiebaManagerDlg;
 struct IHTMLDocument2;
 
 
-BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, const CString& authorLevel, CString& msg, int& pos, int& length);
+BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, const CString& authorLevel, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
 UINT AFX_CDECL ScanThread(LPVOID mainDlg);
 UINT AFX_CDECL ScanPostThread(LPVOID threadID);
 BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHistoryReply,

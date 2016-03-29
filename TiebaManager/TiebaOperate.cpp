@@ -10,6 +10,7 @@
 
 #include "TiebaManagerDlg.h"
 #include "ConfirmDlg.h"
+#include "SuperFunctionDlg.h"
 
 #include <Mmsystem.h>
 
@@ -23,11 +24,12 @@ CString g_randomTid; // 某个tid，确认贴吧时初始化，WAP接口用
 
 
 // 添加确认
-void AddConfirm(const CString& msg, TBObject object, const CString& tid, const CString& title,
+void AddConfirm(BOOL forceToConfirm, const CString& msg, TBObject object, const CString& tid, const CString& title,
 	const CString& floor, const CString& pid, const CString& author, const CString& authorID,
 	const CString& authorPortrait, int pos, int length)
 {
 	Operation tmp;
+	tmp.forceToConfirm = forceToConfirm;
 	tmp.msg = msg;
 	tmp.pos = pos;
 	tmp.length = length;
@@ -66,7 +68,7 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 			continue;
 
 		// 确认是否操作
-		if (g_plan.m_confirm)
+		if (g_plan.m_confirm || op.forceToConfirm)
 		{
 			if (CConfirmDlg(&op).DoModal() == IDCANCEL)
 			{
@@ -172,6 +174,21 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 					sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
 					g_userCache.m_bannedUser->insert(op.author);
 					dlg->m_log.Log(_T("<font color=red>封禁 </font>") + op.author);
+				}
+			}
+
+			// 自动循环封
+			if (g_plan.m_autoLoopBan)
+			{
+				CLoopBanConfig config;
+				config.Load(CURRENT_USER_PATH + _T("\\options2.xml"));
+				auto it = std::find(config.m_userList->cbegin(), config.m_userList->cend(), op.author);
+				if (it == config.m_userList->cend())
+				{
+					config.m_userList->push_back(op.author);
+					config.m_pidList->push_back(_T(""));
+					config.Save(CURRENT_USER_PATH + _T("\\options2.xml"));
+					DeleteFile(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
 				}
 			}
 		}
