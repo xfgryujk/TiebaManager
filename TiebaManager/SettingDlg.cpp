@@ -141,12 +141,6 @@ BOOL CSettingDlg::OnInitDialog()
 		flag = fileFind.FindNextFile();
 		m_optionsPage.m_list.AddString(fileFind.GetFileTitle());
 	}
-	flag = fileFind.FindFile(OPTIONS_PATH + _T("*.tb"));
-	while (flag)
-	{
-		flag = fileFind.FindNextFile();
-		m_optionsPage.m_list.AddString(fileFind.GetFileTitle());
-	}
 
 	m_usersPage.m_currentUserStatic.SetWindowText(_T("当前账号：") + g_globalConfig.m_currentUser); // 当前账号
 	// 账号
@@ -156,8 +150,7 @@ BOOL CSettingDlg::OnInitDialog()
 	{
 		flag = fileFind.FindNextFile();
 		if (fileFind.IsDirectory() && !fileFind.IsDots() 
-			&& (PathFileExists(fileFind.GetFilePath() + _T("\\ck.xml"))
-			|| PathFileExists(fileFind.GetFilePath() + _T("\\ck.tb"))))
+			&& (PathFileExists(fileFind.GetFilePath() + _T("\\ck.xml"))))
 		{
 			CString name = fileFind.GetFileName();
 			if (name != _T("[NULL]"))

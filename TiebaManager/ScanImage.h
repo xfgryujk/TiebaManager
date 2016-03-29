@@ -1,5 +1,4 @@
 #pragma once
-#include <zlib.h>
 #include <opencv2\core\mat.hpp>
 using cv::Mat;
 #include "TiebaCollect.h"

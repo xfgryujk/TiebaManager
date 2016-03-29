@@ -87,7 +87,7 @@ void COptionsPage::OnBnClickedButton1()
 	}
 	
 	CreateDir(OPTIONS_PATH);
-	if (PathFileExists(OPTIONS_PATH + name + _T(".xml")) || PathFileExists(OPTIONS_PATH + name + _T(".tb")))
+	if (PathFileExists(OPTIONS_PATH + name + _T(".xml")))
 	{
 		AfxMessageBox(_T("方案已存在！"), MB_ICONERROR);
 		return;
@@ -105,7 +105,7 @@ void COptionsPage::OnBnClickedButton2()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (!DeleteFile(OPTIONS_PATH + name + _T(".xml")) && !DeleteFile(OPTIONS_PATH + name + _T(".tb")))
+	if (!DeleteFile(OPTIONS_PATH + name + _T(".xml")))
 	{
 		AfxMessageBox(_T("删除方案失败！"), MB_ICONERROR);
 		return;
@@ -136,8 +136,7 @@ void COptionsPage::OnBnClickedButton3()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (!MoveFile(OPTIONS_PATH + name + _T(".xml"), OPTIONS_PATH + newName + _T(".xml")) 
-		&& !MoveFile(OPTIONS_PATH + name + _T(".tb"), OPTIONS_PATH + newName + _T(".tb")))
+	if (!MoveFile(OPTIONS_PATH + name + _T(".xml"), OPTIONS_PATH + newName + _T(".xml")))
 	{
 		AfxMessageBox(_T("重命名方案失败！"), MB_ICONERROR);
 		return;

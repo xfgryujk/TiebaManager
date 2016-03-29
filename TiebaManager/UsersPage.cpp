@@ -65,7 +65,6 @@ BOOL CUsersPage::OnInitDialog()
 	// “Ï≥£:  OCX  Ù–‘“≥”¶∑µªÿ FALSE
 }
 
-#include "StringHelper.h"
 // µ«¬º
 void CUsersPage::OnBnClickedButton1()
 {
@@ -106,7 +105,7 @@ void CUsersPage::OnBnClickedButton2()
 		return;
 	}
 	CString path = USERS_PATH + name + _T("\\");
-	if (!DeleteFile(path + _T("ck.xml")) && !DeleteFile(path + _T("ck.tb")))
+	if (!DeleteFile(path + _T("ck.xml")))
 	{
 		AfxMessageBox(_T("…æ≥˝’À∫≈ ß∞‹£°"), MB_ICONERROR);
 		return;

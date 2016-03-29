@@ -530,15 +530,8 @@ BOOL CConfigBase::Load(const CString& path)
 	FILE* f = NULL;
 	if (_tfopen_s(&f, path, _T("rb")) != 0)
 	{
-		OnChange();
-		CString oldPath = path.Left(path.GetLength() - 3) + _T("tb");
-		BOOL res = LoadOld(oldPath);
-		Save(path);
-		DeleteFile(oldPath);
-		PostChange();
-		if (!res)
-			UseDefault();
-		return res;
+		UseDefault();
+		return FALSE;
 	}
 
 	tinyxml2::XMLDocument doc;
@@ -612,7 +605,7 @@ CPlan::CPlan()
 	m_defriendTrigCount	("DefriendTrigCount",	5,		[](const int& value)->BOOL{ return 1 <= value; }),
 	m_confirm			("Confirm",				TRUE),
 	m_wapBanInterface	("WapBanInterface",		FALSE),
-	m_keywords			("IllegalContent", [](const vector<RegexText>& value)->BOOL
+	m_keywords			("IllegalContent", [](const vector<Keyword>& value)->BOOL
 											{
 												for (const RegexText& i : value)
 													if (StringIncludes(MATCH_TOO_MUCH_CONTENT_TEST1, i) 
@@ -659,140 +652,7 @@ CPlan::CPlan()
 	m_options.push_back(&m_whiteList);
 	m_options.push_back(&m_whiteContent);
 	m_options.push_back(&m_trustedThread);
-}
-
-static inline void ReadRegexTexts(const gzFile& f, vector<RegexText>& vec)
-{
-	int intBuf;
-	gzread(f, &intBuf, sizeof(int)); // 长度
-	vec.resize(intBuf);
-	for (RegexText& i : vec)
-	{
-		gzread(f, &intBuf, sizeof(int)); // 是正则
-		i.isRegex = intBuf != 0;
-		ReadText(f, i.text);
-		i.regexp = i.isRegex ? i.text : _T("");
-	}
-}
-
-static inline void WriteRegexTexts(const gzFile& f, vector<RegexText>& vec)
-{
-	int intBuf;
-	gzwrite(f, &(intBuf = vec.size()), sizeof(int)); // 长度
-	for (const RegexText& i : vec)
-	{
-		gzwrite(f, &(intBuf = i.isRegex ? 1 : 0), sizeof(int)); // 是正则
-		WriteText(f, i.text);
-	}
-}
-
-BOOL CPlan::LoadOld(const CString& path)
-{
-	CString strBuf;
-
-	gzFile f = gzopen_w(path, "rb");
-	if (f == NULL)
-		goto UseDefaultOptions;
-
-	// 头部
-	char header[2];
-	gzread(f, header, sizeof(header));
-	if (header[0] != 'T' || header[1] != 'B')
-	{
-		gzclose(f);
-		goto UseDefaultOptions;
-	}
-
-	m_optionsLock.Lock();
-
-	// 违规内容
-	ReadRegexTexts(f, m_keywords);
-
-	// 屏蔽用户
-	ReadRegexTexts(f, m_blackList);
-
-	// 信任用户
-	int intBuf;
-	gzread(f, &intBuf, sizeof(int)); // 长度
-	for (int i = 0; i < intBuf; i++)
-	{
-		ReadText(f, strBuf);
-		m_whiteList->insert(strBuf);
-	}
-
-	// 信任内容
-	ReadRegexTexts(f, m_whiteContent);
-
-	gzread(f, &*m_scanInterval, sizeof(int));	// 扫描间隔
-	gzread(f, &*m_banID, sizeof(BOOL));			// 封ID
-	gzread(f, &*m_banDuration, sizeof(int));	// 封禁时长
-	BOOL banIP;
-	gzread(f, &banIP, sizeof(BOOL));			// 封IP
-	gzread(f, &*m_banTrigCount, sizeof(int));	// 封禁违规次数
-	gzread(f, &*m_onlyScanTitle, sizeof(BOOL));	// 只扫描标题
-	gzread(f, &*m_deleteInterval, sizeof(float));// 删帖间隔
-	gzread(f, &*m_confirm, sizeof(BOOL));		// 操作前提示
-	gzread(f, &*m_scanPageCount, sizeof(int));	// 扫描最后页数
-	gzread(f, &*m_briefLog, sizeof(BOOL));		// 只输出删帖封号
-	if (gzread(f, &*m_delete, sizeof(BOOL)) != sizeof(BOOL))			// 删帖
-		*m_delete = TRUE;
-	if (gzread(f, &*m_threadCount, sizeof(int)) != sizeof(int))			// 线程数
-		*m_threadCount = 2;
-	ReadText(f, m_banReason);											// 封禁原因
-	if (!ReadText(f, m_imageDir))										// 违规图片目录
-		m_images.clear();												// 违规图片
-	if (gzread(f, &*m_SSIMThreshold, sizeof(double)) != sizeof(double))	// 阈值
-		*m_SSIMThreshold = 2.43;
-
-	// 信任主题
-	m_trustedThread->clear();
-	if (gzread(f, &intBuf, sizeof(int)) == sizeof(int)) // 长度
-	for (int i = 0; i < intBuf; i++)
-	{
-		ReadText(f, strBuf);
-		m_trustedThread->insert(strBuf);
-	}
-
-	if (gzread(f, &*m_defriend, sizeof(BOOL)) != sizeof(BOOL))		// 拉黑
-		*m_defriend = FALSE;
-	if (gzread(f, &*m_defriendTrigCount, sizeof(int)) != sizeof(int)) // 拉黑违规次数
-		*m_defriendTrigCount = 5;
-	if (gzread(f, &*m_autoSaveLog, sizeof(BOOL)) != sizeof(BOOL))	// 自动保存日志
-		*m_autoSaveLog = FALSE;
-
-	m_optionsLock.Unlock();
-
-	gzclose(f);
-	return TRUE;
-
-UseDefaultOptions:
-	m_optionsLock.Lock();
-	m_keywords->clear();		// 违规内容
-	m_blackList->clear();		// 屏蔽用户
-	m_whiteList->clear();		// 信任用户
-	m_whiteContent->clear();	// 信任内容
-	*m_scanInterval = 5;		// 扫描间隔
-	*m_banID = FALSE;			// 封ID
-	*m_banDuration = 1;			// 封禁时长
-	*m_banTrigCount = 1;		// 封禁违规次数
-	*m_onlyScanTitle = FALSE;	// 只扫描标题
-	*m_deleteInterval = 2.5f;	// 删帖间隔
-	*m_confirm = TRUE;			// 操作前提示
-	*m_scanPageCount = 1;		// 扫描最后页数
-	*m_briefLog = FALSE;		// 只输出删帖封号
-	*m_delete = TRUE;			// 删帖
-	*m_threadCount = 2;			// 线程数
-	*m_banReason = _T("");		// 封禁原因
-	*m_imageDir = _T("");		// 违规图片目录
-	m_images.clear();			// 违规图片
-	*m_SSIMThreshold = 2.43f;	// 阈值
-	m_trustedThread->clear();	// 信任主题
-	*m_defriend = FALSE;		// 拉黑
-	*m_defriendTrigCount = 5;	// 拉黑违规次数
-	*m_autoSaveLog = FALSE;		// 自动保存日志
-	m_optionsLock.Unlock();
-	return TRUE;
-}
+};
 
 void CPlan::PostChange()
 {

@@ -82,37 +82,4 @@ public:
 			m_pidList->resize(m_userList->size());
 		return res;
 	}
-
-	BOOL LoadOld(const CString& path)
-	{
-		gzFile f = gzopen_w(path, "rb");
-		if (f == NULL)
-			return FALSE;
-
-		// 头部
-		char header[2];
-		gzread(f, header, sizeof(header));
-		if (header[0] != 'T' || header[1] != 'B')
-		{
-			gzclose(f);
-			return FALSE;
-		}
-
-		int size;
-		gzread(f, &size, sizeof(int)); // 长度
-		m_userList->resize(size);
-		m_pidList->resize(size);
-		for (int i = 0; i < size; i++)
-		{
-			ReadText(f, (*m_userList)[i]);
-			ReadText(f, (*m_pidList)[i]);
-		}
-		*m_log = FALSE;
-		gzread(f, &*m_log, sizeof(BOOL)); // 输出日志
-		if (gzread(f, &*m_enable, sizeof(BOOL)) != sizeof(BOOL)) // 开启
-			*m_enable = TRUE;
-
-		gzclose(f);
-		return TRUE;
-	}
 };

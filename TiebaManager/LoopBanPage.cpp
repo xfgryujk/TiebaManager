@@ -109,19 +109,6 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 			m_options.push_back(&m_month);
 			m_options.push_back(&m_day);
 		}
-
-		BOOL LoadOld(const CString& path)
-		{
-			CFile file;
-			if (!file.Open(path, CFile::modeCreate | CFile::modeNoTruncate | CFile::modeReadWrite))
-				return FALSE;
-			SYSTEMTIME lastTime = {};
-			file.Read(&lastTime, sizeof(lastTime));
-			*m_year = lastTime.wYear;
-			*m_month = lastTime.wMonth;
-			*m_day = lastTime.wDay;
-			return TRUE;
-		}
 	};
 
 
