@@ -9,7 +9,7 @@ class CInputDlg : public CDialog
 	DECLARE_DYNAMIC(CInputDlg)
 
 public:
-	CInputDlg(const CString& title, CString& content, BOOL* isRegex = NULL, BOOL showRegexCheck = FALSE, CWnd* pParent = NULL);   // 标准构造函数
+	CInputDlg(const CString& title, CString& content, BOOL* isRegex = NULL, BOOL showRegexCheck = FALSE, UINT nIDTemplate = IDD, CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CInputDlg();
 
 // 对话框数据

@@ -176,6 +176,8 @@ UseDefault:
 	return root;
 }
 
+// 读自定义类型
+
 XMLElement& COption<RegexText>::operator << (XMLElement& root)
 {
 	XMLElement* optionNode = root.FirstChildElement(m_name);
@@ -197,141 +199,117 @@ XMLElement& COption<RegexText>::operator << (XMLElement& root)
 	return root;
 }
 
+XMLElement& COption<CPlan::Keyword>::operator << (XMLElement& root)
+{
+	XMLElement* optionNode = root.FirstChildElement(m_name);
+	if (optionNode == NULL)
+	{
+		UseDefault();
+		return root;
+	}
+
+	COption<BOOL> isRegex("IsRegex");
+	COption<CString> text("Text");
+	COption<BOOL> forceToConfirm("ForceToConfirm");
+	COption<int> trigCount("TrigCount");
+	isRegex << *optionNode;
+	text << *optionNode;
+	forceToConfirm << *optionNode;
+	trigCount << *optionNode;
+
+	m_value.Set(isRegex, text);
+	m_value.forceToConfirm = forceToConfirm;
+	m_value.trigCount = trigCount;
+
+	if (!IsValid(m_value))
+		UseDefault();
+	return root;
+}
+
 // 读vector
 
-XMLElement& COption<vector<CString> >::operator << (XMLElement& root)
-{
-	XMLElement* optionNode = root.FirstChildElement(m_name);
-	if (optionNode == NULL)
-	{
-		UseDefault();
-		return root;
-	}
-
-	m_value.clear();
-	COption<CString> value("value");
-	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
-	{
-		value << *item;
-		m_value.push_back(value);
-	}
-	if (!IsValid(m_value))
-		UseDefault();
-	return root;
+#define DEFINE_READ_VECTOR(T) \
+XMLElement& COption<vector<T> >::operator << (XMLElement& root)\
+{\
+	XMLElement* optionNode = root.FirstChildElement(m_name);\
+	if (optionNode == NULL)\
+	{\
+		UseDefault();\
+		return root;\
+	}\
+	\
+	m_value.clear();\
+	COption<T> value("value");\
+	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))\
+	{\
+		value << *item;\
+		m_value.push_back(value);\
+	}\
+	if (!IsValid(m_value))\
+		UseDefault();\
+	return root;\
 }
 
-XMLElement& COption<vector<RegexText> >::operator << (XMLElement& root)
-{
-	XMLElement* optionNode = root.FirstChildElement(m_name);
-	if (optionNode == NULL)
-	{
-		UseDefault();
-		return root;
-	}
-
-	m_value.clear();
-	COption<RegexText> value("value");
-	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
-	{
-		value << *item;
-		m_value.push_back(value);
-	}
-	if (!IsValid(m_value))
-		UseDefault();
-	return root;
-}
+DEFINE_READ_VECTOR(CString)
+DEFINE_READ_VECTOR(RegexText)
+DEFINE_READ_VECTOR(CPlan::Keyword)
 
 // 读set
 
-XMLElement& COption<set<__int64> >::operator << (XMLElement& root)
-{
-	XMLElement* optionNode = root.FirstChildElement(m_name);
-	if (optionNode == NULL)
-	{
-		UseDefault();
-		return root;
-	}
-
-	m_value.clear();
-	COption<__int64> value("value");
-	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
-	{
-		value << *item;
-		m_value.insert(value);
-	}
-	if (!IsValid(m_value))
-		UseDefault();
-	return root;
+#define DEFINE_READ_SET(T) \
+XMLElement& COption<set<T> >::operator << (XMLElement& root)\
+{\
+	XMLElement* optionNode = root.FirstChildElement(m_name);\
+	if (optionNode == NULL)\
+	{\
+		UseDefault();\
+		return root;\
+	}\
+	\
+	m_value.clear();\
+	COption<T> value("value");\
+	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))\
+	{\
+		value << *item;\
+		m_value.insert(value);\
+	}\
+	if (!IsValid(m_value))\
+		UseDefault();\
+	return root;\
 }
 
-XMLElement& COption<set<CString> >::operator << (XMLElement& root)
-{
-	XMLElement* optionNode = root.FirstChildElement(m_name);
-	if (optionNode == NULL)
-	{
-		UseDefault();
-		return root;
-	}
-
-	m_value.clear();
-	COption<CString> value("value");
-	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
-	{
-		value << *item;
-		m_value.insert(value);
-	}
-	if (!IsValid(m_value))
-		UseDefault();
-	return root;
-}
+DEFINE_READ_SET(__int64)
+DEFINE_READ_SET(CString)
 
 // 读map
 
-XMLElement& COption<map<__int64, int> >::operator << (XMLElement& root)
-{
-	XMLElement* optionNode = root.FirstChildElement(m_name);
-	if (optionNode == NULL)
-	{
-		UseDefault();
-		return root;
-	}
-
-	m_value.clear();
-	COption<__int64> key("key");
-	COption<int> value("value");
-	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
-	{
-		key << *item;
-		value << *item;
-		m_value[key] = value;
-	}
-	if (!IsValid(m_value))
-		UseDefault();
-	return root;
+#define DEFINE_READ_MAP(T1, T2) \
+XMLElement& COption<map<T1, T2> >::operator << (XMLElement& root)\
+{\
+	XMLElement* optionNode = root.FirstChildElement(m_name);\
+	if (optionNode == NULL)\
+	{\
+		UseDefault();\
+		return root;\
+	}\
+	\
+	m_value.clear();\
+	COption<T1> key("key");\
+	COption<T2> value("value");\
+	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))\
+	{\
+		key << *item;\
+		value << *item;\
+		m_value[key] = value;\
+	}\
+	if (!IsValid(m_value))\
+		UseDefault();\
+	return root;\
 }
 
-XMLElement& COption<map<CString, int> >::operator << (XMLElement& root)
-{
-	XMLElement* optionNode = root.FirstChildElement(m_name);
-	if (optionNode == NULL)
-	{
-		UseDefault();
-		return root;
-	}
+DEFINE_READ_MAP(__int64, int)
+DEFINE_READ_MAP(CString, int)
 
-	m_value.clear();
-	COption<CString> key("key");
-	COption<int> value("value");
-	for (XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))
-	{
-		key << *item;
-		value << *item;
-		m_value[key] = value;
-	}
-	if (!IsValid(m_value))
-		UseDefault();
-	return root;
-}
 
 // 写基本类型
 
@@ -393,6 +371,8 @@ XMLElement& COption<CString>::operator >> (XMLElement& root) const
 	return root;
 }
 
+// 写自定义类型
+
 XMLElement& COption<RegexText>::operator >> (XMLElement& root) const
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
@@ -408,119 +388,88 @@ XMLElement& COption<RegexText>::operator >> (XMLElement& root) const
 	return root;
 }
 
+XMLElement& COption<CPlan::Keyword>::operator >> (XMLElement& root) const
+{
+	tinyxml2::XMLDocument* doc = root.GetDocument();
+	XMLElement* optionNode = doc->NewElement(m_name);
+	root.LinkEndChild(optionNode);
+
+	COption<BOOL> isRegex("IsRegex");
+	*isRegex = m_value.isRegex;
+	isRegex >> *optionNode;
+	COption<CString> text("Text");
+	*text = m_value.text;
+	text >> *optionNode;
+	COption<BOOL> forceToConfirm("ForceToConfirm");
+	*forceToConfirm = m_value.forceToConfirm;
+	forceToConfirm >> *optionNode;
+	COption<int> trigCount("TrigCount");
+	*trigCount = m_value.trigCount;
+	trigCount >> *optionNode;
+	return root;
+}
+
+// 写容器
+
+#define DEFINE_WRITE_CONTAINER(T, CONTAINER) \
+XMLElement& COption<CONTAINER<T> >::operator >> (XMLElement& root) const\
+{\
+	tinyxml2::XMLDocument* doc = root.GetDocument();\
+	XMLElement* optionNode = doc->NewElement(m_name);\
+	root.LinkEndChild(optionNode);\
+	\
+	COption<T> value("value");\
+	for (const T& i : m_value)\
+	{\
+		XMLElement* item = doc->NewElement("item");\
+		optionNode->LinkEndChild(item);\
+		*value = i;\
+		value >> *item;\
+	}\
+	return root;\
+}
+
 // 写vector
 
-XMLElement& COption<vector<CString> >::operator >> (XMLElement& root) const
-{
-	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(m_name);
-	root.LinkEndChild(optionNode);
+#define DEFINE_WRITE_VECTOR(T) DEFINE_WRITE_CONTAINER(T, vector)
 
-	COption<CString> value("value");
-	for (const CString& i : m_value)
-	{
-		XMLElement* item = doc->NewElement("item");
-		optionNode->LinkEndChild(item);
-		*value = i;
-		value >> *item;
-	}
-	return root;
-}
-
-XMLElement& COption<vector<RegexText> >::operator >> (XMLElement& root) const
-{
-	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(m_name);
-	root.LinkEndChild(optionNode);
-
-	COption<RegexText> value("value");
-	for (const RegexText& i : m_value)
-	{
-		XMLElement* item = doc->NewElement("item");
-		optionNode->LinkEndChild(item);
-		*value = i;
-		value >> *item;
-	}
-	return root;
-}
+DEFINE_WRITE_VECTOR(CString)
+DEFINE_WRITE_VECTOR(RegexText)
+DEFINE_WRITE_VECTOR(CPlan::Keyword)
 
 // 写set
 
-XMLElement& COption<set<__int64> >::operator >> (XMLElement& root) const
-{
-	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(m_name);
-	root.LinkEndChild(optionNode);
+#define DEFINE_WRITE_SET(T) DEFINE_WRITE_CONTAINER(T, set)
 
-	COption<__int64> value("value");
-	for (const __int64& i : m_value)
-	{
-		XMLElement* item = doc->NewElement("item");
-		optionNode->LinkEndChild(item);
-		*value = i;
-		value >> *item;
-	}
-	return root;
-}
-
-XMLElement& COption<set<CString> >::operator >> (XMLElement& root) const
-{
-	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(m_name);
-	root.LinkEndChild(optionNode);
-
-	COption<CString> value("value");
-	for (const CString& i : m_value)
-	{
-		XMLElement* item = doc->NewElement("item");
-		optionNode->LinkEndChild(item);
-		*value = i;
-		value >> *item;
-	}
-	return root;
-}
+DEFINE_WRITE_SET(__int64)
+DEFINE_WRITE_SET(CString)
 
 // 写map
 
-XMLElement& COption<map<__int64, int> >::operator >> (XMLElement& root) const
-{
-	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(m_name);
-	root.LinkEndChild(optionNode);
-
-	COption<__int64> key("key");
-	COption<int> value("value");
-	for (const auto& i : m_value)
-	{
-		XMLElement* item = doc->NewElement("item");
-		optionNode->LinkEndChild(item);
-		*key = i.first;
-		key >> *item;
-		*value = i.second;
-		value >> *item;
-	}
-	return root;
+#define DEFINE_WRITE_MAP(T1, T2) \
+XMLElement& COption<map<T1, T2> >::operator >> (XMLElement& root) const\
+{\
+	tinyxml2::XMLDocument* doc = root.GetDocument();\
+	XMLElement* optionNode = doc->NewElement(m_name);\
+	root.LinkEndChild(optionNode);\
+	\
+	COption<T1> key("key");\
+	COption<T2> value("value");\
+	for (const auto& i : m_value)\
+	{\
+		XMLElement* item = doc->NewElement("item");\
+		optionNode->LinkEndChild(item);\
+		*key = i.first;\
+		key >> *item;\
+		*value = i.second;\
+		value >> *item;\
+	}\
+	return root;\
 }
 
-XMLElement& COption<map<CString, int> >::operator >> (XMLElement& root) const
-{
-	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(m_name);
-	root.LinkEndChild(optionNode);
+DEFINE_WRITE_MAP(__int64, int)
+DEFINE_WRITE_MAP(CString, int)
 
-	COption<CString> key("key");
-	COption<int> value("value");
-	for (const auto& i : m_value)
-	{
-		XMLElement* item = doc->NewElement("item");
-		optionNode->LinkEndChild(item);
-		*key = i.first;
-		key >> *item;
-		*value = i.second;
-		value >> *item;
-	}
-	return root;
-}
 #pragma endregion
 
 // 配置读写实现 ///////////////////////////////////////////////////////////////////////////
@@ -605,6 +554,7 @@ CPlan::CPlan()
 	m_defriendTrigCount	("DefriendTrigCount",	5,		[](const int& value)->BOOL{ return 1 <= value; }),
 	m_confirm			("Confirm",				TRUE),
 	m_wapBanInterface	("WapBanInterface",		FALSE),
+	m_autoLoopBan		("AutoLoopBan",			FALSE),
 	m_keywords			("IllegalContent", [](const vector<Keyword>& value)->BOOL
 											{
 												for (const RegexText& i : value)
@@ -645,6 +595,7 @@ CPlan::CPlan()
 	m_options.push_back(&m_defriendTrigCount);
 	m_options.push_back(&m_confirm);
 	m_options.push_back(&m_wapBanInterface);
+	m_options.push_back(&m_autoLoopBan);
 	m_options.push_back(&m_keywords);
 	m_options.push_back(&m_imageDir);
 	m_options.push_back(&m_SSIMThreshold);

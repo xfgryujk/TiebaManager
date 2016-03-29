@@ -119,6 +119,7 @@
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="InputDlg.h" />
+    <ClInclude Include="InputKeywordDlg.h" />
     <ClInclude Include="LockThreadPage.h" />
     <ClInclude Include="LogHelper.h" />
     <ClInclude Include="MiscHelper.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="DefriendPage.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />
     <ClCompile Include="InputDlg.cpp" />
+    <ClCompile Include="InputKeywordDlg.cpp" />
     <ClCompile Include="ListPage.cpp" />
     <ClCompile Include="LockThreadPage.cpp" />
     <ClCompile Include="LogHelper.cpp" />

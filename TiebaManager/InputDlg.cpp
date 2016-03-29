@@ -4,15 +4,14 @@
 #include "stdafx.h"
 #include "TiebaManager.h"
 #include "InputDlg.h"
-#include "afxdialogex.h"
 
 
 // CInputDlg ¶Ô»°¿ò
 
 IMPLEMENT_DYNAMIC(CInputDlg, CDialog)
 
-CInputDlg::CInputDlg(const CString& title, CString& content, BOOL* isRegex, BOOL showRegexCheck, CWnd* pParent /*=NULL*/)
-	: CDialog(CInputDlg::IDD, pParent), 
+CInputDlg::CInputDlg(const CString& title, CString& content, BOOL* isRegex, BOOL showRegexCheck, UINT nIDTemplate, CWnd* pParent /*=NULL*/)
+	: CDialog(nIDTemplate, pParent), 
 	m_title(title), 
 	m_content(content),
 	m_isRegex(isRegex),

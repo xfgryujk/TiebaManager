@@ -61,6 +61,12 @@
     <Filter Include="源文件\GUI\UIHelper\ListPage">
       <UniqueIdentifier>{2e9391c3-017f-451e-b8fd-2dbb2acb7953}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\GUI\UIHelper\InputDlg">
+      <UniqueIdentifier>{7f818a4a-d7ae-4cd1-9295-6ecfd60ba343}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GUI\UIHelper\InputDlg">
+      <UniqueIdentifier>{d67ed370-7061-4e2d-989a-1cca03ca8262}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -201,11 +207,14 @@
     <ClInclude Include="ListPage.h">
       <Filter>头文件\GUI\UIHelper\ListPage</Filter>
     </ClInclude>
-    <ClInclude Include="InputDlg.h">
-      <Filter>头文件\GUI\UIHelper</Filter>
-    </ClInclude>
     <ClInclude Include="RegListPage.h">
       <Filter>头文件\GUI\UIHelper\ListPage</Filter>
+    </ClInclude>
+    <ClInclude Include="InputDlg.h">
+      <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="InputKeywordDlg.h">
+      <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -338,11 +347,14 @@
     <ClCompile Include="NormalListPage.cpp">
       <Filter>源文件\GUI\UIHelper\ListPage</Filter>
     </ClCompile>
-    <ClCompile Include="InputDlg.cpp">
-      <Filter>源文件\GUI\UIHelper</Filter>
-    </ClCompile>
     <ClCompile Include="RegListPage.cpp">
       <Filter>源文件\GUI\UIHelper\ListPage</Filter>
+    </ClCompile>
+    <ClCompile Include="InputDlg.cpp">
+      <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="InputKeywordDlg.cpp">
+      <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

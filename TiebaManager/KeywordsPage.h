@@ -1,5 +1,6 @@
 #pragma once
 #include "RegListPage.h"
+#include "Setting.h"
 
 
 // CKeywordsPage ¶Ô»°¿ò
@@ -21,9 +22,14 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
+	afx_msg virtual void OnClickedButton4();
+	afx_msg virtual void OnClickedButton5();
 
+	virtual BOOL SetItem(int index);
+	virtual void ShowList(const vector<CPlan::Keyword>& list);
+	virtual void ApplyList(vector<CPlan::Keyword>& list);
 protected:
-	virtual BOOL CheckMatchTooMuch(const CString& text, BOOL isRegex);
 	virtual void OnAdd(int index);
+	virtual BOOL CheckMatchTooMuch(const CString& text, BOOL isRegex);
 	virtual BOOL TestMatch(const CString& test, const CString& text, BOOL isRegex);
 };

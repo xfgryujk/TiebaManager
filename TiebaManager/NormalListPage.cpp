@@ -99,7 +99,7 @@ void CNormalListPage::OnClickedButton5()
 BOOL CNormalListPage::SetItem(int index)
 {
 	CString content = m_list.GetItemText(index, 0);
-	CInputDlg dlg(m_inputTitle, content, NULL, FALSE, this);
+	CInputDlg dlg(m_inputTitle, content, NULL, FALSE, CInputDlg::IDD, this);
 	if (dlg.DoModal() == IDOK && content != _T(""))
 	{
 		m_list.SetItemText(index, 0, content);

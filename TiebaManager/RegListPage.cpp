@@ -96,7 +96,7 @@ BOOL CRegListPage::SetItem(int index)
 {
 	CString content = m_list.GetItemText(index, 0);
 	BOOL isRegex = m_list.GetItemText(index, 1) == IS_REGEX_TEXT;
-	CInputDlg dlg(m_inputTitle, content, &isRegex, TRUE, this);
+	CInputDlg dlg(m_inputTitle, content, &isRegex, TRUE, CInputDlg::IDD, this);
 	if (dlg.DoModal() == IDOK && content != _T(""))
 	{
 		if (CheckMatchTooMuch(content, isRegex))
