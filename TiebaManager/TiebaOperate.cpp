@@ -19,6 +19,8 @@ CCriticalSection g_confirmQueueLock;
 queue<Operation> g_operationQueue; // 操作队列
 CCriticalSection g_operationQueueLock;
 
+CString g_randomTid; // 某个tid，确认贴吧时初始化，WAP接口用
+
 
 // 添加确认
 void AddConfirm(const CString& msg, TBObject object, const CString& tid, const CString& title,
@@ -304,9 +306,9 @@ CString BanIDWap(LPCTSTR userName)
 {
 	CString url;
 	url.Format(_T("http://tieba.baidu.com/mo/q/m?tn=bdFIL&ntn=banid&day=1&un=%s&tbs=%s")
-			   _T("&word=%s&fid=%s&z=2&$el=%%5Bobject%%20Array%%5D&reason=%s"),
+			   _T("&word=%s&fid=%s&z=%s&$el=%%5Bobject%%20Array%%5D&reason=%s"),
 		EncodeURI(userName), g_userTiebaInfo.m_tbs, g_userTiebaInfo.m_encodedForumName, 
-		g_userTiebaInfo.m_forumID, *g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
+		g_userTiebaInfo.m_forumID, g_randomTid, *g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
 	CString src = HTTPGet(url);
 	return GetOperationErrorCode(src);
 }

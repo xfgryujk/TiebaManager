@@ -540,6 +540,11 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		goto error;
 	}
 
+	// 取第一个tid
+	g_randomTid = GetStringBetween(src, _T("&quot;id&quot;:"), _T(","));
+	if (g_randomTid == _T(""))
+		g_randomTid = _T("4426261107");
+
 
 	m_stateStatic.SetWindowText(_T("待机中"));
 	m_startButton.EnableWindow(TRUE);
