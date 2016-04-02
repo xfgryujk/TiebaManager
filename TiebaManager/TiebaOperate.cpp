@@ -338,8 +338,7 @@ CString BanIDClient(LPCTSTR userName)
 {
 	// 客户端POST要带数字签名，参数按字典序排列，去掉&，加上"tiebaclient!!!"，转成UTF-8，取MD5
 	CString data;
-	data.Format(_T("BDUSS=%s&_client_type=3&_client_version=5.0.0&_phone_imei=000000000000000")
-				_T("&day=%d&fid=%s&from=tieba&net_type=1&ntn=banid&tbs=%s&un=%s&word=%s&z=%s"),
+	data.Format(_T("BDUSS=%s&day=%d&fid=%s&from=tieba&net_type=1&ntn=banid&tbs=%s&un=%s&word=%s&z=%s"),
 		g_userTiebaInfo.m_bduss, *g_plan.m_banDuration, g_userTiebaInfo.m_forumID, 
 		g_userTiebaInfo.m_tbs, userName, g_userTiebaInfo.m_forumName, g_randomTid);
 	
