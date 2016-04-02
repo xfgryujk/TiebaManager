@@ -7,6 +7,7 @@
 
 #include "StringHelper.h"
 #include "NetworkHelper.h"
+#include "Md5.h"
 
 #include "TiebaManagerDlg.h"
 #include "ConfirmDlg.h"
@@ -161,7 +162,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			}
 			else
 			{
-				CString code = op.pid == _T("") ? BanIDWap(op.author) : BanID(op.author, op.pid);
+				CString code = op.pid == _T("") ? BanIDClient(op.author) : BanID(op.author, op.pid);
 				if (code != _T("0"))
 				{
 					CString content;
@@ -291,6 +292,8 @@ static inline CString GetOperationErrorCode(const CString& src)
 	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
 		return _T("-65536");
 	CString code = GetStringBetween(src, _T("no\":"), _T(","));
+	if (code == _T(""))
+		code = GetStringBetween(src, _T("code\":\""), _T("\""));
 	if (code != _T("0"))
 		WriteString(src, _T("operation.txt"));
 	return code;
@@ -327,6 +330,25 @@ CString BanIDWap(LPCTSTR userName)
 		EncodeURI(userName), g_userTiebaInfo.m_tbs, g_userTiebaInfo.m_encodedForumName, 
 		g_userTiebaInfo.m_forumID, g_randomTid, *g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
 	CString src = HTTPGet(url);
+	return GetOperationErrorCode(src);
+}
+
+// 封ID，返回错误代码，客户端接口，不用PID，小吧可封10天
+CString BanIDClient(LPCTSTR userName)
+{
+	// 客户端POST要带数字签名，参数按字典序排列，去掉&，加上"tiebaclient!!!"，转成UTF-8，取MD5
+	CString data;
+	data.Format(_T("BDUSS=%s&_client_type=3&_client_version=5.0.0&_phone_imei=000000000000000")
+				_T("&day=%d&fid=%s&from=tieba&net_type=1&ntn=banid&tbs=%s&un=%s&word=%s&z=%s"),
+		g_userTiebaInfo.m_bduss, *g_plan.m_banDuration, g_userTiebaInfo.m_forumID, 
+		g_userTiebaInfo.m_tbs, userName, g_userTiebaInfo.m_forumName, g_randomTid);
+	
+	CString signData = data;
+	signData.Replace(_T("&"), _T(""));
+	signData += _T("tiebaclient!!!");
+	data += _T("&sign=") + GetMD5_UTF8(signData);
+
+	CString src = HTTPPost(_T("http://c.tieba.baidu.com/c/c/bawu/commitprison"), data);
 	return GetOperationErrorCode(src);
 }
 

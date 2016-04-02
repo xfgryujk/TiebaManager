@@ -31,6 +31,7 @@ CString BanID(LPCTSTR userName, LPCTSTR pid);
 CString BanID(LPCTSTR userName);
 extern CString g_randomTid; // 某个tid，确认贴吧时初始化，WAP接口用
 CString BanIDWap(LPCTSTR userName);
+CString BanIDClient(LPCTSTR userName);
 CString Defriend(LPCTSTR userID);
 CString DeleteThread(const CString& tid);
 CString DeletePost(LPCTSTR tid, LPCTSTR pid);

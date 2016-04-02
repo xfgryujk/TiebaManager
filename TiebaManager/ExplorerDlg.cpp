@@ -214,7 +214,7 @@ void CExplorerDlg::OnBnClickedButton2()
 		AfxMessageBox(_T("·â½ûÊ§°Ü(»ñÈ¡Ìû×ÓIDÊ§°Ü)"), MB_ICONERROR);
 		return;
 	}*/
-	CString code = pid == _T("") ? BanIDWap(author) : BanID(author, pid);
+	CString code = pid == _T("") ? BanIDClient(author) : BanID(author, pid);
 	if (code != _T("0"))
 		AfxMessageBox(_T("·â½ûÊ§°Ü£¬´íÎó´úÂë" + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
 	else

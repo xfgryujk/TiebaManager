@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TiebaVariable.h"
 #include "TiebaOperate.h"
+#include "StringHelper.h"
 
 
 // 贴吧、用户信息
@@ -14,3 +15,9 @@ CUserCache g_userCache;
 // 操作
 CWinThread* g_confirmThread = NULL;
 CWinThread* g_operateThread = NULL;
+
+
+void CUserTiebaInfo::PostChange()
+{
+	m_bduss = GetStringBetween(m_cookie, _T("BDUSS="), _T(";"));
+}

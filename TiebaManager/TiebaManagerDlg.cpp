@@ -357,7 +357,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
 		CString code = (g_plan.m_wapBanInterface || g_plan.m_banDuration == 1 || args[1] == _T("")) ? 
-			BanIDWap(args[0]) : BanID(args[0], args[1]);
+			BanIDClient(args[0]) : BanID(args[0], args[1]);
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>封禁成功！</font>"));
 		else
@@ -557,6 +557,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + g_userTiebaInfo.m_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));
 	// 开始循环封
 	AfxBeginThread(LoopBanThread, this);
+
 	return;
 
 error:

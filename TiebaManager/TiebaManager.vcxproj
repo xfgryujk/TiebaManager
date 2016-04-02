@@ -122,6 +122,7 @@
     <ClInclude Include="InputKeywordDlg.h" />
     <ClInclude Include="LockThreadPage.h" />
     <ClInclude Include="LogHelper.h" />
+    <ClInclude Include="Md5.h" />
     <ClInclude Include="MiscHelper.h" />
     <ClInclude Include="NormalListPage.h" />
     <ClInclude Include="RegListPage.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="LockThreadPage.cpp" />
     <ClCompile Include="LogHelper.cpp" />
     <ClCompile Include="LoopBanPage.cpp" />
+    <ClCompile Include="Md5.cpp" />
     <ClCompile Include="MiscHelper.cpp" />
     <ClCompile Include="NetworkHelper.cpp" />
     <ClCompile Include="NormalDlg.cpp" />

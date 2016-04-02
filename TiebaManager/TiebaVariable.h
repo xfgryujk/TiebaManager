@@ -10,6 +10,7 @@ public:
 	CString m_encodedForumName;
 	CString m_forumID;
 	COption<CString> m_cookie;
+	CString m_bduss;
 	CString m_tbs; // 备用获取tbs地址：http://tieba.baidu.com/dc/common/tbs
 
 	CUserTiebaInfo()
@@ -18,6 +19,8 @@ public:
 	{
 		m_options.push_back(&m_cookie);
 	}
+
+	virtual void PostChange();
 };
 extern CUserTiebaInfo g_userTiebaInfo;
 

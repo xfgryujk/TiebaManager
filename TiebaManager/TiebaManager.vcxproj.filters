@@ -216,6 +216,9 @@
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
     </ClInclude>
+    <ClInclude Include="Md5.h">
+      <Filter>头文件\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -355,6 +358,9 @@
     </ClCompile>
     <ClCompile Include="InputKeywordDlg.cpp">
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="Md5.cpp">
+      <Filter>源文件\Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

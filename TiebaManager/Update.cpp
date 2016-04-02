@@ -6,12 +6,11 @@
 
 
 // 当前版本日期，每次更新后修改
-const char UPDATE_CURRENT_VERSION_A[] = "16-03-29";
+const char UPDATE_CURRENT_VERSION_A[] = "16-04-02";
 const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
 // 更新日志
-const TCHAR UPDATE_LOG[] = _T("1. 添加封禁时加入循环封\r\n")
-						   _T("2. 添加部分关键词强制确认\r\n")
-						   _T("3. 添加关键词触发次数统计");
+const TCHAR UPDATE_LOG[] = _T("1. 把WAP接口改成客户端接口\r\n")
+						   _T("2. 修复强制确认的BUG");
 
 // 检查更新
 CheckUpdateResult CheckUpdate()

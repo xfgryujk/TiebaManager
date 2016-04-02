@@ -135,7 +135,7 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	{
 		CString code;
 		if (g_plan.m_wapBanInterface)
-			code = BanIDWap((*config.m_userList)[i]); // 用WAP接口封禁
+			code = BanIDClient((*config.m_userList)[i]); // 用WAP接口封禁
 		else
 		{
 			if ((*config.m_pidList)[i] != _T("")) // 尝试用PID封禁
