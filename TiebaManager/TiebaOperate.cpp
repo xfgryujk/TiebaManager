@@ -148,15 +148,15 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		if (g_plan.m_banID && count >= g_plan.m_banTrigCount
 			&& g_userCache.m_bannedUser->find(op.author) == g_userCache.m_bannedUser->end()) // 达到封禁违规次数且未封
 		{
-			// 不使用WAP接口或封禁时长不为1必须获取PID
-			if ((!g_plan.m_wapBanInterface || g_plan.m_banDuration != 1) && op.pid == _T(""))
+			// 不使用客户端接口必须获取PID
+			if ((!g_plan.m_wapBanInterface /*|| g_plan.m_banDuration != 1*/) && op.pid == _T(""))
 			{
 				vector<PostInfo> posts, lzls;
 				GetPosts(op.tid, _T(""), _T("1"), posts, lzls);
 				if (posts.size() > 0)
 					op.pid = posts[0].pid;
 			}
-			if ((!g_plan.m_wapBanInterface || g_plan.m_banDuration != 1) && op.pid == _T(""))
+			if ((!g_plan.m_wapBanInterface /*|| g_plan.m_banDuration != 1*/) && op.pid == _T(""))
 			{
 				dlg->m_log.Log(_T("<font color=red>封禁 </font>") + op.author + _T("<font color=red> 失败！(获取帖子ID失败)</font>"));
 			}

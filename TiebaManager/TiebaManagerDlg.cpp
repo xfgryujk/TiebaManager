@@ -356,7 +356,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = (g_plan.m_wapBanInterface || g_plan.m_banDuration == 1 || args[1] == _T("")) ? 
+		CString code = (g_plan.m_wapBanInterface /*|| g_plan.m_banDuration == 1*/ || args[1] == _T("")) ? 
 			BanIDClient(args[0]) : BanID(args[0], args[1]);
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>·â½û³É¹¦£¡</font>"));

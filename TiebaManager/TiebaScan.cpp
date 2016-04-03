@@ -30,7 +30,7 @@ extern queue<Operation> g_operationQueue; // 操作队列
 // 检查违规
 BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, const CString& authorLevel, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
 {
-	forceToConfirm = TRUE;
+	forceToConfirm = FALSE;
 	g_plan.m_optionsLock.Lock();
 
 	// 信任用户
