@@ -63,7 +63,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml2d.lib;opencv_ts300d.lib;opencv_world300d.lib;zlibstatd.lib;Dbghelp.lib;oleacc.lib;Winmm.lib;Iepmapi.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml2d.lib;opencv_ts300d.lib;opencv_world300d.lib;Dbghelp.lib;oleacc.lib;Winmm.lib;Iepmapi.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
