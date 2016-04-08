@@ -37,12 +37,14 @@ void CConfirmDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC1, m_static);
 	DDX_Control(pDX, IDOK, m_yesButton);
 	DDX_Control(pDX, IDCANCEL, m_noButton);
+	DDX_Control(pDX, IDC_BUTTON1, m_explorerButton);
 }
 
 
 BEGIN_MESSAGE_MAP(CConfirmDlg, CDialog)
 	ON_WM_SIZE()
 	ON_WM_GETMINMAXINFO()
+	ON_BN_CLICKED(IDC_BUTTON1, &CConfirmDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -73,6 +75,7 @@ BOOL CConfirmDlg::OnInitDialog()
 
 	m_resize.AddControl(&m_contentEdit, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
 	m_resize.AddControl(&m_static, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_contentEdit);
+	m_resize.AddControl(&m_explorerButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_contentEdit);
 	m_resize.AddControl(&m_yesButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_contentEdit);
 	m_resize.AddControl(&m_noButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_contentEdit);
 
@@ -101,4 +104,21 @@ BOOL CConfirmDlg::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
+}
+
+// 浏览器
+void CConfirmDlg::OnBnClickedButton1()
+{
+	if (m_operation == NULL)
+		return;
+
+	CString url;
+	if (m_operation->object == TBOBJ_THREAD) // 主题
+		url = _T("http://tieba.baidu.com/p/") + m_operation->tid;
+	else if (m_operation->object == TBOBJ_POST) // 帖子
+		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s#%s"), m_operation->tid, m_operation->pid, m_operation->pid);
+	else /*if (op.object == TBOBJ_POST)*/ // 楼中楼
+		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), m_operation->tid, m_operation->pid, m_operation->pid, m_operation->pid);
+
+	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }

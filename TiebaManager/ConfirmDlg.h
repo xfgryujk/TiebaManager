@@ -27,11 +27,13 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
+	afx_msg void OnBnClickedButton1();
 
 
 public:
 	CEdit m_contentEdit;
 	CStatic m_static;
+	CButton m_explorerButton;
 	CButton m_yesButton;
 	CButton m_noButton;
 
