@@ -79,8 +79,8 @@ void CExplorerDlg::PostNcDestroy()
 // 限制最小尺寸
 void CExplorerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
-	lpMMI->ptMinTrackSize.x = 829;
-	lpMMI->ptMinTrackSize.y = 588;
+	/*lpMMI->ptMinTrackSize.x = 829;
+	lpMMI->ptMinTrackSize.y = 588;*/
 
 	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }

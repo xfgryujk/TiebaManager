@@ -200,8 +200,8 @@ void CSettingDlg::PostNcDestroy()
 // 限制最小尺寸
 void CSettingDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
-	lpMMI->ptMinTrackSize.x = 666;
-	lpMMI->ptMinTrackSize.y = 576;
+	/*lpMMI->ptMinTrackSize.x = 666;
+	lpMMI->ptMinTrackSize.y = 576;*/
 
 	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }

@@ -67,8 +67,8 @@ void CImageViewDlg::PostNcDestroy()
 // 限制最小尺寸
 void CImageViewDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
-	lpMMI->ptMinTrackSize.x = 275;
-	lpMMI->ptMinTrackSize.y = 275;
+	/*lpMMI->ptMinTrackSize.x = 275;
+	lpMMI->ptMinTrackSize.y = 275;*/
 
 	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }

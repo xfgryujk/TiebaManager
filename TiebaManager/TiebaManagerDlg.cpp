@@ -274,8 +274,8 @@ void CTiebaManagerDlg::OnDestroy()
 // 限制最小尺寸
 void CTiebaManagerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
-	lpMMI->ptMinTrackSize.x = 705;
-	lpMMI->ptMinTrackSize.y = 293;
+	/*lpMMI->ptMinTrackSize.x = 705;
+	lpMMI->ptMinTrackSize.y = 293;*/
 
 	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }

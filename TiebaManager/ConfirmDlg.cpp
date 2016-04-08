@@ -52,8 +52,8 @@ END_MESSAGE_MAP()
 // 限制最小尺寸
 void CConfirmDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
-	lpMMI->ptMinTrackSize.x = 455;
-	lpMMI->ptMinTrackSize.y = 362;
+	/*lpMMI->ptMinTrackSize.x = 455;
+	lpMMI->ptMinTrackSize.y = 362;*/
 
 	CDialog::OnGetMinMaxInfo(lpMMI);
 }
