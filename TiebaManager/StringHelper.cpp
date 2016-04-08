@@ -56,14 +56,10 @@ CString GetStringBefore(const CString& src, LPCTSTR right, int startPos)
 // Ð´×Ö·û´®µ½ÎÄ¼þ
 BOOL WriteString(const CString& src, LPCTSTR path)
 {
-	CFile file;
+	CStdioFile file;
 	if (!file.Open(path, CFile::modeCreate | CFile::modeWrite))
 		return FALSE;
-#ifdef _UNICODE
-	static const BYTE UNICODE_HEADER[] = { 0xFF, 0xFE };
-	file.Write(UNICODE_HEADER, sizeof(UNICODE_HEADER));
-#endif
-	file.Write((LPCTSTR)src, src.GetLength() * sizeof(TCHAR));
+	file.WriteString(src);
 	return TRUE;
 }
 

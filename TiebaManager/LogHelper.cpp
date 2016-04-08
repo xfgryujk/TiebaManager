@@ -6,7 +6,7 @@
 #include "StringHelper.h"
 
 
-static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title>日志</title>\r\n")
+static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=gbk\" /><title>日志</title>\r\n")
 								 _T("<style type=\"text/css\">\r\n")
 								 _T("body {border:1px solid black; overflow:auto; margin:0px; padding:3px;")
 								 _T(" font-family:\"宋体\",Verdana; font-size:9pt; line-height:9pt}\r\n")

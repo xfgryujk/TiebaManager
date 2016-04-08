@@ -27,13 +27,15 @@ public:
 	afx_msg virtual void OnClickedButton2();
 	afx_msg virtual void OnClickedButton3();
 	afx_msg void OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult);
-	afx_msg virtual void OnClickedButton4() = 0;
-	afx_msg virtual void OnClickedButton5() = 0;
+	afx_msg virtual void OnClickedButton4();
+	afx_msg virtual void OnClickedButton5();
 	afx_msg virtual void OnClickedButton6();
 
 	virtual BOOL SetItem(int index) = 0;
 	virtual void OnAdd(int index) {}
 	virtual void OnDelete(int index) {}
+	virtual BOOL Export(const CString& path);
+	virtual BOOL Import(const CString& path);
 
 
 public:

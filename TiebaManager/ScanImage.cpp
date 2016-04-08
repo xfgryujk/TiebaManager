@@ -290,7 +290,7 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 			// обтьм╪ф╛
 			unique_ptr<BYTE[]> buffer;
 			ULONG size;
-			if (HTTPGetRaw(img, &buffer, &size) == NET_SUCCESS)
+			if (HTTPGetRaw(img, &buffer, &size, FALSE) == NET_SUCCESS)
 			{
 				ReadImage(buffer.get(), size, image);
 

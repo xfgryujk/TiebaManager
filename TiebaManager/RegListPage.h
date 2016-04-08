@@ -22,10 +22,10 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
-	afx_msg virtual void OnClickedButton4();
-	afx_msg virtual void OnClickedButton5();
 
 	virtual BOOL SetItem(int index);
+	virtual BOOL Export(const CString& path);
+	virtual BOOL Import(const CString& path);
 	virtual void ShowList(const vector<RegexText>& list);
 	virtual void ApplyList(vector<RegexText>& list);
 protected:

@@ -89,36 +89,34 @@ public:
 	}
 };
 
-// 导出
-void CKeywordsPage::OnClickedButton4()
+// 导出xml
+BOOL CKeywordsPage::Export(const CString& path)
 {
-	CFileDialog dlg(FALSE, _T("xml"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-		_T("XML文件 (*.xml)|*.xml|所有文件 (*.*)|*.*||"), this);
-	if (dlg.DoModal() == IDOK)
-	{
-		CKeywordListFile tmp;
-		ApplyList(tmp.m_list);
-		if (!tmp.Save(dlg.GetPathName()))
-			AfxMessageBox(_T("保存失败！"), MB_ICONERROR);
-	}
+	if (path.Right(4).CompareNoCase(_T(".xml")) != 0)
+		return CRegListPage::Export(path);
+
+	CKeywordListFile tmp;
+	ApplyList(tmp.m_list);
+	return tmp.Save(path);
 }
 
-// 导入
-void CKeywordsPage::OnClickedButton5()
+// 导入xml
+BOOL CKeywordsPage::Import(const CString& path)
 {
-	CFileDialog dlg(TRUE, _T("xml"), NULL, 0,
-		_T("XML文件 (*.xml)|*.xml|所有文件 (*.*)|*.*||"), this);
-	if (dlg.DoModal() == IDOK)
+	if (path.Right(4).CompareNoCase(_T(".xml")) != 0)
 	{
-		CKeywordListFile tmp;
-		if (!tmp.Load(dlg.GetPathName()))
-			AfxMessageBox(_T("读取失败！"), MB_ICONERROR);
-		else
-		{
-			ShowList(tmp.m_list);
-			OnAdd(-1);
-		}
+		if (!CRegListPage::Import(path))
+			return FALSE;
+		for (int i = 0; i < m_list.GetItemCount(); i++)
+			m_list.SetItemText(i, 3, _T("0"));
+		return TRUE;
 	}
+
+	CKeywordListFile tmp;
+	if (!tmp.Load(path))
+		return FALSE;
+	ShowList(tmp.m_list);
+	return TRUE;
 }
 
 BOOL CKeywordsPage::SetItem(int index)

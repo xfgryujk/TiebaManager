@@ -126,6 +126,62 @@ void CListPage::OnClickedButton3()
 		OnAdd(index);
 }
 
+// 导出
+void CListPage::OnClickedButton4()
+{
+	CFileDialog dlg(FALSE, _T("xml"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+		_T("XML文件 (*.xml)|*.xml|TXT文件 (*.txt)|*.txt|所有文件 (*.*)|*.*||"), this);
+	if (dlg.DoModal() == IDOK)
+	{
+		if (!Export(dlg.GetPathName()))
+			AfxMessageBox(_T("保存失败！"), MB_ICONERROR);
+	}
+}
+
+// 导出txt
+BOOL CListPage::Export(const CString& path)
+{
+	CStdioFile file;
+	if (!file.Open(path, CFile::modeCreate | CFile::modeWrite))
+		return FALSE;
+
+	for (int i = 0; i < m_list.GetItemCount(); i++)
+	{
+		file.WriteString(m_list.GetItemText(i, 0));
+		file.WriteString(_T("\n"));
+	}
+	return TRUE;
+}
+
+// 导入
+void CListPage::OnClickedButton5()
+{
+	CFileDialog dlg(TRUE, _T("xml"), NULL, 0,
+		_T("XML文件 (*.xml)|*.xml|TXT文件 (*.txt)|*.txt|所有文件 (*.*)|*.*||"), this);
+	if (dlg.DoModal() == IDOK)
+	{
+		if (!Import(dlg.GetPathName()))
+			AfxMessageBox(_T("读取失败！"), MB_ICONERROR);
+		else
+			OnAdd(-1);
+	}
+}
+
+// 导入txt
+BOOL CListPage::Import(const CString& path)
+{
+	CStdioFile file;
+	if (!file.Open(path, CFile::modeRead))
+		return FALSE;
+
+	m_list.DeleteAllItems();
+	int i = 0;
+	CString tmp;
+	while (file.ReadString(tmp))
+		m_list.InsertItem(i++, tmp);
+	return TRUE;
+}
+
 // 双击
 void CListPage::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 {

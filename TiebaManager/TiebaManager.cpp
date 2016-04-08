@@ -70,6 +70,9 @@ BOOL CTiebaManagerApp::InitInstance()
 	// 添加异常处理
 	SetUnhandledExceptionFilter(ExceptionHandler);
 
+	// 本地化输出
+	setlocale(LC_CTYPE, "chs");
+
 	// 初始化配置文件路径
 	TCHAR cd[MAX_PATH];
 	GetCurrentDirectory(_countof(cd), cd);

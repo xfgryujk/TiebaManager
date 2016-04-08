@@ -60,36 +60,28 @@ public:
 	}
 };
 
-// 导出
-void CRegListPage::OnClickedButton4()
+// 导出xml
+BOOL CRegListPage::Export(const CString& path)
 {
-	CFileDialog dlg(FALSE, _T("xml"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-		_T("XML文件 (*.xml)|*.xml|所有文件 (*.*)|*.*||"), this);
-	if (dlg.DoModal() == IDOK)
-	{
-		CRegListFile tmp;
-		ApplyList(tmp.m_list);
-		if (!tmp.Save(dlg.GetPathName()))
-			AfxMessageBox(_T("保存失败！"), MB_ICONERROR);
-	}
+	if (path.Right(4).CompareNoCase(_T(".xml")) != 0)
+		return CListPage::Export(path);
+
+	CRegListFile tmp;
+	ApplyList(tmp.m_list);
+	return tmp.Save(path);
 }
 
-// 导入
-void CRegListPage::OnClickedButton5()
+// 导入xml
+BOOL CRegListPage::Import(const CString& path)
 {
-	CFileDialog dlg(TRUE, _T("xml"), NULL, 0,
-		_T("XML文件 (*.xml)|*.xml|所有文件 (*.*)|*.*||"), this);
-	if (dlg.DoModal() == IDOK)
-	{
-		CRegListFile tmp;
-		if (!tmp.Load(dlg.GetPathName()))
-			AfxMessageBox(_T("读取失败！"), MB_ICONERROR);
-		else
-		{
-			ShowList(tmp.m_list);
-			OnAdd(-1);
-		}
-	}
+	if (path.Right(4).CompareNoCase(_T(".xml")) != 0)
+		return CListPage::Import(path);
+
+	CRegListFile tmp;
+	if (!tmp.Load(path))
+		return FALSE;
+	ShowList(tmp.m_list);
+	return TRUE;
 }
 
 BOOL CRegListPage::SetItem(int index)
