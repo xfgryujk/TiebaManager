@@ -63,6 +63,10 @@ const TCHAR LZL_AUTHOR_ID_LEFT[] = _T("\"user_id\":\"");
 const TCHAR LZL_AUTHOR_ID_RIGHT[] = _T("\"");
 const TCHAR LZL_CONTENT_LEFT[] = _T("\"content\":\"");
 const TCHAR LZL_CONTENT_RIGHT[] = _T("\",\"");
+const TCHAR LZL_PTYPE_LEFT[] = _T("\"ptype\":");
+const TCHAR LZL_PTYPE_RIGHT[] = _T(",");
+const TCHAR LZL_DURING_TIME_LEFT[] = _T("\"during_time\":");
+const TCHAR LZL_DURING_TIME_RIGHT[] = _T("}");
 #pragma endregion
 
 
@@ -206,6 +210,13 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 			lzls[iLzls].authorID = GetStringBetween(rawLzls[iRawLzls], LZL_AUTHOR_ID_LEFT, LZL_AUTHOR_ID_RIGHT);
 			lzls[iLzls].authorPortrait = portrait[lzls[iLzls].author];
 			lzls[iLzls].content = HTMLUnescape(JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_CONTENT_LEFT, LZL_CONTENT_RIGHT)));
+
+			if (GetStringBetween(rawLzls[iRawLzls], LZL_PTYPE_LEFT, LZL_PTYPE_RIGHT) == _T("1")) // ”Ô“ÙÃ˘
+			{
+				lzls[iLzls].content += _T(R"(<div class="voice_player voice_player_mini voice_player_lzl"><a class="voice_player_inner" href="#"><span class="before">&nbsp;</span><span class="middle"><span class="speaker speaker_animate">&nbsp;</span><span class="time" style="width: 65px;"><span class="second">)");
+				lzls[iLzls].content += GetStringBetween(rawLzls[iRawLzls], LZL_DURING_TIME_LEFT, LZL_DURING_TIME_RIGHT);
+				lzls[iLzls].content += _T(R"(</span>"</span></span><span class="after">&nbsp;</span></a></div>)");
+			}
 		}
 	}
 }

@@ -6,11 +6,13 @@
 
 
 // 当前版本日期，每次更新后修改
-const char UPDATE_CURRENT_VERSION_A[] = "16-04-03";
+const char UPDATE_CURRENT_VERSION_A[] = "16-04-08";
 const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
 // 更新日志
-const TCHAR UPDATE_LOG[] = _T("1. :( 小吧真的可以封10天\r\n")
-						   _T("2. 再次修复强制确认的BUG");
+const TCHAR UPDATE_LOG[] = _T("1. 支持导入导出txt文件\r\n")
+						   _T("2. 修复低分辨率下UI多出一块空白\r\n")
+						   _T("3. 确认操作时可用浏览器打开帖子\r\n")
+						   _T("4. 支持扫描楼中楼语音帖");
 
 // 检查更新
 CheckUpdateResult CheckUpdate()
