@@ -523,9 +523,9 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	if (!hasPower)
 	{
 		WriteString(src2, _T("admin.txt"));
-		AfxMessageBox(_T("您不是吧主或小吧主或语音小编！"), MB_ICONERROR);
-		SetWindowText(_T("贴吧管理器"));
-		goto error;
+		AfxMessageBox(_T("您不是吧主或小吧主或语音小编，无法删帖封号！"), MB_ICONWARNING);
+		/*SetWindowText(_T("贴吧管理器"));
+		goto error;*/
 	}
 
 	// 加入信任用户

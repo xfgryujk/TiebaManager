@@ -329,13 +329,20 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 	m_trustedThreadPage.ApplyList(plan.m_trustedThread);
 
 	// 违规图片
-	if (&plan == &g_plan && plan.m_updateImage)
+	BOOL updateImage = &plan == &g_plan && plan.m_updateImage;
+	if (updateImage)
 	{
 		g_leagalImage.clear();
 		g_illegalImage.clear();
 	}
 
 	plan.PostChange();
+
+	if (updateImage)
+	{
+		strBuf.Format(_T("载入了%d张图片"), plan.m_images.size());
+		AfxMessageBox(strBuf, MB_ICONINFORMATION);
+	}
 
 	if (&plan == &g_plan && m_clearScanCache)
 	{

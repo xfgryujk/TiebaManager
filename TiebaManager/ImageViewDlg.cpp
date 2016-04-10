@@ -202,6 +202,8 @@ void CImageViewDlg::OnBnClickedButton3()
 		folder.ReleaseBuffer();
 		
 		CString imgName = GetImageName((*m_imageURL)[m_curImageIndex]);
+		if (imgName.Right(4).CompareNoCase(_T(".jpg")) != 0)
+			imgName += _T(".jpg");
 		m_curImage.Save(folder + _T("\\") + imgName);
 	}
 }

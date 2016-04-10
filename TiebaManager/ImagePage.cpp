@@ -88,4 +88,11 @@ void CImagePage::OnEnKillfocusEdit5()
 	double threshold = _ttof(tmp);
 	if (threshold < 1.0 || threshold > 3.0)
 		m_thresholdEdit.SetWindowText(_T("2.43"));
+
+	if (abs(threshold - g_plan.m_SSIMThreshold) > 0.00001)
+	{
+		g_plan.m_updateImage = TRUE;
+		if (threshold < g_plan.m_SSIMThreshold)
+			((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+	}
 }
