@@ -192,7 +192,6 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	// 初次运行先看关于
 	if (g_globalConfig.m_firstRun)
 	{
-		HTTPGet(_T("http://xfgryujk.tk/adduser.php"), FALSE); // 偷偷统计用户数
 		*g_globalConfig.m_firstRun = FALSE;
 		*g_globalConfig.m_firstRunAfterUpdate = FALSE;
 		g_globalConfig.Save(GLOBAL_CONFIG_PATH);
@@ -204,7 +203,6 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	}
 	else if (g_globalConfig.m_firstRunAfterUpdate) // 弹出更新日志
 	{
-		HTTPGet(_T("http://xfgryujk.tk/adduser.php"), FALSE); // 偷偷统计用户数
 		*g_globalConfig.m_firstRunAfterUpdate = FALSE;
 		g_globalConfig.Save(GLOBAL_CONFIG_PATH);
 		AfxMessageBox(UPDATE_LOG, MB_ICONINFORMATION);

@@ -162,7 +162,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			}
 			else
 			{
-				CString code = op.pid == _T("") ? BanIDClient(op.author) : BanID(op.author, op.pid);
+				CString code = (g_plan.m_wapBanInterface || op.pid == _T("")) ? BanIDClient(op.author) : BanID(op.author, op.pid);
 				if (code != _T("0"))
 				{
 					CString content;

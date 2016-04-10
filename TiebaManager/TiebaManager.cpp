@@ -71,7 +71,7 @@ BOOL CTiebaManagerApp::InitInstance()
 	SetUnhandledExceptionFilter(ExceptionHandler);
 
 	// 本地化输出
-	setlocale(LC_CTYPE, "chs");
+	_tsetlocale(LC_ALL, _T(".936"));
 
 	// 初始化配置文件路径
 	TCHAR cd[MAX_PATH];
