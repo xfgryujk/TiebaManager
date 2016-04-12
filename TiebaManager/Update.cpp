@@ -6,13 +6,12 @@
 
 
 // 当前版本日期，每次更新后修改
-const char UPDATE_CURRENT_VERSION_A[] = "16-04-08";
+const char UPDATE_CURRENT_VERSION_A[] = "16-04-12";
 const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
 // 更新日志
-const TCHAR UPDATE_LOG[] = _T("1. 支持导入导出txt文件\r\n")
-						   _T("2. 修复低分辨率下UI多出一块空白\r\n")
-						   _T("3. 确认操作时可用浏览器打开帖子\r\n")
-						   _T("4. 支持扫描楼中楼语音帖");
+const TCHAR UPDATE_LOG[] = _T("1. 修复某些系统不能打开的问题（大概\r\n")
+						   _T("2. 修复扫描时不使用客户端封禁的BUG\r\n")
+						   _T("3. 可以扫描没有权限的吧（不能操作");
 
 // 检查更新
 CheckUpdateResult CheckUpdate()
@@ -53,14 +52,14 @@ CheckUpdateResult CheckUpdate()
 	static const TCHAR BDSTOKEN_RIGHT[] = _T("\"");
 	static const TCHAR DLINK_LEFT[] = _T("\"dlink\":\"");
 	static const TCHAR DLINK_RIGHT[] = _T("\"");
-	src = HTTPGet(UPDATE_URL, FALSE);
+	src = HTTPGet(UPDATE_URL, TRUE);
 	CString timeStamp = GetStringBetween(src, TIME_STAMP_LEFT, TIME_STAMP_RIGHT);
 	CString sign = GetStringBetween(src, SIGN_LEFT, SIGN_RIGHT);
 	CString bdstoken = GetStringBetween(src, BDSTOKEN_LEFT, BDSTOKEN_RIGHT);
 	CString url;
 	url.Format(_T("http://pan.baidu.com/api/sharedownload?sign=%s&timestamp=%s&bdstoken=%s&channel=chunlei")
 			   _T("&clienttype=0&web=1&app_id=250528"), sign, timeStamp, bdstoken);
-	src = HTTPPost(url, _T("encrypt=0&product=share&uk=436464474&primaryid=497149087&fid_list=%5B") + fs_id + _T("%5D"), FALSE);
+	src = HTTPPost(url, _T("encrypt=0&product=share&uk=436464474&primaryid=3238545029&fid_list=%5B") + fs_id + _T("%5D"), FALSE);
 
 	// 文件下载链接
 	CString dlink = GetStringBetween(src, DLINK_LEFT, DLINK_RIGHT);
