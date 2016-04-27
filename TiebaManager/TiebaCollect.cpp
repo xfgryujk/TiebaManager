@@ -10,15 +10,15 @@
 // 采集贴吧用的常量
 // 正则表达式太慢所以不用
 #pragma region 主题列表
-const TCHAR THREAD_SPLIT[] = _T("data-field='{&quot;author_name&quot;:&quot;");
+const TCHAR THREAD_SPLIT[] = _T("data-field='{&quot;id&quot;:");
 const TCHAR THREAD_END[] = _T("<div id=\"frs_list_pager\"");
-const TCHAR THREAD_TID_LEFT[] = _T("&quot;id&quot;:");
+//const TCHAR THREAD_TID_LEFT[] = _T("&quot;id&quot;:");
 const TCHAR THREAD_TID_RIGHT[] = _T(",");
 const TCHAR THREAD_REPLY_LEFT[] = _T("&quot;reply_num&quot;:");
 const TCHAR THREAD_REPLY_RIGHT[] = _T(",");
-const TCHAR THREAD_TITLE_LEFT[] = _T("class=\"j_th_tit\">");
+const TCHAR THREAD_TITLE_LEFT[] = _T(R"(class="j_th_tit ">)");
 const TCHAR THREAD_TITLE_RIGHT[] = _T("</a>");
-const TCHAR THREAD_PREVIEW_LEFT[] = _T("threadlist_abs_onlyline\">");
+const TCHAR THREAD_PREVIEW_LEFT[] = _T(R"(threadlist_abs_onlyline ">)");
 const TCHAR THREAD_PREVIEW_RIGHT[] = _T("</div>");
 const TCHAR THREAD_MEDIA_LEFT[] = _T("<ul class=\"threadlist_media");
 const TCHAR THREAD_MEDIA_RIGHT[] = _T("</ul>");
@@ -74,7 +74,7 @@ const TCHAR LZL_DURING_TIME_RIGHT[] = _T("}");
 BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& threads)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=UTF-8&kw=") + EncodeURI(forumName)
-		+ _T("&tp=0&pn=") + ignoreThread + _T("&apage=1"), FALSE, &g_stopScanFlag);
+		+ _T("&pn=") + ignoreThread, FALSE, &g_stopScanFlag);
 
 	CStringArray rawThreads;
 	SplitString(rawThreads, src, THREAD_SPLIT);
@@ -89,13 +89,15 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 	threads.resize(rawThreads.GetSize() - 1);
 	for (int iRawThreads = 1, iThreads = 0; iRawThreads < rawThreads.GetSize(); iRawThreads++, iThreads++)
 	{
-		threads[iThreads].tid = GetStringBetween(rawThreads[iRawThreads], THREAD_TID_LEFT, THREAD_TID_RIGHT);
+		//threads[iThreads].tid = GetStringBetween(rawThreads[iRawThreads], THREAD_TID_LEFT, THREAD_TID_RIGHT);
+		threads[iThreads].tid = GetStringBefore(rawThreads[iRawThreads], THREAD_TID_RIGHT);
 		threads[iThreads].reply = GetStringBetween(rawThreads[iRawThreads], THREAD_REPLY_LEFT, THREAD_REPLY_RIGHT);
 		threads[iThreads].title = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
-		threads[iThreads].preview = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT))
+		threads[iThreads].preview = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT).Trim())
 			+ _T("\r\n") + GetStringBetween2(rawThreads[iRawThreads], THREAD_MEDIA_LEFT, THREAD_MEDIA_RIGHT);
 		threads[iThreads].authorID = GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
-		threads[iThreads].author = JSUnescape(GetStringBefore(rawThreads[iRawThreads], THREAD_AUTHOR_RIGHT));
+		//threads[iThreads].author = JSUnescape(GetStringBefore(rawThreads[iRawThreads], THREAD_AUTHOR_RIGHT));
+		threads[iThreads].author = JSUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_LEFT, THREAD_AUTHOR_RIGHT));
 
 		//OutputDebugString(_T("\n"));
 		//OutputDebugString(rawThreads[iRawThreads]);

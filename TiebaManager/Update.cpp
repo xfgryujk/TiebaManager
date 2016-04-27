@@ -6,12 +6,10 @@
 
 
 // 当前版本日期，每次更新后修改
-const char UPDATE_CURRENT_VERSION_A[] = "16-04-12";
+const char UPDATE_CURRENT_VERSION_A[] = "16-04-27";
 const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
 // 更新日志
-const TCHAR UPDATE_LOG[] = _T("1. 修复某些系统不能打开的问题（大概\r\n")
-						   _T("2. 修复扫描时不使用客户端封禁的BUG\r\n")
-						   _T("3. 可以扫描没有权限的吧（不能操作");
+const TCHAR UPDATE_LOG[] = _T("1. 兼容贴吧更新\r\n（这几天特别忙刚刚才挤出时间更新OTZ");
 
 // 检查更新
 CheckUpdateResult CheckUpdate()
