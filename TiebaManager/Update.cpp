@@ -3,14 +3,16 @@
 #import <msscript.ocx> no_namespace
 #include "StringHelper.h"
 #include "NetworkHelper.h"
+#include "MiscHelper.h"
 #include "TiebaManagerDlg.h"
 
 
 // 当前版本日期，每次更新后修改
-const char UPDATE_CURRENT_VERSION_A[] = "16-04-27";
+const char UPDATE_CURRENT_VERSION_A[] = "16-05-01";
 const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
 // 更新日志
-const TCHAR UPDATE_LOG[] = _T("1. 更换软件更新源（不用垃圾百度云了");
+const TCHAR UPDATE_LOG[] = _T("1. 更换软件更新源（不用垃圾百度云了\r\n")
+						   _T("2. 批量拉黑添加拉黑知道没有新关注的");
 
 // 字符串转时间戳
 static time_t Str2Time(const CString& str)
@@ -57,11 +59,8 @@ CheckUpdateResult CheckUpdate()
 UINT AFX_CDECL AutoUpdateThread(LPVOID _dlg)
 {
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)_dlg;
-	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
-	{
-		AfxMessageBox(_T("CoInitializeEx失败！"), MB_ICONERROR);
+	if (!CoInitializeHelper())
 		return 0;
-	}
 	CheckUpdateResult res = CheckUpdate();
 	CoUninitialize();
 	switch (res)

@@ -8,6 +8,7 @@
 
 #include "StringHelper.h"
 #include "NetworkHelper.h"
+#include "MiscHelper.h"
 
 #include "TiebaManagerDlg.h"
 
@@ -121,13 +122,8 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		g_confirmThread = AfxBeginThread(ConfirmThread, mainDlg);
 
 	// 初始化
-	HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	if (FAILED(hr))
-	{
-		CString code;
-		code.Format(_T("CoInitializeEx: 0x%08X"), hr);
-		WriteString(code, _T("error.txt"));
-	}
+	if (!CoInitializeHelper())
+		return 0;
 
 	// 初始化页数
 	CString sPage;
@@ -246,11 +242,8 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 	int threadID = (int)_threadID;
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
 	// 初始化
-	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
-	{
-		AfxMessageBox(_T("CoInitializeEx失败！"), MB_ICONERROR);
+	if (!CoInitializeHelper())
 		return 0;
-	}
 
 	CString pageCount, src;
 	map<__int64, int>::iterator historyReplyIt;

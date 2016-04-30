@@ -7,6 +7,7 @@
 
 #include "StringHelper.h"
 #include "NetworkHelper.h"
+#include "MiscHelper.h"
 #include "Md5.h"
 
 #include "TiebaManagerDlg.h"
@@ -55,11 +56,8 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)mainDlg;
 
 	// 初始化
-	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
-	{
-		AfxMessageBox(_T("CoInitializeEx失败！"), MB_ICONERROR);
+	if (!CoInitializeHelper())
 		return 0;
-	}
 
 	while (!g_confirmQueue.empty() && !g_stopScanFlag)
 	{
@@ -126,11 +124,8 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)mainDlg;
 
 	// 初始化
-	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
-	{
-		AfxMessageBox(_T("CoInitializeEx失败！"), MB_ICONERROR);
+	if (!CoInitializeHelper())
 		return 0;
-	}
 
 	while (!g_operationQueue.empty() && !g_stopScanFlag)
 	{

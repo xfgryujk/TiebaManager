@@ -5,6 +5,7 @@
 #include "LockThreadPage.h"
 #include "TiebaManagerDlg.h"
 #include "StringHelper.h"
+#include "MiscHelper.h"
 #include "TiebaCollect.h"
 #include "TiebaOperate.h"
 #include "Setting.h"
@@ -98,11 +99,8 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 {
 	// ≥ı ºªØ
 	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
-	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
-	{
-		AfxMessageBox(_T("CoInitializeEx ß∞‹£°"), MB_ICONERROR);
+	if (!CoInitializeHelper())
 		return 0;
-	}
 
 	CString tid, page, floor;
 	if (m_instance != NULL)

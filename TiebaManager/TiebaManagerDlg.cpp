@@ -28,6 +28,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Setting.h"
 #include "StringHelper.h"
 #include "NetworkHelper.h"
+#include "MiscHelper.h"
 #include "Update.h"
 
 #include "TiebaVariable.h"
@@ -396,11 +397,8 @@ void CTiebaManagerDlg::OnStnClickedStatic7()
 		CString folder;
 		SHGetPathFromIDList(pidlSel, folder.GetBuffer(MAX_PATH));
 		folder.ReleaseBuffer();
-		if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
-		{
-			AfxMessageBox(_T("CoInitializeEx ß∞‹£°"), MB_ICONERROR);
+		if (!CoInitializeHelper())
 			return;
-		}
 
 		m_log.Save(folder);
 

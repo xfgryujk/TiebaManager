@@ -6,6 +6,7 @@
 #include "TiebaManagerDlg.h"
 #include "StringHelper.h"
 #include "NetworkHelper.h"
+#include "MiscHelper.h"
 #include "TiebaVariable.h"
 #include "TiebaOperate.h"
 
@@ -141,11 +142,8 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 {
 	// ≥ı ºªØ
 	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
-	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
-	{
-		AfxMessageBox(_T("CoInitializeEx ß∞‹£°"), MB_ICONERROR);
+	if (!CoInitializeHelper())
 		return 0;
-	}
 
 	int iStartPage = _ttoi(s_startPage), iEndPage = _ttoi(s_endPage);
 	int iPrevTotalPage = 0;

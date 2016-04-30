@@ -57,3 +57,17 @@ BOOL CreateDir(const CString& path)
 	}
 	return CreateDirectory(path, NULL);
 }
+
+// ≥ı ºªØCOMø‚
+BOOL CoInitializeHelper()
+{
+	HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	if (FAILED(hr))
+	{
+		CString tmp;
+		tmp.Format(_T("CoInitializeEx ß∞‹£°\r\n¥ÌŒÛ¥˙¬Î0x%08X"), hr);
+		AfxMessageBox(tmp, MB_ICONERROR);
+		return FALSE;
+	}
+	return TRUE;
+}

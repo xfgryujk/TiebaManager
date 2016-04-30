@@ -6,6 +6,7 @@
 
 #include "StringHelper.h"
 #include "NetworkHelper.h"
+#include "MiscHelper.h"
 #include "Setting.h"
 
 #include "TiebaCollect.h"
@@ -130,11 +131,8 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	BOOL updatePID = FALSE;
 	// Ñ­»··â
 	dlg->m_stateStatic.SetWindowText(_T("Ñ­»··â½ûÖÐ"));
-	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
-	{
-		AfxMessageBox(_T("CoInitializeExÊ§°Ü£¡"), MB_ICONERROR);
+	if (!CoInitializeHelper())
 		return 0;
-	}
 	for (UINT i = 0; i < config.m_userList->size(); i++)
 	{
 		CString code;
