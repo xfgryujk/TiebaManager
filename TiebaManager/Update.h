@@ -1,16 +1,14 @@
 #pragma once
 
 
-#define UPDATE_URL _T("http://pan.baidu.com/s/1i4vlYIh")
-const TCHAR UPDATE_FULL_URL[] = UPDATE_URL
-								_T("#path=%252F%25E6%2588%2591%25E7%259A%2584%25E5%2588%2586%25E4%25BA%25AB%252F%25E7%2599")
-								_T("%25BE%25E5%25BA%25A6%25E8%25B4%25B4%25E5%2590%25A7%25E7%259B%25B8%25E5%2585%25B3");
+#define UPDATE_URL _T("http://sinacloud.net/xfgryujk/TiebaManager/Ìù°É¹ÜÀíÆ÷.zip")
+#define UPDATE_INFO_URL UPDATE_URL _T("?meta&formatter=json")
 
 extern const char UPDATE_CURRENT_VERSION_A[];
 extern const CString UPDATE_CURRENT_VERSION;
 extern const TCHAR UPDATE_LOG[];
 
 
-enum CheckUpdateResult { UPDATE_NO_UPDATE, UPDATE_HAS_UPDATE, UPDATE_FAILED_TO_GET_FILE_ID, UPDATE_FAILED_TO_GET_LINK };
+enum CheckUpdateResult { UPDATE_NO_UPDATE, UPDATE_HAS_UPDATE, UPDATE_FAILED_TO_GET_FILE_INFO };
 CheckUpdateResult CheckUpdate();
 UINT AFX_CDECL AutoUpdateThread(LPVOID _dlg);

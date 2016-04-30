@@ -73,13 +73,9 @@ void CAboutPage::OnStnClickedStatic1()
 	case UPDATE_NO_UPDATE:
 		AfxMessageBox(_T("已经是最新版本"));
 		break;
-	case UPDATE_FAILED_TO_GET_FILE_ID:
-		if (AfxMessageBox(_T("获取文件ID失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
-			ShellExecute(NULL, _T("open"), UPDATE_FULL_URL, NULL, NULL, SW_NORMAL);
-		break;
-	case UPDATE_FAILED_TO_GET_LINK:
-		if (AfxMessageBox(_T("获取下载地址失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
-			ShellExecute(NULL, _T("open"), UPDATE_FULL_URL, NULL, NULL, SW_NORMAL);
+	case UPDATE_FAILED_TO_GET_FILE_INFO:
+		if (AfxMessageBox(_T("获取文件信息失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
+			ShellExecute(NULL, _T("open"), UPDATE_URL, NULL, NULL, SW_NORMAL);
 		break;
 	}
 }
