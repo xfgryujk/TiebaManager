@@ -140,7 +140,7 @@ void CLoginDlg::OnOK()
 	data.Format(_T("staticpage=http%%3A%%2F%%2Fwww.baidu.com%%2Fcache%%2Fuser%%2Fhtml%%2Fv3Jump.html&charset=utf-8&token=%s&tpl=mn")
 				_T("&apiver=v3&tt=%I64d&codestring=%s&isPhone=false&safeflg=0&u=http%%3A%%2F%%2Fwww.baidu.com%%2F&username=%s&pass")
 				_T("word=%s&verifycode=%s&mem_pass=on&ppui_logintime=35219&callback=parent.bd__pcbs__4y6hex"),
-				m_token, timestamp, m_verifyStr, EncodeURI(userName), EncodeURI(password), verifyCode);
+				(LPCTSTR)m_token, timestamp, (LPCTSTR)m_verifyStr, (LPCTSTR)EncodeURI(userName), (LPCTSTR)EncodeURI(password), (LPCTSTR)verifyCode);
 	CString result = HTTPPost(_T("https://passport.baidu.com/v2/api/?login"), data, TRUE, NULL, &m_cookie);
 
 	EnableWindow(TRUE);
@@ -179,17 +179,22 @@ error:
 void CLoginDlg::OnBnClickedButton3()
 {
 	DWORD size = 1024 * 1024;
-	BOOL result = InternetGetCookieEx(_T("http://tieba.baidu.com/"), NULL, m_cookie.GetBuffer(size),
+	InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), m_cookie.GetBuffer(size),
 		&size, INTERNET_COOKIE_HTTPONLY, NULL);
+	HRESULT result = HRESULT_FROM_WIN32(GetLastError());
 	m_cookie.ReleaseBuffer();
 
 	BOOL jump = TRUE;
 CheckResult:
-	if (!result)
+	if (FAILED(result))
 	{
 		if (jump)
 			goto Win10;
-		AfxMessageBox(_T("获取Cookie失败！"), MB_ICONERROR);
+		CString tmp;
+		tmp.Format(_T("获取Cookie失败！\r\n错误代码0x%08X"), result);
+		AfxMessageBox(tmp, MB_ICONERROR);
+		if (result == HRESULT_FROM_WIN32(ERROR_NO_MORE_ITEMS))
+			AfxMessageBox(_T("请先在IE浏览器登陆百度账号并选中下次自动登录！"), MB_ICONERROR);
 		return;
 	}
 	if (!StringIncludes(m_cookie, _T("BDUSS=")))
@@ -213,8 +218,8 @@ CheckResult:
 
 Win10:
 	size = 1024 * 1024;
-	result = SUCCEEDED(IEGetProtectedModeCookie(L"http://tieba.baidu.com/", NULL, m_cookie.GetBuffer(size),
-		&size, INTERNET_COOKIE_HTTPONLY));
+	result = IEGetProtectedModeCookie(L"http://tieba.baidu.com/", _T("BDUSS"), m_cookie.GetBuffer(size),
+		&size, INTERNET_COOKIE_HTTPONLY);	
 	jump = FALSE;
 	goto CheckResult;
 }

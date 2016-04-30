@@ -92,7 +92,7 @@ BOOL CListPage::OnInitDialog()
 void CListPage::OnClickedButton1()
 {
 	int index = m_list.GetSelectionMark() + 1;
-	index = m_list.InsertItem(index, NULL);
+	index = m_list.InsertItem(index, _T(""));
 	if (SetItem(index))
 	{
 		m_list.SetSelectionMark(index);

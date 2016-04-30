@@ -141,6 +141,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	int pos, length;
 	while (!g_stopScanFlag)
 	{
+#pragma warning(suppress: 28159)
 		DWORD startTime = GetTickCount();
 		dlg->m_stateStatic.SetWindowText(_T("扫描主题中"));
 		if (!g_plan.m_briefLog)
@@ -203,7 +204,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			WaitForMultipleObjects(threadCount, threadHandles, TRUE, INFINITE);
 
 			// 释放
-			delete threadHandles;
+			delete[] threadHandles;
 			dlg->m_stateList.ResetContent();
 		}
 
@@ -211,6 +212,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 		if (!g_plan.m_briefLog)
 		{
 			CString content;
+#pragma warning(suppress: 28159)
 			content.Format(_T("<font color=green>本轮扫描结束，用时%.3f秒</font>"), (float)(GetTickCount() - startTime) / 1000.0f);
 			dlg->m_log.Log(content);
 		}
@@ -244,7 +246,11 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 	int threadID = (int)_threadID;
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
 	// 初始化
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
+	{
+		AfxMessageBox(_T("CoInitializeEx失败！"), MB_ICONERROR);
+		return 0;
+	}
 
 	CString pageCount, src;
 	map<__int64, int>::iterator historyReplyIt;

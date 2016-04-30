@@ -55,7 +55,11 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)mainDlg;
 
 	// 初始化
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
+	{
+		AfxMessageBox(_T("CoInitializeEx失败！"), MB_ICONERROR);
+		return 0;
+	}
 
 	while (!g_confirmQueue.empty() && !g_stopScanFlag)
 	{
@@ -122,7 +126,11 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)mainDlg;
 
 	// 初始化
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
+	{
+		AfxMessageBox(_T("CoInitializeEx失败！"), MB_ICONERROR);
+		return 0;
+	}
 
 	while (!g_operationQueue.empty() && !g_stopScanFlag)
 	{
@@ -167,7 +175,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				{
 					CString content;
 					content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
-								   _T("\"bd:%s,%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.author, op.pid);
+								   _T("\"bd:%s,%s\">重试</a>"), (LPCTSTR)op.author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.author, (LPCTSTR)op.pid);
 					dlg->m_log.Log(content);
 				}
 				else
@@ -203,7 +211,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			{
 				CString content;
 				content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
-							   _T("\"df:%s\">重试</a>"), op.author, code, GetTiebaErrorText(code), op.authorID);
+							   _T("\"df:%s\">重试</a>"), (LPCTSTR)op.author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.authorID);
 				dlg->m_log.Log(content);
 			}
 			else
@@ -229,7 +237,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			{
 				CString content;
 				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a><font color=red> 删除失败！错误代码：%s(%s)</font><a href=")
-							   _T("\"dt:%s\">重试</a>"), op.tid, HTMLEscape(op.title), code, GetTiebaErrorText(code), op.tid);
+							   _T("\"dt:%s\">重试</a>"), (LPCTSTR)op.tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.tid);
 				dlg->m_log.Log(content);
 			}
 			else
@@ -248,8 +256,8 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			{
 				CString content;
 				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼<font color=red> 删除失败！错误代码：%s(%s)</font>")
-							   _T("<a href=\"dp:%s,%s\">重试</a>"), op.tid, HTMLEscape(op.title), op.floor, code, GetTiebaErrorText(code), 
-							   op.tid, op.pid);
+							   _T("<a href=\"dp:%s,%s\">重试</a>"), (LPCTSTR)op.tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)op.floor, (LPCTSTR)code, 
+							   (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.tid, (LPCTSTR)op.pid);
 				dlg->m_log.Log(content);
 			}
 			else
@@ -267,8 +275,8 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			{
 				CString content;
 				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼回复<font color=red> 删除失败！错误代码：")
-							   _T("%s(%s)</font><a href=\"dl:%s,%s\">重试</a>"), op.tid, HTMLEscape(op.title), op.floor, code,
-							   GetTiebaErrorText(code), op.tid, op.pid);
+							   _T("%s(%s)</font><a href=\"dl:%s,%s\">重试</a>"), (LPCTSTR)op.tid, (LPCTSTR)HTMLEscape(op.title), 
+							   (LPCTSTR)op.floor, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.tid, (LPCTSTR)op.pid);
 				dlg->m_log.Log(content);
 			}
 			else
@@ -304,8 +312,8 @@ CString BanID(LPCTSTR userName, LPCTSTR pid)
 {
 	CString data;
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&pid%%5B%%5D=%s&reason=%s"),
-		*g_plan.m_banDuration, g_userTiebaInfo.m_forumID, g_userTiebaInfo.m_tbs, EncodeURI(userName), pid,
-		*g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
+		*g_plan.m_banDuration, (LPCTSTR)g_userTiebaInfo.m_forumID, (LPCTSTR)g_userTiebaInfo.m_tbs, (LPCTSTR)EncodeURI(userName), pid,
+		*g_plan.m_banReason != _T("") ? (LPCTSTR)*g_plan.m_banReason : _T("%20"));
 	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
 	return GetOperationErrorCode(src);
 }
@@ -315,8 +323,8 @@ CString BanID(LPCTSTR userName)
 {
 	CString data;
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&reason=%s"),
-		*g_plan.m_banDuration, g_userTiebaInfo.m_forumID, g_userTiebaInfo.m_tbs, EncodeURI(userName),
-		*g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
+		*g_plan.m_banDuration, (LPCTSTR)g_userTiebaInfo.m_forumID, (LPCTSTR)g_userTiebaInfo.m_tbs, (LPCTSTR)EncodeURI(userName),
+		*g_plan.m_banReason != _T("") ? (LPCTSTR)*g_plan.m_banReason : _T("%20"));
 	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
 	return GetOperationErrorCode(src);
 }
@@ -327,8 +335,8 @@ CString BanIDWap(LPCTSTR userName)
 	CString url;
 	url.Format(_T("http://tieba.baidu.com/mo/q/m?tn=bdFIL&ntn=banid&day=1&un=%s&tbs=%s")
 			   _T("&word=%s&fid=%s&z=%s&$el=%%5Bobject%%20Array%%5D&reason=%s"),
-		EncodeURI(userName), g_userTiebaInfo.m_tbs, g_userTiebaInfo.m_encodedForumName, 
-		g_userTiebaInfo.m_forumID, g_randomTid, *g_plan.m_banReason != _T("") ? *g_plan.m_banReason : _T("%20"));
+		(LPCTSTR)EncodeURI(userName), (LPCTSTR)g_userTiebaInfo.m_tbs, (LPCTSTR)g_userTiebaInfo.m_encodedForumName,
+		(LPCTSTR)g_userTiebaInfo.m_forumID, (LPCTSTR)g_randomTid, *g_plan.m_banReason != _T("") ? (LPCTSTR)*g_plan.m_banReason : _T("%20"));
 	CString src = HTTPGet(url);
 	return GetOperationErrorCode(src);
 }
@@ -339,8 +347,8 @@ CString BanIDClient(LPCTSTR userName)
 	// 客户端POST要带数字签名，参数按字典序排列，去掉&，加上"tiebaclient!!!"，转成UTF-8，取MD5
 	CString data;
 	data.Format(_T("BDUSS=%s&day=%d&fid=%s&from=tieba&net_type=1&ntn=banid&tbs=%s&un=%s&word=%s&z=%s"),
-		g_userTiebaInfo.m_bduss, *g_plan.m_banDuration, g_userTiebaInfo.m_forumID, 
-		g_userTiebaInfo.m_tbs, userName, g_userTiebaInfo.m_forumName, g_randomTid);
+		(LPCTSTR)g_userTiebaInfo.m_bduss, *g_plan.m_banDuration, (LPCTSTR)g_userTiebaInfo.m_forumID,
+		(LPCTSTR)g_userTiebaInfo.m_tbs, userName, (LPCTSTR)g_userTiebaInfo.m_forumName, (LPCTSTR)g_randomTid);
 	
 	CString signData = data;
 	signData.Replace(_T("&"), _T(""));
@@ -372,7 +380,7 @@ CString DeletePost(LPCTSTR tid, LPCTSTR pid)
 {
 	CString data;
 	data.Format(_T("commit_fr=pb&ie=utf-8&tbs=%s&kw=%s&fid=%s&tid=%s&is_vipdel=0&pid=%s&is_finf=false"),
-		g_userTiebaInfo.m_tbs, g_userTiebaInfo.m_encodedForumName, g_userTiebaInfo.m_forumID, tid, pid);
+		(LPCTSTR)g_userTiebaInfo.m_tbs, (LPCTSTR)g_userTiebaInfo.m_encodedForumName, (LPCTSTR)g_userTiebaInfo.m_forumID, tid, pid);
 	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data);
 	return GetOperationErrorCode(src);
 }
@@ -382,7 +390,7 @@ CString DeleteLZL(LPCTSTR tid, LPCTSTR lzlid)
 {
 	CString data;
 	data.Format(_T("ie=utf-8&tbs=%s&kw=%s&fid=%s&tid=%s&pid=%s&is_finf=1"),
-		g_userTiebaInfo.m_tbs, g_userTiebaInfo.m_encodedForumName, g_userTiebaInfo.m_forumID, tid, lzlid);
+		(LPCTSTR)g_userTiebaInfo.m_tbs, (LPCTSTR)g_userTiebaInfo.m_encodedForumName, (LPCTSTR)g_userTiebaInfo.m_forumID, tid, lzlid);
 	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data);
 	return GetOperationErrorCode(src);
 }

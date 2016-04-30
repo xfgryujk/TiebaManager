@@ -5,7 +5,9 @@
 // 不阻塞消息的延迟
 void Delay(DWORD time)
 {
+#pragma warning(suppress: 28159)
 	DWORD startTime = GetTickCount();
+#pragma warning(suppress: 28159)
 	while (GetTickCount() - startTime < time)
 	{
 		DoEvents();

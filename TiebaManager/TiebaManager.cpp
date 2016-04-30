@@ -74,8 +74,9 @@ BOOL CTiebaManagerApp::InitInstance()
 	_tsetlocale(LC_ALL, _T(".936"));
 
 	// 初始化配置文件路径
-	TCHAR cd[MAX_PATH];
+	TCHAR cd[MAX_PATH] = { _T('\0') };
 	GetCurrentDirectory(_countof(cd), cd);
+#pragma warning(suppress: 6102)
 	GLOBAL_CONFIG_PATH = cd + GLOBAL_CONFIG_PATH;
 	USERS_PATH = cd + USERS_PATH;
 

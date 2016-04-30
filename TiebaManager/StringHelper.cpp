@@ -97,7 +97,8 @@ CString EncodeURI(const CString& src)
 	_variant_t param = src;
 	SAFEARRAY* params = SafeArrayCreateVector(VT_VARIANT, 0, 1);
 	LONG index = 0;
-	SafeArrayPutElement(params, &index, &param);
+	if (FAILED(SafeArrayPutElement(params, &index, &param)))
+		return _T("");
 	_variant_t result;
 	script->raw_Run(_bstr_t(_T("encodeURIComponent")), &params, result.GetAddress());
 	SafeArrayDestroy(params);

@@ -167,7 +167,8 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 	time_t timestamp;
 	time(&timestamp);
 	CString url;
-	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), timestamp, tid, g_userTiebaInfo.m_forumID, page);
+	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), 
+		timestamp, (LPCTSTR)tid, (LPCTSTR)g_userTiebaInfo.m_forumID, (LPCTSTR)page);
 	CString src = HTTPGet(url, FALSE, &g_stopScanFlag);
 	//WriteString(src, _T("lzl.txt"));
 	CStringArray splitedSrc; // 0Â¥ÖÐÂ¥£¬1ÓÃ»§

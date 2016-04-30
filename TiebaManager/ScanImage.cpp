@@ -64,12 +64,15 @@ BOOL ReadImage(const BYTE* buffer, ULONG size, CImage& img)
 {
 	// 创建流
 	HGLOBAL m_hMem = GlobalAlloc(GMEM_FIXED, size);
+	if (m_hMem == NULL)
+		return FALSE;
 	BYTE* pmem = (BYTE*)GlobalLock(m_hMem);
 	if (pmem == NULL)
 		return FALSE;
 	memcpy(pmem, buffer, size);
-	IStream* pstm;
-	CreateStreamOnHGlobal(m_hMem, FALSE, &pstm);
+	IStream* pstm = NULL;
+	if (FAILED(CreateStreamOnHGlobal(m_hMem, FALSE, &pstm)) || pstm == NULL)
+		return FALSE;
 
 	// 加载到CImage
 	if (!img.IsNull())
@@ -311,7 +314,7 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 			if (mssim > g_plan.m_SSIMThreshold)
 			{
 				msg.Format(_T("<font color=red> 触发违规图片 </font>%s<font color=red> 相似度%.3lf</font>"),
-					i.name, mssim);
+					(LPCTSTR)i.name, mssim);
 				g_illegalImage.insert(imgName);
 				g_plan.m_optionsLock.Unlock();
 				return TRUE;

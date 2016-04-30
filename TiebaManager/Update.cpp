@@ -22,7 +22,7 @@ static time_t Str2Time(const CString& str)
 	_variant_t result;
 	if (FAILED(script->raw_Eval(_bstr_t(_T("Date.parse(\"") + str + _T("\")")), result.GetAddress())))
 		return 0;
-	return (__int64)result.dblVal / 1000;
+	return (__int64)(result.dblVal / 1000);
 }
 
 // ¼ì²é¸üÐÂ
@@ -57,7 +57,11 @@ CheckUpdateResult CheckUpdate()
 UINT AFX_CDECL AutoUpdateThread(LPVOID _dlg)
 {
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)_dlg;
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
+	{
+		AfxMessageBox(_T("CoInitializeExÊ§°Ü£¡"), MB_ICONERROR);
+		return 0;
+	}
 	CheckUpdateResult res = CheckUpdate();
 	CoUninitialize();
 	switch (res)

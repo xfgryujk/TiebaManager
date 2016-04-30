@@ -80,8 +80,9 @@ public:
 	
 	BOOL IsCompleted()
 	{
-		long state;
-		m_xml->get_readyState(&state);
+		long state = 0;
+		if (FAILED(m_xml->get_readyState(&state)))
+			return FALSE;
 		return state == 4;
 	}
 
@@ -378,6 +379,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 	xml.Send(data);
 
 	// µÈ´ý
+#pragma warning(suppress: 28159)
 	DWORD startTime = GetTickCount();
 	while (!xml.IsCompleted())
 	{
@@ -387,6 +389,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 			xml.Abort();
 			return NET_STOP;
 		}
+#pragma warning(suppress: 28159)
 		if (GetTickCount() - startTime > 10000)
 		{
 			xml.Abort();

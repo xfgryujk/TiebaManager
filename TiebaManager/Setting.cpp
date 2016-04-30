@@ -477,7 +477,7 @@ DEFINE_WRITE_MAP(CString, int)
 BOOL CConfigBase::Load(const CString& path)
 {
 	FILE* f = NULL;
-	if (_tfopen_s(&f, path, _T("rb")) != 0)
+	if (_tfopen_s(&f, path, _T("rb")) != 0 || f == NULL)
 	{
 		UseDefault();
 		return FALSE;
@@ -509,7 +509,7 @@ BOOL CConfigBase::Load(const CString& path)
 BOOL CConfigBase::Save(const CString& path) const
 {
 	FILE* f = NULL;
-	if (_tfopen_s(&f, path, _T("wb")) != 0)
+	if (_tfopen_s(&f, path, _T("wb")) != 0 || f == NULL)
 		return FALSE;
 
 	tinyxml2::XMLDocument doc;

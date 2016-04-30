@@ -396,7 +396,11 @@ void CTiebaManagerDlg::OnStnClickedStatic7()
 		CString folder;
 		SHGetPathFromIDList(pidlSel, folder.GetBuffer(MAX_PATH));
 		folder.ReleaseBuffer();
-		CoInitializeEx(NULL, COINIT_MULTITHREADED);
+		if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
+		{
+			AfxMessageBox(_T("CoInitializeEx ß∞‹£°"), MB_ICONERROR);
+			return;
+		}
 
 		m_log.Save(folder);
 

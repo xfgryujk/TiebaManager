@@ -91,11 +91,15 @@ void CLog::DoLog(const CString* output)
 	// body.scrollTop = body.scrollHeight
 	DISPPARAMS params = {};
 	_variant_t scrollHeight;
-	body->Invoke(scrollHeightID, IID_NULL, LOCALE_SYSTEM_DEFAULT, DISPATCH_PROPERTYGET, &params,
-		scrollHeight.GetAddress(), NULL, NULL);
+#pragma warning(suppress: 6102)
+	if (scrollHeightID != -1)
+		body->Invoke(scrollHeightID, IID_NULL, LOCALE_SYSTEM_DEFAULT, DISPATCH_PROPERTYGET, &params,
+			scrollHeight.GetAddress(), NULL, NULL);
 	params.cArgs = 1;
 	params.rgvarg = &scrollHeight;
-	body->Invoke(scrollTopID, IID_NULL, LOCALE_SYSTEM_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, NULL, NULL);
+#pragma warning(suppress: 6102)
+	if (scrollTopID != -1)
+		body->Invoke(scrollTopID, IID_NULL, LOCALE_SYSTEM_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, NULL, NULL);
 }
 
 // 清空日志
@@ -104,7 +108,9 @@ void CLog::Clear()
 	if (m_logDocument.p == NULL)
 		return;
 
-	m_logDocument->open(NULL, variant_t(), variant_t(), variant_t(), NULL);
+	IDispatch* tmp;
+	m_logDocument->open(_T("about:blank"), variant_t(), variant_t(), variant_t(), &tmp);
+	tmp->Release();
 	WriteDocument(LOG_FRAME);
 	GetSystemTime(&m_logStartTime);
 }
@@ -120,9 +126,11 @@ void CLog::Save(LPCTSTR folder)
 
 	// document.documentElement.outerHTML
 	_variant_t res;
-	documentDisp.GetPropertyByName(OLESTR("documentElement"), res.GetAddress());
+	if (FAILED(documentDisp.GetPropertyByName(OLESTR("documentElement"), res.GetAddress())))
+		return;
 	CComDispatchDriver documentElementDisp((IDispatch*)res);
-	documentElementDisp.GetPropertyByName(OLESTR("outerHTML"), res.GetAddress());
+	if (FAILED(documentElementDisp.GetPropertyByName(OLESTR("outerHTML"), res.GetAddress())))
+		return;
 	CString strHtml = (LPCTSTR)(_bstr_t)res;
 
 	// 另一种取网页HTML方法，末尾有四个乱码？
@@ -176,8 +184,9 @@ LRESULT CALLBACK CLog::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
 void CLog::WriteDocument(const CString& content)
 {
 	SAFEARRAY *arr = SafeArrayCreateVector(VT_VARIANT, 0, 1);
-	VARIANT *str;
-	SafeArrayAccessData(arr, (LPVOID*)&str);
+	VARIANT *str = NULL;
+	if (FAILED(SafeArrayAccessData(arr, (LPVOID*)&str)))
+		return;
 	str->vt = VT_BSTR;
 	str->bstrVal = content.AllocSysString();
 	SafeArrayUnaccessData(arr);

@@ -130,7 +130,11 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	BOOL updatePID = FALSE;
 	// —≠ª∑∑‚
 	dlg->m_stateStatic.SetWindowText(_T("—≠ª∑∑‚Ω˚÷–"));
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
+	{
+		AfxMessageBox(_T("CoInitializeEx ß∞‹£°"), MB_ICONERROR);
+		return 0;
+	}
 	for (UINT i = 0; i < config.m_userList->size(); i++)
 	{
 		CString code;
@@ -158,7 +162,7 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 			{
 				CString content;
 				content.Format(_T("<font color=red>∑‚Ω˚ </font>%s<font color=red>  ß∞‹£°¥ÌŒÛ¥˙¬Î£∫%s(%s)</font><a href=")
-					_T("\"bd:%s,\">÷ÿ ‘</a>"), (*config.m_userList)[i], code, GetTiebaErrorText(code), (*config.m_userList)[i]);
+					_T("\"bd:%s,\">÷ÿ ‘</a>"), (LPCTSTR)(*config.m_userList)[i], (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)(*config.m_userList)[i]);
 				dlg->m_log.Log(content);
 			}
 			else

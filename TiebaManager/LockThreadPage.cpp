@@ -98,7 +98,11 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 {
 	// ³õÊ¼»¯
 	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
+	{
+		AfxMessageBox(_T("CoInitializeExÊ§°Ü£¡"), MB_ICONERROR);
+		return 0;
+	}
 
 	CString tid, page, floor;
 	if (m_instance != NULL)
@@ -133,7 +137,7 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 				{
 					CString content;
 					content.Format(_T("ËøÌû£º %sÂ¥<font color=red> É¾³ıÊ§°Ü£¡´íÎó´úÂë£º%s(%s)</font><a href=\"dl:%s,%s\">ÖØÊÔ</a>"), 
-						post.floor, code, GetTiebaErrorText(code), tid, post.pid);
+						(LPCTSTR)post.floor, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)tid, (LPCTSTR)post.pid);
 					mainDlg->m_log.Log(content);
 				}
 				else

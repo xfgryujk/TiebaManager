@@ -96,7 +96,11 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 {
 	// 初始化
 	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
-	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
+	{
+		AfxMessageBox(_T("CoInitializeEx失败！"), MB_ICONERROR);
+		return 0;
+	}
 
 	CString sStartPage, sEndPage;
 	if (m_instance != NULL)
@@ -124,7 +128,7 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 		if (m_instance != NULL)
 			m_instance->m_stateStatic.SetWindowText(state);
 		CString url;
-		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), g_userTiebaInfo.m_encodedForumName, page);
+		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), (LPCTSTR)g_userTiebaInfo.m_encodedForumName, page);
 		CString src = HTTPGet(url);
 		if (m_stopFlag)
 			break;
@@ -167,7 +171,7 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 		{
 			CString content;
 			content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
-						   _T("\"df:%s\">重试</a>"), userName[i], code, GetTiebaErrorText(code), userID[i]);
+						   _T("\"df:%s\">重试</a>"), (LPCTSTR)userName[i], (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)userID[i]);
 			mainDlg->m_log.Log(content);
 		}
 		else

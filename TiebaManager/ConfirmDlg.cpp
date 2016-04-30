@@ -116,9 +116,9 @@ void CConfirmDlg::OnBnClickedButton1()
 	if (m_operation->object == TBOBJ_THREAD) // 主题
 		url = _T("http://tieba.baidu.com/p/") + m_operation->tid;
 	else if (m_operation->object == TBOBJ_POST) // 帖子
-		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s#%s"), m_operation->tid, m_operation->pid, m_operation->pid);
+		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s#%s"), (LPCTSTR)m_operation->tid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid);
 	else /*if (op.object == TBOBJ_POST)*/ // 楼中楼
-		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), m_operation->tid, m_operation->pid, m_operation->pid, m_operation->pid);
+		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), (LPCTSTR)m_operation->tid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid);
 
 	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }
