@@ -23,20 +23,27 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnDestroy();
+	afx_msg void OnBnClickedCheck1();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
-
+protected:
 	static UINT AFX_CDECL DefriendThread(LPVOID _thiz);
+	static void DoDefriend(int startPage, int endPage);
 
 
 protected:
-	static CDefriendPage* m_instance;
-	static volatile BOOL m_stopFlag;
+	static CDefriendPage* s_instance;
+	static CCriticalSection s_instanceLock;
+	static volatile BOOL s_stopFlag;
+	static CString s_startPage;
+	static CString s_endPage;
+	static BOOL s_defriendNewUsers;
 
 public:
 	CEdit m_startPageEdit;
 	CEdit m_endPageEdit;
 	CButton m_startButton;
 	CButton m_stopButton;
+	CButton m_defriendNewUsersCheck;
 	CStatic m_stateStatic;
 };
