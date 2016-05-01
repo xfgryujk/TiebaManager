@@ -24,26 +24,28 @@ public:
 	afx_msg void OnClose();
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 	virtual void PostNcDestroy();
+	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	void UpdateScrollRange();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButton3();
 
-	void SetImages(unique_ptr<vector<CString> >& imageURL);
-	void SetCurImage(int index);
+	void SetImages(unique_ptr<vector<CString> > imageURL);
+protected:
+	SIZE GetImageSize(const CImage& image);
 
 
 public:
 	CStatic m_imageStatic;
-	CButton m_prevButton;
-	CButton m_nextButton;
+	CScrollBar m_imageScrollBar;
 	CButton m_saveButton;
 
 protected:
 	CImageViewDlg** m_pThis;
 
 	unique_ptr<vector<CString> > m_imageURL;
-	int m_curImageIndex;
-	CImage m_curImage;
+	vector<CImage> m_image;
+public:
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };

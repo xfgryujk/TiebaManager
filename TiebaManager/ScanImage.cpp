@@ -310,6 +310,8 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 		g_plan.m_optionsLock.Lock();
 		for (const NameImage& i : g_plan.m_images)
 		{
+			if (i.img.cols < 30 || i.img.rows < 30) // 尺寸太小不比较
+				continue;
 			double mssim = getMSSIM(image, i.img);
 			if (mssim > g_plan.m_SSIMThreshold)
 			{

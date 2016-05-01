@@ -6,6 +6,7 @@
 #include "ScanImage.h"
 #include "NetworkHelper.h"
 #include "MiscHelper.h"
+#include "InputDlg.h"
 
 
 // CImageViewDlg 对话框
@@ -18,7 +19,6 @@ CImageViewDlg::CImageViewDlg(CImageViewDlg** pThis, CWnd* pParent /*=NULL*/)
 {
 	m_pThis = pThis;
 	m_imageURL = NULL;
-	m_curImageIndex = 0;
 }
 
 #pragma region MFC
@@ -30,9 +30,8 @@ void CImageViewDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STATIC1, m_imageStatic);
-	DDX_Control(pDX, IDC_BUTTON1, m_prevButton);
-	DDX_Control(pDX, IDC_BUTTON2, m_nextButton);
 	DDX_Control(pDX, IDC_BUTTON3, m_saveButton);
+	DDX_Control(pDX, IDC_SCROLLBAR1, m_imageScrollBar);
 }
 
 
@@ -40,9 +39,10 @@ BEGIN_MESSAGE_MAP(CImageViewDlg, CNormalDlg)
 	ON_WM_CLOSE()
 	ON_WM_GETMINMAXINFO()
 	ON_WM_DRAWITEM()
-	ON_BN_CLICKED(IDC_BUTTON1, &CImageViewDlg::OnBnClickedButton1)
-	ON_BN_CLICKED(IDC_BUTTON2, &CImageViewDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CImageViewDlg::OnBnClickedButton3)
+	ON_WM_VSCROLL()
+	ON_WM_SIZE()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -72,6 +72,56 @@ void CImageViewDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 
 	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }
+
+// 滚动
+void CImageViewDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	if (nSBCode != SB_ENDSCROLL)
+	{
+		if (pScrollBar->GetDlgCtrlID() == m_imageScrollBar.GetDlgCtrlID())
+		{
+			m_imageScrollBar.SetScrollPos(nPos);
+			m_imageStatic.Invalidate();
+		}
+	}
+
+	CNormalDlg::OnVScroll(nSBCode, nPos, pScrollBar);
+}
+
+// 滚轮滚动
+BOOL CImageViewDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	m_imageScrollBar.SetScrollPos(m_imageScrollBar.GetScrollPos() - zDelta);
+	m_imageStatic.Invalidate();
+
+	return CNormalDlg::OnMouseWheel(nFlags, zDelta, pt);
+}
+
+// 改变尺寸
+void CImageViewDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CNormalDlg::OnSize(nType, cx, cy);
+
+	UpdateScrollRange();
+}
+
+// 更新滚动条范围
+void CImageViewDlg::UpdateScrollRange()
+{
+	if (m_imageScrollBar.m_hWnd == NULL)
+		return;
+
+	// 计算总高度
+	int totalHeight = 0;
+	for (const CImage& i : m_image)
+		totalHeight += GetImageSize(i).cy;
+	RECT rect;
+	m_imageStatic.GetWindowRect(&rect);
+	m_imageScrollBar.SetScrollRange(0, MAX(0, totalHeight - (int)(rect.bottom - rect.top)));
+	m_imageScrollBar.SetScrollPos(0);
+
+	m_imageStatic.Invalidate();
+}
 #pragma endregion
 
 // 初始化
@@ -82,8 +132,7 @@ BOOL CImageViewDlg::OnInitDialog()
 	SetClassLong(m_imageStatic.m_hWnd, GCL_HCURSOR, (LONG)LoadCursor(NULL, IDC_ARROW));
 
 	m_resize.AddControl(&m_imageStatic, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
-	m_resize.AddControl(&m_prevButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_imageStatic);
-	m_resize.AddControl(&m_nextButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_imageStatic);
+	m_resize.AddControl(&m_imageScrollBar, RT_KEEP_DIST_TO_RIGHT, &m_imageStatic, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
 	m_resize.AddControl(&m_saveButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_imageStatic);
 
 	RECT rect;
@@ -95,53 +144,54 @@ BOOL CImageViewDlg::OnInitDialog()
 }
 
 // 设置图片
-void CImageViewDlg::SetImages(unique_ptr<vector<CString> >& imageURL)
+void CImageViewDlg::SetImages(unique_ptr<vector<CString> > imageURL)
 {
 	m_imageURL = std::move(imageURL);
-	SetCurImage(0);
-}
+	m_image.resize(m_imageURL->size());
 
-// 设置当前图片
-void CImageViewDlg::SetCurImage(int index)
-{
-	m_curImageIndex = index;
-	if (m_curImageIndex < 0 || (UINT)m_curImageIndex >= m_imageURL->size())
+	// 读取图片到m_image
+	for (UINT i = 0; i < m_imageURL->size(); i++)
 	{
-		if (!m_curImage.IsNull())
-			m_curImage.Destroy();
-		SetWindowText(_T(""));
-		m_imageStatic.Invalidate();
-		return;
-	}
-
-	CString imgName = GetImageName((*m_imageURL)[m_curImageIndex]);
-	if (PathFileExists(IMG_CACHE_PATH + imgName))
-	{
-		// 读取图片缓存
-		if (!m_curImage.IsNull())
-			m_curImage.Destroy();
-		m_curImage.Load(IMG_CACHE_PATH + imgName);
-	}
-	else
-	{
-		// 下载图片
-		unique_ptr<BYTE[]> buffer;
-		ULONG size;
-		if (HTTPGetRaw((*m_imageURL)[m_curImageIndex], &buffer, &size) == NET_SUCCESS)
+		CString imgName = GetImageName((*m_imageURL)[i]);
+		if (PathFileExists(IMG_CACHE_PATH + imgName))
 		{
-			ReadImage(buffer.get(), size, m_curImage);
+			// 读取图片缓存
+			if (!m_image[i].IsNull())
+				m_image[i].Destroy();
+			m_image[i].Load(IMG_CACHE_PATH + imgName);
+		}
+		else
+		{
+			// 下载图片
+			unique_ptr<BYTE[]> buffer;
+			ULONG size;
+			if (HTTPGetRaw((*m_imageURL)[i], &buffer, &size) == NET_SUCCESS)
+			{
+				ReadImage(buffer.get(), size, m_image[i]);
 
-			CreateDir(IMG_CACHE_PATH);
-			CFile file;
-			if (file.Open(IMG_CACHE_PATH + imgName, CFile::modeCreate | CFile::modeWrite))
-				file.Write(buffer.get(), size);
+				CreateDir(IMG_CACHE_PATH);
+				CFile file;
+				if (file.Open(IMG_CACHE_PATH + imgName, CFile::modeCreate | CFile::modeWrite))
+					file.Write(buffer.get(), size);
+			}
 		}
 	}
 
-	CString caption;
-	caption.Format(_T("(%d/%d) %s"), m_curImageIndex + 1, m_imageURL->size(), (LPCTSTR)imgName);
-	SetWindowText(caption);
-	m_imageStatic.Invalidate();
+	UpdateScrollRange();
+}
+
+// 取图片显示的尺寸
+SIZE CImageViewDlg::GetImageSize(const CImage& image)
+{
+	CRect rect;
+	m_imageStatic.GetWindowRect(rect);
+	if (image.GetWidth() <= rect.Width())
+		return SIZE{ image.GetWidth(), image.GetHeight() };
+	else
+	{
+		float scale = (float)rect.Width() / image.GetWidth();
+		return SIZE{ rect.Width(), (int)(image.GetHeight() * scale) };
+	}
 }
 
 // 画图片
@@ -149,44 +199,49 @@ void CImageViewDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
 	if (nIDCtl == m_imageStatic.GetDlgCtrlID())
 	{
-		FillRect(lpDrawItemStruct->hDC, &lpDrawItemStruct->rcItem, (HBRUSH)GetStockObject(WHITE_BRUSH));
-		if (!m_curImage.IsNull())
+		CImage buffer;
+		buffer.Create(lpDrawItemStruct->rcItem.right - lpDrawItemStruct->rcItem.left, lpDrawItemStruct->rcItem.bottom - lpDrawItemStruct->rcItem.top, 32);
+		HDC dc = buffer.GetDC();
+		SetStretchBltMode(dc, HALFTONE);
+
+		FillRect(dc, &lpDrawItemStruct->rcItem, (HBRUSH)GetStockObject(WHITE_BRUSH));
+		CRect rect;
+		m_imageStatic.GetWindowRect(rect);
+		int yOffset = -m_imageScrollBar.GetScrollPos();
+		for (const CImage& i : m_image)
 		{
-			SetStretchBltMode(lpDrawItemStruct->hDC, HALFTONE);
-			float ratio1 = (float)(lpDrawItemStruct->rcItem.right - lpDrawItemStruct->rcItem.left) / m_curImage.GetWidth();
-			float ratio2 = (float)(lpDrawItemStruct->rcItem.bottom - lpDrawItemStruct->rcItem.top) / m_curImage.GetHeight();
-			float ratio = ratio1 < ratio2 ? ratio1 : ratio2;
-			m_curImage.Draw(lpDrawItemStruct->hDC, 0, 0, (int)(m_curImage.GetWidth() * ratio), (int)(m_curImage.GetHeight() * ratio));
+			if (i.IsNull())
+				continue;
+			SIZE size = GetImageSize(i);
+			if (yOffset >= rect.Height())
+				break;
+			if (yOffset + size.cy > 0)
+				i.Draw(dc, 0, yOffset, size.cx, size.cy);
+
+			yOffset += size.cy;
 		}
-		FrameRect(lpDrawItemStruct->hDC, &lpDrawItemStruct->rcItem, (HBRUSH)GetStockObject(BLACK_BRUSH));
+		FrameRect(dc, &lpDrawItemStruct->rcItem, (HBRUSH)GetStockObject(BLACK_BRUSH));
+
+		buffer.ReleaseDC();
+		buffer.Draw(lpDrawItemStruct->hDC, 0, 0);
 		return;
 	}
 
 	CNormalDlg::OnDrawItem(nIDCtl, lpDrawItemStruct);
 }
 
-// 上一张
-void CImageViewDlg::OnBnClickedButton1()
-{
-	int index = m_curImageIndex - 1;
-	if (index < 0)
-		index = m_imageURL->size() - 1;
-	SetCurImage(index);
-}
-
-// 下一张
-void CImageViewDlg::OnBnClickedButton2()
-{
-	int index = m_curImageIndex + 1;
-	if ((UINT)index >= m_imageURL->size())
-		index = 0;
-	SetCurImage(index);
-}
-
 // 保存
 void CImageViewDlg::OnBnClickedButton3()
 {
-	if (m_curImage.IsNull())
+	CString content = _T("1");
+	CInputDlg dlg(_T("输入图片序号："), content, NULL, FALSE, CInputDlg::IDD, this);
+	if (dlg.DoModal() != IDOK || content == _T(""))
+		return;
+	int index = _ttoi(content) - 1;
+	if (index < 0 || (UINT)index >= m_imageURL->size())
+		return;
+
+	if (m_image[index].IsNull())
 		return;
 
 	BROWSEINFO bi;
@@ -201,9 +256,9 @@ void CImageViewDlg::OnBnClickedButton3()
 		SHGetPathFromIDList(pidlSel, folder.GetBuffer(MAX_PATH));
 		folder.ReleaseBuffer();
 		
-		CString imgName = GetImageName((*m_imageURL)[m_curImageIndex]);
+		CString imgName = GetImageName((*m_imageURL)[index]);
 		if (imgName.Right(4).CompareNoCase(_T(".jpg")) != 0)
 			imgName += _T(".jpg");
-		m_curImage.Save(folder + _T("\\") + imgName);
+		m_image[index].Save(folder + _T("\\") + imgName);
 	}
 }

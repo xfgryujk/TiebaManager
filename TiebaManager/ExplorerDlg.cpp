@@ -254,5 +254,5 @@ void CExplorerDlg::ViewImages(unique_ptr<vector<CString> > img)
 		m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);
 		m_imageViewDlg->Create(m_imageViewDlg->IDD, this);
 	}
-	m_imageViewDlg->SetImages(img);
+	m_imageViewDlg->SetImages(std::move(img));
 }
