@@ -26,6 +26,8 @@ const TCHAR THREAD_AUTHOR_LEFT[] = _T("&quot;author_name&quot;:&quot;");
 const TCHAR THREAD_AUTHOR_RIGHT[] = _T("&quot;");
 const TCHAR THREAD_AUTHOR_ID_LEFT[] = _T("&quot;user_id&quot;:");
 const TCHAR THREAD_AUTHOR_ID_RIGHT[] = _T("}");
+const TCHAR THREAD_LAST_AUTHOR_LEFT[] = _T(R"(title="最后回复人: )");
+const TCHAR THREAD_LAST_AUTHOR_RIGHT[] = _T("\"");
 #pragma endregion
 #pragma region 帖子列表
 const TCHAR POST_SPLIT[] = _T("data-field='{&quot;author&quot;:");
@@ -98,6 +100,7 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 		threads[iThreads].authorID = GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
 		//threads[iThreads].author = JSUnescape(GetStringBefore(rawThreads[iRawThreads], THREAD_AUTHOR_RIGHT));
 		threads[iThreads].author = JSUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_LEFT, THREAD_AUTHOR_RIGHT));
+		threads[iThreads].lastAuthor = GetStringBetween(rawThreads[iRawThreads], THREAD_LAST_AUTHOR_LEFT, THREAD_LAST_AUTHOR_RIGHT);
 
 		//OutputDebugString(_T("\n"));
 		//OutputDebugString(rawThreads[iRawThreads]);

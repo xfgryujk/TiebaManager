@@ -266,8 +266,11 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		int reply = _ttoi(thread.reply);
 		historyReplyIt = g_userCache.m_reply->find(tid);
 		BOOL hasHistoryReply = historyReplyIt != g_userCache.m_reply->end();
-		if (hasHistoryReply && reply <= historyReplyIt->second) // 无新回复
+		if (hasHistoryReply 
+			&& reply == historyReplyIt->second // 回复数减少时也扫描，防止漏掉
+			&& thread.lastAuthor == (*g_userCache.m_lastAuthor)[tid]) // 判断最后回复人，防止回复数-1然后有新回复+1
 		{
+			// 无新回复，跳过
 			historyReplyIt->second = reply;
 			goto next;
 		}
@@ -303,7 +306,10 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 
 		// 记录历史回复
 		if (res)
+		{
 			(*g_userCache.m_reply)[tid] = reply;
+			(*g_userCache.m_lastAuthor)[tid] = thread.lastAuthor;
+		}
 
 	next:
 		g_threadIndexLock.Lock();

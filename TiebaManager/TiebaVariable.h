@@ -39,6 +39,7 @@ public:
 	set<__int64> m_ignoredLZLID;					// 不删的楼中楼ID(已扫描且违规)
 	set<__int64> m_deletedTID;						// 已删的主题ID
 	COption<map<__int64, int> > m_reply;			// 主题的回复数，要写入文件
+	COption<map<__int64, CString> > m_lastAuthor;	// 主题的最后回复作者，要写入文件
 	COption<map<CString, int> > m_userTrigCount;	// 某用户违规次数，要写入文件
 	COption<set<CString> > m_bannedUser;			// 已封的用户，要写入文件
 	COption<set<CString> > m_defriendedUser;		// 已拉黑的用户，要写入文件
@@ -49,6 +50,7 @@ public:
 		m_initIgnoredPID("IgnoredPID"),
 		m_initIgnoredLZLID("IgnoredLZLID"),
 		m_reply("Reply"),
+		m_lastAuthor("LastAuthor"),
 		m_userTrigCount("TrigCount"),
 		m_bannedUser("BannedUser"),
 		m_defriendedUser("DefriendedUser")
@@ -57,6 +59,7 @@ public:
 		m_options.push_back(&m_initIgnoredPID);
 		m_options.push_back(&m_initIgnoredLZLID);
 		m_options.push_back(&m_reply);
+		m_options.push_back(&m_lastAuthor);
 		m_options.push_back(&m_userTrigCount);
 		m_options.push_back(&m_bannedUser);
 		m_options.push_back(&m_defriendedUser);

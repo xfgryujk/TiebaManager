@@ -23,6 +23,7 @@ struct ThreadInfo // 主题信息
 	CString preview;	// 预览
 	CString author;		// 作者
 	CString authorID;	// 作者ID
+	CString lastAuthor; // 最后回复
 };
 
 struct PostInfo // 帖子信息

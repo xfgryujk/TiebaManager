@@ -309,6 +309,7 @@ XMLElement& COption<map<T1, T2> >::operator << (XMLElement& root)\
 
 DEFINE_READ_MAP(__int64, int)
 DEFINE_READ_MAP(CString, int)
+DEFINE_READ_MAP(__int64, CString)
 
 
 // 写基本类型
@@ -469,6 +470,7 @@ XMLElement& COption<map<T1, T2> >::operator >> (XMLElement& root) const\
 
 DEFINE_WRITE_MAP(__int64, int)
 DEFINE_WRITE_MAP(CString, int)
+DEFINE_WRITE_MAP(__int64, CString)
 
 #pragma endregion
 
