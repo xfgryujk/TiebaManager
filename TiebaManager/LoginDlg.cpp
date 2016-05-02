@@ -8,15 +8,14 @@
 #include <WinInet.h>
 #include <Iepmapi.h>
 #include "TiebaCollect.h"
-#include "ScanImage.h"
 
 
 // CLoginDlg 对话框
 
-IMPLEMENT_DYNAMIC(CLoginDlg, CDialog)
+IMPLEMENT_DYNAMIC(CLoginDlg, CNormalDlg)
 
 CLoginDlg::CLoginDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CLoginDlg::IDD, pParent)
+	: CNormalDlg(CLoginDlg::IDD, pParent)
 {
 
 }
@@ -28,151 +27,61 @@ CLoginDlg::~CLoginDlg()
 
 void CLoginDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_EDIT1, m_userNameEdit);
-	DDX_Control(pDX, IDC_EDIT3, m_passwordEdit);
-	DDX_Control(pDX, IDC_EDIT4, m_verifyCodeEdit);
-	DDX_Control(pDX, IDC_STATIC4, m_verifyCodePicture);
+	CNormalDlg::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_EXPLORER1, m_explorer);
+	DDX_Control(pDX, IDC_BUTTON3, m_useIECookieButton);
+	DDX_Control(pDX, IDC_BUTTON1, m_loginButton);
+	DDX_Control(pDX, IDCANCEL, m_cancelButton);
 }
 
 
-BEGIN_MESSAGE_MAP(CLoginDlg, CDialog)
-	ON_STN_CLICKED(IDC_STATIC4, &CLoginDlg::OnStnClickedStatic4)
+BEGIN_MESSAGE_MAP(CLoginDlg, CNormalDlg)
+	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_BUTTON3, &CLoginDlg::OnBnClickedButton3)
-	ON_WM_DRAWITEM()
+	ON_BN_CLICKED(IDC_BUTTON1, &CLoginDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDCANCEL, &CLoginDlg::OnBnClickedCancel)
 END_MESSAGE_MAP()
+
+BEGIN_EVENTSINK_MAP(CLoginDlg, CNormalDlg)
+	ON_EVENT(CLoginDlg, IDC_EXPLORER1, 252, CLoginDlg::NavigateComplete2Explorer1, VTS_DISPATCH VTS_PVARIANT)
+END_EVENTSINK_MAP()
 #pragma endregion
 
 // CLoginDlg 消息处理程序
 
+#pragma region UI
+// 销毁窗口
+void CLoginDlg::OnClose()
+{
+	EndDialog(IDCANCEL);
+}
+#pragma endregion
 
 BOOL CLoginDlg::OnInitDialog()
 {
-	CDialog::OnInitDialog();
+	CNormalDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	SetIcon(hIcon, TRUE);			// 设置大图标
 	SetIcon(hIcon, FALSE);			// 设置小图标
 
-	SetClassLong(m_verifyCodePicture.m_hWnd, GCL_HCURSOR, (LONG)LoadCursor(NULL, IDC_HAND));
+	m_resize.AddControl(&m_explorer, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_useIECookieButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_explorer);
+	m_resize.AddControl(&m_loginButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_explorer);
+	m_resize.AddControl(&m_cancelButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_explorer);
 
-	// 初始化token
-	CString src = HTTPGet(_T("https://passport.baidu.com/v2/api/?getapi&class=login&tpl=mn&tangram=true"), TRUE, NULL, &m_cookie);
-	m_token = GetStringBetween(src, _T("token='"), _T("'"));
-	if (m_token == _T("the fisrt two args should be string type:0,1!"))
-	{
-		src = HTTPGet(_T("https://passport.baidu.com/v2/api/?getapi&class=login&tpl=mn&tangram=true"), TRUE, NULL, &m_cookie);
-		m_token = GetStringBetween(src, _T("token='"), _T("'"));
-	}
-
-	// 获取验证码
-	OnStnClickedStatic4();
+	InternetSetCookieEx(_T("http://tieba.baidu.com/"), NULL,
+		_T("BDUSS=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=baidu.com;"), INTERNET_COOKIE_HTTPONLY, NULL);
+	m_explorer.Navigate(_T("https://passport.baidu.com/v2/?login"), NULL, NULL, NULL, NULL);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
 
-// 更换验证码
-void CLoginDlg::OnStnClickedStatic4()
+// 浏览器导航完毕
+void CLoginDlg::NavigateComplete2Explorer1(LPDISPATCH pDisp, VARIANT* URL)
 {
-	CString src = HTTPGet(_T("https://passport.baidu.com/v2/?reggetcodestr&token=") + m_token + _T("&tpl=mn&apiver=v3&tt=1374720914453&callback=bd__cbs__hb302a"), TRUE, NULL, &m_cookie);
-	m_verifyStr = GetStringBetween(src, _T("\"verifyStr\" : \""), _T("\""));
-	
-	// 下载图片
-	unique_ptr<BYTE[]> buffer;
-	ULONG size;
-	HTTPGetRaw(_T("https://passport.baidu.com/cgi-bin/genimage?") + m_verifyStr, &buffer, &size, TRUE, NULL, &m_cookie);
-	if (buffer == NULL)
-	{
-		AfxMessageBox(_T("获取验证码图片失败！"), MB_ICONERROR);
-		return;
-	}
-
-	ReadImage(buffer.get(), size, m_verifyImage);
-
-	// 显示图片
-	m_verifyCodePicture.Invalidate();
-}
-
-// 画验证码
-void CLoginDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
-{
-	if (nIDCtl == m_verifyCodePicture.GetDlgCtrlID())
-	{
-		FillRect(lpDrawItemStruct->hDC, &lpDrawItemStruct->rcItem, (HBRUSH)GetStockObject(WHITE_BRUSH));
-		if (!m_verifyImage.IsNull())
-			m_verifyImage.Draw(lpDrawItemStruct->hDC, lpDrawItemStruct->rcItem);
-		FrameRect(lpDrawItemStruct->hDC, &lpDrawItemStruct->rcItem, (HBRUSH)GetStockObject(BLACK_BRUSH));
-		return;
-	}
-
-	CDialog::OnDrawItem(nIDCtl, lpDrawItemStruct);
-}
-
-// 登录
-void CLoginDlg::OnOK()
-{
-	CString userName, password, verifyCode;
-	m_userNameEdit.GetWindowText(userName);
-	if (userName == _T(""))
-	{
-		m_userNameEdit.SetFocus();
-		return;
-	}
-	m_passwordEdit.GetWindowText(password);
-	if (password == _T(""))
-	{
-		m_passwordEdit.SetFocus();
-		return;
-	}
-	m_verifyCodeEdit.GetWindowText(verifyCode);
-	if (verifyCode == _T(""))
-	{
-		m_verifyCodeEdit.SetFocus();
-		return;
-	}
-
-	EnableWindow(FALSE);
-
-	time_t timestamp;
-	time(&timestamp);
-	CString data;
-	data.Format(_T("staticpage=http%%3A%%2F%%2Fwww.baidu.com%%2Fcache%%2Fuser%%2Fhtml%%2Fv3Jump.html&charset=utf-8&token=%s&tpl=mn")
-				_T("&apiver=v3&tt=%I64d&codestring=%s&isPhone=false&safeflg=0&u=http%%3A%%2F%%2Fwww.baidu.com%%2F&username=%s&pass")
-				_T("word=%s&verifycode=%s&mem_pass=on&ppui_logintime=35219&callback=parent.bd__pcbs__4y6hex"),
-				(LPCTSTR)m_token, timestamp, (LPCTSTR)m_verifyStr, (LPCTSTR)EncodeURI(userName), (LPCTSTR)EncodeURI(password), (LPCTSTR)verifyCode);
-	CString result = HTTPPost(_T("https://passport.baidu.com/v2/api/?login"), data, TRUE, NULL, &m_cookie);
-
-	EnableWindow(TRUE);
-	if (result == NET_TIMEOUT_TEXT)
-	{
-		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
-		OnStnClickedStatic4();
-		m_verifyCodeEdit.SetWindowText(_T(""));
-		return;
-	}
-	if (!StringIncludes(m_cookie, _T("BDUSS=")))
-	{
-		WriteString(result, _T("login.txt"));
-		AfxMessageBox(_T("登录失败！"), MB_ICONERROR);
-		if (userName.Left(1) == _T("1"))
-			AfxMessageBox(_T("(不能用手机号哦)"), MB_ICONINFORMATION);
-		goto error;
-	}
-
-	GetLoginUserName();
-	if (m_userName == _T(""))
-	{
-		AfxMessageBox(_T("获取用户名失败！"), MB_ICONERROR);
-		goto error;
-	}
-
-	CDialog::OnOK();
-	return;
-
-error:
-	OnStnClickedStatic4();
-	m_verifyCodeEdit.SetWindowText(_T(""));
+	OnBnClickedButton1();
 }
 
 // 使用IE Cookie
@@ -197,13 +106,14 @@ CheckResult:
 			AfxMessageBox(_T("请先在IE浏览器登陆百度账号并选中下次自动登录！"), MB_ICONERROR);
 		return;
 	}
-	if (!StringIncludes(m_cookie, _T("BDUSS=")))
+	if (m_cookie.GetLength() < 100 || !StringIncludes(m_cookie, _T("BDUSS=")))
 	{
 		if (jump)
 			goto Win10;
 		AfxMessageBox(_T("请先在IE浏览器登陆百度账号并选中下次自动登录！"), MB_ICONERROR);
 		return;
 	}
+	m_cookie += _T(";");
 
 	GetLoginUserName();
 	if (m_userName == _T(""))
@@ -235,4 +145,34 @@ void CLoginDlg::GetLoginUserName()
 		m_userName = JSUnescape(res[3].str().c_str());
 	if (m_userName == _T(""))
 		WriteString(src, _T("login_forum.txt"));
+}
+
+// 登录
+void CLoginDlg::OnBnClickedButton1()
+{
+	DWORD size = 1024 * 1024;
+	InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), m_cookie.GetBuffer(size),
+		&size, INTERNET_COOKIE_HTTPONLY, NULL);
+	DWORD result = GetLastError();
+	m_cookie.ReleaseBuffer();
+
+	TRACE(_T("0x%08X %s\n"), result, (LPCTSTR)m_cookie);
+	if (result != ERROR_SUCCESS || m_cookie.GetLength() < 100 || !StringIncludes(m_cookie, _T("BDUSS=")))
+		return;
+	m_cookie += _T(";");
+
+	GetLoginUserName();
+	if (m_userName == _T(""))
+	{
+		AfxMessageBox(_T("获取用户名失败！"), MB_ICONERROR);
+		return;
+	}
+
+	EndDialog(IDOK);
+}
+
+// 取消
+void CLoginDlg::OnBnClickedCancel()
+{
+	EndDialog(IDCANCEL);
 }

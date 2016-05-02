@@ -1,10 +1,12 @@
 #pragma once
+#include "NormalDlg.h"
+#include "explorer1.h"
 #include "afxwin.h"
 
 
 // CLoginDlg ¶Ô»°¿ò
 
-class CLoginDlg : public CDialog
+class CLoginDlg : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CLoginDlg)
 
@@ -20,25 +22,23 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
+	afx_msg void OnClose();
 	virtual BOOL OnInitDialog();
-	virtual void OnOK();
-	afx_msg void OnStnClickedStatic4();
 	afx_msg void OnBnClickedButton3();
-	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedCancel();
+	DECLARE_EVENTSINK_MAP()
+	void NavigateComplete2Explorer1(LPDISPATCH pDisp, VARIANT* URL);
 protected:
 	void GetLoginUserName();
 
 
 public:
-	CEdit m_userNameEdit;
-	CEdit m_passwordEdit;
-	CEdit m_verifyCodeEdit;
-	CStatic m_verifyCodePicture;
+	CExplorer1 m_explorer;
+	CButton m_useIECookieButton;
+	CButton m_loginButton;
+	CButton m_cancelButton;
 
 	CString m_cookie;
 	CString m_userName;
-protected:
-	CString m_token;
-	CString m_verifyStr;
-	CImage m_verifyImage;
 };

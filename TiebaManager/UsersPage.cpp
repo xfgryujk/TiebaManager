@@ -77,6 +77,7 @@ void CUsersPage::OnBnClickedButton1()
 	// ±£¥ÊCookie
 	CUserTiebaInfo ck;
 	*ck.m_cookie = loginDlg.m_cookie;
+	TRACE(_T("%s\n"), (LPCTSTR)*ck.m_cookie);
 	if (!ck.Save(USERS_PATH + loginDlg.m_userName + _T("\\ck.xml")))
 	{
 		AfxMessageBox(_T("±£¥Ê’À∫≈ ß∞‹£°"), MB_ICONERROR);
