@@ -80,6 +80,12 @@ BOOL CTiebaManagerApp::InitInstance()
 	GLOBAL_CONFIG_PATH = cd + GLOBAL_CONFIG_PATH;
 	USERS_PATH = cd + USERS_PATH;
 
+	// 判断一下有没有解压
+	TCHAR tmpDir[MAX_PATH] = { _T('\0') };
+	if (GetEnvironmentVariable(_T("TMP"), tmpDir, _countof(tmpDir)) != 0 
+		&& StrStrI(cd, tmpDir) != NULL)
+		AfxMessageBox(_T("请先解压再运行，否则无法保存设置"), MB_ICONINFORMATION);
+
 	// 载入主窗口
 	CTiebaManagerDlg dlg;
 	m_pMainWnd = &dlg;

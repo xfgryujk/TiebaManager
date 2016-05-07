@@ -8,11 +8,10 @@
 
 
 // 当前版本日期，每次更新后修改
-const char UPDATE_CURRENT_VERSION_A[] = "16-05-02";
+const char UPDATE_CURRENT_VERSION_A[] = "16-05-03";
 const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
 // 更新日志
-const TCHAR UPDATE_LOG[] = _T("1. 更改图片显示方式\r\n")
-						   _T("2. 判断有没有新回复时加上判断最后回复人");
+const TCHAR UPDATE_LOG[] = _T("1. 更改登录方式");
 
 // 字符串转时间戳
 static time_t Str2Time(const CString& str)

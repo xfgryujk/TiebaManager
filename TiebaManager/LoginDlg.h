@@ -30,6 +30,9 @@ public:
 	DECLARE_EVENTSINK_MAP()
 	void NavigateComplete2Explorer1(LPDISPATCH pDisp, VARIANT* URL);
 protected:
+	void Login(BOOL prompt);
+	HRESULT GetCookie();
+	HRESULT GetProtectedModeCookie();
 	void GetLoginUserName();
 
 

@@ -81,39 +81,30 @@ BOOL CLoginDlg::OnInitDialog()
 // 浏览器导航完毕
 void CLoginDlg::NavigateComplete2Explorer1(LPDISPATCH pDisp, VARIANT* URL)
 {
-	OnBnClickedButton1();
+	Login(FALSE);
 }
 
 // 使用IE Cookie
 void CLoginDlg::OnBnClickedButton3()
 {
-	DWORD size = 1024 * 1024;
-	InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), m_cookie.GetBuffer(size),
-		&size, INTERNET_COOKIE_HTTPONLY, NULL);
-	HRESULT result = HRESULT_FROM_WIN32(GetLastError());
-	m_cookie.ReleaseBuffer();
-
-	BOOL jump = TRUE;
-CheckResult:
+	HRESULT result = GetCookie();
 	if (FAILED(result))
 	{
-		if (jump)
-			goto Win10;
-		CString tmp;
-		tmp.Format(_T("获取Cookie失败！\r\n错误代码0x%08X"), result);
-		AfxMessageBox(tmp, MB_ICONERROR);
-		if (result == HRESULT_FROM_WIN32(ERROR_NO_MORE_ITEMS))
-			AfxMessageBox(_T("请先在IE浏览器登陆百度账号并选中下次自动登录！"), MB_ICONERROR);
-		return;
+		result = GetProtectedModeCookie();
+		if (FAILED(result))
+		{
+			CString tmp;
+			if (result == HRESULT_FROM_WIN32(ERROR_INVALID_DATA))
+				tmp.Format(_T("无效的Cookie：\r\n%s"), (LPCTSTR)m_cookie);
+			else
+				tmp.Format(_T("获取Cookie失败！\r\n错误代码0x%08X"), result);
+			AfxMessageBox(tmp, MB_ICONERROR);
+			
+			if (result == HRESULT_FROM_WIN32(ERROR_NO_MORE_ITEMS))
+				AfxMessageBox(_T("请先在IE浏览器登陆百度账号并选中下次自动登录！"), MB_ICONERROR);
+			return;
+		}
 	}
-	if (m_cookie.GetLength() < 100 || !StringIncludes(m_cookie, _T("BDUSS=")))
-	{
-		if (jump)
-			goto Win10;
-		AfxMessageBox(_T("请先在IE浏览器登陆百度账号并选中下次自动登录！"), MB_ICONERROR);
-		return;
-	}
-	m_cookie += _T(";");
 
 	GetLoginUserName();
 	if (m_userName == _T(""))
@@ -124,14 +115,88 @@ CheckResult:
 
 	AfxMessageBox(_T("登录完毕，不要在IE退出账号以免cookie失效，可以直接清除cookie"), MB_ICONINFORMATION);
 	EndDialog(IDOK);
-	return;
+}
 
-Win10:
-	size = 1024 * 1024;
-	result = IEGetProtectedModeCookie(L"http://tieba.baidu.com/", _T("BDUSS"), m_cookie.GetBuffer(size),
-		&size, INTERNET_COOKIE_HTTPONLY);	
-	jump = FALSE;
-	goto CheckResult;
+// 登录
+void CLoginDlg::OnBnClickedButton1()
+{
+	Login(TRUE);
+}
+
+// 取消
+void CLoginDlg::OnBnClickedCancel()
+{
+	EndDialog(IDCANCEL);
+}
+
+// 真登录
+void CLoginDlg::Login(BOOL prompt)
+{
+	HRESULT result = GetCookie();
+
+	TRACE(_T("0x%08X %s\n"), result, (LPCTSTR)m_cookie);
+	if (FAILED(result))
+	{
+		if (prompt)
+		{
+			CString tmp;
+			if (result == ERROR_INVALID_DATA)
+				tmp.Format(_T("无效的Cookie：\r\n%s"), (LPCTSTR)m_cookie);
+			else
+				tmp.Format(_T("获取Cookie失败！\r\n错误代码0x%08X\r\n"), result);
+			AfxMessageBox(tmp, MB_ICONERROR);
+		}
+		return;
+	}
+
+	GetLoginUserName();
+	if (m_userName == _T(""))
+	{
+		AfxMessageBox(_T("获取用户名失败！"), MB_ICONERROR);
+		return;
+	}
+
+	EndDialog(IDOK);
+}
+
+HRESULT CLoginDlg::GetCookie()
+{
+	// 这API真难用
+	DWORD size;
+	InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), NULL,
+		&size, INTERNET_COOKIE_HTTPONLY, NULL); // size为字节数
+	BOOL result = InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), m_cookie.GetBuffer(size),
+		&size, INTERNET_COOKIE_HTTPONLY, NULL); // BUG：size在XP下单位是字节，在win10是字符数
+	HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
+	m_cookie.ReleaseBuffer();
+
+	if (result)
+	{
+		if (m_cookie.GetLength() < 100 || !StringIncludes(m_cookie, _T("BDUSS=")))
+			return HRESULT_FROM_WIN32(ERROR_INVALID_DATA); // 无效的Cookie
+		m_cookie += _T(";");
+		return S_OK; // 成功
+	}
+	return hr;
+}
+
+HRESULT CLoginDlg::GetProtectedModeCookie()
+{
+	// 这API真难用
+	DWORD size = 1024 * 1024;
+	HRESULT result = IEGetProtectedModeCookie(L"http://tieba.baidu.com/", L"BDUSS", m_cookie.GetBuffer(size),
+		&size, INTERNET_COOKIE_HTTPONLY); // BUG：不知道为什么总是E_INVALIDARG
+	HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
+	m_cookie.ReleaseBuffer();
+	
+	if (result == S_OK || SUCCEEDED(hr))
+	{
+		if (m_cookie.GetLength() < 100 || !StringIncludes(m_cookie, _T("BDUSS=")))
+			return HRESULT_FROM_WIN32(ERROR_INVALID_DATA); // 无效的Cookie
+		m_cookie += _T(";");
+		return S_OK; // 成功
+	}
+	return hr;
 }
 
 // 取用户名
@@ -145,34 +210,4 @@ void CLoginDlg::GetLoginUserName()
 		m_userName = JSUnescape(res[3].str().c_str());
 	if (m_userName == _T(""))
 		WriteString(src, _T("login_forum.txt"));
-}
-
-// 登录
-void CLoginDlg::OnBnClickedButton1()
-{
-	DWORD size = 1024 * 1024;
-	InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), m_cookie.GetBuffer(size),
-		&size, INTERNET_COOKIE_HTTPONLY, NULL);
-	DWORD result = GetLastError();
-	m_cookie.ReleaseBuffer();
-
-	TRACE(_T("0x%08X %s\n"), result, (LPCTSTR)m_cookie);
-	if (result != ERROR_SUCCESS || m_cookie.GetLength() < 100 || !StringIncludes(m_cookie, _T("BDUSS=")))
-		return;
-	m_cookie += _T(";");
-
-	GetLoginUserName();
-	if (m_userName == _T(""))
-	{
-		AfxMessageBox(_T("获取用户名失败！"), MB_ICONERROR);
-		return;
-	}
-
-	EndDialog(IDOK);
-}
-
-// 取消
-void CLoginDlg::OnBnClickedCancel()
-{
-	EndDialog(IDCANCEL);
 }

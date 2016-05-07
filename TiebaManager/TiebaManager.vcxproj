@@ -66,6 +66,7 @@
       <AdditionalDependencies>tinyxml2d.lib;opencv_ts300d.lib;opencv_world300d.lib;Dbghelp.lib;oleacc.lib;Winmm.lib;Iepmapi.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
