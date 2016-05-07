@@ -24,21 +24,19 @@ protected:
 public:
 	afx_msg void OnClose();
 	virtual BOOL OnInitDialog();
-	afx_msg void OnBnClickedButton3();
+	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedCancel();
 	DECLARE_EVENTSINK_MAP()
 	void NavigateComplete2Explorer1(LPDISPATCH pDisp, VARIANT* URL);
 protected:
 	void Login(BOOL prompt);
-	HRESULT GetCookie();
-	HRESULT GetProtectedModeCookie();
+	HRESULT GetCookie(CString& cookie);
 	void GetLoginUserName();
 
 
 public:
 	CExplorer1 m_explorer;
-	CButton m_useIECookieButton;
 	CButton m_loginButton;
 	CButton m_cancelButton;
 
