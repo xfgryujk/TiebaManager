@@ -230,3 +230,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+!Library/bin/
+!Library/bin/Debug/
+!Library/bin/Release/
