@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "TiebaVariable.h"
 #include "TiebaOperate.h"
-#include "StringHelper.h"
+#include <StringHelper.h>
 
 
 // 贴吧、用户信息

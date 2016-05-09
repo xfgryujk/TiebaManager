@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TiebaManager", "TiebaManager\TiebaManager.vcxproj", "{A4141D90-1EA4-4E10-84C3-79E11E265BA4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1} = {99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Helper", "Helper\Helper.vcxproj", "{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{A4141D90-1EA4-4E10-84C3-79E11E265BA4}.Debug|Win32.Build.0 = Debug|Win32
 		{A4141D90-1EA4-4E10-84C3-79E11E265BA4}.Release|Win32.ActiveCfg = Release|Win32
 		{A4141D90-1EA4-4E10-84C3-79E11E265BA4}.Release|Win32.Build.0 = Release|Win32
+		{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}.Debug|Win32.Build.0 = Debug|Win32
+		{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}.Release|Win32.ActiveCfg = Release|Win32
+		{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

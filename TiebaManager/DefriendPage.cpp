@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "DefriendPage.h"
 #include "TiebaManagerDlg.h"
-#include "StringHelper.h"
+#include <StringHelper.h>
 #include "NetworkHelper.h"
 #include "MiscHelper.h"
 #include "TiebaVariable.h"

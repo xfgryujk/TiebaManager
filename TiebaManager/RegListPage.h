@@ -1,6 +1,6 @@
 #pragma once
 #include "ListTestPage.h"
-#include "TypeHelper.h"
+#include <StringHelper.h>
 
 
 // CRegListPage ¶Ô»°¿ò

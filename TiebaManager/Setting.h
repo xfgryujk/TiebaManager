@@ -1,5 +1,7 @@
 #pragma once
-#include "TypeHelper.h"
+#include <ConfigFile.h>
+#include <StringHelper.h>
+#include <opencv2\core\mat.hpp>
 #include "Update.h"
 
 
@@ -12,69 +14,6 @@ extern CString	CURRENT_USER_PATH;	// 确定贴吧时初始化
 extern CString	COOKIE_PATH;		// 确定贴吧时初始化
 extern CString	CACHE_PATH;			// 确定贴吧时初始化
 
-
-// Option、Config类声明 //////////////////////////////////////////////////////////////
-namespace tinyxml2{ class XMLElement; }
-
-class COptionBase
-{
-public:
-	const CStringA m_name;
-
-	COptionBase(const CStringA& name) : m_name(name) {}
-	virtual ~COptionBase() {}
-
-	virtual void UseDefault() = 0;
-	virtual tinyxml2::XMLElement& operator << (tinyxml2::XMLElement& root) = 0;
-	virtual tinyxml2::XMLElement& operator >> (tinyxml2::XMLElement& root) const = 0;
-};
-
-template <class T>
-class COption : public COptionBase
-{
-public:
-	const T m_default;
-	T m_value;
-	typedef BOOL(*IsValidFunc)(const T& value);
-	const IsValidFunc IsValid;
-
-	COption(const CStringA& name, IsValidFunc _isValid = [](const T&){ return TRUE; })
-		: COptionBase(name), m_default(), IsValid(_isValid)
-	{}
-	COption(const CStringA& name, const T& _default, IsValidFunc _isValid = [](const T&){ return TRUE; })
-		: COptionBase(name), m_default(_default), IsValid(_isValid)
-	{}
-
-	bool operator == (const COption&) const = delete;
-	operator const T& () const{ return m_value; }
-	operator T& (){ return m_value; }
-	const T& operator * () const{ return m_value; }
-	T& operator * (){ return m_value; }
-	const T* operator -> () const{ return &m_value; }
-	T* operator -> (){ return &m_value; }
-	void UseDefault(){ m_value = m_default; }
-
-	tinyxml2::XMLElement& operator << (tinyxml2::XMLElement& root);
-	tinyxml2::XMLElement& operator >> (tinyxml2::XMLElement& root) const;
-};
-
-class CConfigBase
-{
-protected:
-	vector<COptionBase*> m_options;
-
-public:
-	const LPCSTR m_name;
-
-	CConfigBase(LPCSTR name) : m_name(name) {}
-	virtual ~CConfigBase() {}
-
-	virtual BOOL Load(const CString& path);
-	virtual BOOL Save(const CString& path) const;
-	virtual void UseDefault();
-	virtual void OnChange() {}
-	virtual void PostChange() {}
-};
 
 // 全局配置
 class CGlobalConfig : public CConfigBase
@@ -127,6 +66,12 @@ public:
 		BOOL forceToConfirm;	// 强制确认
 		int trigCount;			// 触发次数
 	};
+
+	struct NameImage
+	{
+		CString name;
+		cv::Mat img;
+	};
 	
 public:
 	CCriticalSection m_optionsLock; // 方案临界区
@@ -164,6 +109,16 @@ public:
 	void PostChange();
 };
 extern CPlan g_plan;
+#ifdef TIEBA_MANAGER_EXPORTS
+#undef HELPER_API
+#define HELPER_API __declspec(dllexport)
+#endif
+DECLEAR_BOTH(CPlan::Keyword)
+DECLEAR_BOTH(vector<CPlan::Keyword>)
+#ifdef TIEBA_MANAGER_EXPORTS
+#undef HELPER_API
+#define HELPER_API __declspec(dllimport)
+#endif
 
 
 // 保存当前账号配置

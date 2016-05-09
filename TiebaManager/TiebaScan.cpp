@@ -6,7 +6,7 @@
 #include "TiebaOperate.h"
 #include "Setting.h"
 
-#include "StringHelper.h"
+#include <StringHelper.h>
 #include "NetworkHelper.h"
 #include "MiscHelper.h"
 

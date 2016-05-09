@@ -3,10 +3,9 @@
 
 #include "stdafx.h"
 #include "LoginDlg.h"
-#include "StringHelper.h"
+#include <StringHelper.h>
 #include "NetworkHelper.h"
 #include <WinInet.h>
-#include <Iepmapi.h>
 #include "TiebaCollect.h"
 
 

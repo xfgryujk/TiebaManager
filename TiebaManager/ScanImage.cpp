@@ -308,7 +308,7 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 			continue;
 		// 判断和违规图片比较大于阈值
 		g_plan.m_optionsLock.Lock();
-		for (const NameImage& i : g_plan.m_images)
+		for (const auto& i : g_plan.m_images)
 		{
 			if (i.img.cols < 30 || i.img.rows < 30) // 尺寸太小不比较
 				continue;

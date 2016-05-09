@@ -5,7 +5,7 @@
 #include "RegListPage.h"
 #include "Setting.h"
 #include "InputDlg.h"
-#include "StringHelper.h"
+#include <StringHelper.h>
 
 
 // CRegListPage ¶Ô»°¿ò

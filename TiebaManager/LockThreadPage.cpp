@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "LockThreadPage.h"
 #include "TiebaManagerDlg.h"
-#include "StringHelper.h"
+#include <StringHelper.h>
 #include "MiscHelper.h"
 #include "TiebaCollect.h"
 #include "TiebaOperate.h"

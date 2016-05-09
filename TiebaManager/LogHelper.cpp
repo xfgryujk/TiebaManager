@@ -3,7 +3,7 @@
 
 #include "explorer1.h"
 #include "MiscHelper.h"
-#include "StringHelper.h"
+#include <StringHelper.h>
 
 
 static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=gbk\" /><title>日志</title>\r\n")

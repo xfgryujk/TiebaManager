@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "WhiteContentPage.h"
-#include "StringHelper.h"
+#include <StringHelper.h>
 
 
 // CWhiteContentPage ¶Ô»°¿ò

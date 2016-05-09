@@ -1,17 +1,17 @@
 #include "stdafx.h"
 #include "Update.h"
 #import <msscript.ocx> no_namespace
-#include "StringHelper.h"
+#include <StringHelper.h>
 #include "NetworkHelper.h"
 #include "MiscHelper.h"
 #include "TiebaManagerDlg.h"
 
 
 // 当前版本日期，每次更新后修改
-const char UPDATE_CURRENT_VERSION_A[] = "16-05-03";
+const char UPDATE_CURRENT_VERSION_A[] = "16-05-07";
 const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
 // 更新日志
-const TCHAR UPDATE_LOG[] = _T("1. 更改登录方式");
+const TCHAR UPDATE_LOG[] = _T("1. 兼容XP和Win7登录");
 
 // 字符串转时间戳
 static time_t Str2Time(const CString& str)

@@ -5,7 +5,7 @@
 #include "TiebaCollect.h"
 #include "Setting.h"
 
-#include "StringHelper.h"
+#include <StringHelper.h>
 #include "NetworkHelper.h"
 #include "MiscHelper.h"
 #include "Md5.h"

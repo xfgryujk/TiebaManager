@@ -67,6 +67,9 @@
     <Filter Include="源文件\GUI\UIHelper\InputDlg">
       <UniqueIdentifier>{d67ed370-7061-4e2d-989a-1cca03ca8262}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\API">
+      <UniqueIdentifier>{bbcc7758-dc62-4f83-b404-c9842ebbd3dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -159,9 +162,6 @@
     <ClInclude Include="DefriendPage.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
-    <ClInclude Include="StringHelper.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="NetworkHelper.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
@@ -184,9 +184,6 @@
       <Filter>头文件\Helper</Filter>
     </ClInclude>
     <ClInclude Include="ScanImage.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="TypeHelper.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
     <ClInclude Include="TiebaVariable.h">
@@ -218,6 +215,9 @@
     </ClInclude>
     <ClInclude Include="Md5.h">
       <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="API\APICommon.h">
+      <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -306,9 +306,6 @@
       <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
     <ClCompile Include="NetworkHelper.cpp">
-      <Filter>源文件\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="StringHelper.cpp">
       <Filter>源文件\Helper</Filter>
     </ClCompile>
     <ClCompile Include="TiebaCollect.cpp">
