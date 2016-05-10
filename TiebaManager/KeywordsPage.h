@@ -1,6 +1,6 @@
 #pragma once
 #include "RegListPage.h"
-#include "Setting.h"
+#include <TBMConfig.h>
 
 
 // CKeywordsPage ¶Ô»°¿ò

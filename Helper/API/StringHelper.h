@@ -1,7 +1,6 @@
 #pragma once
-#include "APICommon.h"
+#include "HelperCommon.h"
 #include <regex>
-#include "ConfigFile.h"
 
 
 struct RegexText
@@ -17,8 +16,6 @@ struct RegexText
 		regexp = isRegex ? text : _T("");
 	}
 };
-DECLEAR_BOTH(RegexText)
-DECLEAR_BOTH(vector<RegexText>)
 
 
 // ·Ö¸î×Ö·û´®

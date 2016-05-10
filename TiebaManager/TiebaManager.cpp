@@ -6,7 +6,7 @@
 #include "TiebaManager.h"
 #include "TiebaManagerDlg.h"
 #include "MiscHelper.h"
-#include "Setting.h"
+#include <TBMConfig.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -8,7 +8,7 @@
 #include "MiscHelper.h"
 #include "TiebaCollect.h"
 #include "TiebaOperate.h"
-#include "Setting.h"
+#include <TBMConfig.h>
 #include <Mmsystem.h>
 
 

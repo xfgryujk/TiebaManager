@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "ImagePage.h"
-#include "Setting.h"
 #include "SettingDlg.h"
 
 

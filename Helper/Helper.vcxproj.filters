@@ -61,7 +61,7 @@
     <ClInclude Include="API\StringHelper.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\APICommon.h">
+    <ClInclude Include="API\HelperCommon.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>

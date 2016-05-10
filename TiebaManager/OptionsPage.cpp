@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "OptionsPage.h"
-#include "Setting.h"
+#include <TBMConfig.h>
 #include "SettingDlg.h"
 #include "MiscHelper.h"
 

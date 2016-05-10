@@ -1,5 +1,5 @@
 #pragma once
-#include "Setting.h"
+#include <TBMConfig.h>
 
 
 // 贴吧、用户信息

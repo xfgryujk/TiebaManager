@@ -3,7 +3,6 @@
 
 #include "TiebaVariable.h"
 #include "TiebaCollect.h"
-#include "Setting.h"
 
 #include <StringHelper.h>
 #include "NetworkHelper.h"

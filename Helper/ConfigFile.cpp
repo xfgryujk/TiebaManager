@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#define EXPORT_OPTION
 #include <ConfigFile.h>
 using namespace tinyxml2;
 #include <StringHelper.h>
@@ -9,196 +10,186 @@ using namespace tinyxml2;
 
 // 读基本类型
 
-DECLEAR_READ(int)
+HELPER_API DECLEAR_READ(int)
 {
-	const XMLElement* optionNode = root.FirstChildElement(thiz.m_name);
+	const XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
 	UseDefault:
-		thiz.UseDefault();
-		return root;
+		UseDefault();
+		return;
 	}
 	const XMLNode* content = optionNode->FirstChild();
 	if (content == NULL)
 		goto UseDefault;
 	LPCSTR value = content->ToText()->Value();
 
-	thiz.m_value = atoi(value);
-	if (!thiz.IsValid(thiz.m_value))
-		thiz.UseDefault();
-	return root;
+	m_value = atoi(value);
+	if (!IsValid(m_value))
+		UseDefault();
 }
 
-DECLEAR_READ(float)
+HELPER_API DECLEAR_READ(float)
 {
-	const XMLElement* optionNode = root.FirstChildElement(thiz.m_name);
+	const XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
 	UseDefault:
-		thiz.UseDefault();
-		return root;
+		UseDefault();
+		return;
 	}
 	const XMLNode* content = optionNode->FirstChild();
 	if (content == NULL)
 		goto UseDefault;
 	LPCSTR value = content->ToText()->Value();
 
-	thiz.m_value = (float)atof(value);
-	if (!thiz.IsValid(thiz.m_value))
-		thiz.UseDefault();
-	return root;
+	m_value = (float)atof(value);
+	if (!IsValid(m_value))
+		UseDefault();
 }
 
-DECLEAR_READ(double)
+HELPER_API DECLEAR_READ(double)
 {
-	const XMLElement* optionNode = root.FirstChildElement(thiz.m_name);
+	const XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
 	UseDefault:
-		thiz.UseDefault();
-		return root;
+		UseDefault();
+		return;
 	}
 	const XMLNode* content = optionNode->FirstChild();
 	if (content == NULL)
 		goto UseDefault;
 	LPCSTR value = content->ToText()->Value();
 
-	thiz.m_value = atof(value);
-	if (!thiz.IsValid(thiz.m_value))
-		thiz.UseDefault();
-	return root;
+	m_value = atof(value);
+	if (!IsValid(m_value))
+		UseDefault();
 }
 
-DECLEAR_READ(__int64)
+HELPER_API DECLEAR_READ(__int64)
 {
-	const XMLElement* optionNode = root.FirstChildElement(thiz.m_name);
+	const XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
 	UseDefault:
-		thiz.UseDefault();
-		return root;
+		UseDefault();
+		return;
 	}
 	const XMLNode* content = optionNode->FirstChild();
 	if (content == NULL)
 		goto UseDefault;
 	LPCSTR value = content->ToText()->Value();
 
-	thiz.m_value = _atoi64(value);
-	if (!thiz.IsValid(thiz.m_value))
-		thiz.UseDefault();
-	return root;
+	m_value = _atoi64(value);
+	if (!IsValid(m_value))
+		UseDefault();
 }
 
-DECLEAR_READ(CString)
+HELPER_API DECLEAR_READ(CString)
 {
-	const XMLElement* optionNode = root.FirstChildElement(thiz.m_name);
+	const XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
 	UseDefault:
-		thiz.UseDefault();
-		return root;
+		UseDefault();
+		return;
 	}
 	const XMLNode* content = optionNode->FirstChild();
 	if (content == NULL)
 		goto UseDefault;
 	LPCSTR value = content->ToText()->Value();
 
-	thiz.m_value = GBK2W(value);
-	if (!thiz.IsValid(thiz.m_value))
-		thiz.UseDefault();
-	return root;
+	m_value = GBK2W(value);
+	if (!IsValid(m_value))
+		UseDefault();
 }
 
 // 读vector
 
-DEFINE_READ_VECTOR(CString)
+HELPER_API DEFINE_READ_VECTOR(CString)
 
 // 读set
 
-DEFINE_READ_SET(__int64)
-DEFINE_READ_SET(CString)
+HELPER_API DEFINE_READ_SET(__int64)
+HELPER_API DEFINE_READ_SET(CString)
 
 // 读map
 
-DEFINE_READ_MAP(__int64, int)
-DEFINE_READ_MAP(CString, int)
-DEFINE_READ_MAP(__int64, CString)
+HELPER_API DEFINE_READ_MAP(__int64, int)
+HELPER_API DEFINE_READ_MAP(CString, int)
+HELPER_API DEFINE_READ_MAP(__int64, CString)
 
 
 // 写基本类型
 
-DECLEAR_WRITE(int)
+HELPER_API DECLEAR_WRITE(int)
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(thiz.m_name);
+	XMLElement* optionNode = doc->NewElement(m_name);
 	root.LinkEndChild(optionNode);
 
 	char buffer[15];
-	_itoa_s(thiz.m_value, buffer, _countof(buffer), 10);
+	_itoa_s(m_value, buffer, _countof(buffer), 10);
 	optionNode->LinkEndChild(doc->NewText(buffer));
-	return root;
 }
 
-DECLEAR_WRITE(float)
+HELPER_API DECLEAR_WRITE(float)
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(thiz.m_name);
+	XMLElement* optionNode = doc->NewElement(m_name);
 	root.LinkEndChild(optionNode);
 
 	char buffer[25];
-	sprintf_s(buffer, "%f", thiz.m_value);
+	sprintf_s(buffer, "%f", m_value);
 	optionNode->LinkEndChild(doc->NewText(buffer));
-	return root;
 }
 
-DECLEAR_WRITE(double)
+HELPER_API DECLEAR_WRITE(double)
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(thiz.m_name);
+	XMLElement* optionNode = doc->NewElement(m_name);
 	root.LinkEndChild(optionNode);
 
 	char buffer[50];
-	sprintf_s(buffer, "%f", thiz.m_value);
+	sprintf_s(buffer, "%f", m_value);
 	optionNode->LinkEndChild(doc->NewText(buffer));
-	return root;
 }
 
-DECLEAR_WRITE(__int64)
+HELPER_API DECLEAR_WRITE(__int64)
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(thiz.m_name);
+	XMLElement* optionNode = doc->NewElement(m_name);
 	root.LinkEndChild(optionNode);
 
 	char buffer[25];
-	_i64toa_s(thiz.m_value, buffer, _countof(buffer), 10);
+	_i64toa_s(m_value, buffer, _countof(buffer), 10);
 	optionNode->LinkEndChild(doc->NewText(buffer));
-	return root;
 }
 
-DECLEAR_WRITE(CString)
+HELPER_API DECLEAR_WRITE(CString)
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(thiz.m_name);
+	XMLElement* optionNode = doc->NewElement(m_name);
 	root.LinkEndChild(optionNode);
 
-	optionNode->LinkEndChild(doc->NewText(W2GBK(thiz.m_value)));
-	return root;
+	optionNode->LinkEndChild(doc->NewText(W2GBK(m_value)));
 }
 
 // 写vector
 
-DEFINE_WRITE_VECTOR(CString)
+HELPER_API DEFINE_WRITE_VECTOR(CString)
 
 // 写set
 
-DEFINE_WRITE_SET(__int64)
-DEFINE_WRITE_SET(CString)
+HELPER_API DEFINE_WRITE_SET(__int64)
+HELPER_API DEFINE_WRITE_SET(CString)
 
 // 写map
 
-DEFINE_WRITE_MAP(__int64, int)
-DEFINE_WRITE_MAP(CString, int)
-DEFINE_WRITE_MAP(__int64, CString)
+HELPER_API DEFINE_WRITE_MAP(__int64, int)
+HELPER_API DEFINE_WRITE_MAP(CString, int)
+HELPER_API DEFINE_WRITE_MAP(__int64, CString)
 
 #pragma endregion
 

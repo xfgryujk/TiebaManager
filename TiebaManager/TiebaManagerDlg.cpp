@@ -25,7 +25,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "SuperFunctionDlg.h"
 #include "LoopBanPage.h"
 
-#include "Setting.h"
+#include <TBMConfig.h>
+#include "ConfigHelper.h"
 #include <StringHelper.h>
 #include "NetworkHelper.h"
 #include "MiscHelper.h"
@@ -256,7 +257,7 @@ void CTiebaManagerDlg::OnDestroy()
 {
 	CNormalDlg::OnDestroy();
 
-	SaveCurrentUserProfile();
+	SaveCurrentUserConfig();
 	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
 	g_plan.Save(OPTIONS_PATH + g_userConfig.m_plan + _T(".xml"));
 

@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "SuperFunctionDlg.h"
 #include "TiebaManagerDlg.h"
-#include "Setting.h"
 
 
 // CSuperFunctionDlg ¶Ô»°¿ò

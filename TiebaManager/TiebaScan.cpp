@@ -4,7 +4,6 @@
 #include "TiebaVariable.h"
 #include "TiebaCollect.h"
 #include "TiebaOperate.h"
-#include "Setting.h"
 
 #include <StringHelper.h>
 #include "NetworkHelper.h"

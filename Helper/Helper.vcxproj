@@ -125,7 +125,7 @@
     <None Include="res\Helper.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="API\APICommon.h" />
+    <ClInclude Include="API\HelperCommon.h" />
     <ClInclude Include="API\ConfigFile.h" />
     <ClInclude Include="API\StringHelper.h" />
     <ClInclude Include="Resource.h" />

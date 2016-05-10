@@ -1,48 +1,48 @@
 #include "stdafx.h"
 #include <StringHelper.h>
+#define EXPORT_OPTION
 #include <ConfigFile.h>
 #import <msscript.ocx> no_namespace
+using namespace tinyxml2;
 
 
-DECLEAR_READ(RegexText)
+HELPER_API DECLEAR_READ(RegexText)
 {
-	const tinyxml2::XMLElement* optionNode = root.FirstChildElement(thiz.m_name);
+	const XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
-		thiz.UseDefault();
-		return root;
+		UseDefault();
+		return;
 	}
 
 	COption<BOOL> isRegex("IsRegex");
 	COption<CString> text("Text");
-	isRegex << *optionNode;
-	text << *optionNode;
+	isRegex.Read(*optionNode);
+	text.Read(*optionNode);
 
-	thiz.m_value.Set(isRegex, text);
+	m_value.Set(isRegex, text);
 
-	if (!thiz.IsValid(thiz.m_value))
-		thiz.UseDefault();
-	return root;
+	if (!IsValid(m_value))
+		UseDefault();
 }
 
-DECLEAR_WRITE(RegexText)
+HELPER_API DECLEAR_WRITE(RegexText)
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
-	tinyxml2::XMLElement* optionNode = doc->NewElement(thiz.m_name);
+	XMLElement* optionNode = doc->NewElement(m_name);
 	root.LinkEndChild(optionNode);
 
 	COption<BOOL> isRegex("IsRegex");
-	*isRegex = thiz.m_value.isRegex;
-	isRegex >> *optionNode;
+	*isRegex = m_value.isRegex;
+	isRegex.Write(*optionNode);
 	COption<CString> text("Text");
-	*text = thiz.m_value.text;
-	text >> *optionNode;
-	return root;
+	*text = m_value.text;
+	text.Write(*optionNode);
 }
 
-DEFINE_READ_VECTOR(RegexText)
+HELPER_API DEFINE_READ_VECTOR(RegexText)
 
-DEFINE_WRITE_VECTOR(RegexText)
+HELPER_API DEFINE_WRITE_VECTOR(RegexText)
 
 
 // ·Ö¸î×Ö·û´®

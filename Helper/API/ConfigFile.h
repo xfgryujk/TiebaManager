@@ -1,5 +1,5 @@
 #pragma once
-#include "APICommon.h"
+#include "HelperCommon.h"
 #include <tinyxml2.h>
 
 
@@ -8,8 +8,8 @@ class COptionBase
 public:
 	const CStringA m_name;
 
-	COptionBase(const CStringA& name) : m_name(name) {}
-	virtual ~COptionBase() {}
+	COptionBase(const CStringA& name) : m_name(name) { }
+	virtual ~COptionBase() { }
 
 	virtual void UseDefault() = 0;
 	virtual void Read(const tinyxml2::XMLElement& root) = 0;
@@ -26,13 +26,11 @@ public:
 	const IsValidFunc IsValid;
 
 	COption(const CStringA& name, IsValidFunc _isValid = [](const T&){ return TRUE; })
-		: COptionBase(name), m_default(), IsValid(_isValid)
-	{}
+		: COptionBase(name), m_default(), IsValid(_isValid) { }
 	COption(const CStringA& name, const T& _default, IsValidFunc _isValid = [](const T&){ return TRUE; })
-		: COptionBase(name), m_default(_default), IsValid(_isValid)
-	{}
+		: COptionBase(name), m_default(_default), IsValid(_isValid) { }
 
-	bool operator == (const COption&) const = delete;
+	bool operator == (const COption<T>&) const = delete;
 	operator const T& () const{ return m_value; }
 	operator T& (){ return m_value; }
 	const T& operator * () const{ return m_value; }
@@ -41,59 +39,62 @@ public:
 	T* operator -> (){ return &m_value; }
 	void UseDefault(){ m_value = m_default; }
 
-	void Read(const tinyxml2::XMLElement& root){ *this << root; }
-	void Write(tinyxml2::XMLElement& root) const{ *this >> root; }
+#ifdef EXPORT_OPTION // 如果要定义新的COption，在include之前加这个宏
+	__declspec(dllexport) void Read(const tinyxml2::XMLElement& root);
+	__declspec(dllexport) void Write(tinyxml2::XMLElement& root) const;
+#else
+	__declspec(dllimport) void Read(const tinyxml2::XMLElement& root);
+	__declspec(dllimport) void Write(tinyxml2::XMLElement& root) const;
+#endif
 };
 
 // 读Option
-#define DECLEAR_READ(T) HELPER_API const tinyxml2::XMLElement& operator << (COption<T >& thiz, const tinyxml2::XMLElement& root)
+#define DECLEAR_READ(T) void COption<T >::Read(const tinyxml2::XMLElement& root)
 // 写Option
-#define DECLEAR_WRITE(T) HELPER_API tinyxml2::XMLElement& operator >> (const COption<T >& thiz, tinyxml2::XMLElement& root)
+#define DECLEAR_WRITE(T) void COption<T >::Write(tinyxml2::XMLElement& root) const
 
 // 读vector
 #define DEFINE_READ_VECTOR(T) \
 DECLEAR_READ(vector<T>)\
 {\
-	const tinyxml2::XMLElement* optionNode = root.FirstChildElement(thiz.m_name); \
+	const tinyxml2::XMLElement* optionNode = root.FirstChildElement(m_name); \
 	if (optionNode == NULL)\
 	{\
-		thiz.UseDefault(); \
-		return root; \
+		UseDefault(); \
+		return; \
 	}\
 	\
-	thiz.m_value.clear(); \
+	m_value.clear(); \
 	COption<T> value("value"); \
 	for (const tinyxml2::XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))\
 	{\
-		value << *item; \
-		thiz.m_value.push_back(value); \
+		value.Read(*item); \
+		m_value.push_back(value); \
 	}\
-	if (!thiz.IsValid(thiz.m_value))\
-		thiz.UseDefault(); \
-	return root; \
+	if (!IsValid(m_value))\
+		UseDefault(); \
 }
 
 // 读set
 #define DEFINE_READ_SET(T) \
 DECLEAR_READ(set<T>)\
 {\
-	const tinyxml2::XMLElement* optionNode = root.FirstChildElement(thiz.m_name); \
+	const tinyxml2::XMLElement* optionNode = root.FirstChildElement(m_name); \
 	if (optionNode == NULL)\
 	{\
-		thiz.UseDefault(); \
-		return root; \
+		UseDefault(); \
+		return; \
 	}\
 	\
-	thiz.m_value.clear(); \
+	m_value.clear(); \
 	COption<T> value("value"); \
 	for (const tinyxml2::XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))\
 	{\
-		value << *item; \
-		thiz.m_value.insert(value); \
+		value.Read(*item); \
+		m_value.insert(value); \
 	}\
-	if (!thiz.IsValid(thiz.m_value))\
-		thiz.UseDefault(); \
-	return root; \
+	if (!IsValid(m_value))\
+		UseDefault(); \
 }
 
 // 读map
@@ -102,25 +103,24 @@ DECLEAR_READ(set<T>)\
 #define DEFINE_READ_MAP(T1, T2) \
 DECLEAR_READ(map<T1 COMMA T2>)\
 {\
-	const tinyxml2::XMLElement* optionNode = root.FirstChildElement(thiz.m_name); \
+	const tinyxml2::XMLElement* optionNode = root.FirstChildElement(m_name); \
 	if (optionNode == NULL)\
 	{\
-		thiz.UseDefault(); \
-		return root; \
+		UseDefault(); \
+		return; \
 	}\
 	\
-	thiz.m_value.clear(); \
+	m_value.clear(); \
 	COption<T1> key("key"); \
 	COption<T2> value("value"); \
 	for (const tinyxml2::XMLElement* item = optionNode->FirstChildElement("item"); item != NULL; item = item->NextSiblingElement("item"))\
 	{\
-		key << *item; \
-		value << *item; \
-		thiz.m_value[key] = value; \
+		key.Read(*item); \
+		value.Read(*item); \
+		m_value[key] = value; \
 	}\
-	if (!thiz.IsValid(thiz.m_value))\
-		thiz.UseDefault(); \
-	return root; \
+	if (!IsValid(m_value))\
+		UseDefault(); \
 }
 
 // 写容器
@@ -128,18 +128,17 @@ DECLEAR_READ(map<T1 COMMA T2>)\
 DECLEAR_WRITE(CONTAINER<T>)\
 {\
 	tinyxml2::XMLDocument* doc = root.GetDocument(); \
-	tinyxml2::XMLElement* optionNode = doc->NewElement(thiz.m_name); \
+	tinyxml2::XMLElement* optionNode = doc->NewElement(m_name); \
 	root.LinkEndChild(optionNode); \
 	\
 	COption<T> value("value"); \
-	for (const T& i : thiz.m_value)\
+	for (const T& i : m_value)\
 	{\
 		tinyxml2::XMLElement* item = doc->NewElement("item"); \
 		optionNode->LinkEndChild(item); \
 		*value = i; \
-		value >> *item; \
+		value.Write(*item); \
 	}\
-	return root; \
 }
 
 // 写vector
@@ -153,35 +152,21 @@ DECLEAR_WRITE(CONTAINER<T>)\
 DECLEAR_WRITE(map<T1 COMMA T2>)\
 {\
 	tinyxml2::XMLDocument* doc = root.GetDocument(); \
-	tinyxml2::XMLElement* optionNode = doc->NewElement(thiz.m_name); \
+	tinyxml2::XMLElement* optionNode = doc->NewElement(m_name); \
 	root.LinkEndChild(optionNode); \
 	\
 	COption<T1> key("key"); \
 	COption<T2> value("value"); \
-	for (const auto& i : thiz.m_value)\
-		{\
+	for (const auto& i : m_value)\
+	{\
 		tinyxml2::XMLElement* item = doc->NewElement("item"); \
 		optionNode->LinkEndChild(item); \
 		*key = i.first; \
-		key >> *item; \
+		key.Write(*item); \
 		*value = i.second; \
-		value >> *item; \
+		value.Write(*item); \
 	}\
-	return root; \
 }
-
-#define DECLEAR_BOTH(T) DECLEAR_READ(T); DECLEAR_WRITE(T);
-DECLEAR_BOTH(int)
-DECLEAR_BOTH(float)
-DECLEAR_BOTH(double)
-DECLEAR_BOTH(__int64)
-DECLEAR_BOTH(CString)
-DECLEAR_BOTH(vector<CString>)
-DECLEAR_BOTH(set<__int64>)
-DECLEAR_BOTH(set<CString>)
-DECLEAR_BOTH(map<__int64 COMMA int>)
-DECLEAR_BOTH(map<CString COMMA int>)
-DECLEAR_BOTH(map<__int64 COMMA CString>)
 
 
 class CConfigBase
@@ -190,14 +175,14 @@ protected:
 	vector<COptionBase*> m_options;
 
 public:
-	const LPCSTR m_name;
+	const CStringA m_name;
 
-	CConfigBase(LPCSTR name) : m_name(name) {}
-	virtual ~CConfigBase() {}
+	CConfigBase(CStringA name) : m_name(name) { }
+	virtual ~CConfigBase() { }
 
 	HELPER_API virtual BOOL Load(const CString& path);
 	HELPER_API virtual BOOL Save(const CString& path) const;
 	HELPER_API virtual void UseDefault();
-	virtual void OnChange() {}
-	virtual void PostChange() {}
+	virtual void OnChange() { }
+	virtual void PostChange() { }
 };

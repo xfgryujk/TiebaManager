@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ScanImage.h"
-#include "Setting.h"
+#include <TBMConfig.h>
 #include <opencv2\imgproc\imgproc.hpp>
 #include <opencv2\imgcodecs.hpp>
 #include "NetworkHelper.h"

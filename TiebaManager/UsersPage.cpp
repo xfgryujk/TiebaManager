@@ -4,7 +4,8 @@
 #include "stdafx.h"
 #include "UsersPage.h"
 #include "LoginDlg.h"
-#include "Setting.h"
+#include <TBMConfig.h>
+#include "ConfigHelper.h"
 #include "TiebaVariable.h"
 #include "SettingDlg.h"
 #include "TiebaManagerDlg.h"

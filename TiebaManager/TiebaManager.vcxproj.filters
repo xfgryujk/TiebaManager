@@ -70,6 +70,9 @@
     <Filter Include="头文件\API">
       <UniqueIdentifier>{bbcc7758-dc62-4f83-b404-c9842ebbd3dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\API">
+      <UniqueIdentifier>{221d2e54-0bbb-47de-aa55-4398bc1a30a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -180,9 +183,6 @@
     <ClInclude Include="Update.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Setting.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="ScanImage.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
@@ -216,8 +216,14 @@
     <ClInclude Include="Md5.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="API\APICommon.h">
+    <ClInclude Include="API\TBMConfig.h">
       <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\TBMCommon.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigHelper.h">
+      <Filter>头文件\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -323,9 +329,6 @@
     <ClCompile Include="Update.cpp">
       <Filter>源文件\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Setting.cpp">
-      <Filter>源文件\Helper</Filter>
-    </ClCompile>
     <ClCompile Include="ScanImage.cpp">
       <Filter>源文件\Helper</Filter>
     </ClCompile>
@@ -357,6 +360,12 @@
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
     </ClCompile>
     <ClCompile Include="Md5.cpp">
+      <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMConfig.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigHelper.cpp">
       <Filter>源文件\Helper</Filter>
     </ClCompile>
   </ItemGroup>

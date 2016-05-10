@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "SettingDlg.h"
 #include "TiebaManagerDlg.h"
-#include "Setting.h"
+#include <TBMConfig.h>
 #include "TiebaVariable.h"
 #include "ScanImage.h"
 #include "MiscHelper.h"
