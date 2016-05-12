@@ -6,8 +6,8 @@
 
 #include <StringHelper.h>
 #include "NetworkHelper.h"
-#include "MiscHelper.h"
-#include "Md5.h"
+#include <MiscHelper.h>
+#include <Md5.h>
 
 #include "TiebaManagerDlg.h"
 #include "ConfirmDlg.h"
@@ -308,7 +308,7 @@ CString BanID(LPCTSTR userName, LPCTSTR pid)
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&pid%%5B%%5D=%s&reason=%s"),
 		*g_plan.m_banDuration, (LPCTSTR)g_userTiebaInfo.m_forumID, (LPCTSTR)g_userTiebaInfo.m_tbs, (LPCTSTR)EncodeURI(userName), pid,
 		*g_plan.m_banReason != _T("") ? (LPCTSTR)*g_plan.m_banReason : _T("%20"));
-	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
+	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data, &*g_userTiebaInfo.m_cookie);
 	return GetOperationErrorCode(src);
 }
 
@@ -319,7 +319,7 @@ CString BanID(LPCTSTR userName)
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&reason=%s"),
 		*g_plan.m_banDuration, (LPCTSTR)g_userTiebaInfo.m_forumID, (LPCTSTR)g_userTiebaInfo.m_tbs, (LPCTSTR)EncodeURI(userName),
 		*g_plan.m_banReason != _T("") ? (LPCTSTR)*g_plan.m_banReason : _T("%20"));
-	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
+	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data, &*g_userTiebaInfo.m_cookie);
 	return GetOperationErrorCode(src);
 }
 
@@ -331,7 +331,7 @@ CString BanIDWap(LPCTSTR userName)
 			   _T("&word=%s&fid=%s&z=%s&$el=%%5Bobject%%20Array%%5D&reason=%s"),
 		(LPCTSTR)EncodeURI(userName), (LPCTSTR)g_userTiebaInfo.m_tbs, (LPCTSTR)g_userTiebaInfo.m_encodedForumName,
 		(LPCTSTR)g_userTiebaInfo.m_forumID, (LPCTSTR)g_randomTid, *g_plan.m_banReason != _T("") ? (LPCTSTR)*g_plan.m_banReason : _T("%20"));
-	CString src = HTTPGet(url);
+	CString src = HTTPGet(url, &*g_userTiebaInfo.m_cookie);
 	return GetOperationErrorCode(src);
 }
 
@@ -349,7 +349,7 @@ CString BanIDClient(LPCTSTR userName)
 	signData += _T("tiebaclient!!!");
 	data += _T("&sign=") + GetMD5_UTF8(signData);
 
-	CString src = HTTPPost(_T("http://c.tieba.baidu.com/c/c/bawu/commitprison"), data);
+	CString src = HTTPPost(_T("http://c.tieba.baidu.com/c/c/bawu/commitprison"), data, &*g_userTiebaInfo.m_cookie);
 	return GetOperationErrorCode(src);
 }
 
@@ -357,7 +357,7 @@ CString BanIDClient(LPCTSTR userName)
 CString Defriend(LPCTSTR userID)
 {
 	CString src = HTTPPost(_T("http://tieba.baidu.com/bawu2/platform/addBlack"), _T("ie=utf-8&tbs=") + g_userTiebaInfo.m_tbs
-		+ _T("&user_id=") + userID + _T("&word=") + g_userTiebaInfo.m_encodedForumName);
+		+ _T("&user_id=") + userID + _T("&word=") + g_userTiebaInfo.m_encodedForumName, &*g_userTiebaInfo.m_cookie);
 	return GetOperationErrorCode(src);
 }
 
@@ -365,7 +365,7 @@ CString Defriend(LPCTSTR userID)
 CString DeleteThread(const CString& tid)
 {
 	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/thread/delete"), _T("kw=") + g_userTiebaInfo.m_encodedForumName
-		+ _T("&fid=") + g_userTiebaInfo.m_forumID + _T("&tid=") + tid + _T("&ie=utf-8&tbs=") + g_userTiebaInfo.m_tbs);
+		+ _T("&fid=") + g_userTiebaInfo.m_forumID + _T("&tid=") + tid + _T("&ie=utf-8&tbs=") + g_userTiebaInfo.m_tbs, &*g_userTiebaInfo.m_cookie);
 	return GetOperationErrorCode(src);
 }
 
@@ -375,7 +375,7 @@ CString DeletePost(LPCTSTR tid, LPCTSTR pid)
 	CString data;
 	data.Format(_T("commit_fr=pb&ie=utf-8&tbs=%s&kw=%s&fid=%s&tid=%s&is_vipdel=0&pid=%s&is_finf=false"),
 		(LPCTSTR)g_userTiebaInfo.m_tbs, (LPCTSTR)g_userTiebaInfo.m_encodedForumName, (LPCTSTR)g_userTiebaInfo.m_forumID, tid, pid);
-	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data);
+	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data, &*g_userTiebaInfo.m_cookie);
 	return GetOperationErrorCode(src);
 }
 
@@ -385,7 +385,7 @@ CString DeleteLZL(LPCTSTR tid, LPCTSTR lzlid)
 	CString data;
 	data.Format(_T("ie=utf-8&tbs=%s&kw=%s&fid=%s&tid=%s&pid=%s&is_finf=1"),
 		(LPCTSTR)g_userTiebaInfo.m_tbs, (LPCTSTR)g_userTiebaInfo.m_encodedForumName, (LPCTSTR)g_userTiebaInfo.m_forumID, tid, lzlid);
-	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data);
+	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data, &*g_userTiebaInfo.m_cookie);
 	return GetOperationErrorCode(src);
 }
 

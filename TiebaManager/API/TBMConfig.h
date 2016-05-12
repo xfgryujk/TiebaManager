@@ -16,7 +16,7 @@ extern TIEBA_MANAGER_API CString CACHE_PATH;			// 确定贴吧时初始化
 
 
 // 全局配置
-class CGlobalConfig : public CConfigBase
+class TIEBA_MANAGER_API CGlobalConfig : public CConfigBase
 {
 public:
 	COption<BOOL> m_firstRun;				// 第一次运行
@@ -24,23 +24,23 @@ public:
 	COption<CString> m_currentUser;			// 当前账号
 	COption<BOOL> m_autoUpdate;				// 自动更新
 
-	TIEBA_MANAGER_API CGlobalConfig();
+	CGlobalConfig();
 };
 extern TIEBA_MANAGER_API CGlobalConfig g_globalConfig;
 
 // 用户配置
-class CUserConfig : public CConfigBase
+class TIEBA_MANAGER_API CUserConfig : public CConfigBase
 {
 public:
 	COption<CString> m_plan;		// 当前方案
 	COption<CString> m_forumName;	// 贴吧名
 
-	TIEBA_MANAGER_API CUserConfig();
+	CUserConfig();
 };
 extern TIEBA_MANAGER_API CUserConfig g_userConfig;
 
 // 方案
-class CPlan : public CConfigBase
+class TIEBA_MANAGER_API CPlan : public CConfigBase
 {
 public:
 	struct Keyword : RegexText
@@ -86,14 +86,8 @@ public:
 	COption<vector<RegexText> >	m_whiteContent;	// 信任内容
 	COption<set<CString> >		m_trustedThread;// 信任主题
 
-	TIEBA_MANAGER_API CPlan();
+	CPlan();
 	void OnChange(){ m_optionsLock.Lock(); }
-	TIEBA_MANAGER_API void PostChange();
+	void PostChange();
 };
 extern TIEBA_MANAGER_API CPlan g_plan;
-
-
-// 保存当前账号配置
-void SaveCurrentUserConfig();
-// 设置当前账号
-void SetCurrentUser(const CString& userName, BOOL save);

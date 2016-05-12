@@ -1,18 +1,10 @@
 // 转自http://blog.csdn.net/jrckkyy/article/details/4715810
 
-#ifndef _MD5_H
-#define _MD5_H
+#pragma once
+#include "HelperCommon.h"
 
-//#pragma warning(disable:4786)
 
-//#include <string>
-
-//using namespace std;
-
-/*!
-* Manage MD5.
-*/
-class CMD5
+class HELPER_API CMD5
 {
 private:
 #define uint8  unsigned char
@@ -58,7 +50,6 @@ public:
 	unsigned long m_data[4];
 };
 
-// 转成UTF-8编码取MD5
-CString GetMD5_UTF8(const CString& data);
 
-#endif /* md5.h */
+// 转成UTF-8编码取MD5
+HELPER_API CString GetMD5_UTF8(const CString& data);

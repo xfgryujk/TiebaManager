@@ -5,7 +5,7 @@
 #include "LockThreadPage.h"
 #include "TiebaManagerDlg.h"
 #include <StringHelper.h>
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 #include "TiebaCollect.h"
 #include "TiebaOperate.h"
 #include <TBMConfig.h>

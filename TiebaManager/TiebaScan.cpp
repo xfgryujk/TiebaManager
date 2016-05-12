@@ -7,7 +7,7 @@
 
 #include <StringHelper.h>
 #include "NetworkHelper.h"
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 
 #include "TiebaManagerDlg.h"
 
@@ -275,9 +275,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		}
 
 		// 第一页
-		src = HTTPGet(_T("http://tieba.baidu.com/p/" + thread.tid), FALSE, &g_stopScanFlag);
-		if (src == NET_STOP_TEXT)
-			goto next;
+		src = HTTPGet(_T("http://tieba.baidu.com/p/" + thread.tid));
 		if (src == NET_TIMEOUT_TEXT)
 		{
 			if (!g_plan.m_briefLog)
@@ -340,7 +338,6 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + title
 			+ _T("</a> <font color=red>获取贴子列表失败(") + (res == GET_POSTS_TIMEOUT ? _T("超时") :
 			_T("可能已被删")) + _T(")，暂时跳过</font>"));
-	case GET_POSTS_STOP:
 		return FALSE;
 	}
 

@@ -165,9 +165,6 @@
     <ClInclude Include="DefriendPage.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkHelper.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="TiebaCollect.h">
       <Filter>头文件\Tieba</Filter>
     </ClInclude>
@@ -176,9 +173,6 @@
     </ClInclude>
     <ClInclude Include="TiebaScan.h">
       <Filter>头文件\Tieba</Filter>
-    </ClInclude>
-    <ClInclude Include="MiscHelper.h">
-      <Filter>头文件\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Update.h">
       <Filter>头文件\Helper</Filter>
@@ -212,9 +206,6 @@
     </ClInclude>
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
-    </ClInclude>
-    <ClInclude Include="Md5.h">
-      <Filter>头文件\Helper</Filter>
     </ClInclude>
     <ClInclude Include="API\TBMConfig.h">
       <Filter>头文件\API</Filter>
@@ -311,9 +302,6 @@
     <ClCompile Include="DefriendPage.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkHelper.cpp">
-      <Filter>源文件\Helper</Filter>
-    </ClCompile>
     <ClCompile Include="TiebaCollect.cpp">
       <Filter>源文件\Tieba</Filter>
     </ClCompile>
@@ -322,9 +310,6 @@
     </ClCompile>
     <ClCompile Include="TiebaOperate.cpp">
       <Filter>源文件\Tieba</Filter>
-    </ClCompile>
-    <ClCompile Include="MiscHelper.cpp">
-      <Filter>源文件\Helper</Filter>
     </ClCompile>
     <ClCompile Include="Update.cpp">
       <Filter>源文件\Helper</Filter>
@@ -358,9 +343,6 @@
     </ClCompile>
     <ClCompile Include="InputKeywordDlg.cpp">
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
-    </ClCompile>
-    <ClCompile Include="Md5.cpp">
-      <Filter>源文件\Helper</Filter>
     </ClCompile>
     <ClCompile Include="TBMConfig.cpp">
       <Filter>源文件\API</Filter>

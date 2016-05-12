@@ -3,7 +3,7 @@
 #import <msscript.ocx> no_namespace
 #include <StringHelper.h>
 #include "NetworkHelper.h"
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 #include "TiebaManagerDlg.h"
 
 
@@ -12,6 +12,7 @@ const char UPDATE_CURRENT_VERSION_A[] = "16-05-07";
 const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
 // 更新日志
 const TCHAR UPDATE_LOG[] = _T("1. 兼容XP和Win7登录");
+
 
 // 字符串转时间戳
 static time_t Str2Time(const CString& str)
@@ -30,7 +31,7 @@ static time_t Str2Time(const CString& str)
 CheckUpdateResult CheckUpdate()
 {
 	// 取上传时间
-	CString src = HTTPGet(UPDATE_INFO_URL, FALSE);
+	CString src = HTTPGet(UPDATE_INFO_URL);
 	// 字符串
 	CString time = GetStringBetween(src, _T(R"("Last-Modified":")"), _T("\""));
 	if (time == _T(""))

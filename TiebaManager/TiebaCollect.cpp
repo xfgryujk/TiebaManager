@@ -76,13 +76,13 @@ const TCHAR LZL_DURING_TIME_RIGHT[] = _T("}");
 BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& threads)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=UTF-8&kw=") + EncodeURI(forumName)
-		+ _T("&pn=") + ignoreThread, FALSE, &g_stopScanFlag);
+		+ _T("&pn=") + ignoreThread);
 
 	CStringArray rawThreads;
 	SplitString(rawThreads, src, THREAD_SPLIT);
 	if (rawThreads.GetSize() < 2)
 	{
-		if (src != NET_STOP_TEXT && src != NET_TIMEOUT_TEXT)
+		if (src != NET_TIMEOUT_TEXT)
 			WriteString(src, _T("forum.txt"));
 		return FALSE;
 	}
@@ -113,9 +113,7 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 // 取帖子列表
 GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, vector<PostInfo>& posts, vector<PostInfo>& lzls)
 {
-	CString src = _src != _T("") ? _src : HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page, FALSE, &g_stopScanFlag);
-	if (src == NET_STOP_TEXT)
-		return GET_POSTS_STOP;
+	CString src = _src != _T("") ? _src : HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
 	if (src == NET_TIMEOUT_TEXT)
 		return GET_POSTS_TIMEOUT;
 
@@ -172,7 +170,7 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 	CString url;
 	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), 
 		timestamp, (LPCTSTR)tid, (LPCTSTR)g_userTiebaInfo.m_forumID, (LPCTSTR)page);
-	CString src = HTTPGet(url, FALSE, &g_stopScanFlag);
+	CString src = HTTPGet(url);
 	//WriteString(src, _T("lzl.txt"));
 	CStringArray splitedSrc; // 0楼中楼，1用户
 	SplitString(splitedSrc, src, _T("\"user_list\":{"));
@@ -231,7 +229,7 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 CString GetPIDFromUser(const CString& userName)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + g_userTiebaInfo.m_encodedForumName + _T("&qw=&rn=10&un=")
-		+ userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"), FALSE);
+		+ userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"));
 	if (src == NET_TIMEOUT_TEXT)
 		return NET_TIMEOUT_TEXT;
 	CString pid = GetStringBetween(src, _T("<div class=\"s_post\">"), _T("target=\"_blank\" >"));

@@ -36,6 +36,18 @@
     <ClCompile Include="ConfigFile.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
+    <ClCompile Include="Md5.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="MiscHelper.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageHelper.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkHelper.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Helper.def">
@@ -62,6 +74,18 @@
       <Filter>头文件\API</Filter>
     </ClInclude>
     <ClInclude Include="API\HelperCommon.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\Md5.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\MiscHelper.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\ImageHelper.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\NetworkHelper.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>

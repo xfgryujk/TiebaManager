@@ -43,13 +43,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\API;$(SolutionDir)Library\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Library\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\API;$(OpenCV)\build\include;$(SolutionDir)Library\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OpenCV)\build\x86\vc12\lib;$(SolutionDir)Library\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)\API;$(SolutionDir)Library\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Library\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\API;$(OpenCV)\build\include;$(SolutionDir)Library\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OpenCV)\build\x86\vc12\lib;$(SolutionDir)Library\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -63,7 +63,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>.\Helper.def</ModuleDefinitionFile>
-      <AdditionalDependencies>tinyxml2d.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml2d.lib;opencv_ts300d.lib;opencv_world300d.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -91,7 +91,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>.\Helper.def</ModuleDefinitionFile>
-      <AdditionalDependencies>tinyxml2.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyxml2.lib;opencv_ts300.lib;opencv_world300.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -114,6 +114,10 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="ImageHelper.cpp" />
+    <ClCompile Include="Md5.cpp" />
+    <ClCompile Include="MiscHelper.cpp" />
+    <ClCompile Include="NetworkHelper.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -127,6 +131,10 @@
   <ItemGroup>
     <ClInclude Include="API\HelperCommon.h" />
     <ClInclude Include="API\ConfigFile.h" />
+    <ClInclude Include="API\ImageHelper.h" />
+    <ClInclude Include="API\Md5.h" />
+    <ClInclude Include="API\MiscHelper.h" />
+    <ClInclude Include="API\NetworkHelper.h" />
     <ClInclude Include="API\StringHelper.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

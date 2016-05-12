@@ -1,6 +1,4 @@
 #pragma once
-#include <opencv2\core\mat.hpp>
-using cv::Mat;
 #include "TiebaCollect.h"
 
 
@@ -11,11 +9,7 @@ extern set<CString> g_illegalImage; // 已检查违规的图片
 const CString IMG_CACHE_PATH = _T("ImageCache\\");
 
 
-BOOL ReadImage(const CString& path, Mat& img);
-BOOL ReadImage(const BYTE* buffer, ULONG size, CImage& img);
-BOOL ReadImage(const BYTE* buffer, ULONG size, Mat& img);
 void ReadImages(const CString& dir);
-CString GetImageName(const CString& imgUrl);
 
 class GetImagesBase
 {

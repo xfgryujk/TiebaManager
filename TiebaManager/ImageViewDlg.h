@@ -25,6 +25,7 @@ public:
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 	virtual void PostNcDestroy();
 	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	void UpdateScrollRange();
 	virtual BOOL OnInitDialog();
@@ -46,6 +47,4 @@ protected:
 
 	unique_ptr<vector<CString> > m_imageURL;
 	vector<CImage> m_image;
-public:
-	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };

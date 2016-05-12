@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#define EXPORT_OPTION
 #include <TBMConfig.h>
 using tinyxml2::XMLElement;
 #include "Update.h"
@@ -19,7 +18,7 @@ TIEBA_MANAGER_API CString CACHE_PATH;								// 确定贴吧时初始化
 
 // 全局配置
 TIEBA_MANAGER_API CGlobalConfig g_globalConfig;
-TIEBA_MANAGER_API CGlobalConfig::CGlobalConfig() : CConfigBase("Global"),
+CGlobalConfig::CGlobalConfig() : CConfigBase("Global"),
 	m_firstRun("FirstRun", TRUE),
 	m_firstRunAfterUpdate("FirstRunAfter" + CStringA(UPDATE_CURRENT_VERSION_A), TRUE),
 	m_currentUser("UserName", _T("[NULL]"), [](const CString& value)->BOOL{ return value != _T("") && PathFileExists(USERS_PATH + value + _T("\\ck.xml")); }),
@@ -33,7 +32,7 @@ TIEBA_MANAGER_API CGlobalConfig::CGlobalConfig() : CConfigBase("Global"),
 
 // 用户配置
 TIEBA_MANAGER_API CUserConfig g_userConfig;
-TIEBA_MANAGER_API CUserConfig::CUserConfig() : CConfigBase("User"),
+CUserConfig::CUserConfig() : CConfigBase("User"),
 	m_plan("Plan", _T("默认")),
 	m_forumName("ForumName")
 {
@@ -93,7 +92,7 @@ TIEBA_MANAGER_API DEFINE_READ_VECTOR(CPlan::Keyword)
 TIEBA_MANAGER_API DEFINE_WRITE_VECTOR(CPlan::Keyword)
 
 TIEBA_MANAGER_API CPlan g_plan;
-TIEBA_MANAGER_API CPlan::CPlan() : CConfigBase("Plan"),
+CPlan::CPlan() : CConfigBase("Plan"),
 	m_scanInterval		("ScanInterval",		5,		[](const int& value)->BOOL{ return 0 <= value && value <= 600; }),
 	m_onlyScanTitle		("OnlyScanTitle",		FALSE),
 	m_scanPageCount		("ScanPageCount",		1,		[](const int& value)->BOOL{ return 1 <= value; }),
@@ -162,7 +161,7 @@ TIEBA_MANAGER_API CPlan::CPlan() : CConfigBase("Plan"),
 	m_options.push_back(&m_trustedThread);
 };
 
-TIEBA_MANAGER_API void CPlan::PostChange()
+void CPlan::PostChange()
 {
 	if (m_updateImage)
 	{

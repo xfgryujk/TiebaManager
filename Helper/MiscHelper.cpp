@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "MiscHelper.h"
-#include <Dbghelp.h>
+#include <MiscHelper.h>
+
 
 // 不阻塞消息的延迟
-void Delay(DWORD time)
+HELPER_API void Delay(DWORD time)
 {
 #pragma warning(suppress: 28159)
 	DWORD startTime = GetTickCount();
@@ -16,7 +16,7 @@ void Delay(DWORD time)
 }
 
 // 处理消息
-void DoEvents()
+HELPER_API void DoEvents()
 {
 	MSG msg;
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -26,25 +26,8 @@ void DoEvents()
 	}
 }
 
-// 异常处理
-LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
-{
-	CFile file;
-	if (file.Open(_T("exception.dmp"), CFile::modeCreate | CFile::modeWrite))
-	{
-		MINIDUMP_EXCEPTION_INFORMATION einfo;
-		einfo.ThreadId = GetCurrentThreadId();
-		einfo.ExceptionPointers = ExceptionInfo;
-		einfo.ClientPointers = FALSE;
-		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpWithIndirectlyReferencedMemory,
-			&einfo, NULL, NULL);
-	}
-	AfxMessageBox(_T("程序崩溃了，请把exception.dmp文件发到xfgryujk@126.com帮助调试"), MB_ICONERROR);
-	return EXCEPTION_CONTINUE_SEARCH;
-}
-
 // 创建目录
-BOOL CreateDir(const CString& path)
+HELPER_API BOOL CreateDir(const CString& path)
 {
 	if (PathFileExists(path))
 		return TRUE;
@@ -59,7 +42,7 @@ BOOL CreateDir(const CString& path)
 }
 
 // 初始化COM库
-BOOL CoInitializeHelper()
+HELPER_API BOOL CoInitializeHelper()
 {
 	HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	if (FAILED(hr))

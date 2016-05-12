@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMConfig.h>
 #include "TiebaVariable.h"
 #include "ScanImage.h"
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 
 
 // CSettingDlg ¶Ô»°¿ò

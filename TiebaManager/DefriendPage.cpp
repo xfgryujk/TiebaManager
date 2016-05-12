@@ -6,7 +6,7 @@
 #include "TiebaManagerDlg.h"
 #include <StringHelper.h>
 #include "NetworkHelper.h"
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 #include "TiebaVariable.h"
 #include "TiebaOperate.h"
 
@@ -153,7 +153,7 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 		{
 			CString url;
 			url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s"), (LPCTSTR)g_userTiebaInfo.m_encodedForumName);
-			CString src = HTTPGet(url);
+			CString src = HTTPGet(url, &*g_userTiebaInfo.m_cookie);
 			CString totalPage = GetStringBetween(src, _T(R"(class="tbui_total_page">¹²)"), _T("Ò³"));
 			if (totalPage == _T(""))
 			{
@@ -212,7 +212,7 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 		s_instanceLock.Unlock();
 		CString url;
 		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), (LPCTSTR)g_userTiebaInfo.m_encodedForumName, page);
-		CString src = HTTPGet(url);
+		CString src = HTTPGet(url, &*g_userTiebaInfo.m_cookie);
 		if (s_stopFlag)
 			break;
 

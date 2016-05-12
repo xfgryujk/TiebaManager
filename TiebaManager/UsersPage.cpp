@@ -9,7 +9,7 @@
 #include "TiebaVariable.h"
 #include "SettingDlg.h"
 #include "TiebaManagerDlg.h"
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 
 
 // CUsersPage 对话框
@@ -74,7 +74,7 @@ void CUsersPage::OnBnClickedButton1()
 		return;
 	// 创建目录
 	CreateDir(USERS_PATH + loginDlg.m_userName);
-	
+
 	// 保存Cookie
 	CUserTiebaInfo ck;
 	*ck.m_cookie = loginDlg.m_cookie;
@@ -84,6 +84,8 @@ void CUsersPage::OnBnClickedButton1()
 		AfxMessageBox(_T("保存账号失败！"), MB_ICONERROR);
 		return;
 	}
+	if (g_globalConfig.m_currentUser == loginDlg.m_userName)
+		*g_userTiebaInfo.m_cookie = loginDlg.m_cookie;
 
 	int index = m_list.FindStringExact(-1, loginDlg.m_userName);
 	if (index == LB_ERR)

@@ -6,7 +6,7 @@
 
 #include <StringHelper.h>
 #include "NetworkHelper.h"
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 #include <TBMConfig.h>
 
 #include "TiebaCollect.h"

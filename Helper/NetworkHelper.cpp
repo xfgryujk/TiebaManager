@@ -1,9 +1,8 @@
 #include "stdafx.h"
-#include "NetworkHelper.h"
+#include <NetworkHelper.h>
 using std::regex_iterator;
-#include "TiebaVariable.h" // extern CString g_cookie;
 #include <StringHelper.h>
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 #include "msxml2.h" // C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include\MsXml2.h
 #import <winhttpcom.dll> no_namespace //#import <winhttp.dll> no_namespace
 
@@ -339,10 +338,10 @@ unique_ptr<CWinHttpBase> CWinHttpBase::Create()
 
 
 // 从HTTP头提取Cookie并修改cookie
-static void ReceiveCookie(LPCTSTR headers, CString& cookie)
+static void ReceiveCookie(const CString& headers, CString& cookie)
 {
 	static const wregex cookieExp(_T("Set-Cookie: (.*?)=(.*?);"));
-	for (regex_iterator<LPCTSTR> it(headers, headers + _tcslen(headers), cookieExp), end; it != end; ++it)
+	for (regex_iterator<LPCTSTR> it(headers, (LPCTSTR)headers + _tcslen(headers), cookieExp), end; it != end; ++it)
 	{
 		CString name = (*it)[1].str().c_str();
 		CString value = (*it)[2].str().c_str();
@@ -360,12 +359,10 @@ static void ReceiveCookie(LPCTSTR headers, CString& cookie)
 
 // HTTP请求
 static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
-	LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
+	const CString& URL, const CString& data, CString* cookie)
 {
 	if (xml.IsEmpty())
 		return NET_FAILED_TO_CREATE_INSTANCE;
-	if (cookie == NULL)
-		cookie = &*g_userTiebaInfo.m_cookie;
 
 	if (postMethod)
 	{
@@ -374,7 +371,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 	}
 	else
 		xml.Open(_T("GET"), URL, true);
-	if (useCookie)
+	if (cookie != NULL)
 		xml.SetRequestHeader(_T("Cookie"), *cookie);
 	xml.Send(data);
 
@@ -384,11 +381,6 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 	while (!xml.IsCompleted())
 	{
 		Delay(1);
-		if (stopFlag != NULL && *stopFlag)
-		{
-			xml.Abort();
-			return NET_STOP;
-		}
 #pragma warning(suppress: 28159)
 		if (GetTickCount() - startTime > 10000)
 		{
@@ -398,11 +390,11 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 	}
 
 	// 接收Cookie
-	if (useCookie)
+	if (cookie != NULL)
 	{
 		CString headers;
 		xml.GetAllResponseHeaders(headers);
-		ReceiveCookie((LPCTSTR)headers, *cookie);
+		ReceiveCookie(headers, *cookie);
 	}
 
 	// 重定向
@@ -412,17 +404,17 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 	{
 		CString location;
 		xml.GetResponseLocation(location);
-		return HTTPRequestBase(postMethod, xml, URL, data, useCookie, stopFlag, cookie);
+		return HTTPRequestBase(postMethod, xml, URL, data, cookie);
 	}
 
 	return NET_SUCCESS;
 }
 
 // HTTP GET请求
-CString HTTPGet(LPCTSTR URL, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
+HELPER_API CString HTTPGet(const CString& URL, CString* cookie)
 {
 	unique_ptr<CWinHttpBase> xml(CWinHttpBase::Create());
-	HTTPRequestResult ret = HTTPRequestBase(FALSE, *xml, URL, NULL, useCookie, stopFlag, cookie);
+	HTTPRequestResult ret = HTTPRequestBase(FALSE, *xml, URL, NULL, cookie);
 	if (ret != NET_SUCCESS)
 	{
 		CString result;
@@ -430,9 +422,6 @@ CString HTTPGet(LPCTSTR URL, BOOL useCookie, volatile BOOL* stopFlag, CString* c
 		{
 		case NET_FAILED_TO_CREATE_INSTANCE:
 			result = NET_FAILED_TO_CREATE_INSTANCE_TEXT;
-			break;
-		case NET_STOP:
-			result = NET_STOP_TEXT;
 			break;
 		case NET_TIMEOUT:
 			result = NET_TIMEOUT_TEXT;
@@ -447,10 +436,10 @@ CString HTTPGet(LPCTSTR URL, BOOL useCookie, volatile BOOL* stopFlag, CString* c
 }
 
 // HTTP POST请求
-CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
+HELPER_API CString HTTPPost(const CString& URL, const CString& data, CString* cookie)
 {
 	unique_ptr<CWinHttpBase> xml(CWinHttpBase::Create());
-	HTTPRequestResult ret = HTTPRequestBase(TRUE, *xml, URL, data, useCookie, stopFlag, cookie);
+	HTTPRequestResult ret = HTTPRequestBase(TRUE, *xml, URL, data, cookie);
 	if (ret != NET_SUCCESS)
 	{
 		CString result;
@@ -458,9 +447,6 @@ CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopF
 		{
 		case NET_FAILED_TO_CREATE_INSTANCE:
 			result = NET_FAILED_TO_CREATE_INSTANCE_TEXT;
-			break;
-		case NET_STOP:
-			result = NET_STOP_TEXT;
 			break;
 		case NET_TIMEOUT:
 			result = NET_TIMEOUT_TEXT;
@@ -475,10 +461,10 @@ CString HTTPPost(LPCTSTR URL, LPCTSTR data, BOOL useCookie, volatile BOOL* stopF
 }
 
 // HTTP GET请求，取得原始数据
-HTTPRequestResult HTTPGetRaw(LPCTSTR URL, unique_ptr<BYTE[]>* buffer, ULONG* size, BOOL useCookie, volatile BOOL* stopFlag, CString* cookie)
+HELPER_API HTTPRequestResult HTTPGetRaw(const CString& URL, unique_ptr<BYTE[]>* buffer, ULONG* size, CString* cookie)
 {
 	unique_ptr<CWinHttpBase> xml(CWinHttpBase::Create());
-	HTTPRequestResult ret = HTTPRequestBase(FALSE, *xml, URL, NULL, useCookie, stopFlag, cookie);
+	HTTPRequestResult ret = HTTPRequestBase(FALSE, *xml, URL, NULL, cookie);
 	if (ret != NET_SUCCESS)
 		return ret;
 

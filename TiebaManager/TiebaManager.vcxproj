@@ -63,7 +63,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Helper.lib;tinyxml2d.lib;opencv_ts300d.lib;opencv_world300d.lib;Dbghelp.lib;oleacc.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>Helper.lib;tinyxml2d.lib;opencv_ts300d.lib;opencv_world300d.lib;Dbghelp.lib;Winmm.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
@@ -94,7 +94,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Helper.lib;tinyxml2.lib;opencv_ts300.lib;opencv_world300.lib;Dbghelp.lib;Wininet.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>Helper.lib;tinyxml2.lib;opencv_ts300.lib;opencv_world300.lib;Dbghelp.lib;Winmm.lib</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Midl>
@@ -126,8 +126,6 @@
     <ClInclude Include="InputKeywordDlg.h" />
     <ClInclude Include="LockThreadPage.h" />
     <ClInclude Include="LogHelper.h" />
-    <ClInclude Include="Md5.h" />
-    <ClInclude Include="MiscHelper.h" />
     <ClInclude Include="NormalListPage.h" />
     <ClInclude Include="RegListPage.h" />
     <ClInclude Include="TiebaCollect.h" />
@@ -135,7 +133,6 @@
     <ClInclude Include="ImageViewDlg.h" />
     <ClInclude Include="ListPage.h" />
     <ClInclude Include="LoopBanPage.h" />
-    <ClInclude Include="NetworkHelper.h" />
     <ClInclude Include="NormalDlg.h" />
     <ClInclude Include="TiebaOperate.h" />
     <ClInclude Include="OperatePage.h" />
@@ -180,9 +177,6 @@
     <ClCompile Include="LockThreadPage.cpp" />
     <ClCompile Include="LogHelper.cpp" />
     <ClCompile Include="LoopBanPage.cpp" />
-    <ClCompile Include="Md5.cpp" />
-    <ClCompile Include="MiscHelper.cpp" />
-    <ClCompile Include="NetworkHelper.cpp" />
     <ClCompile Include="NormalDlg.cpp" />
     <ClCompile Include="NormalListPage.cpp" />
     <ClCompile Include="OperatePage.cpp" />

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ConfigHelper.h"
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 #include <TBMConfig.h>
 #include "TiebaVariable.h"
 #include "ScanImage.h"

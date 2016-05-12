@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#define EXPORT_OPTION
 #include <ConfigFile.h>
 using namespace tinyxml2;
 #include <StringHelper.h>

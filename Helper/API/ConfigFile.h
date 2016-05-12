@@ -39,13 +39,9 @@ public:
 	T* operator -> (){ return &m_value; }
 	void UseDefault(){ m_value = m_default; }
 
-#ifdef EXPORT_OPTION // 如果要定义新的COption，在include之前加这个宏
+	// 貌似全部用dllexport也可以？
 	__declspec(dllexport) void Read(const tinyxml2::XMLElement& root);
 	__declspec(dllexport) void Write(tinyxml2::XMLElement& root) const;
-#else
-	__declspec(dllimport) void Read(const tinyxml2::XMLElement& root);
-	__declspec(dllimport) void Write(tinyxml2::XMLElement& root) const;
-#endif
 };
 
 // 读Option

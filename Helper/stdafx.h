@@ -37,6 +37,8 @@
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 
+#pragma warning(disable:4819)
+
 // STL
 #include <vector>
 #include <queue>

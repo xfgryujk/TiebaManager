@@ -6,7 +6,7 @@
 * this program is licensed under the GPL.
 */
 #include "stdafx.h"
-#include "Md5.h"
+#include <Md5.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -341,7 +341,7 @@ CString CMD5::ToString()
 }
 
 // ×ª³ÉUTF-8±àÂëÈ¡MD5
-CString GetMD5_UTF8(const CString& data)
+HELPER_API CString GetMD5_UTF8(const CString& data)
 {
 	int dstLen = WideCharToMultiByte(CP_UTF8, 0, data, data.GetLength(), NULL, 0, NULL, NULL);
 	if (dstLen == 0)

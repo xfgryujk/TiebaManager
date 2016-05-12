@@ -29,7 +29,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ConfigHelper.h"
 #include <StringHelper.h>
 #include "NetworkHelper.h"
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 #include "Update.h"
 
 #include "TiebaVariable.h"
@@ -462,7 +462,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	std::wcmatch res;
 
 
-	src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=") + EncodeURI(g_userTiebaInfo.m_forumName));
+	src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=") + EncodeURI(g_userTiebaInfo.m_forumName), &*g_userTiebaInfo.m_cookie);
 	if (src == NET_TIMEOUT_TEXT)
 	{
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
@@ -500,8 +500,8 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 
 	// 验证用户权限
 	// 旧接口
-	//src2 = HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(g_forumName), FALSE);
-	src2 = HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/listBawuTeamInfo?word=") + g_userTiebaInfo.m_encodedForumName + _T("&ie=utf-8"), FALSE);
+	//src2 = HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(g_forumName));
+	src2 = HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/listBawuTeamInfo?word=") + g_userTiebaInfo.m_encodedForumName + _T("&ie=utf-8"));
 	if (src2 == NET_TIMEOUT_TEXT)
 	{
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);

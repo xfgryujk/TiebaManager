@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include <StringHelper.h>
-#define EXPORT_OPTION
 #include <ConfigFile.h>
 #import <msscript.ocx> no_namespace
 using namespace tinyxml2;

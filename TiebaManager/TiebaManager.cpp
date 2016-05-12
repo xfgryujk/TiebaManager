@@ -5,12 +5,16 @@
 #include "stdafx.h"
 #include "TiebaManager.h"
 #include "TiebaManagerDlg.h"
-#include "MiscHelper.h"
+#include <Dbghelp.h>
 #include <TBMConfig.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+
+// 唯一的一个 CTiebaManagerApp 对象
+CTiebaManagerApp theApp;
 
 
 // CTiebaManagerApp
@@ -21,7 +25,6 @@ END_MESSAGE_MAP()
 
 
 // CTiebaManagerApp 构造
-
 CTiebaManagerApp::CTiebaManagerApp()
 {
 	// 支持重新启动管理器
@@ -31,14 +34,24 @@ CTiebaManagerApp::CTiebaManagerApp()
 	// 将所有重要的初始化放置在 InitInstance 中
 }
 
-
-// 唯一的一个 CTiebaManagerApp 对象
-
-CTiebaManagerApp theApp;
-
+// 异常处理
+static LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
+{
+	CFile file;
+	if (file.Open(_T("exception.dmp"), CFile::modeCreate | CFile::modeWrite))
+	{
+		MINIDUMP_EXCEPTION_INFORMATION einfo;
+		einfo.ThreadId = GetCurrentThreadId();
+		einfo.ExceptionPointers = ExceptionInfo;
+		einfo.ClientPointers = FALSE;
+		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpWithIndirectlyReferencedMemory,
+			&einfo, NULL, NULL);
+	}
+	AfxMessageBox(_T("程序崩溃了，请把exception.dmp文件发到xfgryujk@126.com帮助调试"), MB_ICONERROR);
+	return EXCEPTION_EXECUTE_HANDLER;
+}
 
 // CTiebaManagerApp 初始化
-
 BOOL CTiebaManagerApp::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要

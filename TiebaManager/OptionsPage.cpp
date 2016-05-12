@@ -5,7 +5,7 @@
 #include "OptionsPage.h"
 #include <TBMConfig.h>
 #include "SettingDlg.h"
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 
 
 // COptionsPage ¶Ô»°¿ò

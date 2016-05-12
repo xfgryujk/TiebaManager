@@ -3,9 +3,10 @@
 
 #include "stdafx.h"
 #include "ImageViewDlg.h"
+#include <ImageHelper.h>
 #include "ScanImage.h"
 #include "NetworkHelper.h"
-#include "MiscHelper.h"
+#include <MiscHelper.h>
 #include "InputDlg.h"
 
 
@@ -257,8 +258,6 @@ void CImageViewDlg::OnBnClickedButton3()
 		folder.ReleaseBuffer();
 		
 		CString imgName = GetImageName((*m_imageURL)[index]);
-		if (imgName.Right(4).CompareNoCase(_T(".jpg")) != 0)
-			imgName += _T(".jpg");
 		m_image[index].Save(folder + _T("\\") + imgName);
 	}
 }
