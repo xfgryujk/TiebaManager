@@ -3,7 +3,7 @@
 #include <ImageHelper.h>
 #include <TBMConfig.h>
 #include <opencv2\imgproc\imgproc.hpp>
-#include "NetworkHelper.h"
+#include <NetworkHelper.h>
 #include <MiscHelper.h>
 
 

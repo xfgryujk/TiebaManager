@@ -43,12 +43,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Helper\API;$(ProjectDir)\API;$(OpenCV)\build\include;$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)TiebaAPI\API;$(SolutionDir)Helper\API;$(ProjectDir)\API;$(OpenCV)\build\include;$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)$(Configuration);$(OpenCV)\build\x86\vc12\lib;$(SolutionDir)Library\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Helper\API;$(ProjectDir)\API;$(OpenCV)\build\include;$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)TiebaAPI\API;$(SolutionDir)Helper\API;$(ProjectDir)\API;$(OpenCV)\build\include;$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)$(Configuration);$(OpenCV)\build\x86\vc12\lib;$(SolutionDir)Library\lib;$(VC_LibraryPath_x86);$(WindowsSdk_71A_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -56,14 +56,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>TIEBA_MANAGER_EXPORTS;ASMV;ASMINF;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TIEBA_MANAGER_EXPORTS;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Helper.lib;tinyxml2d.lib;opencv_ts300d.lib;opencv_world300d.lib;Dbghelp.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>TiebaAPI.lib;Helper.lib;tinyxml2d.lib;opencv_ts300d.lib;opencv_world300d.lib;Dbghelp.lib;Winmm.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
@@ -86,7 +86,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>TIEBA_MANAGER_EXPORTS;ASMV;ASMINF;WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TIEBA_MANAGER_EXPORTS;WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -94,7 +94,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Helper.lib;tinyxml2.lib;opencv_ts300.lib;opencv_world300.lib;Dbghelp.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>TiebaAPI.lib;Helper.lib;tinyxml2.lib;opencv_ts300.lib;opencv_world300.lib;Dbghelp.lib;Winmm.lib</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Midl>
@@ -128,13 +128,12 @@
     <ClInclude Include="LogHelper.h" />
     <ClInclude Include="NormalListPage.h" />
     <ClInclude Include="RegListPage.h" />
-    <ClInclude Include="TiebaCollect.h" />
     <ClInclude Include="DefriendPage.h" />
     <ClInclude Include="ImageViewDlg.h" />
     <ClInclude Include="ListPage.h" />
     <ClInclude Include="LoopBanPage.h" />
     <ClInclude Include="NormalDlg.h" />
-    <ClInclude Include="TiebaOperate.h" />
+    <ClInclude Include="TBMOperate.h" />
     <ClInclude Include="OperatePage.h" />
     <ClInclude Include="ResizeControl.h" />
     <ClInclude Include="TiebaScan.h" />
@@ -204,10 +203,9 @@
     </ClCompile>
     <ClCompile Include="SuperFunctionDlg.cpp" />
     <ClCompile Include="TextButton.cpp" />
-    <ClCompile Include="TiebaCollect.cpp" />
     <ClCompile Include="TiebaManager.cpp" />
     <ClCompile Include="TiebaManagerDlg.cpp" />
-    <ClCompile Include="TiebaOperate.cpp" />
+    <ClCompile Include="TBMOperate.cpp" />
     <ClCompile Include="TiebaScan.cpp" />
     <ClCompile Include="TiebaVariable.cpp" />
     <ClCompile Include="Update.cpp" />

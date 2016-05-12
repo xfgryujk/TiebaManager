@@ -6,8 +6,8 @@
 #include "TiebaManagerDlg.h"
 #include <StringHelper.h>
 #include <MiscHelper.h>
-#include "TiebaCollect.h"
-#include "TiebaOperate.h"
+#include <TiebaClawer.h>
+#include "TBMOperate.h"
 #include <TBMConfig.h>
 #include <Mmsystem.h>
 
@@ -124,13 +124,13 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 	// ËøÌû
 	while (!m_stopFlag)
 	{
-		vector<PostInfo> posts, lzls;
-		GetPosts(tid, _T(""), page, posts, lzls);
+		vector<PostInfo> posts;
+		GetPosts(tid, _T(""), page, posts);
 
 		for (const PostInfo& post : posts)
 			if (_ttoi(post.floor) > iFloor)
 			{
-				CString code = DeletePost(tid, post.pid);
+				CString code = g_tiebaOperate->DeletePost(tid, post.pid);
 				if (code != _T("0"))
 				{
 					CString content;

@@ -1,10 +1,7 @@
 #include "stdafx.h"
-#include "TiebaCollect.h"
-
-#include "TiebaVariable.h"
-
+#include <TiebaClawer.h>
 #include <StringHelper.h>
-#include "NetworkHelper.h"
+#include <NetworkHelper.h>
 
 
 // 采集贴吧用的常量
@@ -73,7 +70,7 @@ const TCHAR LZL_DURING_TIME_RIGHT[] = _T("}");
 
 
 // 取主题列表
-BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& threads)
+TIEBA_API_API BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& threads)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=UTF-8&kw=") + EncodeURI(forumName)
 		+ _T("&pn=") + ignoreThread);
@@ -111,7 +108,7 @@ BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& thr
 }
 
 // 取帖子列表
-GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, vector<PostInfo>& posts, vector<PostInfo>& lzls)
+TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, vector<PostInfo>& posts)
 {
 	CString src = _src != _T("") ? _src : HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
 	if (src == NET_TIMEOUT_TEXT)
@@ -157,19 +154,17 @@ GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& 
 		//OutputDebugString(_T("\n----------------------------------"));
 	}
 
-	GetLzls(tid, page, posts, lzls);
-
 	return GET_POSTS_SUCCESS;
 }
 
 // 取楼中楼列表
-void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, vector<PostInfo>& lzls)
+TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const vector<PostInfo>& posts, vector<PostInfo>& lzls)
 {
 	time_t timestamp;
 	time(&timestamp);
 	CString url;
 	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), 
-		timestamp, (LPCTSTR)tid, (LPCTSTR)g_userTiebaInfo.m_forumID, (LPCTSTR)page);
+		timestamp, (LPCTSTR)tid, (LPCTSTR)fid, (LPCTSTR)page);
 	CString src = HTTPGet(url);
 	//WriteString(src, _T("lzl.txt"));
 	CStringArray splitedSrc; // 0楼中楼，1用户
@@ -223,16 +218,4 @@ void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, v
 			}
 		}
 	}
-}
-
-// 取用户发的帖子ID
-CString GetPIDFromUser(const CString& userName)
-{
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + g_userTiebaInfo.m_encodedForumName + _T("&qw=&rn=10&un=")
-		+ userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"));
-	if (src == NET_TIMEOUT_TEXT)
-		return NET_TIMEOUT_TEXT;
-	CString pid = GetStringBetween(src, _T("<div class=\"s_post\">"), _T("target=\"_blank\" >"));
-	pid = GetStringBetween(pid, _T("?pid="), _T("&"));
-	return pid;
 }

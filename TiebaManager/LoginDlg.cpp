@@ -4,9 +4,9 @@
 #include "stdafx.h"
 #include "LoginDlg.h"
 #include <StringHelper.h>
-#include "NetworkHelper.h"
+#include <NetworkHelper.h>
 #include <WinInet.h>
-#include "TiebaCollect.h"
+#include <TiebaClawer.h>
 
 
 // CLoginDlg 对话框
@@ -137,7 +137,7 @@ void CLoginDlg::Login(BOOL prompt)
 
 HRESULT CLoginDlg::GetCookie(CString& cookie)
 {
-	DWORD size;
+	DWORD size = 0;
 	InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), NULL,
 		&size, INTERNET_COOKIE_HTTPONLY, NULL); // size为字节数
 	BOOL result = InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), cookie.GetBuffer(size),

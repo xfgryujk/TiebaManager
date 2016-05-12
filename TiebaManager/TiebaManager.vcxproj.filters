@@ -165,12 +165,6 @@
     <ClInclude Include="DefriendPage.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
-    <ClInclude Include="TiebaCollect.h">
-      <Filter>头文件\Tieba</Filter>
-    </ClInclude>
-    <ClInclude Include="TiebaOperate.h">
-      <Filter>头文件\Tieba</Filter>
-    </ClInclude>
     <ClInclude Include="TiebaScan.h">
       <Filter>头文件\Tieba</Filter>
     </ClInclude>
@@ -215,6 +209,9 @@
     </ClInclude>
     <ClInclude Include="ConfigHelper.h">
       <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMOperate.h">
+      <Filter>头文件\Tieba</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -302,13 +299,7 @@
     <ClCompile Include="DefriendPage.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
-    <ClCompile Include="TiebaCollect.cpp">
-      <Filter>源文件\Tieba</Filter>
-    </ClCompile>
     <ClCompile Include="TiebaScan.cpp">
-      <Filter>源文件\Tieba</Filter>
-    </ClCompile>
-    <ClCompile Include="TiebaOperate.cpp">
       <Filter>源文件\Tieba</Filter>
     </ClCompile>
     <ClCompile Include="Update.cpp">
@@ -349,6 +340,9 @@
     </ClCompile>
     <ClCompile Include="ConfigHelper.cpp">
       <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMOperate.cpp">
+      <Filter>源文件\Tieba</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

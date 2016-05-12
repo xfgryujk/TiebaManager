@@ -2,7 +2,7 @@
 #include "Update.h"
 #import <msscript.ocx> no_namespace
 #include <StringHelper.h>
-#include "NetworkHelper.h"
+#include <NetworkHelper.h>
 #include <MiscHelper.h>
 #include "TiebaManagerDlg.h"
 

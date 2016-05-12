@@ -6,8 +6,8 @@
 #include "ExplorerDlg.h"
 #include "TiebaManagerDlg.h"
 #include "TiebaVariable.h"
-#include "TiebaCollect.h"
-#include "TiebaOperate.h"
+#include <TiebaClawer.h>
+#include "TBMOperate.h"
 #include <Mmsystem.h>
 
 
@@ -157,14 +157,14 @@ void CExplorerDlg::OnBnClickedButton1()
 	if (tabIndex == 0) // Ö÷Ìâ
 	{
 		ThreadInfo& thread = m_exploreThreadPage.m_threads[index];
-		code = DeleteThread(thread.tid);
+		code = g_tiebaOperate->DeleteThread(thread.tid);
 		if (code == _T("0"))
 			g_userCache.m_deletedTID.insert(_ttoi64(thread.tid));
 	}
 	else if (tabIndex == 1) // Ìû×Ó
-		code = DeletePost(m_explorePostPage.m_tid, m_explorePostPage.m_posts[index].pid);
+		code = g_tiebaOperate->DeletePost(m_explorePostPage.m_tid, m_explorePostPage.m_posts[index].pid);
 	else // Â¥ÖÐÂ¥
-		code = DeleteLZL(m_explorePostPage.m_tid, m_exploreLzlPage.m_lzls[index].pid);
+		code = g_tiebaOperate->DeleteLZL(m_explorePostPage.m_tid, m_exploreLzlPage.m_lzls[index].pid);
 
 
 	if (code != _T("0"))
@@ -189,8 +189,8 @@ void CExplorerDlg::OnBnClickedButton2()
 		author = m_exploreThreadPage.m_threads[index].author;
 		if (!g_plan.m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
 		{
-			vector<PostInfo> posts, lzls;
-			GetPosts(m_exploreThreadPage.m_threads[index].tid, _T(""), _T("1"), posts, lzls);
+			vector<PostInfo> posts;
+			GetPosts(m_exploreThreadPage.m_threads[index].tid, _T(""), _T("1"), posts);
 			if (posts.size() > 0)
 				pid = posts[0].pid;
 		}
@@ -214,7 +214,7 @@ void CExplorerDlg::OnBnClickedButton2()
 		AfxMessageBox(_T("·â½ûÊ§°Ü(»ñÈ¡Ìû×ÓIDÊ§°Ü)"), MB_ICONERROR);
 		return;
 	}*/
-	CString code = pid == _T("") ? BanIDClient(author) : BanID(author, pid);
+	CString code = pid == _T("") ? g_tiebaOperate->BanIDClient(author) : g_tiebaOperate->BanID(author, pid);
 	if (code != _T("0"))
 		AfxMessageBox(_T("·â½ûÊ§°Ü£¬´íÎó´úÂë" + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
 	else

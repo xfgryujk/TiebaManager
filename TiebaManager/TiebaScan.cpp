@@ -2,11 +2,11 @@
 #include "TiebaScan.h"
 
 #include "TiebaVariable.h"
-#include "TiebaCollect.h"
-#include "TiebaOperate.h"
+#include <TiebaClawer.h>
+#include "TBMOperate.h"
 
 #include <StringHelper.h>
-#include "NetworkHelper.h"
+#include <NetworkHelper.h>
 #include <MiscHelper.h>
 
 #include "TiebaManagerDlg.h"
@@ -96,7 +96,7 @@ static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg)
 		if (g_userCache.m_ignoredTID.find(tid) == g_userCache.m_ignoredTID.end()
 			&& CheckImageIllegal(thread.author, GetThreadImage(thread), msg))
 		{
-			AddConfirm(FALSE, thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
+			AddConfirm(FALSE, thread.title + _T("\r\n") + thread.preview, Operation::TBOBJ_THREAD, thread.tid,
 				thread.title, _T("1"), _T(""), thread.author, thread.authorID);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 				+ HTMLEscape(thread.title) + _T("</a>") + msg);
@@ -161,7 +161,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			if (g_userCache.m_ignoredTID.find(tid) == g_userCache.m_ignoredTID.end()
 				&& CheckIllegal(thread.title + _T("\r\n") + thread.preview, thread.author, _T(""), msg, forceToConfirm, pos, length))
 			{
-				AddConfirm(forceToConfirm, thread.title + _T("\r\n") + thread.preview, TBOBJ_THREAD, thread.tid,
+				AddConfirm(forceToConfirm, thread.title + _T("\r\n") + thread.preview, Operation::TBOBJ_THREAD, thread.tid,
 					thread.title, _T("0"), _T(""), thread.author, thread.authorID, _T(""), pos, length);
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 					+ HTMLEscape(thread.title) + _T("</a>") + msg);
@@ -330,7 +330,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 
 	// 获取帖子列表
 	vector<PostInfo> posts, lzls;
-	GetPostsResult res = GetPosts(tid, src, sPage, posts, lzls);
+	GetPostsResult res = GetPosts(tid, src, sPage, posts);
 	switch (res)
 	{
 	case GET_POSTS_TIMEOUT:
@@ -340,6 +340,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			_T("可能已被删")) + _T(")，暂时跳过</font>"));
 		return FALSE;
 	}
+	GetLzls(g_userTiebaInfo.m_forumID, tid, sPage, posts, lzls);
 
 	CString msg;
 	BOOL forceToConfirm;
@@ -353,7 +354,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (g_userCache.m_ignoredPID.find(pid) == g_userCache.m_ignoredPID.end()
 			&& CheckIllegal(post.content, post.author, post.authorLevel, msg, forceToConfirm, pos, length))
 		{
-			AddConfirm(forceToConfirm, post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
+			AddConfirm(forceToConfirm, post.content, post.floor == _T("1") ? Operation::TBOBJ_THREAD : Operation::TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID, _T(""), pos, length);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + post.floor + _T("楼") + msg);
@@ -371,7 +372,8 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			__int64 lzlid = _ttoi64(lzl.pid);
 			if (g_userCache.m_ignoredLZLID.find(lzlid) == g_userCache.m_ignoredLZLID.end())
 			{
-				AddConfirm(forceToConfirm, lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID, _T(""), pos, length);
+				AddConfirm(forceToConfirm, lzl.content, Operation::TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, 
+					lzl.authorID, _T(""), pos, length);
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 				g_userCache.m_ignoredLZLID.insert(lzlid);
@@ -388,7 +390,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (g_userCache.m_ignoredPID.find(pid) == g_userCache.m_ignoredPID.end()
 			&& CheckImageIllegal(post.author, GetPostImage(post), msg))
 		{
-			AddConfirm(FALSE, post.content, post.floor == _T("1") ? TBOBJ_THREAD : TBOBJ_POST,
+			AddConfirm(FALSE, post.content, post.floor == _T("1") ? Operation::TBOBJ_THREAD : Operation::TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + post.floor + _T("楼") + msg);
@@ -405,7 +407,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (g_userCache.m_ignoredLZLID.find(pid) == g_userCache.m_ignoredLZLID.end()
 			&& CheckImageIllegal(lzl.author, GetPostImage(lzl), msg))
 		{
-			AddConfirm(FALSE, lzl.content, TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID);
+			AddConfirm(FALSE, lzl.content, Operation::TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 			g_userCache.m_ignoredLZLID.insert(pid);

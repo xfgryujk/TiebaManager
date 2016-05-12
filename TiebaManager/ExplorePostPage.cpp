@@ -3,7 +3,8 @@
 
 #include "stdafx.h"
 #include "ExplorePostPage.h"
-#include "TiebaCollect.h"
+#include <TiebaClawer.h>
+#include "TiebaVariable.h"
 #include "ExplorerDlg.h"
 #include "ExploreLzlPage.h"
 #include "ScanImage.h"
@@ -75,7 +76,8 @@ void CExplorePostPage::OnBnClickedButton1()
 
 	CExplorerDlg* parentDlg = (CExplorerDlg*)GetParent()->GetParent();
 	CExploreLzlPage& exploreLzlPage = parentDlg->m_exploreLzlPage;
-	GetPosts(m_tid, _T(""), sPage, m_posts, exploreLzlPage.m_lzls);
+	GetPosts(m_tid, _T(""), sPage, m_posts);
+	GetLzls(g_userTiebaInfo.m_forumID, m_tid, sPage, m_posts, exploreLzlPage.m_lzls);
 	m_list.DeleteAllItems();
 	parentDlg->m_edit.SetWindowText(_T(""));
 	for (const PostInfo& i : m_posts)

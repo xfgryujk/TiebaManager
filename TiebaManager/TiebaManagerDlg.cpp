@@ -28,14 +28,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMConfig.h>
 #include "ConfigHelper.h"
 #include <StringHelper.h>
-#include "NetworkHelper.h"
+#include <NetworkHelper.h>
 #include <MiscHelper.h>
 #include "Update.h"
 
 #include "TiebaVariable.h"
-#include "TiebaCollect.h"
+#include <TiebaClawer.h>
 #include "TiebaScan.h"
-#include "TiebaOperate.h"
+#include "TBMOperate.h"
 
 #include "ScanImage.h"
 
@@ -328,7 +328,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	CString prefix = url.Left(3);
 	if (prefix == _T("dt:")) // 删主题
 	{
-		CString code = DeleteThread(url.Right(url.GetLength() - 3));
+		CString code = g_tiebaOperate->DeleteThread(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
@@ -338,7 +338,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = DeletePost(args[0], args[1]);
+		CString code = g_tiebaOperate->DeletePost(args[0], args[1]);
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
@@ -348,7 +348,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = DeleteLZL(args[0], args[1]);
+		CString code = g_tiebaOperate->DeleteLZL(args[0], args[1]);
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
@@ -359,7 +359,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
 		CString code = (g_plan.m_wapBanInterface /*|| g_plan.m_banDuration == 1*/ || args[1] == _T("")) ? 
-			BanIDClient(args[0]) : BanID(args[0], args[1]);
+			g_tiebaOperate->BanIDClient(args[0]) : g_tiebaOperate->BanID(args[0], args[1]);
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>封禁成功！</font>"));
 		else
@@ -367,7 +367,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	}
 	else if (prefix == _T("df:")) // 拉黑
 	{
-		CString code = Defriend(url.Right(url.GetLength() - 3));
+		CString code = g_tiebaOperate->Defriend(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>拉黑成功！</font>"));
 		else
@@ -457,7 +457,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_forumNameEdit.EnableWindow(FALSE);
 	m_confirmButton.EnableWindow(FALSE);
 	m_stateStatic.SetWindowText(_T("验证贴吧中"));
-	CString src, src2, tmp, userName;
+	CString src, src2, tmp, userName, randomTid;
 	CStringArray bawuList;
 	std::wcmatch res;
 
@@ -545,9 +545,11 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	}
 
 	// 取第一个tid
-	g_randomTid = GetStringBetween(src, _T("&quot;id&quot;:"), _T(","));
-	if (g_randomTid == _T(""))
-		g_randomTid = _T("4426261107");
+	randomTid = GetStringBetween(src, _T("&quot;id&quot;:"), _T(","));
+	if (randomTid == _T(""))
+		randomTid = _T("4426261107");
+	g_tiebaOperate.reset(new CTiebaOperate(g_userTiebaInfo.m_forumID, g_userTiebaInfo.m_forumName, g_userTiebaInfo.m_cookie, g_userTiebaInfo.m_bduss,
+		g_userTiebaInfo.m_tbs, g_plan.m_banDuration, g_plan.m_banReason, randomTid));
 
 
 	m_stateStatic.SetWindowText(_T("待机中"));

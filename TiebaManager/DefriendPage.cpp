@@ -5,10 +5,10 @@
 #include "DefriendPage.h"
 #include "TiebaManagerDlg.h"
 #include <StringHelper.h>
-#include "NetworkHelper.h"
+#include <NetworkHelper.h>
 #include <MiscHelper.h>
 #include "TiebaVariable.h"
-#include "TiebaOperate.h"
+#include "TBMOperate.h"
 
 
 // CDefriendPage ¶Ô»°¿ò
@@ -252,7 +252,7 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 			s_instance->m_stateStatic.SetWindowText(state);
 		s_instanceLock.Unlock();
 
-		CString code = Defriend(userID[i]);
+		CString code = g_tiebaOperate->Defriend(userID[i]);
 		if (code != _T("0"))
 		{
 			CString content;

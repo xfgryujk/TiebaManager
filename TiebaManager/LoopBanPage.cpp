@@ -5,12 +5,12 @@
 #include "LoopBanPage.h"
 
 #include <StringHelper.h>
-#include "NetworkHelper.h"
+#include <NetworkHelper.h>
 #include <MiscHelper.h>
 #include <TBMConfig.h>
 
-#include "TiebaCollect.h"
-#include "TiebaOperate.h"
+#include "TiebaVariable.h"
+#include "TBMOperate.h"
 
 #include "SuperFunctionDlg.h"
 #include "TiebaManagerDlg.h"
@@ -90,6 +90,18 @@ void CLoopBanPage::OnDelete(int index)
 		m_pid.clear();
 }
 
+// 取用户发的帖子ID
+static CString GetPIDFromUser(const CString& userName)
+{
+	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + g_userTiebaInfo.m_encodedForumName + _T("&qw=&rn=10&un=")
+		+ userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"));
+	if (src == NET_TIMEOUT_TEXT)
+		return NET_TIMEOUT_TEXT;
+	CString pid = GetStringBetween(src, _T("<div class=\"s_post\">"), _T("target=\"_blank\" >"));
+	pid = GetStringBetween(pid, _T("?pid="), _T("&"));
+	return pid;
+}
+
 // 循环封线程
 UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 {
@@ -137,19 +149,19 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	{
 		CString code;
 		if (g_plan.m_wapBanInterface)
-			code = BanIDClient((*config.m_userList)[i]); // 用WAP接口封禁
+			code = g_tiebaOperate->BanIDClient((*config.m_userList)[i]); // 用WAP接口封禁
 		else
 		{
 			if ((*config.m_pidList)[i] != _T("")) // 尝试用PID封禁
-				code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
+				code = g_tiebaOperate->BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
 			if ((*config.m_pidList)[i] == _T("") || code != _T("0")) // 尝试不用PID封禁（用户必须为本吧会员）
 			{
-				code = BanID((*config.m_userList)[i]);
+				code = g_tiebaOperate->BanID((*config.m_userList)[i]);
 				if (code != _T("0")) // 尝试获取新的PID并用PID封禁
 				{
 					(*config.m_pidList)[i] = GetPIDFromUser((*config.m_userList)[i]);
 					updatePID = TRUE;
-					code = BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
+					code = g_tiebaOperate->BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
 				}
 			}
 		}

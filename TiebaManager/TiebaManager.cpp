@@ -96,6 +96,7 @@ BOOL CTiebaManagerApp::InitInstance()
 	// 判断一下有没有解压
 	TCHAR tmpDir[MAX_PATH] = { _T('\0') };
 	if (GetEnvironmentVariable(_T("TMP"), tmpDir, _countof(tmpDir)) != 0 
+#pragma warning(suppress: 6102)
 		&& StrStrI(cd, tmpDir) != NULL)
 		AfxMessageBox(_T("请先解压再运行，否则无法保存设置"), MB_ICONINFORMATION);
 

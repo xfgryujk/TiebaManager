@@ -108,9 +108,10 @@ void CLog::Clear()
 	if (m_logDocument.p == NULL)
 		return;
 
-	IDispatch* tmp;
+	IDispatch* tmp = NULL;
 	m_logDocument->open(_T("about:blank"), variant_t(), variant_t(), variant_t(), &tmp);
-	tmp->Release();
+	if (tmp != NULL)
+		tmp->Release();
 	WriteDocument(LOG_FRAME);
 	GetSystemTime(&m_logStartTime);
 }

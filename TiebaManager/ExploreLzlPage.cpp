@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "ExploreLzlPage.h"
-#include "TiebaCollect.h"
+#include <TiebaClawer.h>
 #include "ExplorerDlg.h"
 #include "ScanImage.h"
 

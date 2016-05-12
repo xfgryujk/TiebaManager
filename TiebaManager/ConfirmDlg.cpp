@@ -85,10 +85,10 @@ BOOL CConfirmDlg::OnInitDialog()
 		m_contentEdit.SetWindowText(m_operation->msg + _T("\r\n\r\n作者：") + m_operation->author);
 		m_contentEdit.SetSel(m_operation->pos, m_operation->pos + m_operation->length);
 
-		if (m_operation->object != TBOBJ_LZL)
+		if (m_operation->object != Operation::TBOBJ_LZL)
 		{
 			unique_ptr<vector<CString> > img(new vector<CString>());
-			if (m_operation->object == TBOBJ_THREAD)
+			if (m_operation->object == Operation::TBOBJ_THREAD)
 				GetThreadImage(m_operation->msg).GetImage(*img);
 			else //if (m_operation->object == TBOBJ_POST)
 				GetPostImage(m_operation->msg, m_operation->authorPortrait).GetImage(*img);
@@ -113,9 +113,9 @@ void CConfirmDlg::OnBnClickedButton1()
 		return;
 
 	CString url;
-	if (m_operation->object == TBOBJ_THREAD) // 主题
+	if (m_operation->object == Operation::TBOBJ_THREAD) // 主题
 		url = _T("http://tieba.baidu.com/p/") + m_operation->tid;
-	else if (m_operation->object == TBOBJ_POST) // 帖子
+	else if (m_operation->object == Operation::TBOBJ_POST) // 帖子
 		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s#%s"), (LPCTSTR)m_operation->tid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid);
 	else /*if (op.object == TBOBJ_POST)*/ // 楼中楼
 		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), (LPCTSTR)m_operation->tid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid);

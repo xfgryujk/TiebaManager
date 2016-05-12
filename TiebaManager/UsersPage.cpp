@@ -85,7 +85,10 @@ void CUsersPage::OnBnClickedButton1()
 		return;
 	}
 	if (g_globalConfig.m_currentUser == loginDlg.m_userName)
+	{
 		*g_userTiebaInfo.m_cookie = loginDlg.m_cookie;
+		g_userTiebaInfo.PostChange();
+	}
 
 	int index = m_list.FindStringExact(-1, loginDlg.m_userName);
 	if (index == LB_ERR)

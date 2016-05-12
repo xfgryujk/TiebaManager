@@ -5,7 +5,7 @@
 #include "ImageViewDlg.h"
 #include <ImageHelper.h>
 #include "ScanImage.h"
-#include "NetworkHelper.h"
+#include <NetworkHelper.h>
 #include <MiscHelper.h>
 #include "InputDlg.h"
 

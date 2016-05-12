@@ -1,6 +1,6 @@
 #pragma once
 #include "afxwin.h"
-#include "TiebaOperate.h"
+#include "TBMOperate.h"
 #include "ResizeControl.h"
 class CImageViewDlg;
 

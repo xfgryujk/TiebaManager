@@ -5,7 +5,7 @@
 #include "ExploreThreadPage.h"
 #include "ExplorerDlg.h"
 #include "TiebaVariable.h"
-#include "TiebaCollect.h"
+#include <TiebaClawer.h>
 #include "ScanImage.h"
 
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "TiebaCollect.h"
+#include <TiebaClawer.h>
 
 
 extern set<CString> g_leagalImage; // 已检查不违规的图片

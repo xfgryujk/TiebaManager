@@ -1,4 +1,5 @@
 #pragma once
+#include "TiebaAPICommon.h"
 
 
 // 采集贴吧用的常量
@@ -15,7 +16,8 @@ const wregex TBS_REG(_T("tbs('|\")?:\\s*('|\")(.*?)('|\")"));
 #pragma endregion
 
 
-struct ThreadInfo // 主题信息
+// 主题信息
+struct ThreadInfo
 {
 	CString tid;		// 主题ID
 	CString reply;		// 回复数
@@ -26,21 +28,20 @@ struct ThreadInfo // 主题信息
 	CString lastAuthor; // 最后回复
 };
 
-struct PostInfo // 帖子信息
+// 帖子信息
+struct PostInfo
 {
-	CString pid;		// 帖子ID
-	CString floor;		// 楼层
-	CString author;		// 作者
-	CString authorID;	// 作者ID
-	CString authorLevel; // 作者等级
+	CString pid;			// 帖子ID
+	CString floor;			// 楼层
+	CString author;			// 作者
+	CString authorID;		// 作者ID
+	CString authorLevel;	// 作者等级
 	CString authorPortrait;	// 作者头像哈希
-	CString content;	// 内容
+	CString content;		// 内容
 };
 
 
-BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& threads);
+TIEBA_API_API BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& threads);
 enum GetPostsResult { GET_POSTS_SUCCESS, GET_POSTS_TIMEOUT, GET_POSTS_DELETED };
-GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, vector<PostInfo>& posts, vector<PostInfo>& lzls);
-void GetLzls(const CString& tid, const CString& page, vector<PostInfo>& posts, vector<PostInfo>& lzls);
-
-CString GetPIDFromUser(const CString& userName);
+TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, vector<PostInfo>& posts);
+TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const vector<PostInfo>& posts, vector<PostInfo>& lzls);

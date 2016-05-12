@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "TiebaVariable.h"
-#include "TiebaOperate.h"
+#include "TBMOperate.h"
 #include <StringHelper.h>
 
 
