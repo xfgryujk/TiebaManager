@@ -1,17 +1,17 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "TiebaVariable.h"
 #include "TBMOperate.h"
 #include <StringHelper.h>
 
 
-// CookieÎÄ¼ş
+// Cookieæ–‡ä»¶
 CCookieConfig g_cookieConfig;
 
-// É¨Ãè
+// æ‰«æ
 volatile BOOL g_stopScanFlag = FALSE;
 CWinThread* g_scanThread = NULL;
 CUserCache g_userCache;
 
-// ²Ù×÷
+// æ“ä½œ
 CWinThread* g_confirmThread = NULL;
 CWinThread* g_operateThread = NULL;

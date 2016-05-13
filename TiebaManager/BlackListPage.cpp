@@ -1,4 +1,4 @@
-// BlackListPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// BlackListPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -7,12 +7,12 @@
 #include "SettingDlg.h"
 
 
-// CBlackListPage ¶Ô»°¿ò
+// CBlackListPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CBlackListPage, CRegListPage)
 
 CBlackListPage::CBlackListPage(CWnd* pParent /*=NULL*/)
-	: CRegListPage(_T("ÓÃ»§Ãû£º"), pParent)
+	: CRegListPage(_T("ç”¨æˆ·åï¼š"), pParent)
 {
 
 }
@@ -31,18 +31,18 @@ BEGIN_MESSAGE_MAP(CBlackListPage, CRegListPage)
 END_MESSAGE_MAP()
 
 
-// CBlackListPage ÏûÏ¢´¦Àí³ÌĞò
+// CBlackListPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 
 BOOL CBlackListPage::OnInitDialog()
 {
 	CRegListPage::OnInitDialog();
 
-	m_static.SetWindowText(_T("µ±±»²âÎÄ±¾µÈÓÚÎÄ±¾Ê±Æ¥Åä\r\n")
-						   _T("×¢ÒâÕıÔò±í´ïÊ½.*Æ¥ÅäËùÓĞÎÄ±¾£¬Çë²»Òª²»¼ÓÏŞÖÆÊ¹ÓÃ£¡£¡"));
+	m_static.SetWindowText(_T("å½“è¢«æµ‹æ–‡æœ¬ç­‰äºæ–‡æœ¬æ—¶åŒ¹é…\r\n")
+						   _T("æ³¨æ„æ­£åˆ™è¡¨è¾¾å¼.*åŒ¹é…æ‰€æœ‰æ–‡æœ¬ï¼Œè¯·ä¸è¦ä¸åŠ é™åˆ¶ä½¿ç”¨ï¼ï¼"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
 BOOL CBlackListPage::CheckMatchTooMuch(const CString& text, BOOL isRegex)

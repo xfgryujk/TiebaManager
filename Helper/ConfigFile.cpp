@@ -1,13 +1,13 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include <ConfigFile.h>
 using namespace tinyxml2;
 #include <StringHelper.h>
 
 
-// COption µœ÷ ///////////////////////////////////////////////////////////////////////////
+// COptionÂÆûÁé∞ ///////////////////////////////////////////////////////////////////////////
 #pragma region COption
 
-// ∂¡ª˘±æ¿‡–Õ
+// ËØªÂü∫Êú¨Á±ªÂûã
 
 HELPER_API DECLEAR_READ(int)
 {
@@ -104,23 +104,23 @@ HELPER_API DECLEAR_READ(CString)
 		UseDefault();
 }
 
-// ∂¡vector
+// ËØªvector
 
 HELPER_API DEFINE_READ_VECTOR(CString)
 
-// ∂¡set
+// ËØªset
 
 HELPER_API DEFINE_READ_SET(__int64)
 HELPER_API DEFINE_READ_SET(CString)
 
-// ∂¡map
+// ËØªmap
 
 HELPER_API DEFINE_READ_MAP(__int64, int)
 HELPER_API DEFINE_READ_MAP(CString, int)
 HELPER_API DEFINE_READ_MAP(__int64, CString)
 
 
-// –¥ª˘±æ¿‡–Õ
+// ÂÜôÂü∫Êú¨Á±ªÂûã
 
 HELPER_API DECLEAR_WRITE(int)
 {
@@ -175,16 +175,16 @@ HELPER_API DECLEAR_WRITE(CString)
 	optionNode->LinkEndChild(doc->NewText(W2GBK(m_value)));
 }
 
-// –¥vector
+// ÂÜôvector
 
 HELPER_API DEFINE_WRITE_VECTOR(CString)
 
-// –¥set
+// ÂÜôset
 
 HELPER_API DEFINE_WRITE_SET(__int64)
 HELPER_API DEFINE_WRITE_SET(CString)
 
-// –¥map
+// ÂÜômap
 
 HELPER_API DEFINE_WRITE_MAP(__int64, int)
 HELPER_API DEFINE_WRITE_MAP(CString, int)
@@ -192,7 +192,7 @@ HELPER_API DEFINE_WRITE_MAP(__int64, CString)
 
 #pragma endregion
 
-// ≈‰÷√∂¡–¥ µœ÷ ///////////////////////////////////////////////////////////////////////////
+// ÈÖçÁΩÆËØªÂÜôÂÆûÁé∞ ///////////////////////////////////////////////////////////////////////////
 
 HELPER_API BOOL CConfigBase::Load(const CString& path)
 {

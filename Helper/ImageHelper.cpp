@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <ImageHelper.h>
 #include <opencv2\imgcodecs.hpp>
 
@@ -9,7 +9,7 @@ static BOOL CImageToMat(const CImage& image, Mat& img)
 	if (img.data == NULL)
 		return FALSE;
 
-	// Ö§³Ö24Î»¡¢32Î»Í¼
+	// æ”¯æŒ24ä½ã€32ä½å›¾
 	int bpp = image.GetBPP() / 8;
 	if (bpp < 3)
 		return FALSE;
@@ -29,14 +29,14 @@ static BOOL CImageToMat(const CImage& image, Mat& img)
 	return TRUE;
 }
 
-// ´ÓÎÄ¼ş¼ÓÔØÍ¼Æ¬
+// ä»æ–‡ä»¶åŠ è½½å›¾ç‰‡
 HELPER_API BOOL ReadImage(const CString& path, Mat& img)
 {
 	img = cv::imread((LPCSTR)(CStringA)path);
 	if (img.data != NULL)
 		return TRUE;
 	
-	// ¼ÓÔØOpenCV²»Ö§³ÖµÄ¸ñÊ½(GIF)
+	// åŠ è½½OpenCVä¸æ”¯æŒçš„æ ¼å¼(GIF)
 	CImage image;
 	image.Load(path);
 	if (image.IsNull())
@@ -45,10 +45,10 @@ HELPER_API BOOL ReadImage(const CString& path, Mat& img)
 	return CImageToMat(image, img);
 }
 
-// ´ÓÄÚ´æ¼ÓÔØÍ¼Æ¬
+// ä»å†…å­˜åŠ è½½å›¾ç‰‡
 HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, CImage& img)
 {
-	// ´´½¨Á÷
+	// åˆ›å»ºæµ
 	HGLOBAL m_hMem = GlobalAlloc(GMEM_FIXED, size);
 	if (m_hMem == NULL)
 		return FALSE;
@@ -60,18 +60,18 @@ HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, CImage& img)
 	if (FAILED(CreateStreamOnHGlobal(m_hMem, FALSE, &pstm)) || pstm == NULL)
 		return FALSE;
 
-	// ¼ÓÔØµ½CImage
+	// åŠ è½½åˆ°CImage
 	if (!img.IsNull())
 		img.Destroy();
 	img.Load(pstm);
 	
-	// ÊÍ·ÅÁ÷
+	// é‡Šæ”¾æµ
 	GlobalUnlock(m_hMem);
 	pstm->Release();
 	return !img.IsNull();
 }
 
-// ´ÓÄÚ´æ¼ÓÔØÍ¼Æ¬
+// ä»å†…å­˜åŠ è½½å›¾ç‰‡
 HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, Mat& img)
 {
 	try
@@ -85,14 +85,14 @@ HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, Mat& img)
 	if (img.data != NULL)
 		return TRUE;
 
-	// ¼ÓÔØOpenCV²»Ö§³ÖµÄ¸ñÊ½(GIF)
+	// åŠ è½½OpenCVä¸æ”¯æŒçš„æ ¼å¼(GIF)
 	CImage image;
 	if (!ReadImage(buffer, size, image))
 		return FALSE;
 	return CImageToMat(image, img);
 }
 
-// ´ÓÍ¼Æ¬µØÖ·È¡Í¼Æ¬Ãû
+// ä»å›¾ç‰‡åœ°å€å–å›¾ç‰‡å
 HELPER_API CString GetImageName(const CString& img)
 {
 	LPTSTR pos = StrRChr(img, NULL, _T('/'));

@@ -1,4 +1,4 @@
-// WhiteContentPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// WhiteContentPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -6,12 +6,12 @@
 #include <StringHelper.h>
 
 
-// CWhiteContentPage ¶Ô»°¿ò
+// CWhiteContentPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CWhiteContentPage, CRegListPage)
 
 CWhiteContentPage::CWhiteContentPage(CWnd* pParent /*=NULL*/)
-	: CRegListPage(_T("ĞÅÈÎÄÚÈİ£º"), pParent)
+	: CRegListPage(_T("ä¿¡ä»»å†…å®¹ï¼š"), pParent)
 {
 
 }
@@ -30,18 +30,18 @@ BEGIN_MESSAGE_MAP(CWhiteContentPage, CRegListPage)
 END_MESSAGE_MAP()
 
 
-// CWhiteContentPage ÏûÏ¢´¦Àí³ÌĞò
+// CWhiteContentPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 
 BOOL CWhiteContentPage::OnInitDialog()
 {
 	CRegListPage::OnInitDialog();
 
-	m_static.SetWindowText(_T("Ö§³ÖÍ¼Æ¬µØÖ·\\ÊÓÆµµØÖ·£¬µ±±»²âÎÄ±¾º¬ÓĞÎÄ±¾Ê±Æ¥Åä"));
+	m_static.SetWindowText(_T("æ”¯æŒå›¾ç‰‡åœ°å€\\è§†é¢‘åœ°å€ï¼Œå½“è¢«æµ‹æ–‡æœ¬å«æœ‰æ–‡æœ¬æ—¶åŒ¹é…"));
 	m_static.ModifyStyle(0, SS_CENTERIMAGE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
 BOOL CWhiteContentPage::CheckMatchTooMuch(const CString& text, BOOL isRegex)

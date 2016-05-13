@@ -1,4 +1,4 @@
-// ConfirmDlg.cpp : ÊµÏÖÎÄ¼þ
+ï»¿// ConfirmDlg.cpp : å®žçŽ°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -7,7 +7,7 @@
 #include "ScanImage.h"
 
 
-// CConfirmDlg ¶Ô»°¿ò
+// CConfirmDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CConfirmDlg, CDialog)
 
@@ -48,10 +48,10 @@ BEGIN_MESSAGE_MAP(CConfirmDlg, CDialog)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CConfirmDlg ÏûÏ¢´¦Àí³ÌÐò
+// CConfirmDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 #pragma region UI
-// ÏÞÖÆ×îÐ¡³ß´ç
+// é™åˆ¶æœ€å°å°ºå¯¸
 void CConfirmDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
 	/*lpMMI->ptMinTrackSize.x = 455;
@@ -60,7 +60,7 @@ void CConfirmDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	CDialog::OnGetMinMaxInfo(lpMMI);
 }
 
-// ¸Ä±ä³ß´ç
+// æ”¹å˜å°ºå¯¸
 void CConfirmDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialog::OnSize(nType, cx, cy);
@@ -68,7 +68,7 @@ void CConfirmDlg::OnSize(UINT nType, int cx, int cy)
 }
 #pragma endregion
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CConfirmDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
@@ -82,7 +82,7 @@ BOOL CConfirmDlg::OnInitDialog()
 	if (m_operation != NULL)
 	{
 		SetWindowText(m_operation->title);
-		m_contentEdit.SetWindowText(m_operation->msg + _T("\r\n\r\n×÷Õß£º") + m_operation->author);
+		m_contentEdit.SetWindowText(m_operation->msg + _T("\r\n\r\nä½œè€…ï¼š") + m_operation->author);
 		m_contentEdit.SetSel(m_operation->pos, m_operation->pos + m_operation->length);
 
 		if (m_operation->object != Operation::TBOBJ_LZL)
@@ -103,21 +103,21 @@ BOOL CConfirmDlg::OnInitDialog()
 	MessageBeep(MB_ICONQUESTION);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôÐÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±žæ€§é¡µåº”è¿”å›ž FALSE
 }
 
-// ä¯ÀÀÆ÷
+// æµè§ˆå™¨
 void CConfirmDlg::OnBnClickedButton1()
 {
 	if (m_operation == NULL)
 		return;
 
 	CString url;
-	if (m_operation->object == Operation::TBOBJ_THREAD) // Ö÷Ìâ
+	if (m_operation->object == Operation::TBOBJ_THREAD) // ä¸»é¢˜
 		url = _T("http://tieba.baidu.com/p/") + m_operation->tid;
-	else if (m_operation->object == Operation::TBOBJ_POST) // Ìû×Ó
+	else if (m_operation->object == Operation::TBOBJ_POST) // å¸–å­
 		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s#%s"), (LPCTSTR)m_operation->tid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid);
-	else /*if (op.object == TBOBJ_POST)*/ // Â¥ÖÐÂ¥
+	else /*if (op.object == TBOBJ_POST)*/ // æ¥¼ä¸­æ¥¼
 		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), (LPCTSTR)m_operation->tid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid);
 
 	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);

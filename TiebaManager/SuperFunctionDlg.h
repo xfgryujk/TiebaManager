@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "NormalDlg.h"
 #include "LoopBanPage.h"
 #include "DefriendPage.h"
@@ -6,21 +6,21 @@
 #include <TBMConfig.h>
 
 
-// CSuperFunctionDlg ¶Ô»°¿ò
+// CSuperFunctionDlg å¯¹è¯æ¡†
 
 class CSuperFunctionDlg : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CSuperFunctionDlg)
 
 public:
-	CSuperFunctionDlg(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CSuperFunctionDlg(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CSuperFunctionDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_SETTING_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:
@@ -54,11 +54,11 @@ protected:
 class CLoopBanConfig : public CConfigBase
 {
 public:
-	COption<BOOL> m_enable;					// ¿ªÆô
-	COption<BOOL> m_log;					// Êä³öÈÕÖ¾
-	COption<float> m_banInterval;			// ·â½û¼ä¸ô
-	COption<vector<CString> > m_userList;	// ÓÃ»§ÁĞ±í
-	COption<vector<CString> > m_pidList;	// PIDÁĞ±í
+	COption<BOOL> m_enable;					// å¼€å¯
+	COption<BOOL> m_log;					// è¾“å‡ºæ—¥å¿—
+	COption<float> m_banInterval;			// å°ç¦é—´éš”
+	COption<vector<CString> > m_userList;	// ç”¨æˆ·åˆ—è¡¨
+	COption<vector<CString> > m_pidList;	// PIDåˆ—è¡¨
 
 	CLoopBanConfig()
 		: CConfigBase("LoopBan"),

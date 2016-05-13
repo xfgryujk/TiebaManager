@@ -1,11 +1,11 @@
-// NormalDlg.cpp : й╣ожнд╪Ч
+О╩©// NormalDlg.cpp : Е╝·Г▌╟Ф√┤Д╩╤
 //
 
 #include "stdafx.h"
 #include "NormalDlg.h"
 
 
-// CNormalDlg ╤т╩╟©Р
+// CNormalDlg Е╞╧Х╞²Ф║├
 
 IMPLEMENT_DYNAMIC(CNormalDlg, CDialog)
 
@@ -33,19 +33,19 @@ BEGIN_MESSAGE_MAP(CNormalDlg, CDialog)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CNormalDlg оШо╒╢╕юМЁлпР
+// CNormalDlg Ф╤┬Ф│╞Е╓└Г░├Г╗▀Е╨▐
 
-// фа╠нEsc╧ь╠у╢╟©з
+// Е╠▐Х■╫EscЕ┘ЁИ≈╜Г╙≈Е▐ё
 void CNormalDlg::OnCancel()
 {
 }
 
-// фа╠н╩ьЁ╣╧ь╠у╢╟©з
+// Е╠▐Х■╫Е⌡·Х╫╕Е┘ЁИ≈╜Г╙≈Е▐ё
 void CNormalDlg::OnOK()
 {
 }
 
-// оЗ╩ы╢╟©з
+// И■─Ф╞│Г╙≈Е▐ё
 void CNormalDlg::OnClose()
 {
 	DestroyWindow();
@@ -53,7 +53,7 @@ void CNormalDlg::OnClose()
 	CDialog::OnClose();
 }
 
-// ╦д╠ДЁъ╢Г
+// Ф■╧Е▐≤Е╟╨Е╞╦
 void CNormalDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialog::OnSize(nType, cx, cy);

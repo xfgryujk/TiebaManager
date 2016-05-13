@@ -1,4 +1,4 @@
-// ImagePage.cpp : ÊµÏÖÎÄ¼þ
+ï»¿// ImagePage.cpp : å®žçŽ°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -6,7 +6,7 @@
 #include "SettingDlg.h"
 
 
-// CImagePage ¶Ô»°¿ò
+// CImagePage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CImagePage, CNormalDlg)
 
@@ -39,9 +39,9 @@ BEGIN_MESSAGE_MAP(CImagePage, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CImagePage ÏûÏ¢´¦Àí³ÌÐò
+// CImagePage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CImagePage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -51,15 +51,15 @@ BOOL CImagePage::OnInitDialog()
 	m_resize.AddControl(&m_static, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôÐÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±žæ€§é¡µåº”è¿”å›ž FALSE
 }
 
-// ä¯ÀÀ
+// æµè§ˆ
 void CImagePage::OnBnClickedButton1()
 {
 	BROWSEINFO bi;
 	ZeroMemory(&bi, sizeof(bi));
-	bi.lpszTitle = _T("Î¥¹æÍ¼Æ¬Ä¿Â¼£º");
+	bi.lpszTitle = _T("è¿è§„å›¾ç‰‡ç›®å½•ï¼š");
 	bi.ulFlags = BIF_STATUSTEXT;
 	LPITEMIDLIST pidlSel = SHBrowseForFolder(&bi);
 
@@ -72,14 +72,14 @@ void CImagePage::OnBnClickedButton1()
 	}
 }
 
-// ¸üÐÂÍ¼Æ¬
+// æ›´æ–°å›¾ç‰‡
 void CImagePage::OnBnClickedButton2()
 {
 	g_plan.m_updateImage = TRUE;
 	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 }
 
-// ãÐÖµ
+// é˜ˆå€¼
 void CImagePage::OnEnKillfocusEdit5()
 {
 	CString tmp;

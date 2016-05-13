@@ -1,4 +1,4 @@
-// TiebaAPI.cpp : ¶¨Òå DLL µÄ³õÊ¼»¯Àı³Ì¡£
+ï»¿// TiebaAPI.cpp : å®šä¹‰ DLL çš„åˆå§‹åŒ–ä¾‹ç¨‹ã€‚
 //
 
 #include "stdafx.h"

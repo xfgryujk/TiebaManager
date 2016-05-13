@@ -1,4 +1,4 @@
-// InputKeywordDlg.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// InputKeywordDlg.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -6,7 +6,7 @@
 #include "InputKeywordDlg.h"
 
 
-// CInputKeywordDlg ¶Ô»°¿ò
+// CInputKeywordDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CInputKeywordDlg, CInputDlg)
 
@@ -32,9 +32,9 @@ BEGIN_MESSAGE_MAP(CInputKeywordDlg, CInputDlg)
 END_MESSAGE_MAP()
 
 
-// CInputKeywordDlg ÏûÏ¢´¦Àí³ÌĞò
+// CInputKeywordDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CInputKeywordDlg::OnInitDialog()
 {
 	CInputDlg::OnInitDialog();
@@ -43,10 +43,10 @@ BOOL CInputKeywordDlg::OnInitDialog()
 		m_forceToConfirmCheck.SetCheck(*m_forceToConfirm);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// È·¶¨
+// ç¡®å®š
 void CInputKeywordDlg::OnOK()
 {
 	if (m_forceToConfirm != NULL)

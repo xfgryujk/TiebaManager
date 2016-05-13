@@ -1,5 +1,5 @@
-
-// TiebaManager.cpp : ¶¨ÒåÓ¦ÓÃ³ÌĞòµÄÀàĞĞÎª¡£
+ï»¿
+// TiebaManager.cpp : å®šä¹‰åº”ç”¨ç¨‹åºçš„ç±»è¡Œä¸ºã€‚
 //
 
 #include "stdafx.h"
@@ -13,7 +13,7 @@
 #endif
 
 
-// Î¨Ò»µÄÒ»¸ö CTiebaManagerApp ¶ÔÏó
+// å”¯ä¸€çš„ä¸€ä¸ª CTiebaManagerApp å¯¹è±¡
 CTiebaManagerApp theApp;
 
 
@@ -24,17 +24,17 @@ BEGIN_MESSAGE_MAP(CTiebaManagerApp, CWinApp)
 END_MESSAGE_MAP()
 
 
-// CTiebaManagerApp ¹¹Ôì
+// CTiebaManagerApp æ„é€ 
 CTiebaManagerApp::CTiebaManagerApp()
 {
-	// Ö§³ÖÖØĞÂÆô¶¯¹ÜÀíÆ÷
+	// æ”¯æŒé‡æ–°å¯åŠ¨ç®¡ç†å™¨
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 
-	// TODO:  ÔÚ´Ë´¦Ìí¼Ó¹¹Ôì´úÂë£¬
-	// ½«ËùÓĞÖØÒªµÄ³õÊ¼»¯·ÅÖÃÔÚ InitInstance ÖĞ
+	// TODO:  åœ¨æ­¤å¤„æ·»åŠ æ„é€ ä»£ç ï¼Œ
+	// å°†æ‰€æœ‰é‡è¦çš„åˆå§‹åŒ–æ”¾ç½®åœ¨ InitInstance ä¸­
 }
 
-// Òì³£´¦Àí
+// å¼‚å¸¸å¤„ç†
 static LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 {
 	CFile file;
@@ -47,20 +47,20 @@ static LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpWithIndirectlyReferencedMemory,
 			&einfo, NULL, NULL);
 	}
-	AfxMessageBox(_T("³ÌĞò±ÀÀ£ÁË£¬Çë°Ñexception.dmpÎÄ¼ş·¢µ½xfgryujk@126.com°ïÖúµ÷ÊÔ"), MB_ICONERROR);
+	AfxMessageBox(_T("ç¨‹åºå´©æºƒäº†ï¼Œè¯·æŠŠexception.dmpæ–‡ä»¶å‘åˆ°xfgryujk@126.comå¸®åŠ©è°ƒè¯•"), MB_ICONERROR);
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
-// CTiebaManagerApp ³õÊ¼»¯
+// CTiebaManagerApp åˆå§‹åŒ–
 BOOL CTiebaManagerApp::InitInstance()
 {
-	// Èç¹ûÒ»¸öÔËĞĞÔÚ Windows XP ÉÏµÄÓ¦ÓÃ³ÌĞòÇåµ¥Ö¸¶¨Òª
-	// Ê¹ÓÃ ComCtl32.dll °æ±¾ 6 »ò¸ü¸ß°æ±¾À´ÆôÓÃ¿ÉÊÓ»¯·½Ê½£¬
-	//ÔòĞèÒª InitCommonControlsEx()¡£  ·ñÔò£¬½«ÎŞ·¨´´½¨´°¿Ú¡£
+	// å¦‚æœä¸€ä¸ªè¿è¡Œåœ¨ Windows XP ä¸Šçš„åº”ç”¨ç¨‹åºæ¸…å•æŒ‡å®šè¦
+	// ä½¿ç”¨ ComCtl32.dll ç‰ˆæœ¬ 6 æˆ–æ›´é«˜ç‰ˆæœ¬æ¥å¯ç”¨å¯è§†åŒ–æ–¹å¼ï¼Œ
+	//åˆ™éœ€è¦ InitCommonControlsEx()ã€‚  å¦åˆ™ï¼Œå°†æ— æ³•åˆ›å»ºçª—å£ã€‚
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof(InitCtrls);
-	// ½«ËüÉèÖÃÎª°üÀ¨ËùÓĞÒªÔÚÓ¦ÓÃ³ÌĞòÖĞÊ¹ÓÃµÄ
-	// ¹«¹²¿Ø¼şÀà¡£
+	// å°†å®ƒè®¾ç½®ä¸ºåŒ…æ‹¬æ‰€æœ‰è¦åœ¨åº”ç”¨ç¨‹åºä¸­ä½¿ç”¨çš„
+	// å…¬å…±æ§ä»¶ç±»ã€‚
 	InitCtrls.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
 
@@ -70,45 +70,45 @@ BOOL CTiebaManagerApp::InitInstance()
 	AfxEnableControlContainer();
 
 
-	// ±ê×¼³õÊ¼»¯
-	// Èç¹ûÎ´Ê¹ÓÃÕâĞ©¹¦ÄÜ²¢Ï£Íû¼õĞ¡
-	// ×îÖÕ¿ÉÖ´ĞĞÎÄ¼şµÄ´óĞ¡£¬ÔòÓ¦ÒÆ³ıÏÂÁĞ
-	// ²»ĞèÒªµÄÌØ¶¨³õÊ¼»¯Àı³Ì
-	// ¸ü¸ÄÓÃÓÚ´æ´¢ÉèÖÃµÄ×¢²á±íÏî
-	// TODO:  Ó¦ÊÊµ±ĞŞ¸Ä¸Ã×Ö·û´®£¬
-	// ÀıÈçĞŞ¸ÄÎª¹«Ë¾»ò×éÖ¯Ãû
-	//SetRegistryKey(_T("Ó¦ÓÃ³ÌĞòÏòµ¼Éú³ÉµÄ±¾µØÓ¦ÓÃ³ÌĞò"));
+	// æ ‡å‡†åˆå§‹åŒ–
+	// å¦‚æœæœªä½¿ç”¨è¿™äº›åŠŸèƒ½å¹¶å¸Œæœ›å‡å°
+	// æœ€ç»ˆå¯æ‰§è¡Œæ–‡ä»¶çš„å¤§å°ï¼Œåˆ™åº”ç§»é™¤ä¸‹åˆ—
+	// ä¸éœ€è¦çš„ç‰¹å®šåˆå§‹åŒ–ä¾‹ç¨‹
+	// æ›´æ”¹ç”¨äºå­˜å‚¨è®¾ç½®çš„æ³¨å†Œè¡¨é¡¹
+	// TODO:  åº”é€‚å½“ä¿®æ”¹è¯¥å­—ç¬¦ä¸²ï¼Œ
+	// ä¾‹å¦‚ä¿®æ”¹ä¸ºå…¬å¸æˆ–ç»„ç»‡å
+	//SetRegistryKey(_T("åº”ç”¨ç¨‹åºå‘å¯¼ç”Ÿæˆçš„æœ¬åœ°åº”ç”¨ç¨‹åº"));
 
 
-	// Ìí¼ÓÒì³£´¦Àí
+	// æ·»åŠ å¼‚å¸¸å¤„ç†
 	SetUnhandledExceptionFilter(ExceptionHandler);
 
-	// ±¾µØ»¯Êä³ö
+	// æœ¬åœ°åŒ–è¾“å‡º
 	_tsetlocale(LC_ALL, _T(".936"));
 
-	// ³õÊ¼»¯ÅäÖÃÎÄ¼şÂ·¾¶
+	// åˆå§‹åŒ–é…ç½®æ–‡ä»¶è·¯å¾„
 	TCHAR cd[MAX_PATH] = { _T('\0') };
 	GetCurrentDirectory(_countof(cd), cd);
 #pragma warning(suppress: 6102)
 	GLOBAL_CONFIG_PATH = cd + GLOBAL_CONFIG_PATH;
 	USERS_DIR_PATH = cd + USERS_DIR_PATH;
 
-	// ÅĞ¶ÏÒ»ÏÂÓĞÃ»ÓĞ½âÑ¹
+	// åˆ¤æ–­ä¸€ä¸‹æœ‰æ²¡æœ‰è§£å‹
 	TCHAR tmpDir[MAX_PATH] = { _T('\0') };
 	if (GetEnvironmentVariable(_T("TMP"), tmpDir, _countof(tmpDir)) != 0 
 #pragma warning(suppress: 6102)
 		&& StrStrI(cd, tmpDir) != NULL)
-		AfxMessageBox(_T("ÇëÏÈ½âÑ¹ÔÙÔËĞĞ£¬·ñÔòÎŞ·¨±£´æÉèÖÃ"), MB_ICONINFORMATION);
+		AfxMessageBox(_T("è¯·å…ˆè§£å‹å†è¿è¡Œï¼Œå¦åˆ™æ— æ³•ä¿å­˜è®¾ç½®"), MB_ICONINFORMATION);
 
 
-	// ÔØÈëÖ÷´°¿Ú
+	// è½½å…¥ä¸»çª—å£
 	CTiebaManagerDlg dlg;
 	m_pMainWnd = &dlg;
 	dlg.DoModal();
 
 
-	// ÓÉÓÚ¶Ô»°¿òÒÑ¹Ø±Õ£¬ËùÒÔ½«·µ»Ø FALSE ÒÔ±ãÍË³öÓ¦ÓÃ³ÌĞò£¬
-	//  ¶ø²»ÊÇÆô¶¯Ó¦ÓÃ³ÌĞòµÄÏûÏ¢±Ã¡£
+	// ç”±äºå¯¹è¯æ¡†å·²å…³é—­ï¼Œæ‰€ä»¥å°†è¿”å› FALSE ä»¥ä¾¿é€€å‡ºåº”ç”¨ç¨‹åºï¼Œ
+	//  è€Œä¸æ˜¯å¯åŠ¨åº”ç”¨ç¨‹åºçš„æ¶ˆæ¯æ³µã€‚
 	return FALSE;
 }
 

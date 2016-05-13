@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "NormalListPage.h"
 
 
-// CLoopBanPage ¶Ô»°¿ò
+// CLoopBanPage å¯¹è¯æ¡†
 
 class CLoopBanPage : public CNormalListPage
 {
 	DECLARE_DYNAMIC(CLoopBanPage)
 
 public:
-	CLoopBanPage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CLoopBanPage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CLoopBanPage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_LOOP_BAN_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

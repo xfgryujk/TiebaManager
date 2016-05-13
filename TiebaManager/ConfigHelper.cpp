@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "ConfigHelper.h"
 #include <MiscHelper.h>
 #include <TBMConfig.h>
@@ -7,47 +7,47 @@
 #include "TiebaManagerDlg.h"
 
 
-// ±£´æµ±Ç°ÕËºÅÅäÖÃ
+// ä¿å­˜å½“å‰è´¦å·é…ç½®
 void SaveCurrentUserConfig()
 {
-	// ´´½¨Ä¿Â¼
+	// åˆ›å»ºç›®å½•
 	CreateDir(USERS_DIR_PATH + g_globalConfig.m_currentUser);
 
-	// µ±Ç°ÕËºÅÅäÖÃ
+	// å½“å‰è´¦å·é…ç½®
 	g_userConfig.Save(USER_CONFIG_PATH);
 
 	// Cookie
 	g_cookieConfig.Save(COOKIE_PATH);
 
-	// ÀúÊ·»Ø¸´¡¢ºöÂÔIDµÈ
+	// å†å²å›å¤ã€å¿½ç•¥IDç­‰
 	g_userCache.Save(CACHE_PATH);
 }
 
-// ÉèÖÃµ±Ç°ÕËºÅ
+// è®¾ç½®å½“å‰è´¦å·
 void SetCurrentUser(const CString& userName, BOOL save)
 {
-	// ±£´æµ±Ç°ÕËºÅÅäÖÃ
+	// ä¿å­˜å½“å‰è´¦å·é…ç½®
 	if (save)
 		SaveCurrentUserConfig();
 
-	// ÉèÖÃÅäÖÃÂ·¾¶
+	// è®¾ç½®é…ç½®è·¯å¾„
 	*g_globalConfig.m_currentUser = userName;
 	CURRENT_USER_DIR_PATH = USERS_DIR_PATH + userName + _T("\\");
 	USER_CONFIG_PATH = CURRENT_USER_DIR_PATH + _T("options.xml");
 	COOKIE_PATH = CURRENT_USER_DIR_PATH + _T("ck.xml");
 	CACHE_PATH = CURRENT_USER_DIR_PATH + _T("cache.xml");
 
-	// ¶ÁÈ¡ÉèÖÃ
+	// è¯»å–è®¾ç½®
 	g_userConfig.Load(USER_CONFIG_PATH);
-	// ·½°¸
+	// æ–¹æ¡ˆ
 	g_plan.Load(OPTIONS_DIR_PATH + g_userConfig.m_plan + _T(".xml"));
 	ReadImages(g_plan.m_imageDir);
-	// Ìù°ÉÃû
+	// è´´å§å
 	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_forumNameEdit.SetWindowText(*g_userConfig.m_forumName);
 
 	// Cookie
 	g_cookieConfig.Load(COOKIE_PATH);
 
-	// ÀúÊ·»Ø¸´¡¢ºöÂÔIDµÈ
+	// å†å²å›å¤ã€å¿½ç•¥IDç­‰
 	g_userCache.Load(CACHE_PATH);
 }

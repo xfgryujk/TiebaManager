@@ -1,4 +1,4 @@
-// SuperFunctionDlg.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// SuperFunctionDlg.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -6,16 +6,16 @@
 #include "TiebaManagerDlg.h"
 
 
-// CSuperFunctionDlg ¶Ô»°¿ò
+// CSuperFunctionDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CSuperFunctionDlg, CNormalDlg)
 
-// ¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°
 CSuperFunctionDlg::CSuperFunctionDlg(CWnd* pParent /*=NULL*/)
 	: CNormalDlg(CSuperFunctionDlg::IDD, pParent),
 	m_pagesResize(&m_tab)
 {
-	// ³õÊ¼»¯m_pages
+	// åˆå§‹åŒ–m_pages
 	int i = 0;
 	m_pages[i++] = &m_loopBanPage;
 	m_pages[i++] = &m_defriendPage;
@@ -44,26 +44,26 @@ BEGIN_MESSAGE_MAP(CSuperFunctionDlg, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CSuperFunctionDlg ÏûÏ¢´¦Àí³ÌĞò
+// CSuperFunctionDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CSuperFunctionDlg::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	SetIcon(hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(hIcon, FALSE);			// ÉèÖÃĞ¡Í¼±ê
+	SetIcon(hIcon, TRUE);			// è®¾ç½®å¤§å›¾æ ‡
+	SetIcon(hIcon, FALSE);			// è®¾ç½®å°å›¾æ ‡
 
-	SetWindowText(_T("³¬¼¶¹¦ÄÜ"));
+	SetWindowText(_T("è¶…çº§åŠŸèƒ½"));
 
-	// ³õÊ¼»¯m_tab
+	// åˆå§‹åŒ–m_tab
 	int i = 0;
-	m_tab.InsertItem(i++, _T("Ñ­»··â"));
-	m_tab.InsertItem(i++, _T("ÅúÁ¿À­ºÚ"));
-	m_tab.InsertItem(i++, _T("ËøÌû"));
+	m_tab.InsertItem(i++, _T("å¾ªç¯å°"));
+	m_tab.InsertItem(i++, _T("æ‰¹é‡æ‹‰é»‘"));
+	m_tab.InsertItem(i++, _T("é”å¸–"));
 
-	// ³õÊ¼»¯¸÷Ò³
+	// åˆå§‹åŒ–å„é¡µ
 #define CREATE_PAGE(page) page.Create(page.IDD, &m_tab)
 	CREATE_PAGE(m_loopBanPage);
 	CREATE_PAGE(m_defriendPage);
@@ -82,27 +82,27 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 	for (i = 0; i < _countof(m_pages); i++)
 		m_pagesResize.AddControl(m_pages[i], RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_tab, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
 
-	// ÏÔÊ¾ÅäÖÃ
+	// æ˜¾ç¤ºé…ç½®
 	ShowCurrentOptions();
 	m_clearCache = FALSE;
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
 #pragma region UI
-// ´°¿Ú /////////////////////////////////////////////////////////////////////////////////
+// çª—å£ /////////////////////////////////////////////////////////////////////////////////
 
-// È¡Ïû
+// å–æ¶ˆ
 void CSuperFunctionDlg::OnCancel()
 {
 	DestroyWindow();
 }
 
-// ÌáÊ¾ÊÇ·ñ±£´æ
+// æç¤ºæ˜¯å¦ä¿å­˜
 void CSuperFunctionDlg::OnClose()
 {
-	int result = AfxMessageBox(_T("±£´æÉèÖÃ£¿"), MB_ICONQUESTION | MB_YESNOCANCEL);
+	int result = AfxMessageBox(_T("ä¿å­˜è®¾ç½®ï¼Ÿ"), MB_ICONQUESTION | MB_YESNOCANCEL);
 	if (result == IDYES)
 	{
 		OnOK();
@@ -114,7 +114,7 @@ void CSuperFunctionDlg::OnClose()
 	DestroyWindow();
 }
 
-// ÊÍ·Åthis
+// é‡Šæ”¾this
 void CSuperFunctionDlg::PostNcDestroy()
 {
 	CNormalDlg::PostNcDestroy();
@@ -123,7 +123,7 @@ void CSuperFunctionDlg::PostNcDestroy()
 	delete this;
 }
 
-// ÏŞÖÆ×îĞ¡³ß´ç
+// é™åˆ¶æœ€å°å°ºå¯¸
 void CSuperFunctionDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
 	/*lpMMI->ptMinTrackSize.x = 666;
@@ -132,14 +132,14 @@ void CSuperFunctionDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }
 
-// ¸Ä±ä³ß´ç
+// æ”¹å˜å°ºå¯¸
 void CSuperFunctionDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CNormalDlg::OnSize(nType, cx, cy);
 	m_pagesResize.Resize();
 }
 
-// ÇĞ»»±êÇ©
+// åˆ‡æ¢æ ‡ç­¾
 void CSuperFunctionDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	*pResult = 0;
@@ -150,35 +150,35 @@ void CSuperFunctionDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 }
 #pragma endregion
 
-// ÏÔÊ¾µ±Ç°ÉèÖÃ
+// æ˜¾ç¤ºå½“å‰è®¾ç½®
 void CSuperFunctionDlg::ShowCurrentOptions()
 {
 	CString tmp;
-	// Ñ­»··â
+	// å¾ªç¯å°
 	CLoopBanConfig loopBanConfig;
 	loopBanConfig.Load(CURRENT_USER_DIR_PATH + _T("options2.xml"));
 	
-	m_loopBanPage.ShowList(loopBanConfig.m_userList);				// ÓÃ»§Ãû
+	m_loopBanPage.ShowList(loopBanConfig.m_userList);				// ç”¨æˆ·å
 	m_loopBanPage.m_pid = std::move(*loopBanConfig.m_pidList);		// PID
-	m_loopBanPage.m_logCheck.SetCheck(loopBanConfig.m_log);			// Êä³öÈÕÖ¾
-	m_loopBanPage.m_enableCheck.SetCheck(loopBanConfig.m_enable);	// ¿ªÆô
+	m_loopBanPage.m_logCheck.SetCheck(loopBanConfig.m_log);			// è¾“å‡ºæ—¥å¿—
+	m_loopBanPage.m_enableCheck.SetCheck(loopBanConfig.m_enable);	// å¼€å¯
 	tmp.Format(_T("%g"), *loopBanConfig.m_banInterval);
-	m_loopBanPage.m_banIntervalEdit.SetWindowText(tmp);				// ·â½û¼ä¸ô
+	m_loopBanPage.m_banIntervalEdit.SetWindowText(tmp);				// å°ç¦é—´éš”
 }
 
-// Ó¦ÓÃ¶Ô»°¿òÖĞµÄÉèÖÃ
+// åº”ç”¨å¯¹è¯æ¡†ä¸­çš„è®¾ç½®
 void CSuperFunctionDlg::ApplyOptionsInDlg()
 {
 	CString strBuf;
-	// Ñ­»··â
+	// å¾ªç¯å°
 	CLoopBanConfig loopBanConfig;
 
-	m_loopBanPage.ApplyList(loopBanConfig.m_userList);					// ÓÃ»§Ãû
+	m_loopBanPage.ApplyList(loopBanConfig.m_userList);					// ç”¨æˆ·å
 	*loopBanConfig.m_pidList = m_loopBanPage.m_pid;						// PID
-	*loopBanConfig.m_log = m_loopBanPage.m_logCheck.GetCheck();			// Êä³öÈÕÖ¾
-	*loopBanConfig.m_enable = m_loopBanPage.m_enableCheck.GetCheck();	// ¿ªÆô
+	*loopBanConfig.m_log = m_loopBanPage.m_logCheck.GetCheck();			// è¾“å‡ºæ—¥å¿—
+	*loopBanConfig.m_enable = m_loopBanPage.m_enableCheck.GetCheck();	// å¼€å¯
 	m_loopBanPage.m_banIntervalEdit.GetWindowText(strBuf);
-	*loopBanConfig.m_banInterval = (float)_ttof(strBuf);				// ·â½û¼ä¸ô
+	*loopBanConfig.m_banInterval = (float)_ttof(strBuf);				// å°ç¦é—´éš”
 
 	loopBanConfig.Save(CURRENT_USER_DIR_PATH + _T("options2.xml"));
 
@@ -186,7 +186,7 @@ void CSuperFunctionDlg::ApplyOptionsInDlg()
 		DeleteFile(CURRENT_USER_DIR_PATH + _T("LoopBanDate.xml"));
 }
 
-// È·ÈÏ
+// ç¡®è®¤
 void CSuperFunctionDlg::OnOK()
 {
 	ApplyOptionsInDlg();

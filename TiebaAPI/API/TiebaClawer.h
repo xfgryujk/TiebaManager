@@ -1,43 +1,43 @@
-#pragma once
+ï»¿#pragma once
 #include "TiebaAPICommon.h"
 
 
-// ²É¼¯Ìù°ÉÓÃµÄ³£Á¿
-#pragma region ÓÃ»§ĞÅÏ¢
-// 3ÊÇfid£¬7ÊÇÌù°ÉÃû
+// é‡‡é›†è´´å§ç”¨çš„å¸¸é‡
+#pragma region ç”¨æˆ·ä¿¡æ¯
+// 3æ˜¯fidï¼Œ7æ˜¯è´´å§å
 const wregex FORUM_ID_NAME_REG(_T("id('|\")?:\\s*('|\")?(\\d+)('|\")?,")
 							   _T(".*?name('|\")?:\\s*('|\")(.*?)('|\")"));
-// 3ÊÇÓÃ»§Ãû
+// 3æ˜¯ç”¨æˆ·å
 const wregex USER_NAME_REG(_T("name('|\")?:\\s*('|\")(.*?)('|\")"));
 const TCHAR _TBS_LEFT[] = _T("PageData.tbs = \"");
 const TCHAR _TBS_RIGHT[] = _T("\"");
-// 3ÊÇtbs
+// 3æ˜¯tbs
 const wregex TBS_REG(_T("tbs('|\")?:\\s*('|\")(.*?)('|\")"));
 #pragma endregion
 
 
-// Ö÷ÌâĞÅÏ¢
+// ä¸»é¢˜ä¿¡æ¯
 struct ThreadInfo
 {
-	CString tid;		// Ö÷ÌâID
-	CString reply;		// »Ø¸´Êı
-	CString title;		// ±êÌâ
-	CString preview;	// Ô¤ÀÀ
-	CString author;		// ×÷Õß
-	CString authorID;	// ×÷ÕßID
-	CString lastAuthor; // ×îºó»Ø¸´
+	CString tid;		// ä¸»é¢˜ID
+	CString reply;		// å›å¤æ•°
+	CString title;		// æ ‡é¢˜
+	CString preview;	// é¢„è§ˆ
+	CString author;		// ä½œè€…
+	CString authorID;	// ä½œè€…ID
+	CString lastAuthor; // æœ€åå›å¤
 };
 
-// Ìû×ÓĞÅÏ¢
+// å¸–å­ä¿¡æ¯
 struct PostInfo
 {
-	CString pid;			// Ìû×ÓID
-	CString floor;			// Â¥²ã
-	CString author;			// ×÷Õß
-	CString authorID;		// ×÷ÕßID
-	CString authorLevel;	// ×÷ÕßµÈ¼¶
-	CString authorPortrait;	// ×÷ÕßÍ·Ïñ¹şÏ£
-	CString content;		// ÄÚÈİ
+	CString pid;			// å¸–å­ID
+	CString floor;			// æ¥¼å±‚
+	CString author;			// ä½œè€…
+	CString authorID;		// ä½œè€…ID
+	CString authorLevel;	// ä½œè€…ç­‰çº§
+	CString authorPortrait;	// ä½œè€…å¤´åƒå“ˆå¸Œ
+	CString content;		// å†…å®¹
 };
 
 

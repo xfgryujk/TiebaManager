@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "ListTestPage.h"
 #include <StringHelper.h>
 
 
-// CRegListPage ¶Ô»°¿ò
+// CRegListPage å¯¹è¯æ¡†
 
 class CRegListPage : public CListTestPage
 {
 	DECLARE_DYNAMIC(CRegListPage)
 
 public:
-	CRegListPage(const CString& inputTitle, CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CRegListPage(const CString& inputTitle, CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CRegListPage();
 
-	// ¶Ô»°¿òÊı¾İ
+	// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_LIST_TEST_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:
@@ -38,4 +38,4 @@ protected:
 	const CString m_inputTitle;
 };
 
-static const TCHAR IS_REGEX_TEXT[] = _T("¡Ì");
+static const TCHAR IS_REGEX_TEXT[] = _T("âˆš");

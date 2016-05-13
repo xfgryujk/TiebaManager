@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Update.h"
 #import <msscript.ocx> no_namespace
 #include <StringHelper.h>
@@ -7,14 +7,14 @@
 #include "TiebaManagerDlg.h"
 
 
-// µ±Ç°°æ±¾ÈÕÆÚ£¬Ã¿´Î¸üĞÂºóĞŞ¸Ä
+// å½“å‰ç‰ˆæœ¬æ—¥æœŸï¼Œæ¯æ¬¡æ›´æ–°åä¿®æ”¹
 const char UPDATE_CURRENT_VERSION_A[] = "16-05-07";
 const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
-// ¸üĞÂÈÕÖ¾
-const TCHAR UPDATE_LOG[] = _T("1. ¼æÈİXPºÍWin7µÇÂ¼");
+// æ›´æ–°æ—¥å¿—
+const TCHAR UPDATE_LOG[] = _T("1. å…¼å®¹XPå’ŒWin7ç™»å½•");
 
 
-// ×Ö·û´®×ªÊ±¼ä´Á
+// å­—ç¬¦ä¸²è½¬æ—¶é—´æˆ³
 static time_t Str2Time(const CString& str)
 {
 	CComPtr<IScriptControl> script;
@@ -27,35 +27,35 @@ static time_t Str2Time(const CString& str)
 	return (__int64)(result.dblVal / 1000);
 }
 
-// ¼ì²é¸üĞÂ
+// æ£€æŸ¥æ›´æ–°
 CheckUpdateResult CheckUpdate()
 {
-	// È¡ÉÏ´«Ê±¼ä
+	// å–ä¸Šä¼ æ—¶é—´
 	CString src = HTTPGet(UPDATE_INFO_URL);
-	// ×Ö·û´®
+	// å­—ç¬¦ä¸²
 	CString time = GetStringBetween(src, _T(R"("Last-Modified":")"), _T("\""));
 	if (time == _T(""))
 		return UPDATE_FAILED_TO_GET_FILE_INFO;
-	// Ê±¼ä´Á
+	// æ—¶é—´æˆ³
 	time_t tTime = Str2Time(time);
 	if (tTime == 0)
 		return UPDATE_FAILED_TO_GET_FILE_INFO;
 	tm tmTime;
 	localtime_s(&tmTime, &tTime);
-	// ×Ö·û´®
+	// å­—ç¬¦ä¸²
 	time.Format(_T("%02d-%02d-%02d"), tmTime.tm_year % 100, tmTime.tm_mon + 1, tmTime.tm_mday);
 	if (time == UPDATE_CURRENT_VERSION)
 		return UPDATE_NO_UPDATE;
 
-	if (AfxMessageBox(_T("×îĞÂ°æ±¾") + time + _T("£¬ÊÇ·ñ¸üĞÂ£¿"), MB_ICONQUESTION | MB_YESNO) == IDNO)
+	if (AfxMessageBox(_T("æœ€æ–°ç‰ˆæœ¬") + time + _T("ï¼Œæ˜¯å¦æ›´æ–°ï¼Ÿ"), MB_ICONQUESTION | MB_YESNO) == IDNO)
 		return UPDATE_HAS_UPDATE;
 
 	ShellExecute(NULL, _T("open"), UPDATE_URL, NULL, NULL, SW_NORMAL);
-	AfxMessageBox(_T("ÏÂÔØºó½âÑ¹²¢¸²¸Ç¾É°æ±¾ÎÄ¼ş£¬¿É±£Áôµ±Ç°ÉèÖÃ"), MB_ICONINFORMATION);
+	AfxMessageBox(_T("ä¸‹è½½åè§£å‹å¹¶è¦†ç›–æ—§ç‰ˆæœ¬æ–‡ä»¶ï¼Œå¯ä¿ç•™å½“å‰è®¾ç½®"), MB_ICONINFORMATION);
 	return UPDATE_HAS_UPDATE;
 }
 
-// ×Ô¶¯¸üĞÂÏß³Ì
+// è‡ªåŠ¨æ›´æ–°çº¿ç¨‹
 UINT AFX_CDECL AutoUpdateThread(LPVOID _dlg)
 {
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)_dlg;
@@ -66,11 +66,11 @@ UINT AFX_CDECL AutoUpdateThread(LPVOID _dlg)
 	switch (res)
 	{
 	case UPDATE_FAILED_TO_GET_FILE_INFO:
-		dlg->m_stateStatic.SetWindowText(_T("¼ì²é¸üĞÂÊ§°Ü£º»ñÈ¡ÎÄ¼şĞÅÏ¢Ê§°Ü£¬ÔÚÉèÖÃÀïÊÖ¶¯¼ì²é¸üĞÂ"));
+		dlg->m_stateStatic.SetWindowText(_T("æ£€æŸ¥æ›´æ–°å¤±è´¥ï¼šè·å–æ–‡ä»¶ä¿¡æ¯å¤±è´¥ï¼Œåœ¨è®¾ç½®é‡Œæ‰‹åŠ¨æ£€æŸ¥æ›´æ–°"));
 		break;
 	case UPDATE_NO_UPDATE:
 	case UPDATE_HAS_UPDATE:
-		dlg->m_stateStatic.SetWindowText(_T("´ı»úÖĞ"));
+		dlg->m_stateStatic.SetWindowText(_T("å¾…æœºä¸­"));
 		break;
 	}
 

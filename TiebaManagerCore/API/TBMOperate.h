@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <TiebaOperate.h>
 
 
@@ -6,18 +6,18 @@ struct Operation
 {
 	enum TBObject { TBOBJ_THREAD, TBOBJ_POST, TBOBJ_LZL };
 
-	BOOL forceToConfirm; // Ç¿ÖÆÈ·ÈÏ
-	CString msg;		// ÌáÊ¾ÏûÏ¢
-	int pos;			// ¸ßÁÁÎ»ÖÃ
-	int length;			// ¸ßÁÁ³¤¶È
-	TBObject object;	// ²Ù×÷¶ÔÏó
-	CString tid;		// Ö÷ÌâID
-	CString title;		// Ö÷Ìâ±êÌâ
-	CString floor;		// Â¥²ã
-	CString pid;		// Ìû×ÓID
-	CString author;		// Ìû×Ó×÷Õß
-	CString authorID;	// Ìû×Ó×÷ÕßID
-	CString authorPortrait;	// Ìû×Ó×÷ÕßÍ·Ïñ¹şÏ£
+	BOOL forceToConfirm; // å¼ºåˆ¶ç¡®è®¤
+	CString msg;		// æç¤ºæ¶ˆæ¯
+	int pos;			// é«˜äº®ä½ç½®
+	int length;			// é«˜äº®é•¿åº¦
+	TBObject object;	// æ“ä½œå¯¹è±¡
+	CString tid;		// ä¸»é¢˜ID
+	CString title;		// ä¸»é¢˜æ ‡é¢˜
+	CString floor;		// æ¥¼å±‚
+	CString pid;		// å¸–å­ID
+	CString author;		// å¸–å­ä½œè€…
+	CString authorID;	// å¸–å­ä½œè€…ID
+	CString authorPortrait;	// å¸–å­ä½œè€…å¤´åƒå“ˆå¸Œ
 };
 
 

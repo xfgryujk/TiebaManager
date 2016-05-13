@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "ListPage.h"
 
 
-// CNormalListPage ¶Ô»°¿ò
+// CNormalListPage å¯¹è¯æ¡†
 
 class CNormalListPage : public CListPage
 {
 	DECLARE_DYNAMIC(CNormalListPage)
 
 public:
-	CNormalListPage(const CString& inputTitle, CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CNormalListPage(const CString& inputTitle, CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	CNormalListPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd = NULL);
 	virtual ~CNormalListPage();
 
-	// ¶Ô»°¿òÊı¾İ
+	// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_LIST_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

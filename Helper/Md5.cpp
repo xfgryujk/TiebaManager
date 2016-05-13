@@ -1,4 +1,4 @@
-// ×ª×Ôhttp://blog.csdn.net/jrckkyy/article/details/4715810
+ï»¿// è½¬è‡ªhttp://blog.csdn.net/jrckkyy/article/details/4715810
 
 /*
 * RFC 1321 compliant MD5 implementation,
@@ -340,7 +340,7 @@ CString CMD5::ToString()
 	return CString(output);
 }
 
-// ×ª³ÉUTF-8±àÂëÈ¡MD5
+// è½¬æˆUTF-8ç¼–ç å–MD5
 HELPER_API CString GetMD5_UTF8(const CString& data)
 {
 	int dstLen = WideCharToMultiByte(CP_UTF8, 0, data, data.GetLength(), NULL, 0, NULL, NULL);

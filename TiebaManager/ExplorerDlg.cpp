@@ -1,4 +1,4 @@
-// ExplorerDlg.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// ExplorerDlg.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -11,16 +11,16 @@
 #include <Mmsystem.h>
 
 
-// CExplorerDlg ¶Ô»°¿ò
+// CExplorerDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CExplorerDlg, CNormalDlg)
 
-// ¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°
 CExplorerDlg::CExplorerDlg(CWnd* pParent /*=NULL*/)
 	: CNormalDlg(CExplorerDlg::IDD, pParent),
 	m_pagesResize(&m_tab)
 {
-	// ³õÊ¼»¯m_pages
+	// åˆå§‹åŒ–m_pages
 	int i = 0;
 	m_pages[i++] = &m_exploreThreadPage;
 	m_pages[i++] = &m_explorePostPage;
@@ -56,18 +56,18 @@ BEGIN_MESSAGE_MAP(CExplorerDlg, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CExplorerDlg ÏûÏ¢´¦Àí³ÌĞò
+// CExplorerDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 #pragma region UI
-// ´°¿Ú /////////////////////////////////////////////////////////////////////////////////
+// çª—å£ /////////////////////////////////////////////////////////////////////////////////
 
-// Ïú»Ù´°¿Ú
+// é”€æ¯çª—å£
 void CExplorerDlg::OnClose()
 {
 	DestroyWindow();
 }
 
-// ÊÍ·Åthis
+// é‡Šæ”¾this
 void CExplorerDlg::PostNcDestroy()
 {
 	CNormalDlg::PostNcDestroy();
@@ -76,7 +76,7 @@ void CExplorerDlg::PostNcDestroy()
 	delete this;
 }
 
-// ÏŞÖÆ×îĞ¡³ß´ç
+// é™åˆ¶æœ€å°å°ºå¯¸
 void CExplorerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
 	/*lpMMI->ptMinTrackSize.x = 829;
@@ -85,14 +85,14 @@ void CExplorerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }
 
-// ¸Ä±ä³ß´ç
+// æ”¹å˜å°ºå¯¸
 void CExplorerDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CNormalDlg::OnSize(nType, cx, cy);
 	m_pagesResize.Resize();
 }
 
-// ÇĞ»»±êÇ©
+// åˆ‡æ¢æ ‡ç­¾
 void CExplorerDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	*pResult = 0;
@@ -103,22 +103,22 @@ void CExplorerDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 }
 #pragma endregion
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CExplorerDlg::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	SetIcon(hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(hIcon, FALSE);			// ÉèÖÃĞ¡Í¼±ê
+	SetIcon(hIcon, TRUE);			// è®¾ç½®å¤§å›¾æ ‡
+	SetIcon(hIcon, FALSE);			// è®¾ç½®å°å›¾æ ‡
 
-	// ³õÊ¼»¯m_tab
+	// åˆå§‹åŒ–m_tab
 	int i = 0;
-	m_tab.InsertItem(i++, _T("Ö÷Ìâ"));
-	m_tab.InsertItem(i++, _T("Ìû×Ó"));
-	m_tab.InsertItem(i++, _T("Â¥ÖĞÂ¥"));
+	m_tab.InsertItem(i++, _T("ä¸»é¢˜"));
+	m_tab.InsertItem(i++, _T("å¸–å­"));
+	m_tab.InsertItem(i++, _T("æ¥¼ä¸­æ¥¼"));
 
-	// ³õÊ¼»¯¸÷Ò³
+	// åˆå§‹åŒ–å„é¡µ
 #define CREATE_PAGE(page) page.Create(page.IDD, &m_tab)
 	CREATE_PAGE(m_exploreThreadPage);
 	CREATE_PAGE(m_explorePostPage);
@@ -140,10 +140,10 @@ BOOL CExplorerDlg::OnInitDialog()
 		m_pagesResize.AddControl(m_pages[i], RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_tab, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// É¾³ı
+// åˆ é™¤
 void CExplorerDlg::OnBnClickedButton1()
 {
 	int tabIndex = m_tab.GetCurSel(); 
@@ -154,26 +154,26 @@ void CExplorerDlg::OnBnClickedButton1()
 
 
 	CString code;
-	if (tabIndex == 0) // Ö÷Ìâ
+	if (tabIndex == 0) // ä¸»é¢˜
 	{
 		ThreadInfo& thread = m_exploreThreadPage.m_threads[index];
 		code = g_tiebaOperate->DeleteThread(thread.tid);
 		if (code == _T("0"))
 			g_userCache.m_deletedTID.insert(_ttoi64(thread.tid));
 	}
-	else if (tabIndex == 1) // Ìû×Ó
+	else if (tabIndex == 1) // å¸–å­
 		code = g_tiebaOperate->DeletePost(m_explorePostPage.m_tid, m_explorePostPage.m_posts[index].pid);
-	else // Â¥ÖĞÂ¥
+	else // æ¥¼ä¸­æ¥¼
 		code = g_tiebaOperate->DeleteLZL(m_explorePostPage.m_tid, m_exploreLzlPage.m_lzls[index].pid);
 
 
 	if (code != _T("0"))
-		AfxMessageBox(_T("É¾³ıÊ§°Ü£¬´íÎó´úÂë" + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
+		AfxMessageBox(_T("åˆ é™¤å¤±è´¥ï¼Œé”™è¯¯ä»£ç " + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
 	else
-		sndPlaySound(_T("É¾Ìù.wav"), SND_ASYNC | SND_NODEFAULT);
+		sndPlaySound(_T("åˆ è´´.wav"), SND_ASYNC | SND_NODEFAULT);
 }
 
-// ·â½û
+// å°ç¦
 void CExplorerDlg::OnBnClickedButton2()
 {
 	int tabIndex = m_tab.GetCurSel();
@@ -184,7 +184,7 @@ void CExplorerDlg::OnBnClickedButton2()
 
 
 	CString author, pid;
-	if (tabIndex == 0) // Ö÷Ìâ
+	if (tabIndex == 0) // ä¸»é¢˜
 	{
 		author = m_exploreThreadPage.m_threads[index].author;
 		if (!g_plan.m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
@@ -195,13 +195,13 @@ void CExplorerDlg::OnBnClickedButton2()
 				pid = posts[0].pid;
 		}
 	}
-	else if (tabIndex == 1) // Ìû×Ó
+	else if (tabIndex == 1) // å¸–å­
 	{
 		author = m_explorePostPage.m_posts[index].author;
 		if (!g_plan.m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
 			pid = m_explorePostPage.m_posts[index].pid;
 	}
-	else // Â¥ÖĞÂ¥
+	else // æ¥¼ä¸­æ¥¼
 	{
 		author = m_exploreLzlPage.m_lzls[index].author;
 		if (!g_plan.m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
@@ -211,17 +211,17 @@ void CExplorerDlg::OnBnClickedButton2()
 
 	/*if (pid == _T(""))
 	{
-		AfxMessageBox(_T("·â½ûÊ§°Ü(»ñÈ¡Ìû×ÓIDÊ§°Ü)"), MB_ICONERROR);
+		AfxMessageBox(_T("å°ç¦å¤±è´¥(è·å–å¸–å­IDå¤±è´¥)"), MB_ICONERROR);
 		return;
 	}*/
 	CString code = pid == _T("") ? g_tiebaOperate->BanIDClient(author) : g_tiebaOperate->BanID(author, pid);
 	if (code != _T("0"))
-		AfxMessageBox(_T("·â½ûÊ§°Ü£¬´íÎó´úÂë" + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
+		AfxMessageBox(_T("å°ç¦å¤±è´¥ï¼Œé”™è¯¯ä»£ç " + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
 	else
-		sndPlaySound(_T("·âºÅ.wav"), SND_ASYNC | SND_NODEFAULT);
+		sndPlaySound(_T("å°å·.wav"), SND_ASYNC | SND_NODEFAULT);
 }
 
-// ä¯ÀÀÆ÷
+// æµè§ˆå™¨
 void CExplorerDlg::OnBnClickedButton3()
 {
 	CString url;
@@ -246,7 +246,7 @@ void CExplorerDlg::OnBnClickedButton3()
 	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }
 
-// ´ò¿ªä¯ÀÀÍ¼Æ¬¶Ô»°¿ò
+// æ‰“å¼€æµè§ˆå›¾ç‰‡å¯¹è¯æ¡†
 void CExplorerDlg::ViewImages(unique_ptr<vector<CString> > img)
 {
 	if (m_imageViewDlg == NULL)

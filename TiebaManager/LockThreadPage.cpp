@@ -1,4 +1,4 @@
-// CLockThreadPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// CLockThreadPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -12,7 +12,7 @@
 #include <Mmsystem.h>
 
 
-// CLockThreadPage ¶Ô»°¿ò
+// CLockThreadPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CLockThreadPage, CNormalDlg)
 
@@ -44,12 +44,12 @@ BEGIN_MESSAGE_MAP(CLockThreadPage, CNormalDlg)
 END_MESSAGE_MAP()
 
 
-// CLockThreadPage ÏûÏ¢´¦Àí³ÌĞò
+// CLockThreadPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 CLockThreadPage* CLockThreadPage::m_instance = NULL;
 volatile BOOL CLockThreadPage::m_stopFlag = TRUE;
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CLockThreadPage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -66,10 +66,10 @@ BOOL CLockThreadPage::OnInitDialog()
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// Ïú»Ù
+// é”€æ¯
 void CLockThreadPage::OnDestroy()
 {
 	m_instance = NULL;
@@ -77,7 +77,7 @@ void CLockThreadPage::OnDestroy()
 	CNormalDlg::OnDestroy();
 }
 
-// ¿ªÊ¼
+// å¼€å§‹
 void CLockThreadPage::OnBnClickedButton1()
 {
 	m_tidEdit.EnableWindow(FALSE);
@@ -89,7 +89,7 @@ void CLockThreadPage::OnBnClickedButton1()
 	AfxBeginThread(LockThreadThread, NULL);
 }
 
-// Í£Ö¹
+// åœæ­¢
 void CLockThreadPage::OnBnClickedButton2()
 {
 	m_stopFlag = TRUE;
@@ -97,7 +97,7 @@ void CLockThreadPage::OnBnClickedButton2()
 
 UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 {
-	// ³õÊ¼»¯
+	// åˆå§‹åŒ–
 	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
 	if (!CoInitializeHelper())
 		return 0;
@@ -121,7 +121,7 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 	}
 	int iFloor = _ttoi(floor);
 
-	// ËøÌû
+	// é”å¸–
 	while (!m_stopFlag)
 	{
 		vector<PostInfo> posts;
@@ -134,14 +134,14 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 				if (code != _T("0"))
 				{
 					CString content;
-					content.Format(_T("ËøÌû£º %sÂ¥<font color=red> É¾³ıÊ§°Ü£¡´íÎó´úÂë£º%s(%s)</font><a href=\"dl:%s,%s\">ÖØÊÔ</a>"), 
+					content.Format(_T("é”å¸–ï¼š %sæ¥¼<font color=red> åˆ é™¤å¤±è´¥ï¼é”™è¯¯ä»£ç ï¼š%s(%s)</font><a href=\"dl:%s,%s\">é‡è¯•</a>"), 
 						(LPCTSTR)post.floor, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)tid, (LPCTSTR)post.pid);
 					mainDlg->m_log.Log(content);
 				}
 				else
 				{
-					sndPlaySound(_T("É¾Ìù.wav"), SND_ASYNC | SND_NODEFAULT);
-					mainDlg->m_log.Log(_T("<font color=red>ËøÌû£ºÉ¾³ı </font>") + post.floor + _T("Â¥"));
+					sndPlaySound(_T("åˆ è´´.wav"), SND_ASYNC | SND_NODEFAULT);
+					mainDlg->m_log.Log(_T("<font color=red>é”å¸–ï¼šåˆ é™¤ </font>") + post.floor + _T("æ¥¼"));
 					for (int i = 0; i < (int)(g_plan.m_deleteInterval * 10); i++)
 					{
 						if (m_stopFlag)
@@ -151,7 +151,7 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 				}
 			}
 
-		// É¨Ãè¼ä¸ô3s
+		// æ‰«æé—´éš”3s
 		for (int i = 0; i < 30; i++)
 		{
 			if (m_stopFlag)

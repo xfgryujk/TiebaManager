@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 
 enum ResizeType{ RT_NULL, RT_KEEP_DIST_TO_LEFT, RT_KEEP_DIST_TO_TOP, RT_KEEP_DIST_TO_RIGHT, RT_KEEP_DIST_TO_BOTTOM };

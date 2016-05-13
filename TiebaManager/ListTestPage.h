@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "ListPage.h"
 
 
-// CListTestPage ¶Ô»°¿ò
+// CListTestPage å¯¹è¯æ¡†
 
 class CListTestPage : public CListPage
 {
 	DECLARE_DYNAMIC(CListTestPage)
 
 public:
-	CListTestPage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CListTestPage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CListTestPage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_LIST_TEST_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:
@@ -25,7 +25,7 @@ public:
 	afx_msg void OnClickedButton7();
 
 protected:
-	// ²âÊÔÆ¥Åä
+	// æµ‹è¯•åŒ¹é…
 	virtual BOOL TestMatch(int index) = 0;
 
 
@@ -34,8 +34,8 @@ public:
 	CButton m_testButton;
 };
 
-// ÓÃ²»Ïà¹ØµÄÁ½¸öÄÚÈİ×ö²âÊÔ
-static const TCHAR MATCH_TOO_MUCH_CONTENT_TEST1[] = _T("¡¾°ÉÎñµ¼º½¡¿É¾Ìû²éÑ¯£¬Ìû×ÓÉê¾«£¬°É¹æ£¬Ë¢¶¹£¬Ë¢·Û");
-static const TCHAR MATCH_TOO_MUCH_CONTENT_TEST2[] = _T("ºØËê¡¤·¬Íâ14¡¤½ĞÊŞ½ÌÄã¿¾µØ¹Ï");
-static const TCHAR MATCH_TOO_MUCH_USERNAME_TEST1[] = _T("µÁÎÒÔ­ºÅµÄÃ»J8");
-static const TCHAR MATCH_TOO_MUCH_USERNAME_TEST2[] = _T("´ÓÈİÈËÉú");
+// ç”¨ä¸ç›¸å…³çš„ä¸¤ä¸ªå†…å®¹åšæµ‹è¯•
+static const TCHAR MATCH_TOO_MUCH_CONTENT_TEST1[] = _T("ã€å§åŠ¡å¯¼èˆªã€‘åˆ å¸–æŸ¥è¯¢ï¼Œå¸–å­ç”³ç²¾ï¼Œå§è§„ï¼Œåˆ·è±†ï¼Œåˆ·ç²‰");
+static const TCHAR MATCH_TOO_MUCH_CONTENT_TEST2[] = _T("è´ºå²Â·ç•ªå¤–14Â·å«å…½æ•™ä½ çƒ¤åœ°ç“œ");
+static const TCHAR MATCH_TOO_MUCH_USERNAME_TEST1[] = _T("ç›—æˆ‘åŸå·çš„æ²¡J8");
+static const TCHAR MATCH_TOO_MUCH_USERNAME_TEST2[] = _T("ä»å®¹äººç”Ÿ");

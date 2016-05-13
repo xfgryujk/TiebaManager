@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "NormalDlg.h"
 #include "afxwin.h"
 
 
-// CLockThreadPage ¶Ô»°¿ò
+// CLockThreadPage å¯¹è¯æ¡†
 
 class CLockThreadPage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CLockThreadPage)
 
 public:
-	CLockThreadPage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CLockThreadPage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CLockThreadPage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_LOCK_THREAD_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

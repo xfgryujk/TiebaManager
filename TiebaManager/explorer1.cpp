@@ -1,7 +1,7 @@
-// ¼ÆËã»úÉú³ÉÁËÓÉ Microsoft Visual C++ ´´½¨µÄ IDispatch °ü×°Æ÷Àà
+ï»¿// è®¡ç®—æœºç”Ÿæˆäº†ç”± Microsoft Visual C++ åˆ›å»ºçš„ IDispatch åŒ…è£…å™¨ç±»
 
-// ×¢Òâ:  ²»ÒªÐÞ¸Ä´ËÎÄ¼þµÄÄÚÈÝ¡£  Èç¹û´ËÀàÓÉ
-//  Microsoft Visual C++ ÖØÐÂÉú³É£¬ÄúµÄÐÞ¸Ä½«±»¸²¸Ç¡£
+// æ³¨æ„:  ä¸è¦ä¿®æ”¹æ­¤æ–‡ä»¶çš„å†…å®¹ã€‚  å¦‚æžœæ­¤ç±»ç”±
+//  Microsoft Visual C++ é‡æ–°ç”Ÿæˆï¼Œæ‚¨çš„ä¿®æ”¹å°†è¢«è¦†ç›–ã€‚
 
 
 #include "stdafx.h"
@@ -13,8 +13,8 @@
 IMPLEMENT_DYNCREATE(CExplorer1, CWnd)
 
 /////////////////////////////////////////////////////////////////////////////
-// CExplorer1 ÊôÐÔ
+// CExplorer1 å±žæ€§
 
 /////////////////////////////////////////////////////////////////////////////
-// CExplorer1 ²Ù×÷
+// CExplorer1 æ“ä½œ
 

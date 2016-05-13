@@ -1,4 +1,4 @@
-// InputDlg.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// InputDlg.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -6,7 +6,7 @@
 #include "InputDlg.h"
 
 
-// CInputDlg ¶Ô»°¿ò
+// CInputDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CInputDlg, CDialog)
 
@@ -36,9 +36,9 @@ BEGIN_MESSAGE_MAP(CInputDlg, CDialog)
 END_MESSAGE_MAP()
 
 
-// CInputDlg ÏûÏ¢´¦Àí³ÌĞò
+// CInputDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CInputDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
@@ -53,10 +53,10 @@ BOOL CInputDlg::OnInitDialog()
 		m_regexCheck.ShowWindow(SW_NORMAL);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// È·¶¨
+// ç¡®å®š
 void CInputDlg::OnOK()
 {
 	m_edit.GetWindowText(m_content);

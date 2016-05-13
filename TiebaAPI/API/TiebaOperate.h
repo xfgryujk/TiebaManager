@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "TiebaAPICommon.h"
 
 
 class TIEBA_API_API CTiebaOperate
 {
 protected:
-	CString m_forumID;			// Ìù°ÉID£¬È·ÈÏÌù°ÉÊ±³õÊ¼»¯
-	CString m_forumName;		// Ìù°ÉÃû£¬È·ÈÏÌù°ÉÊ±³õÊ¼»¯
-	CString m_encodedForumName; // UTF8 URL±àÂëµÄÌù°ÉÃû£¬È·ÈÏÌù°ÉÊ±³õÊ¼»¯
+	CString m_forumID;			// è´´å§IDï¼Œç¡®è®¤è´´å§æ—¶åˆå§‹åŒ–
+	CString m_forumName;		// è´´å§åï¼Œç¡®è®¤è´´å§æ—¶åˆå§‹åŒ–
+	CString m_encodedForumName; // UTF8 URLç¼–ç çš„è´´å§åï¼Œç¡®è®¤è´´å§æ—¶åˆå§‹åŒ–
 
-	CString m_userName;			// ÓÃ»§Ãû£¬È·ÈÏÌù°ÉÊ±³õÊ¼»¯
+	CString m_userName;			// ç”¨æˆ·åï¼Œç¡®è®¤è´´å§æ—¶åˆå§‹åŒ–
 	CString& m_cookie;
-	CString m_bduss;			// CookieÖĞµÄBDUSS£¬È·ÈÏÌù°ÉÊ±³õÊ¼»¯£¬ÓÃÓÚ¿Í»§¶Ë½Ó¿Ú
-	CString m_tbs;				// ¿ÚÁîºÅ£¬¹À¼ÆÊÇ·ÀÖ¹CSRFÓÃµÄ£¬È·ÈÏÌù°ÉÊ±³õÊ¼»¯£¬±¸ÓÃ»ñÈ¡tbsµØÖ·£ºhttp://tieba.baidu.com/dc/common/tbs
+	CString m_bduss;			// Cookieä¸­çš„BDUSSï¼Œç¡®è®¤è´´å§æ—¶åˆå§‹åŒ–ï¼Œç”¨äºå®¢æˆ·ç«¯æ¥å£
+	CString m_tbs;				// å£ä»¤å·ï¼Œä¼°è®¡æ˜¯é˜²æ­¢CSRFç”¨çš„ï¼Œç¡®è®¤è´´å§æ—¶åˆå§‹åŒ–ï¼Œå¤‡ç”¨è·å–tbsåœ°å€ï¼šhttp://tieba.baidu.com/dc/common/tbs
 
-	const int& m_banDuration;	// ·â½ûÊ±³¤
-	const CString& m_banReason; // ·â½ûÔ­Òò
+	const int& m_banDuration;	// å°ç¦æ—¶é•¿
+	const CString& m_banReason; // å°ç¦åŸå› 
 
-	CString m_randomTid;		// Ä³¸ötid£¬È·ÈÏÌù°ÉÊ±³õÊ¼»¯£¬ÓÃÓÚWAP½Ó¿ÚºÍ¿Í»§¶Ë½Ó¿Ú·â½û
+	CString m_randomTid;		// æŸä¸ªtidï¼Œç¡®è®¤è´´å§æ—¶åˆå§‹åŒ–ï¼Œç”¨äºWAPæ¥å£å’Œå®¢æˆ·ç«¯æ¥å£å°ç¦
 
 public:
 	CString GetForumID() { return m_forumID; }
@@ -29,26 +29,26 @@ public:
 	CTiebaOperate(CString& cookie, const int& banDuration, const CString& banReason);
 
 	enum SetTiebaResult { SET_TIEBA_OK, SET_TIEBA_TIMEOUT, SET_TIEBA_NOT_FOUND, SET_TIEBA_NOT_LOGIN, SET_TIEBA_NO_POWER, SET_TIEBA_NO_TBS };
-	// ÉèÖÃÒª²Ù×÷µÄÌù°É
+	// è®¾ç½®è¦æ“ä½œçš„è´´å§
 	SetTiebaResult SetTieba(const CString& forumName);
 
-	// ·âID£¬·µ»Ø´íÎó´úÂë
+	// å°IDï¼Œè¿”å›é”™è¯¯ä»£ç 
 	CString BanID(const CString& userName, const CString& pid);
-	// ·âID£¬·µ»Ø´íÎó´úÂë£¬²»ÓÃPID£¨ÓÃ»§±ØĞëÎª±¾°É»áÔ±£©
+	// å°IDï¼Œè¿”å›é”™è¯¯ä»£ç ï¼Œä¸ç”¨PIDï¼ˆç”¨æˆ·å¿…é¡»ä¸ºæœ¬å§ä¼šå‘˜ï¼‰
 	CString BanID(const CString& userName);
-	// ·âID£¬·µ»Ø´íÎó´úÂë£¬WAP½Ó¿Ú£¬²»ÓÃPID£¬Ö»ÄÜ·â1Ìì£¨·ñÔòÒªÓÃTID£©
+	// å°IDï¼Œè¿”å›é”™è¯¯ä»£ç ï¼ŒWAPæ¥å£ï¼Œä¸ç”¨PIDï¼Œåªèƒ½å°1å¤©ï¼ˆå¦åˆ™è¦ç”¨TIDï¼‰
 	CString BanIDWap(const CString& userName);
-	// ·âID£¬·µ»Ø´íÎó´úÂë£¬¿Í»§¶Ë½Ó¿Ú£¬²»ÓÃPID£¬Ğ¡°É¿É·â10Ìì
+	// å°IDï¼Œè¿”å›é”™è¯¯ä»£ç ï¼Œå®¢æˆ·ç«¯æ¥å£ï¼Œä¸ç”¨PIDï¼Œå°å§å¯å°10å¤©
 	CString BanIDClient(const CString& userName);
-	// À­ºÚ£¬·µ»Ø´íÎó´úÂë
+	// æ‹‰é»‘ï¼Œè¿”å›é”™è¯¯ä»£ç 
 	CString Defriend(const CString& userID);
-	// É¾Ö÷Ìâ£¬·µ»Ø´íÎó´úÂë
+	// åˆ ä¸»é¢˜ï¼Œè¿”å›é”™è¯¯ä»£ç 
 	CString DeleteThread(const CString& tid);
-	// É¾Ìû×Ó£¬·µ»Ø´íÎó´úÂë
+	// åˆ å¸–å­ï¼Œè¿”å›é”™è¯¯ä»£ç 
 	CString DeletePost(const CString& tid, const CString& pid);
-	// É¾Â¥ÖĞÂ¥£¬·µ»Ø´íÎó´úÂë
+	// åˆ æ¥¼ä¸­æ¥¼ï¼Œè¿”å›é”™è¯¯ä»£ç 
 	CString DeleteLZL(const CString& tid, const CString& lzlid);
 };
 
-// È¡´íÎóÎÄ±¾
+// å–é”™è¯¯æ–‡æœ¬
 TIEBA_API_API CString GetTiebaErrorText(const CString& errorCode);

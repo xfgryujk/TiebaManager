@@ -1,5 +1,5 @@
-
-// TiebaManagerDlg.h : Í·ÎÄ¼ş
+ï»¿
+// TiebaManagerDlg.h : å¤´æ–‡ä»¶
 //
 
 #pragma once
@@ -13,25 +13,25 @@ class CExplorerDlg;
 class CSuperFunctionDlg;
 
 
-// CTiebaManagerDlg ¶Ô»°¿ò
+// CTiebaManagerDlg å¯¹è¯æ¡†
 class CTiebaManagerDlg : public CNormalDlg
 {
-// ¹¹Ôì
+// æ„é€ 
 public:
-	CTiebaManagerDlg(CWnd* pParent = NULL);	// ±ê×¼¹¹Ôìº¯Êı
+	CTiebaManagerDlg(CWnd* pParent = NULL);	// æ ‡å‡†æ„é€ å‡½æ•°
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_TIEBAMANAGER_DIALOG };
 
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV æ”¯æŒ
 
 
-// ÊµÏÖ
+// å®ç°
 protected:
 	HICON m_hIcon;
 
-	// Éú³ÉµÄÏûÏ¢Ó³Éäº¯Êı
+	// ç”Ÿæˆçš„æ¶ˆæ¯æ˜ å°„å‡½æ•°
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();

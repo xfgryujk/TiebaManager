@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "NormalDlg.h"
 
 
-// CScanPage ¶Ô»°¿ò
+// CScanPage å¯¹è¯æ¡†
 
 class CScanPage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CScanPage)
 
 public:
-	CScanPage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CScanPage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CScanPage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_SCAN_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

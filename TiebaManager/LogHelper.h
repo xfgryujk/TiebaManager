@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <mshtml.h>
 class CExplorer1;
 struct IHTMLDocument2;

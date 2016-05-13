@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 
 
-#define UPDATE_URL _T("http://sinacloud.net/xfgryujk/TiebaManager/Ìù°É¹ÜÀíÆ÷.zip")
+#define UPDATE_URL _T("http://sinacloud.net/xfgryujk/TiebaManager/è´´å§ç®¡ç†å™¨.zip")
 #define UPDATE_INFO_URL UPDATE_URL _T("?meta&formatter=json")
 
 extern const char UPDATE_CURRENT_VERSION_A[];

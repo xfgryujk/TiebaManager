@@ -1,4 +1,4 @@
-// NormalListPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// NormalListPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -7,7 +7,7 @@
 #include "InputDlg.h"
 
 
-// CNormalListPage ¶Ô»°¿ò
+// CNormalListPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CNormalListPage, CListPage)
 
@@ -37,7 +37,7 @@ BEGIN_MESSAGE_MAP(CNormalListPage, CListPage)
 END_MESSAGE_MAP()
 
 
-// CNormalListPage ÏûÏ¢´¦Àí³ÌĞò
+// CNormalListPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 
 BOOL CNormalListPage::OnInitDialog()
@@ -48,7 +48,7 @@ BOOL CNormalListPage::OnInitDialog()
 	m_list.InsertColumn(0, _T(""), LVCFMT_LEFT, 500);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
 class CNormalListFile : public CConfigBase
@@ -64,7 +64,7 @@ public:
 	}
 };
 
-// µ¼³öxml
+// å¯¼å‡ºxml
 BOOL CNormalListPage::Export(const CString& path)
 {
 	if (path.Right(4).CompareNoCase(_T(".xml")) != 0)
@@ -75,7 +75,7 @@ BOOL CNormalListPage::Export(const CString& path)
 	return tmp.Save(path);
 }
 
-// µ¼Èëxml
+// å¯¼å…¥xml
 BOOL CNormalListPage::Import(const CString& path)
 {
 	if (path.Right(4).CompareNoCase(_T(".xml")) != 0)

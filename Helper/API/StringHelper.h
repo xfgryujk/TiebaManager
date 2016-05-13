@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "HelperCommon.h"
 #include <regex>
 
@@ -6,7 +6,7 @@
 struct RegexText
 {
 	BOOL isRegex;
-	CString text; // ÎªÁË±ÜÃâÍü¼ÇÉèÖÃregexpÒªÓÃSet·½·¨¸³Öµ£¡£¡
+	CString text; // ä¸ºäº†é¿å…å¿˜è®°è®¾ç½®regexpè¦ç”¨Setæ–¹æ³•èµ‹å€¼ï¼ï¼
 	std::wregex regexp;
 
 	void Set(BOOL _isRegex, const CString& _text)
@@ -18,41 +18,41 @@ struct RegexText
 };
 
 
-// ·Ö¸î×Ö·û´®
+// åˆ†å‰²å­—ç¬¦ä¸²
 HELPER_API void SplitString(CStringArray& dst, const CString& src, const CString& slipt);
 
-// ×Ö·û´®°üº¬
+// å­—ç¬¦ä¸²åŒ…å«
 HELPER_API BOOL StringIncludes(const CString& str, const CString& content);
-// ×Ö·û´®°üº¬
+// å­—ç¬¦ä¸²åŒ…å«
 HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL isRegex);
-// ×Ö·û´®°üº¬
+// å­—ç¬¦ä¸²åŒ…å«
 HELPER_API BOOL StringIncludes(const CString& str, const RegexText& content, int* _pos = NULL, int* length = NULL);
-// ×Ö·û´®Æ¥Åä
+// å­—ç¬¦ä¸²åŒ¹é…
 HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL isRegex);
-// ×Ö·û´®Æ¥Åä
+// å­—ç¬¦ä¸²åŒ¹é…
 HELPER_API BOOL StringMatchs(const CString& str, const RegexText& content);
 
-// È¡×Ö·û´®Ö®¼äµÄ×Ö·û´®
+// å–å­—ç¬¦ä¸²ä¹‹é—´çš„å­—ç¬¦ä¸²
 HELPER_API CString GetStringBetween(const CString& src, const CString& left, const CString& right, int startPos = 0);
-// È¡×Ö·û´®Ö®¼äµÄ×Ö·û´®£¬°üÀ¨×óÓÒµÄ×Ö·û´®
+// å–å­—ç¬¦ä¸²ä¹‹é—´çš„å­—ç¬¦ä¸²ï¼ŒåŒ…æ‹¬å·¦å³çš„å­—ç¬¦ä¸²
 HELPER_API CString GetStringBetween2(const CString& src, const CString& left, const CString& right, int startPos = 0);
-// È¡×Ö·û´®Ö®Ç°µÄ×Ö·û´®
+// å–å­—ç¬¦ä¸²ä¹‹å‰çš„å­—ç¬¦ä¸²
 HELPER_API CString GetStringBefore(const CString& src, const CString& right, int startPos = 0);
 
-// Ğ´×Ö·û´®µ½ÎÄ¼ş
+// å†™å­—ç¬¦ä¸²åˆ°æ–‡ä»¶
 HELPER_API BOOL WriteString(const CString& src, const CString& path);
 
-// Unicode×ªGBK
+// Unicodeè½¬GBK
 HELPER_API CStringA W2GBK(const CStringW& src);
-// GBK×ªUnicode
+// GBKè½¬Unicode
 HELPER_API CStringW GBK2W(const CStringA& src);
-// URL±àÂë
+// URLç¼–ç 
 HELPER_API CString EncodeURI(const CString& src);
-// URL±àÂë GBK°æ
+// URLç¼–ç  GBKç‰ˆ
 HELPER_API CString EncodeURI_GBK(const CString& src);
-// HTML×ªÒå
+// HTMLè½¬ä¹‰
 HELPER_API CString HTMLEscape(const CString& src);
-// HTML·´×ªÒå
+// HTMLåè½¬ä¹‰
 HELPER_API CString HTMLUnescape(const CString& src);
-// JS·´×ªÒå£¬µ÷ÓÃÕßÓ¦×ÔĞĞ×ªÒåsrcÀïµÄË«ÒıºÅ
+// JSåè½¬ä¹‰ï¼Œè°ƒç”¨è€…åº”è‡ªè¡Œè½¬ä¹‰srcé‡Œçš„åŒå¼•å·
 HELPER_API CString JSUnescape(const CString& src);

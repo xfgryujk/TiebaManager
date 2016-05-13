@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <TBMConfig.h>
 using tinyxml2::XMLElement;
 #include "Update.h"
@@ -6,17 +6,17 @@ using tinyxml2::XMLElement;
 #include "ScanImage.h"
 
 
-// �����ļ�·��
-TIEBA_MANAGER_API CString GLOBAL_CONFIG_PATH = _T("\\options.xml");	// �����ʼ��ʱ��ʼ��
-TIEBA_MANAGER_API CString USER_CONFIG_PATH;							// ȷ���û�ʱ��ʼ��
+// 配置文件路径
+TIEBA_MANAGER_API CString GLOBAL_CONFIG_PATH = _T("\\options.xml");	// 程序初始化时初始化
+TIEBA_MANAGER_API CString USER_CONFIG_PATH;							// 确定用户时初始化
 TIEBA_MANAGER_API CString OPTIONS_DIR_PATH = _T("Option\\");
-TIEBA_MANAGER_API CString USERS_DIR_PATH = _T("\\User\\");			// �����ʼ��ʱ��ʼ��
-TIEBA_MANAGER_API CString CURRENT_USER_DIR_PATH;					// ȷ���û�ʱ��ʼ��
-TIEBA_MANAGER_API CString COOKIE_PATH;								// ȷ���û�ʱ��ʼ��
-TIEBA_MANAGER_API CString CACHE_PATH;								// ȷ���û�ʱ��ʼ��
+TIEBA_MANAGER_API CString USERS_DIR_PATH = _T("\\User\\");			// 程序初始化时初始化
+TIEBA_MANAGER_API CString CURRENT_USER_DIR_PATH;					// 确定用户时初始化
+TIEBA_MANAGER_API CString COOKIE_PATH;								// 确定用户时初始化
+TIEBA_MANAGER_API CString CACHE_PATH;								// 确定用户时初始化
 
 
-// ȫ������
+// 全局配置
 TIEBA_MANAGER_API CGlobalConfig g_globalConfig;
 CGlobalConfig::CGlobalConfig() : CConfigBase("Global"),
 	m_firstRun("FirstRun", TRUE),
@@ -30,17 +30,17 @@ CGlobalConfig::CGlobalConfig() : CConfigBase("Global"),
 	m_options.push_back(&m_autoUpdate);
 }
 
-// �û�����
+// 用户配置
 TIEBA_MANAGER_API CUserConfig g_userConfig;
 CUserConfig::CUserConfig() : CConfigBase("User"),
-	m_plan("Plan", _T("Ĭ��")),
+	m_plan("Plan", _T("默认")),
 	m_forumName("ForumName")
 {
 	m_options.push_back(&m_plan);
 	m_options.push_back(&m_forumName);
 }
 
-// ����
+// 方案
 TIEBA_MANAGER_API DECLEAR_READ(CPlan::Keyword)
 {
 	const XMLElement* optionNode = root.FirstChildElement(m_name);

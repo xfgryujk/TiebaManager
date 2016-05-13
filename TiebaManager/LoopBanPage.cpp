@@ -1,4 +1,4 @@
-// LoopBanPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// LoopBanPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -15,12 +15,12 @@
 #include "TiebaManagerDlg.h"
 
 
-// CLoopBanPage ¶Ô»°¿ò
+// CLoopBanPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CLoopBanPage, CNormalListPage)
 
 CLoopBanPage::CLoopBanPage(CWnd* pParent /*=NULL*/)
-	: CNormalListPage(_T("ÓÃ»§Ãû£º"), CLoopBanPage::IDD, pParent)
+	: CNormalListPage(_T("ç”¨æˆ·åï¼š"), CLoopBanPage::IDD, pParent)
 {
 
 }
@@ -45,9 +45,9 @@ BEGIN_MESSAGE_MAP(CLoopBanPage, CNormalListPage)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CLoopBanPage ÏûÏ¢´¦Àí³ÌĞò
+// CLoopBanPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CLoopBanPage::OnInitDialog()
 {
 	CNormalListPage::OnInitDialog();
@@ -59,16 +59,16 @@ BOOL CLoopBanPage::OnInitDialog()
 	m_resize.AddControl(&m_static3, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// Ìí¼Ó
+// æ·»åŠ 
 void CLoopBanPage::OnAdd(int index)
 {
 	if (index >= 0)
 	{
 		if (m_pid.size() != m_list.GetItemCount())
-			m_pid.insert(m_pid.begin() + index, _T("")); // ÓÅÏÈ²»Ê¹ÓÃPID·â½û
+			m_pid.insert(m_pid.begin() + index, _T("")); // ä¼˜å…ˆä¸ä½¿ç”¨PIDå°ç¦
 		else
 			m_pid[index] = _T("");
 	}
@@ -80,7 +80,7 @@ void CLoopBanPage::OnAdd(int index)
 	((CSuperFunctionDlg*)GetParent()->GetParent())->m_clearCache = TRUE;
 }
 
-// É¾³ı
+// åˆ é™¤
 void CLoopBanPage::OnDelete(int index)
 {
 	if (index >= 0)
@@ -89,7 +89,7 @@ void CLoopBanPage::OnDelete(int index)
 		m_pid.clear();
 }
 
-// È¡ÓÃ»§·¢µÄÌû×ÓID
+// å–ç”¨æˆ·å‘çš„å¸–å­ID
 static CString GetPIDFromUser(const CString& userName)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + g_tiebaOperate->GetEncodedForumName() + _T("&qw=&rn=10&un=")
@@ -101,7 +101,7 @@ static CString GetPIDFromUser(const CString& userName)
 	return pid;
 }
 
-// Ñ­»··âÏß³Ì
+// å¾ªç¯å°çº¿ç¨‹
 UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 {
 	class CLoopBanDate : public CConfigBase
@@ -126,7 +126,7 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)_dlg;
 
-	// Ò»ÌìÄÚÑ­»··â¹ı²»ÔÙ·â
+	// ä¸€å¤©å†…å¾ªç¯å°è¿‡ä¸å†å°
 	SYSTEMTIME time = {};
 	GetLocalTime(&time);
 	CLoopBanDate lastTime;
@@ -140,23 +140,23 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 		return 0;
 
 	BOOL updatePID = FALSE;
-	// Ñ­»··â
-	dlg->m_stateStatic.SetWindowText(_T("Ñ­»··â½ûÖĞ"));
+	// å¾ªç¯å°
+	dlg->m_stateStatic.SetWindowText(_T("å¾ªç¯å°ç¦ä¸­"));
 	if (!CoInitializeHelper())
 		return 0;
 	for (UINT i = 0; i < config.m_userList->size(); i++)
 	{
 		CString code;
 		if (g_plan.m_wapBanInterface)
-			code = g_tiebaOperate->BanIDClient((*config.m_userList)[i]); // ÓÃWAP½Ó¿Ú·â½û
+			code = g_tiebaOperate->BanIDClient((*config.m_userList)[i]); // ç”¨WAPæ¥å£å°ç¦
 		else
 		{
-			if ((*config.m_pidList)[i] != _T("")) // ³¢ÊÔÓÃPID·â½û
+			if ((*config.m_pidList)[i] != _T("")) // å°è¯•ç”¨PIDå°ç¦
 				code = g_tiebaOperate->BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
-			if ((*config.m_pidList)[i] == _T("") || code != _T("0")) // ³¢ÊÔ²»ÓÃPID·â½û£¨ÓÃ»§±ØĞëÎª±¾°É»áÔ±£©
+			if ((*config.m_pidList)[i] == _T("") || code != _T("0")) // å°è¯•ä¸ç”¨PIDå°ç¦ï¼ˆç”¨æˆ·å¿…é¡»ä¸ºæœ¬å§ä¼šå‘˜ï¼‰
 			{
 				code = g_tiebaOperate->BanID((*config.m_userList)[i]);
-				if (code != _T("0")) // ³¢ÊÔ»ñÈ¡ĞÂµÄPID²¢ÓÃPID·â½û
+				if (code != _T("0")) // å°è¯•è·å–æ–°çš„PIDå¹¶ç”¨PIDå°ç¦
 				{
 					(*config.m_pidList)[i] = GetPIDFromUser((*config.m_userList)[i]);
 					updatePID = TRUE;
@@ -170,12 +170,12 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 			if (code != _T("0"))
 			{
 				CString content;
-				content.Format(_T("<font color=red>·â½û </font>%s<font color=red> Ê§°Ü£¡´íÎó´úÂë£º%s(%s)</font><a href=")
-					_T("\"bd:%s,\">ÖØÊÔ</a>"), (LPCTSTR)(*config.m_userList)[i], (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)(*config.m_userList)[i]);
+				content.Format(_T("<font color=red>å°ç¦ </font>%s<font color=red> å¤±è´¥ï¼é”™è¯¯ä»£ç ï¼š%s(%s)</font><a href=")
+					_T("\"bd:%s,\">é‡è¯•</a>"), (LPCTSTR)(*config.m_userList)[i], (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)(*config.m_userList)[i]);
 				dlg->m_log.Log(content);
 			}
 			else
-				dlg->m_log.Log(_T("<font color=red>·â½û </font>") + (*config.m_userList)[i]);
+				dlg->m_log.Log(_T("<font color=red>å°ç¦ </font>") + (*config.m_userList)[i]);
 		}
 
 		if (code == _T("0") && i < config.m_userList->size() - 1)
@@ -183,16 +183,16 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	}
 	CoUninitialize();
 
-	// ¸üĞÂPID
+	// æ›´æ–°PID
 	if (updatePID)
 		config.Save(CURRENT_USER_DIR_PATH + _T("options2.xml"));
 
-	// ¸üĞÂÊ±¼ä
+	// æ›´æ–°æ—¶é—´
 	*lastTime.m_year = time.wYear;
 	*lastTime.m_month = time.wMonth;
 	*lastTime.m_day = time.wDay;
 	lastTime.Save(CURRENT_USER_DIR_PATH + _T("LoopBanDate.xml"));
 
-	dlg->m_stateStatic.SetWindowText(_T("´ı»úÖĞ"));
+	dlg->m_stateStatic.SetWindowText(_T("å¾…æœºä¸­"));
 	return 0;
 }

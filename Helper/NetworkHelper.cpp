@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <NetworkHelper.h>
 using std::regex_iterator;
 #include <StringHelper.h>
@@ -148,10 +148,10 @@ public:
 class CWinHttpRequest : public CWinHttpBase
 {
 protected:
-	// ´«µİ¸øCOM×é¼şµÄ»Øµ÷Àà£¬ÓÃÀ´¼àÌı»ØÓ¦½áÊøÊÂ¼ş
+	// ä¼ é€’ç»™COMç»„ä»¶çš„å›è°ƒç±»ï¼Œç”¨æ¥ç›‘å¬å›åº”ç»“æŸäº‹ä»¶
 	class CWinHttpRequestEvents : public IWinHttpRequestEvents
 	{
-		// ÊµÏÖIUnknown
+		// å®ç°IUnknown
 	protected:
 		DWORD m_dwRefCount;
 
@@ -180,7 +180,7 @@ protected:
 			return count;
 		}
 
-		// ÊµÏÖIWinHttpRequestEvents
+		// å®ç°IWinHttpRequestEvents
 	protected:
 		CWinHttpRequest* m_request;
 
@@ -216,7 +216,7 @@ public:
 		if (FAILED(hr))
 			WriteError(_T("CoCreateInstance(WinHttpRequest)"), hr);
 
-		// ×¢²á»Øµ÷ÊÂ¼ş
+		// æ³¨å†Œå›è°ƒäº‹ä»¶
 		CComPtr<IConnectionPointContainer> connectionPointContainer;
 		hr = m_request.QueryInterface(&connectionPointContainer);
 		if (FAILED(hr))
@@ -337,7 +337,7 @@ unique_ptr<CWinHttpBase> CWinHttpBase::Create()
 }
 
 
-// ´ÓHTTPÍ·ÌáÈ¡Cookie²¢ĞŞ¸Äcookie
+// ä»HTTPå¤´æå–Cookieå¹¶ä¿®æ”¹cookie
 static void ReceiveCookie(const CString& headers, CString& cookie)
 {
 	static const wregex cookieExp(_T("Set-Cookie: (.*?)=(.*?);"));
@@ -357,7 +357,7 @@ static void ReceiveCookie(const CString& headers, CString& cookie)
 	}
 }
 
-// HTTPÇëÇó
+// HTTPè¯·æ±‚
 static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 	const CString& URL, const CString& data, CString* cookie)
 {
@@ -375,7 +375,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 		xml.SetRequestHeader(_T("Cookie"), *cookie);
 	xml.Send(data);
 
-	// µÈ´ı
+	// ç­‰å¾…
 #pragma warning(suppress: 28159)
 	DWORD startTime = GetTickCount();
 	while (!xml.IsCompleted())
@@ -389,7 +389,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 		}
 	}
 
-	// ½ÓÊÕCookie
+	// æ¥æ”¶Cookie
 	if (cookie != NULL)
 	{
 		CString headers;
@@ -397,7 +397,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 		ReceiveCookie(headers, *cookie);
 	}
 
-	// ÖØ¶¨Ïò
+	// é‡å®šå‘
 	long status;
 	xml.GetStatus(&status);
 	if (status == 302)
@@ -410,7 +410,7 @@ static HTTPRequestResult HTTPRequestBase(BOOL postMethod, CWinHttpBase& xml,
 	return NET_SUCCESS;
 }
 
-// HTTP GETÇëÇó
+// HTTP GETè¯·æ±‚
 HELPER_API CString HTTPGet(const CString& URL, CString* cookie)
 {
 	unique_ptr<CWinHttpBase> xml(CWinHttpBase::Create());
@@ -435,7 +435,7 @@ HELPER_API CString HTTPGet(const CString& URL, CString* cookie)
 	return result;
 }
 
-// HTTP POSTÇëÇó
+// HTTP POSTè¯·æ±‚
 HELPER_API CString HTTPPost(const CString& URL, const CString& data, CString* cookie)
 {
 	unique_ptr<CWinHttpBase> xml(CWinHttpBase::Create());
@@ -460,7 +460,7 @@ HELPER_API CString HTTPPost(const CString& URL, const CString& data, CString* co
 	return result;
 }
 
-// HTTP GETÇëÇó£¬È¡µÃÔ­Ê¼Êı¾İ
+// HTTP GETè¯·æ±‚ï¼Œå–å¾—åŸå§‹æ•°æ®
 HELPER_API HTTPRequestResult HTTPGetRaw(const CString& URL, unique_ptr<BYTE[]>* buffer, ULONG* size, CString* cookie)
 {
 	unique_ptr<CWinHttpBase> xml(CWinHttpBase::Create());
@@ -468,7 +468,7 @@ HELPER_API HTTPRequestResult HTTPGetRaw(const CString& URL, unique_ptr<BYTE[]>* 
 	if (ret != NET_SUCCESS)
 		return ret;
 
-	// ·µ»Ø
+	// è¿”å›
 	xml->GetResponseBody(buffer, size);
 	return NET_SUCCESS;
 }

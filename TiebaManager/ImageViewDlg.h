@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "NormalDlg.h"
 
 
-// CImageViewDlg ¶Ô»°¿ò
+// CImageViewDlg å¯¹è¯æ¡†
 
 class CImageViewDlg : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CImageViewDlg)
 
 public:
-	CImageViewDlg(CImageViewDlg** pThis, CWnd* pParent = NULL);   // ¹¹Ôìº¯Êı
+	CImageViewDlg(CImageViewDlg** pThis, CWnd* pParent = NULL);   // æ„é€ å‡½æ•°
 	virtual ~CImageViewDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_IMAGE_VIEW_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "TiebaScan.h"
 
 #include "TiebaVariable.h"
@@ -18,51 +18,51 @@ static const TCHAR PAGE_COUNT_LEFT[] = _T(",\"total_page\":");
 static const TCHAR PAGE_COUNT_RIGHT[] = _T("}");
 
 
-static vector<ThreadInfo> g_threads; // µ±Ç°É¨ÃèµÄÖ÷ÌâÁĞ±í
-static int g_threadIndex; // ÏÂ¸öÒªÉ¨ÃèµÄÖ÷ÌâË÷Òı
+static vector<ThreadInfo> g_threads; // å½“å‰æ‰«æçš„ä¸»é¢˜åˆ—è¡¨
+static int g_threadIndex; // ä¸‹ä¸ªè¦æ‰«æçš„ä¸»é¢˜ç´¢å¼•
 static CCriticalSection g_threadIndexLock;
 
 
-extern queue<Operation> g_confirmQueue; // È·ÈÏ¶ÓÁĞ
-extern queue<Operation> g_operationQueue; // ²Ù×÷¶ÓÁĞ
+extern queue<Operation> g_confirmQueue; // ç¡®è®¤é˜Ÿåˆ—
+extern queue<Operation> g_operationQueue; // æ“ä½œé˜Ÿåˆ—
 
 
-// ¼ì²éÎ¥¹æ
+// æ£€æŸ¥è¿è§„
 BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, const CString& authorLevel, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
 {
 	forceToConfirm = FALSE;
 	g_plan.m_optionsLock.Lock();
 
-	// ĞÅÈÎÓÃ»§
+	// ä¿¡ä»»ç”¨æˆ·
 	if (g_plan.m_whiteList->find(author) != g_plan.m_whiteList->end())
 	{
 		g_plan.m_optionsLock.Unlock();
 		return FALSE;
 	}
 
-	// Î¥¹æµÈ¼¶
+	// è¿è§„ç­‰çº§
 	if (g_plan.m_illegalLevel > 0 && authorLevel != _T("") && _ttoi(authorLevel) <= g_plan.m_illegalLevel)
 	{
 		pos = 0;
 		length = 0;
-		msg.Format(_T("<font color=red> ´¥·¢µÈ¼¶Ğ¡ÓÚ»òµÈÓÚ </font>%d"), *g_plan.m_illegalLevel);
+		msg.Format(_T("<font color=red> è§¦å‘ç­‰çº§å°äºæˆ–ç­‰äº </font>%d"), *g_plan.m_illegalLevel);
 		g_plan.m_optionsLock.Unlock();
 		return TRUE;
 	}
 
-	// ÆÁ±ÎÓÃ»§
+	// å±è”½ç”¨æˆ·
 	for (const RegexText& blackList : *g_plan.m_blackList)
 		if (StringMatchs(author, blackList))
 		{
 			pos = 0;
 			length = 0;
-			msg = _T("<font color=red> ´¥·¢ÆÁ±ÎÓÃ»§ </font>") + HTMLEscape(blackList.text);
+			msg = _T("<font color=red> è§¦å‘å±è”½ç”¨æˆ· </font>") + HTMLEscape(blackList.text);
 			g_plan.m_optionsLock.Unlock();
 			return TRUE;
 		}
 
 
-	// ĞÅÈÎÄÚÈİ
+	// ä¿¡ä»»å†…å®¹
 	for (const RegexText& whiteContent : *g_plan.m_whiteContent)
 		if (StringIncludes(content, whiteContent))
 		{
@@ -70,13 +70,13 @@ BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, const CString& authorLevel, C
 			return FALSE;
 		}
 
-	// Î¥¹æÄÚÈİ
+	// è¿è§„å†…å®¹
 	for (CPlan::Keyword& keyword : *g_plan.m_keywords)
 		if (StringIncludes(content, keyword, &pos, &length))
 		{
 			keyword.trigCount++;
 			forceToConfirm = keyword.forceToConfirm;
-			msg = _T("<font color=red> ´¥·¢Î¥½û´Ê </font>") + HTMLEscape(keyword.text);
+			msg = _T("<font color=red> è§¦å‘è¿ç¦è¯ </font>") + HTMLEscape(keyword.text);
 			g_plan.m_optionsLock.Unlock();
 			return TRUE;
 		}
@@ -85,7 +85,7 @@ BOOL CheckIllegal(LPCTSTR content, LPCTSTR author, const CString& authorLevel, C
 	return FALSE;
 }
 
-// É¨ÃèÖ÷ÌâÍ¼Æ¬
+// æ‰«æä¸»é¢˜å›¾ç‰‡
 static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg)
 {
 	for (const ThreadInfo& thread : g_threads)
@@ -105,7 +105,7 @@ static inline void ScanThreadImage(CString& msg, CTiebaManagerDlg* dlg)
 	}
 }
 
-// ×ÜÉ¨ÃèÏß³Ì
+// æ€»æ‰«æçº¿ç¨‹
 UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 {
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)mainDlg;
@@ -114,21 +114,21 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	dlg->m_pageEdit.EnableWindow(FALSE);
 	dlg->m_stopButton.EnableWindow(TRUE);
 
-	// ¿ªÊ¼²Ù×÷¡¢È·ÈÏÏß³Ì
+	// å¼€å§‹æ“ä½œã€ç¡®è®¤çº¿ç¨‹
 	if (g_operateThread == NULL && !g_operationQueue.empty())
 		g_operateThread = AfxBeginThread(OperateThread, mainDlg);
 	if (g_confirmThread == NULL && !g_confirmQueue.empty())
 		g_confirmThread = AfxBeginThread(ConfirmThread, mainDlg);
 
-	// ³õÊ¼»¯
+	// åˆå§‹åŒ–
 	if (!CoInitializeHelper())
 		return 0;
 
-	// ³õÊ¼»¯Ò³Êı
+	// åˆå§‹åŒ–é¡µæ•°
 	CString sPage;
 	dlg->m_pageEdit.GetWindowText(sPage);
 	int iPage = _ttoi(sPage);
-	CString ignoreThread; // ºöÂÔÇ°¼¸¸öÖ÷Ìâ
+	CString ignoreThread; // å¿½ç•¥å‰å‡ ä¸ªä¸»é¢˜
 	ignoreThread.Format(_T("%d"), (iPage - 1) * 50);
 
 	CString msg;
@@ -138,21 +138,21 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	{
 #pragma warning(suppress: 28159)
 		DWORD startTime = GetTickCount();
-		dlg->m_stateStatic.SetWindowText(_T("É¨ÃèÖ÷ÌâÖĞ"));
+		dlg->m_stateStatic.SetWindowText(_T("æ‰«æä¸»é¢˜ä¸­"));
 		if (!g_plan.m_briefLog)
-			dlg->m_log.Log(_T("<font color=green>±¾ÂÖÉ¨Ãè¿ªÊ¼£¬Ê¹ÓÃ·½°¸£º</font>") + g_userConfig.m_plan);
+			dlg->m_log.Log(_T("<font color=green>æœ¬è½®æ‰«æå¼€å§‹ï¼Œä½¿ç”¨æ–¹æ¡ˆï¼š</font>") + g_userConfig.m_plan);
 
-		// »ñÈ¡Ö÷ÌâÁĞ±í
+		// è·å–ä¸»é¢˜åˆ—è¡¨
 		if (!GetThreads(g_tiebaOperate->GetForumName(), ignoreThread, g_threads))
 		{
 			if (g_stopScanFlag)
 				break;
 			if (!g_plan.m_briefLog)
-				dlg->m_log.Log(_T("<font color=red>»ñÈ¡Ö÷ÌâÁĞ±íÊ§°Ü£¬ÖØĞÂ¿ªÊ¼±¾ÂÖ</font>"));
+				dlg->m_log.Log(_T("<font color=red>è·å–ä¸»é¢˜åˆ—è¡¨å¤±è´¥ï¼Œé‡æ–°å¼€å§‹æœ¬è½®</font>"));
 			continue;
 		}
 
-		// É¨ÃèÖ÷Ìâ
+		// æ‰«æä¸»é¢˜
 		for (const ThreadInfo& thread : g_threads)
 		{
 			if (g_stopScanFlag)
@@ -168,7 +168,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 				g_userCache.m_ignoredTID.insert(tid);
 			}
 		}
-		// É¨ÃèÖ÷ÌâÍ¼Æ¬
+		// æ‰«æä¸»é¢˜å›¾ç‰‡
 		BOOL scanImage = !g_plan.m_images.empty();
 		if (g_plan.m_onlyScanTitle && scanImage)
 		{
@@ -176,43 +176,43 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			ScanThreadImage(msg, dlg);
 		}
 
-		// É¨ÃèÌû×Ó
+		// æ‰«æå¸–å­
 		if (!g_plan.m_onlyScanTitle)
 		{
-			dlg->m_stateStatic.SetWindowText(_T("É¨ÃèÌû×ÓÖĞ"));
+			dlg->m_stateStatic.SetWindowText(_T("æ‰«æå¸–å­ä¸­"));
 			g_threadIndex = 0;
-			// ´´½¨Ïß³ÌÉ¨ÃèÌû×Ó
-			int threadCount = g_plan.m_threadCount; // g_threadCount»á±ä
+			// åˆ›å»ºçº¿ç¨‹æ‰«æå¸–å­
+			int threadCount = g_plan.m_threadCount; // g_threadCountä¼šå˜
 			unique_ptr<unique_ptr<CWinThread>[]> threadObjects(new unique_ptr<CWinThread>[threadCount]);
 			HANDLE* threadHandles(new HANDLE[threadCount]);
 			for (int i = 0; i < threadCount; i++)
 			{
-				dlg->m_stateList.AddString(_T("×¼±¸ÖĞ"));
+				dlg->m_stateList.AddString(_T("å‡†å¤‡ä¸­"));
 				threadObjects[i].reset(AfxBeginThread(ScanPostThread, (LPVOID)i, 0, 0, CREATE_SUSPENDED));
 				threadObjects[i]->m_bAutoDelete = FALSE;
 				threadHandles[i] = threadObjects[i]->m_hThread;
 				threadObjects[i]->ResumeThread();
 			}
-			// µÈ´ıÉ¨ÃèÌû×ÓÊ±É¨ÃèÖ÷ÌâÍ¼Æ¬
+			// ç­‰å¾…æ‰«æå¸–å­æ—¶æ‰«æä¸»é¢˜å›¾ç‰‡
 			if (scanImage)
 				ScanThreadImage(msg, dlg);
 			WaitForMultipleObjects(threadCount, threadHandles, TRUE, INFINITE);
 
-			// ÊÍ·Å
+			// é‡Šæ”¾
 			delete[] threadHandles;
 			dlg->m_stateList.ResetContent();
 		}
 
-		dlg->m_stateStatic.SetWindowText(_T("ÑÓÊ±ÖĞ"));
+		dlg->m_stateStatic.SetWindowText(_T("å»¶æ—¶ä¸­"));
 		if (!g_plan.m_briefLog)
 		{
 			CString content;
 #pragma warning(suppress: 28159)
-			content.Format(_T("<font color=green>±¾ÂÖÉ¨Ãè½áÊø£¬ÓÃÊ±%.3fÃë</font>"), (float)(GetTickCount() - startTime) / 1000.0f);
+			content.Format(_T("<font color=green>æœ¬è½®æ‰«æç»“æŸï¼Œç”¨æ—¶%.3fç§’</font>"), (float)(GetTickCount() - startTime) / 1000.0f);
 			dlg->m_log.Log(content);
 		}
 
-		// ÑÓÊ±
+		// å»¶æ—¶
 		int count = g_plan.m_scanInterval * 10;
 		for (int i = 0; i < count; i++)
 		{
@@ -224,23 +224,23 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 	g_stopScanFlag = FALSE;
 
 	if (!g_plan.m_briefLog)
-		dlg->m_log.Log(_T("<font color=green>É¨Ãè½áÊø</font>"));
+		dlg->m_log.Log(_T("<font color=green>æ‰«æç»“æŸ</font>"));
 	CoUninitialize();
 	dlg->m_stopButton.EnableWindow(FALSE);
 	dlg->m_startButton.EnableWindow(TRUE);
 	dlg->m_pageEdit.EnableWindow(TRUE);
-	dlg->m_stateStatic.SetWindowText(_T("´ı»úÖĞ"));
+	dlg->m_stateStatic.SetWindowText(_T("å¾…æœºä¸­"));
 
 	g_scanThread = NULL;
 	return 0;
 }
 
-// É¨ÃèÌû×ÓÏß³Ì
+// æ‰«æå¸–å­çº¿ç¨‹
 UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 {
 	int threadID = (int)_threadID;
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
-	// ³õÊ¼»¯
+	// åˆå§‹åŒ–
 	if (!CoInitializeHelper())
 		return 0;
 
@@ -251,10 +251,10 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 	{
 		ThreadInfo& thread = g_threads[g_threadIndex++];
 		g_threadIndexLock.Unlock();
-		if (g_userCache.m_deletedTID.find(_ttoi64(thread.tid)) != g_userCache.m_deletedTID.end()) // ÒÑÉ¾
+		if (g_userCache.m_deletedTID.find(_ttoi64(thread.tid)) != g_userCache.m_deletedTID.end()) // å·²åˆ 
 			goto Next;
 		g_plan.m_optionsLock.Lock();
-		if (g_plan.m_trustedThread->find(thread.tid) != g_plan.m_trustedThread->end()) // ĞÅÈÎ
+		if (g_plan.m_trustedThread->find(thread.tid) != g_plan.m_trustedThread->end()) // ä¿¡ä»»
 		{
 			g_plan.m_optionsLock.Unlock();
 			goto Next;
@@ -266,42 +266,42 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		historyReplyIt = g_userCache.m_reply->find(tid);
 		BOOL hasHistoryReply = historyReplyIt != g_userCache.m_reply->end();
 		if (hasHistoryReply 
-			&& reply == historyReplyIt->second // »Ø¸´Êı¼õÉÙÊ±Ò²É¨Ãè£¬·ÀÖ¹Â©µô
-			&& thread.lastAuthor == (*g_userCache.m_lastAuthor)[tid]) // ÅĞ¶Ï×îºó»Ø¸´ÈË£¬·ÀÖ¹»Ø¸´Êı-1È»ºóÓĞĞÂ»Ø¸´+1
+			&& reply == historyReplyIt->second // å›å¤æ•°å‡å°‘æ—¶ä¹Ÿæ‰«æï¼Œé˜²æ­¢æ¼æ‰
+			&& thread.lastAuthor == (*g_userCache.m_lastAuthor)[tid]) // åˆ¤æ–­æœ€åå›å¤äººï¼Œé˜²æ­¢å›å¤æ•°-1ç„¶åæœ‰æ–°å›å¤+1
 		{
-			// ÎŞĞÂ»Ø¸´£¬Ìø¹ı
+			// æ— æ–°å›å¤ï¼Œè·³è¿‡
 			historyReplyIt->second = reply;
 			goto Next;
 		}
 
-		// µÚÒ»Ò³
+		// ç¬¬ä¸€é¡µ
 		src = HTTPGet(_T("http://tieba.baidu.com/p/" + thread.tid));
 		if (src == NET_TIMEOUT_TEXT)
 		{
 			if (!g_plan.m_briefLog)
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
-				+ _T("</a> <font color=red>»ñÈ¡Ìù×ÓÁĞ±íÊ§°Ü(³¬Ê±)£¬ÔİÊ±Ìø¹ı</font>"));
+				+ _T("</a> <font color=red>è·å–è´´å­åˆ—è¡¨å¤±è´¥(è¶…æ—¶)ï¼Œæš‚æ—¶è·³è¿‡</font>"));
 			goto Next;
 		}
 
-		// Ìû×ÓÒ³Êı
+		// å¸–å­é¡µæ•°
 		pageCount = GetStringBetween(src, PAGE_COUNT_LEFT, PAGE_COUNT_RIGHT);
 		if (pageCount == _T(""))
 		{
 			WriteString(src, _T("thread.txt"));
 			if (!g_plan.m_briefLog)
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
-				+ _T("</a> <font color=red>»ñÈ¡Ìù×ÓÁĞ±íÊ§°Ü(¿ÉÄÜÒÑ±»É¾)£¬ÔİÊ±Ìø¹ı</font>"));
+				+ _T("</a> <font color=red>è·å–è´´å­åˆ—è¡¨å¤±è´¥(å¯èƒ½å·²è¢«åˆ )ï¼Œæš‚æ—¶è·³è¿‡</font>"));
 			goto Next;
 		}
 
-		// É¨ÃèÌû×ÓÒ³
+		// æ‰«æå¸–å­é¡µ
 		int iPageCount = _ttoi(pageCount);
 		BOOL res = ScanPostPage(thread.tid, 1, thread.title, hasHistoryReply, 0, src, threadID, dlg);
 		if (iPageCount > 1 && !g_stopScanFlag)
 			res = ScanPostPage(thread.tid, iPageCount, thread.title, hasHistoryReply, 0, _T(""), threadID, dlg);
 
-		// ¼ÇÂ¼ÀúÊ·»Ø¸´
+		// è®°å½•å†å²å›å¤
 		if (res)
 		{
 			(*g_userCache.m_reply)[tid] = reply;
@@ -315,11 +315,11 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 
 	CoUninitialize();
 	dlg->m_stateList.DeleteString(threadID);
-	dlg->m_stateList.InsertString(threadID, _T("Ïß³Ì½áÊø"));
+	dlg->m_stateList.InsertString(threadID, _T("çº¿ç¨‹ç»“æŸ"));
 	return 0;
 }
 
-// É¨ÃèÌû×ÓÒ³
+// æ‰«æå¸–å­é¡µ
 BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHistoryReply,
 	int ScanedCount, const CString& src, int threadID, CTiebaManagerDlg* dlg)
 {
@@ -328,7 +328,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	dlg->m_stateList.DeleteString(threadID);
 	dlg->m_stateList.InsertString(threadID, tid + _T(":") + sPage + _T(" ") + title);
 
-	// »ñÈ¡Ìû×ÓÁĞ±í
+	// è·å–å¸–å­åˆ—è¡¨
 	vector<PostInfo> posts, lzls;
 	GetPostsResult res = GetPosts(tid, src, sPage, posts);
 	switch (res)
@@ -336,8 +336,8 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	case GET_POSTS_TIMEOUT:
 	case GET_POSTS_DELETED:
 		dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + title
-			+ _T("</a> <font color=red>»ñÈ¡Ìù×ÓÁĞ±íÊ§°Ü(") + (res == GET_POSTS_TIMEOUT ? _T("³¬Ê±") :
-			_T("¿ÉÄÜÒÑ±»É¾")) + _T(")£¬ÔİÊ±Ìø¹ı</font>"));
+			+ _T("</a> <font color=red>è·å–è´´å­åˆ—è¡¨å¤±è´¥(") + (res == GET_POSTS_TIMEOUT ? _T("è¶…æ—¶") :
+			_T("å¯èƒ½å·²è¢«åˆ ")) + _T(")ï¼Œæš‚æ—¶è·³è¿‡</font>"));
 		return FALSE;
 	}
 	GetLzls(g_tiebaOperate->GetForumID(), tid, sPage, posts, lzls);
@@ -345,7 +345,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 	CString msg;
 	BOOL forceToConfirm;
 	int pos, length;
-	// É¨ÃèÌû×Ó
+	// æ‰«æå¸–å­
 	for (const PostInfo& post : posts)
 	{
 		if (g_stopScanFlag)
@@ -357,12 +357,12 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			AddConfirm(forceToConfirm, post.content, post.floor == _T("1") ? Operation::TBOBJ_THREAD : Operation::TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID, post.authorPortrait, pos, length);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
-				_T("</a> ") + post.floor + _T("Â¥") + msg);
+				_T("</a> ") + post.floor + _T("æ¥¼") + msg);
 			g_userCache.m_ignoredPID.insert(pid);
 		}
 	}
 
-	// É¨ÃèÂ¥ÖĞÂ¥
+	// æ‰«ææ¥¼ä¸­æ¥¼
 	for (const PostInfo& lzl : lzls)
 	{
 		if (g_stopScanFlag)
@@ -375,13 +375,13 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 				AddConfirm(forceToConfirm, lzl.content, Operation::TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, 
 					lzl.authorID, lzl.authorPortrait, pos, length);
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
-					_T("</a> ") + lzl.floor + _T("Â¥»Ø¸´") + msg);
+					_T("</a> ") + lzl.floor + _T("æ¥¼å›å¤") + msg);
 				g_userCache.m_ignoredLZLID.insert(lzlid);
 			}
 		}
 	}
 
-	// É¨ÃèÌû×ÓÍ¼Æ¬
+	// æ‰«æå¸–å­å›¾ç‰‡
 	for (const PostInfo& post : posts)
 	{
 		if (g_stopScanFlag)
@@ -393,12 +393,12 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			AddConfirm(FALSE, post.content, post.floor == _T("1") ? Operation::TBOBJ_THREAD : Operation::TBOBJ_POST,
 				tid, title, post.floor, post.pid, post.author, post.authorID, post.authorPortrait);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
-				_T("</a> ") + post.floor + _T("Â¥") + msg);
+				_T("</a> ") + post.floor + _T("æ¥¼") + msg);
 			g_userCache.m_ignoredPID.insert(pid);
 		}
 	}
 
-	// É¨ÃèÂ¥ÖĞÂ¥Í¼Æ¬
+	// æ‰«ææ¥¼ä¸­æ¥¼å›¾ç‰‡
 	for (const PostInfo& lzl : lzls)
 	{
 		if (g_stopScanFlag)
@@ -409,17 +409,17 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		{
 			AddConfirm(FALSE, lzl.content, Operation::TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID, lzl.authorPortrait);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
-				_T("</a> ") + lzl.floor + _T("Â¥»Ø¸´") + msg);
+				_T("</a> ") + lzl.floor + _T("æ¥¼å›å¤") + msg);
 			g_userCache.m_ignoredLZLID.insert(pid);
 		}
 	}
 
-	// µİ¹éÉ¨ÃèÉÏÒ»Ò³
-	if (!hasHistoryReply) // Èç¹ûÓĞÀúÊ·»Ø¸´Ç°Ãæ¼¸Ò³ºÜ¿ÉÄÜ±»É¨Ãè¹ıÁË£¬²»µİ¹é
+	// é€’å½’æ‰«æä¸Šä¸€é¡µ
+	if (!hasHistoryReply) // å¦‚æœæœ‰å†å²å›å¤å‰é¢å‡ é¡µå¾ˆå¯èƒ½è¢«æ‰«æè¿‡äº†ï¼Œä¸é€’å½’
 	{
-		if (++ScanedCount < g_plan.m_scanPageCount) // Ã»´ïµ½×î´óÉ¨ÃèÒ³Êı
+		if (++ScanedCount < g_plan.m_scanPageCount) // æ²¡è¾¾åˆ°æœ€å¤§æ‰«æé¡µæ•°
 		{
-			if (--page < 2) // É¨ÃèÍê
+			if (--page < 2) // æ‰«æå®Œ
 				return TRUE;
 			return ScanPostPage(tid, page, title, FALSE, ScanedCount, _T(""), threadID, dlg);
 		}

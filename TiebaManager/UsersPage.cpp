@@ -1,4 +1,4 @@
-// UsersPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// UsersPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -12,7 +12,7 @@
 #include <MiscHelper.h>
 
 
-// CUsersPage ¶Ô»°¿ò
+// CUsersPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CUsersPage, CNormalDlg)
 
@@ -45,9 +45,9 @@ BEGIN_MESSAGE_MAP(CUsersPage, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CUsersPage ÏûÏ¢´¦Àí³ÌĞò
+// CUsersPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CUsersPage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -58,30 +58,30 @@ BOOL CUsersPage::OnInitDialog()
 	m_resize.AddControl(&m_deleteButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 	m_resize.AddControl(&m_switchButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 
-	// ÒÑÈ·ÈÏÌù°É
+	// å·²ç¡®è®¤è´´å§
 	if (!((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_confirmButton.IsWindowEnabled())
 		m_switchButton.EnableWindow(FALSE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// µÇÂ¼
+// ç™»å½•
 void CUsersPage::OnBnClickedButton1()
 {
 	CLoginDlg loginDlg(this);
 	if (loginDlg.DoModal() != IDOK)
 		return;
-	// ´´½¨Ä¿Â¼
+	// åˆ›å»ºç›®å½•
 	CreateDir(USERS_DIR_PATH + loginDlg.m_userName);
 
-	// ±£´æCookie
+	// ä¿å­˜Cookie
 	CCookieConfig ck;
 	*ck.m_cookie = loginDlg.m_cookie;
 	TRACE(_T("%s\n"), (LPCTSTR)*ck.m_cookie);
 	if (!ck.Save(USERS_DIR_PATH + loginDlg.m_userName + _T("\\ck.xml")))
 	{
-		AfxMessageBox(_T("±£´æÕËºÅÊ§°Ü£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("ä¿å­˜è´¦å·å¤±è´¥ï¼"), MB_ICONERROR);
 		return;
 	}
 	if (g_globalConfig.m_currentUser == loginDlg.m_userName)
@@ -95,7 +95,7 @@ void CUsersPage::OnBnClickedButton1()
 		OnBnClickedButton3();
 }
 
-// É¾³ı
+// åˆ é™¤
 void CUsersPage::OnBnClickedButton2()
 {
 	int index = m_list.GetCurSel();
@@ -105,31 +105,31 @@ void CUsersPage::OnBnClickedButton2()
 	m_list.GetText(index, name);
 	if (name == g_globalConfig.m_currentUser)
 	{
-		AfxMessageBox(_T("²»ÄÜÉ¾³ıµ±Ç°ÕËºÅ£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("ä¸èƒ½åˆ é™¤å½“å‰è´¦å·ï¼"), MB_ICONERROR);
 		return;
 	}
 	CString path = USERS_DIR_PATH + name + _T("\\");
 	if (!DeleteFile(path + _T("ck.xml")))
 	{
-		AfxMessageBox(_T("É¾³ıÕËºÅÊ§°Ü£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("åˆ é™¤è´¦å·å¤±è´¥ï¼"), MB_ICONERROR);
 		return;
 	}
 	m_list.DeleteString(index);
 	m_list.SetCurSel(index == 0 ? 0 : index - 1);
 }
 
-// ÇĞ»»
+// åˆ‡æ¢
 void CUsersPage::OnBnClickedButton3()
 {
 	int index = m_list.GetCurSel();
 	if (index == LB_ERR)
 		return;
-	// ÒÑÈ·ÈÏÌù°É
+	// å·²ç¡®è®¤è´´å§
 	if (!((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_confirmButton.IsWindowEnabled())
 		return;
 	CString name;
 	m_list.GetText(index, name);
 	SetCurrentUser(name, TRUE);
 	((CSettingDlg*)GetParent()->GetParent())->ShowPlan(g_plan);
-	m_currentUserStatic.SetWindowText(_T("µ±Ç°ÕËºÅ£º") + g_globalConfig.m_currentUser);
+	m_currentUserStatic.SetWindowText(_T("å½“å‰è´¦å·ï¼š") + g_globalConfig.m_currentUser);
 }

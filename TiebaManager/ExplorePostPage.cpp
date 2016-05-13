@@ -1,4 +1,4 @@
-// ExploreThreadPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// ExploreThreadPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -10,7 +10,7 @@
 #include "ScanImage.h"
 
 
-// CExplorePostPage ¶Ô»°¿ò
+// CExplorePostPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CExplorePostPage, CExplorerPage)
 
@@ -37,9 +37,9 @@ BEGIN_MESSAGE_MAP(CExplorePostPage, CExplorerPage)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CExplorePostPage ÏûÏ¢´¦Àí³ÌĞò
+// CExplorePostPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CExplorePostPage::OnInitDialog()
 {
 	CExplorerPage::OnInitDialog();
@@ -49,16 +49,16 @@ BOOL CExplorePostPage::OnInitDialog()
 	m_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	int i = 0;
 	m_list.InsertColumn(i++, _T(""), LVCFMT_LEFT, 0);
-	m_list.InsertColumn(i++, _T("Â¥²ã"), LVCFMT_RIGHT, 50);
-	m_list.InsertColumn(i++, _T("ÄÚÈİ"), LVCFMT_LEFT, 540);
-	m_list.InsertColumn(i++, _T("×÷Õß"), LVCFMT_CENTER, 130);
-	m_list.DeleteColumn(0); // ½â¾öµÚÒ»ÁĞÎÄ×Ö²»ÄÜÓÒ¶ÔÆëµÄÎÊÌâ
+	m_list.InsertColumn(i++, _T("æ¥¼å±‚"), LVCFMT_RIGHT, 50);
+	m_list.InsertColumn(i++, _T("å†…å®¹"), LVCFMT_LEFT, 540);
+	m_list.InsertColumn(i++, _T("ä½œè€…"), LVCFMT_CENTER, 130);
+	m_list.DeleteColumn(0); // è§£å†³ç¬¬ä¸€åˆ—æ–‡å­—ä¸èƒ½å³å¯¹é½çš„é—®é¢˜
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// ×ªµ½
+// è½¬åˆ°
 void CExplorePostPage::OnBnClickedButton1()
 {
 	if (m_tid == _T(""))
@@ -99,7 +99,7 @@ void CExplorePostPage::OnBnClickedButton1()
 	m_gotoButton.EnableWindow(TRUE);
 }
 
-// Ñ¡ÖĞÏî¸Ä±ä
+// é€‰ä¸­é¡¹æ”¹å˜
 void CExplorePostPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);

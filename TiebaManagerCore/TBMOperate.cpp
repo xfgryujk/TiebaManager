@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "TBMOperate.h"
 
 #include "TiebaVariable.h"
@@ -13,15 +13,15 @@
 #include <Mmsystem.h>
 
 
-queue<Operation> g_confirmQueue; // È·ÈÏ¶ÓÁĞ
+queue<Operation> g_confirmQueue; // ç¡®è®¤é˜Ÿåˆ—
 CCriticalSection g_confirmQueueLock;
-queue<Operation> g_operationQueue; // ²Ù×÷¶ÓÁĞ
+queue<Operation> g_operationQueue; // æ“ä½œé˜Ÿåˆ—
 CCriticalSection g_operationQueueLock;
 
 unique_ptr<CTiebaOperate> g_tiebaOperate;
 
 
-// Ìí¼ÓÈ·ÈÏ
+// æ·»åŠ ç¡®è®¤
 void AddConfirm(BOOL forceToConfirm, const CString& msg, Operation::TBObject object, const CString& tid, const CString& title,
 	const CString& floor, const CString& pid, const CString& author, const CString& authorID,
 	const CString& authorPortrait, int pos, int length)
@@ -46,12 +46,12 @@ void AddConfirm(BOOL forceToConfirm, const CString& msg, Operation::TBObject obj
 	g_confirmQueueLock.Unlock();
 }
 
-// È·ÈÏÏß³Ì
+// ç¡®è®¤çº¿ç¨‹
 UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 {
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)mainDlg;
 
-	// ³õÊ¼»¯
+	// åˆå§‹åŒ–
 	if (!CoInitializeHelper())
 		return 0;
 
@@ -62,11 +62,11 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 		g_confirmQueue.pop();
 		g_confirmQueueLock.Unlock();
 
-		// Ã»ÓĞ²Ù×÷
+		// æ²¡æœ‰æ“ä½œ
 		if (!g_plan.m_delete && !g_plan.m_banID && !g_plan.m_defriend)
 			continue;
 
-		// È·ÈÏÊÇ·ñ²Ù×÷
+		// ç¡®è®¤æ˜¯å¦æ“ä½œ
 		if (g_plan.m_confirm || op.forceToConfirm)
 		{
 			if (CConfirmDlg(&op).DoModal() == IDCANCEL)
@@ -77,26 +77,26 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 					if (op.floor == _T("1"))
 						goto CasePost;
 					g_userCache.m_initIgnoredTID->insert(_ttoi64(op.tid));
-					dlg->m_log.Log(_T("<font color=green>ºöÂÔ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+					dlg->m_log.Log(_T("<font color=green>å¿½ç•¥ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
 					break;
 				case Operation::TBOBJ_POST:
 				CasePost:
 					g_userCache.m_initIgnoredPID->insert(_ttoi64(op.pid));
-					dlg->m_log.Log(_T("<font color=green>ºöÂÔ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("Â¥"));
+					dlg->m_log.Log(_T("<font color=green>å¿½ç•¥ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("æ¥¼"));
 					break;
 				case Operation::TBOBJ_LZL:
 					g_userCache.m_initIgnoredLZLID->insert(_ttoi64(op.pid));
-					dlg->m_log.Log(_T("<font color=green>ºöÂÔ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("Â¥»Ø¸´"));
+					dlg->m_log.Log(_T("<font color=green>å¿½ç•¥ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("æ¥¼å›å¤"));
 					break;
 				}
 				continue;
 			}
 		}
 
-		// ¼ÓÈë²Ù×÷
+		// åŠ å…¥æ“ä½œ
 		AddOperation(op);
 	}
 
@@ -105,7 +105,7 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 	return 0;
 }
 
-// Ìí¼Ó²Ù×÷
+// æ·»åŠ æ“ä½œ
 void AddOperation(const Operation& operation)
 {
 	g_operationQueueLock.Lock();
@@ -115,12 +115,12 @@ void AddOperation(const Operation& operation)
 	g_operationQueueLock.Unlock();
 }
 
-// ²Ù×÷Ïß³Ì
+// æ“ä½œçº¿ç¨‹
 UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 {
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)mainDlg;
 
-	// ³õÊ¼»¯
+	// åˆå§‹åŒ–
 	if (!CoInitializeHelper())
 		return 0;
 
@@ -131,11 +131,11 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		g_operationQueue.pop();
 		g_operationQueueLock.Unlock();
 
-		// Ã»ÓĞ²Ù×÷
+		// æ²¡æœ‰æ“ä½œ
 		if (!g_plan.m_delete && !g_plan.m_banID && !g_plan.m_defriend)
 			continue;
 
-		// Ôö¼ÓÎ¥¹æ´ÎÊı
+		// å¢åŠ è¿è§„æ¬¡æ•°
 		auto countIt = g_userCache.m_userTrigCount->find(op.author);
 		BOOL hasHistory = countIt != g_userCache.m_userTrigCount->end();
 		int count = hasHistory ? (countIt->second + 1) : 1;
@@ -144,11 +144,11 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 		else
 			(*g_userCache.m_userTrigCount)[op.author] = 1;
 
-		// ·â½û
+		// å°ç¦
 		if (g_plan.m_banID && count >= g_plan.m_banTrigCount
-			&& g_userCache.m_bannedUser->find(op.author) == g_userCache.m_bannedUser->end()) // ´ïµ½·â½ûÎ¥¹æ´ÎÊıÇÒÎ´·â
+			&& g_userCache.m_bannedUser->find(op.author) == g_userCache.m_bannedUser->end()) // è¾¾åˆ°å°ç¦è¿è§„æ¬¡æ•°ä¸”æœªå°
 		{
-			// ²»Ê¹ÓÃ¿Í»§¶Ë½Ó¿Ú±ØĞë»ñÈ¡PID
+			// ä¸ä½¿ç”¨å®¢æˆ·ç«¯æ¥å£å¿…é¡»è·å–PID
 			if ((!g_plan.m_wapBanInterface /*|| g_plan.m_banDuration != 1*/) && op.pid == _T(""))
 			{
 				vector<PostInfo> posts;
@@ -158,7 +158,7 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			}
 			if ((!g_plan.m_wapBanInterface /*|| g_plan.m_banDuration != 1*/) && op.pid == _T(""))
 			{
-				dlg->m_log.Log(_T("<font color=red>·â½û </font>") + op.author + _T("<font color=red> Ê§°Ü£¡(»ñÈ¡Ìû×ÓIDÊ§°Ü)</font>"));
+				dlg->m_log.Log(_T("<font color=red>å°ç¦ </font>") + op.author + _T("<font color=red> å¤±è´¥ï¼(è·å–å¸–å­IDå¤±è´¥)</font>"));
 			}
 			else
 			{
@@ -167,19 +167,19 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 				if (code != _T("0"))
 				{
 					CString content;
-					content.Format(_T("<font color=red>·â½û </font>%s<font color=red> Ê§°Ü£¡´íÎó´úÂë£º%s(%s)</font><a href=")
-								   _T("\"bd:%s,%s\">ÖØÊÔ</a>"), (LPCTSTR)op.author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.author, (LPCTSTR)op.pid);
+					content.Format(_T("<font color=red>å°ç¦ </font>%s<font color=red> å¤±è´¥ï¼é”™è¯¯ä»£ç ï¼š%s(%s)</font><a href=")
+								   _T("\"bd:%s,%s\">é‡è¯•</a>"), (LPCTSTR)op.author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.author, (LPCTSTR)op.pid);
 					dlg->m_log.Log(content);
 				}
 				else
 				{
-					sndPlaySound(_T("·âºÅ.wav"), SND_ASYNC | SND_NODEFAULT);
+					sndPlaySound(_T("å°å·.wav"), SND_ASYNC | SND_NODEFAULT);
 					g_userCache.m_bannedUser->insert(op.author);
-					dlg->m_log.Log(_T("<font color=red>·â½û </font>") + op.author);
+					dlg->m_log.Log(_T("<font color=red>å°ç¦ </font>") + op.author);
 				}
 			}
 
-			// ×Ô¶¯Ñ­»··â
+			// è‡ªåŠ¨å¾ªç¯å°
 			if (g_plan.m_autoLoopBan)
 			{
 				CLoopBanConfig config;
@@ -195,88 +195,88 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			}
 		}
 
-		// À­ºÚ
+		// æ‹‰é»‘
 		if (g_plan.m_defriend && count >= g_plan.m_defriendTrigCount
-			&& g_userCache.m_defriendedUser->find(op.author) == g_userCache.m_defriendedUser->end()) // ´ïµ½À­ºÚÎ¥¹æ´ÎÊıÇÒÎ´À­ºÚ
+			&& g_userCache.m_defriendedUser->find(op.author) == g_userCache.m_defriendedUser->end()) // è¾¾åˆ°æ‹‰é»‘è¿è§„æ¬¡æ•°ä¸”æœªæ‹‰é»‘
 		{
 			CString code = g_tiebaOperate->Defriend(op.authorID);
 			if (code != _T("0"))
 			{
 				CString content;
-				content.Format(_T("<font color=red>À­ºÚ </font>%s<font color=red> Ê§°Ü£¡´íÎó´úÂë£º%s(%s)</font><a href=")
-							   _T("\"df:%s\">ÖØÊÔ</a>"), (LPCTSTR)op.author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.authorID);
+				content.Format(_T("<font color=red>æ‹‰é»‘ </font>%s<font color=red> å¤±è´¥ï¼é”™è¯¯ä»£ç ï¼š%s(%s)</font><a href=")
+							   _T("\"df:%s\">é‡è¯•</a>"), (LPCTSTR)op.author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.authorID);
 				dlg->m_log.Log(content);
 			}
 			else
 			{
-				sndPlaySound(_T("·âºÅ.wav"), SND_ASYNC | SND_NODEFAULT);
+				sndPlaySound(_T("å°å·.wav"), SND_ASYNC | SND_NODEFAULT);
 				g_userCache.m_defriendedUser->insert(op.author);
-				dlg->m_log.Log(_T("<font color=red>À­ºÚ </font>") + op.author);
+				dlg->m_log.Log(_T("<font color=red>æ‹‰é»‘ </font>") + op.author);
 			}
 		}
 
-		// Ö÷ÌâÒÑ±»É¾Ôò²»ÔÙÉ¾Ìû
+		// ä¸»é¢˜å·²è¢«åˆ åˆ™ä¸å†åˆ å¸–
 		__int64 tid = _ttoi64(op.tid);
 		if (g_userCache.m_deletedTID.find(tid) != g_userCache.m_deletedTID.end())
 			continue;
 
-		// É¾Ìû
+		// åˆ å¸–
 		if (!g_plan.m_delete)
 			continue;
-		if (op.object == Operation::TBOBJ_THREAD) // Ö÷Ìâ
+		if (op.object == Operation::TBOBJ_THREAD) // ä¸»é¢˜
 		{
 			CString code = g_tiebaOperate->DeleteThread(op.tid);
 			if (code != _T("0"))
 			{
 				CString content;
-				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a><font color=red> É¾³ıÊ§°Ü£¡´íÎó´úÂë£º%s(%s)</font><a href=")
-							   _T("\"dt:%s\">ÖØÊÔ</a>"), (LPCTSTR)op.tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.tid);
+				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a><font color=red> åˆ é™¤å¤±è´¥ï¼é”™è¯¯ä»£ç ï¼š%s(%s)</font><a href=")
+							   _T("\"dt:%s\">é‡è¯•</a>"), (LPCTSTR)op.tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.tid);
 				dlg->m_log.Log(content);
 			}
 			else
 			{
-				sndPlaySound(_T("É¾Ìù.wav"), SND_ASYNC | SND_NODEFAULT);
+				sndPlaySound(_T("åˆ è´´.wav"), SND_ASYNC | SND_NODEFAULT);
 				g_userCache.m_deletedTID.insert(_ttoi64(op.tid));
-				dlg->m_log.Log(_T("<font color=red>É¾³ı </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+				dlg->m_log.Log(_T("<font color=red>åˆ é™¤ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 					+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
 				Sleep((DWORD)(g_plan.m_deleteInterval * 1000));
 			}
 		}
-		else if (op.object == Operation::TBOBJ_POST) // Ìû×Ó
+		else if (op.object == Operation::TBOBJ_POST) // å¸–å­
 		{
 			CString code = g_tiebaOperate->DeletePost(op.tid, op.pid);
 			if (code != _T("0"))
 			{
 				CString content;
-				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %sÂ¥<font color=red> É¾³ıÊ§°Ü£¡´íÎó´úÂë£º%s(%s)</font>")
-							   _T("<a href=\"dp:%s,%s\">ÖØÊÔ</a>"), (LPCTSTR)op.tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)op.floor, (LPCTSTR)code, 
+				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %sæ¥¼<font color=red> åˆ é™¤å¤±è´¥ï¼é”™è¯¯ä»£ç ï¼š%s(%s)</font>")
+							   _T("<a href=\"dp:%s,%s\">é‡è¯•</a>"), (LPCTSTR)op.tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)op.floor, (LPCTSTR)code, 
 							   (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.tid, (LPCTSTR)op.pid);
 				dlg->m_log.Log(content);
 			}
 			else
 			{
-				sndPlaySound(_T("É¾Ìù.wav"), SND_ASYNC | SND_NODEFAULT);
-				dlg->m_log.Log(_T("<font color=red>É¾³ı </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-					+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("Â¥"));
+				sndPlaySound(_T("åˆ è´´.wav"), SND_ASYNC | SND_NODEFAULT);
+				dlg->m_log.Log(_T("<font color=red>åˆ é™¤ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+					+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("æ¥¼"));
 				Sleep((DWORD)(g_plan.m_deleteInterval * 1000));
 			}
 		}
-		else /*if (op.object == Operation::TBOBJ_POST)*/ // Â¥ÖĞÂ¥
+		else /*if (op.object == Operation::TBOBJ_POST)*/ // æ¥¼ä¸­æ¥¼
 		{
 			CString code = g_tiebaOperate->DeleteLZL(op.tid, op.pid);
 			if (code != _T("0"))
 			{
 				CString content;
-				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %sÂ¥»Ø¸´<font color=red> É¾³ıÊ§°Ü£¡´íÎó´úÂë£º")
-							   _T("%s(%s)</font><a href=\"dl:%s,%s\">ÖØÊÔ</a>"), (LPCTSTR)op.tid, (LPCTSTR)HTMLEscape(op.title), 
+				content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %sæ¥¼å›å¤<font color=red> åˆ é™¤å¤±è´¥ï¼é”™è¯¯ä»£ç ï¼š")
+							   _T("%s(%s)</font><a href=\"dl:%s,%s\">é‡è¯•</a>"), (LPCTSTR)op.tid, (LPCTSTR)HTMLEscape(op.title), 
 							   (LPCTSTR)op.floor, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.tid, (LPCTSTR)op.pid);
 				dlg->m_log.Log(content);
 			}
 			else
 			{
-				sndPlaySound(_T("É¾Ìù.wav"), SND_ASYNC | SND_NODEFAULT);
-				dlg->m_log.Log(_T("<font color=red>É¾³ı </font><a href=\"http://tieba.baidu.com/p/") + op.tid
-					+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("Â¥»Ø¸´"));
+				sndPlaySound(_T("åˆ è´´.wav"), SND_ASYNC | SND_NODEFAULT);
+				dlg->m_log.Log(_T("<font color=red>åˆ é™¤ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
+					+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("æ¥¼å›å¤"));
 				Sleep((DWORD)(g_plan.m_deleteInterval * 1000));
 			}
 		}

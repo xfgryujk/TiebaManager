@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 #include "HelperCommon.h"
 
 
-// ²»×èÈûÏûÏ¢µÄÑÓ³Ù
+// ä¸é˜»å¡æ¶ˆæ¯çš„å»¶è¿Ÿ
 HELPER_API void Delay(DWORD time);
-// ´¦ÀíÏûÏ¢
+// å¤„ç†æ¶ˆæ¯
 HELPER_API void DoEvents();
-// ´´½¨Ä¿Â¼
+// åˆ›å»ºç›®å½•
 HELPER_API BOOL CreateDir(const CString& path);
-// ³õÊ¼»¯COM¿â
+// åˆå§‹åŒ–COMåº“
 HELPER_API BOOL CoInitializeHelper();

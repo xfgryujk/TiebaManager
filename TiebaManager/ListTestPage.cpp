@@ -1,11 +1,11 @@
-// ListTestPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// ListTestPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
 #include "ListTestPage.h"
 
 
-// CListTestPage ¶Ô»°¿ò
+// CListTestPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CListTestPage, CListPage)
 
@@ -32,9 +32,9 @@ BEGIN_MESSAGE_MAP(CListTestPage, CListPage)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CListTestPage ÏûÏ¢´¦Àí³ÌĞò
+// CListTestPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CListTestPage::OnInitDialog()
 {
 	CListPage::OnInitDialog();
@@ -42,13 +42,13 @@ BOOL CListTestPage::OnInitDialog()
 	m_resize.AddControl(&m_testEdit, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this, RT_KEEP_DIST_TO_RIGHT, this);
 	m_resize.AddControl(&m_testButton, RT_KEEP_DIST_TO_RIGHT, &m_static, RT_KEEP_DIST_TO_BOTTOM, &m_testEdit);
 
-	m_testEdit.SetWindowText(_T("Óû²âÊÔÎÄ±¾"));
+	m_testEdit.SetWindowText(_T("æ¬²æµ‹è¯•æ–‡æœ¬"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// ²âÊÔ
+// æµ‹è¯•
 void CListTestPage::OnClickedButton7()
 {
 	int index = m_list.GetSelectionMark();
@@ -57,11 +57,11 @@ void CListTestPage::OnClickedButton7()
 	if (TestMatch(index))
 	{
 		m_staticColor = RGB(0, 255, 0);
-		m_static.SetWindowText(_T("Æ¥Åä³É¹¦£¡"));
+		m_static.SetWindowText(_T("åŒ¹é…æˆåŠŸï¼"));
 	}
 	else
 	{
 		m_staticColor = RGB(255, 0, 0);
-		m_static.SetWindowText(_T("Æ¥ÅäÊ§°Ü£¬Çë¼ì²éÆ¥ÅäÎÄ±¾£¡"));
+		m_static.SetWindowText(_T("åŒ¹é…å¤±è´¥ï¼Œè¯·æ£€æŸ¥åŒ¹é…æ–‡æœ¬ï¼"));
 	}
 }

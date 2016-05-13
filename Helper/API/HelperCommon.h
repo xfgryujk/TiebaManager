@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifdef HELPER_EXPORTS
 #define HELPER_API __declspec(dllexport)

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "HelperCommon.h"
 #include <opencv2\core\mat.hpp>
 using cv::Mat;

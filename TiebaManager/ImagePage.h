@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "NormalDlg.h"
 
 
-// CImagePage ¶Ô»°¿ò
+// CImagePage å¯¹è¯æ¡†
 
 class CImagePage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CImagePage)
 
 public:
-	CImagePage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CImagePage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CImagePage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_IMAGE_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

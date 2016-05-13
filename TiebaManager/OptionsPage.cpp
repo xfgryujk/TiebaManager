@@ -1,4 +1,4 @@
-// OptionsPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// OptionsPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -8,7 +8,7 @@
 #include <MiscHelper.h>
 
 
-// COptionsPage ¶Ô»°¿ò
+// COptionsPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(COptionsPage, CNormalDlg)
 
@@ -47,9 +47,9 @@ BEGIN_MESSAGE_MAP(COptionsPage, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// COptionsPage ÏûÏ¢´¦Àí³ÌĞò
+// COptionsPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL COptionsPage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -64,10 +64,10 @@ BOOL COptionsPage::OnInitDialog()
 	m_resize.AddControl(&m_saveOptionsButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// Ë«»÷ÁĞ±í
+// åŒå‡»åˆ—è¡¨
 void COptionsPage::OnLbnDblclkList1()
 {
 	CString tmp;
@@ -75,21 +75,21 @@ void COptionsPage::OnLbnDblclkList1()
 	m_edit.SetWindowText(tmp);
 }
 
-// ĞÂ½¨
+// æ–°å»º
 void COptionsPage::OnBnClickedButton1()
 {
 	CString name;
 	m_edit.GetWindowText(name);
 	if (name == _T(""))
 	{
-		AfxMessageBox(_T("·½°¸Ãû²»ÄÜÎª¿Õ£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("æ–¹æ¡ˆåä¸èƒ½ä¸ºç©ºï¼"), MB_ICONERROR);
 		return;
 	}
 	
 	CreateDir(OPTIONS_DIR_PATH);
 	if (PathFileExists(OPTIONS_DIR_PATH + name + _T(".xml")))
 	{
-		AfxMessageBox(_T("·½°¸ÒÑ´æÔÚ£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("æ–¹æ¡ˆå·²å­˜åœ¨ï¼"), MB_ICONERROR);
 		return;
 	}
 	m_list.SetCurSel(m_list.AddString(name));
@@ -97,7 +97,7 @@ void COptionsPage::OnBnClickedButton1()
 	OnBnClickedButton6();
 }
 
-// É¾³ı
+// åˆ é™¤
 void COptionsPage::OnBnClickedButton2()
 {
 	int index = m_list.GetCurSel();
@@ -107,7 +107,7 @@ void COptionsPage::OnBnClickedButton2()
 	m_list.GetText(index, name);
 	if (!DeleteFile(OPTIONS_DIR_PATH + name + _T(".xml")))
 	{
-		AfxMessageBox(_T("É¾³ı·½°¸Ê§°Ü£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("åˆ é™¤æ–¹æ¡ˆå¤±è´¥ï¼"), MB_ICONERROR);
 		return;
 	}
 	m_list.DeleteString(index);
@@ -121,14 +121,14 @@ void COptionsPage::OnBnClickedButton2()
 		OnBnClickedButton6();
 }
 
-// ÖØÃüÃû
+// é‡å‘½å
 void COptionsPage::OnBnClickedButton3()
 {
 	CString newName;
 	m_edit.GetWindowText(newName);
 	if (newName == _T(""))
 	{
-		AfxMessageBox(_T("·½°¸Ãû²»ÄÜÎª¿Õ£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("æ–¹æ¡ˆåä¸èƒ½ä¸ºç©ºï¼"), MB_ICONERROR);
 		return;
 	}
 	int index = m_list.GetCurSel();
@@ -138,41 +138,41 @@ void COptionsPage::OnBnClickedButton3()
 	m_list.GetText(index, name);
 	if (!MoveFile(OPTIONS_DIR_PATH + name + _T(".xml"), OPTIONS_DIR_PATH + newName + _T(".xml")))
 	{
-		AfxMessageBox(_T("ÖØÃüÃû·½°¸Ê§°Ü£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("é‡å‘½åæ–¹æ¡ˆå¤±è´¥ï¼"), MB_ICONERROR);
 		return;
 	}
 	if (g_userConfig.m_plan == name)
 	{
 		*g_userConfig.m_plan = newName;
-		m_currentOptionStatic.SetWindowText(_T("µ±Ç°·½°¸£º") + newName);
+		m_currentOptionStatic.SetWindowText(_T("å½“å‰æ–¹æ¡ˆï¼š") + newName);
 	}
 	m_list.DeleteString(index);
 	m_list.InsertString(index, newName);
 	m_list.SetCurSel(index);
 }
 
-// ÔØÈë
+// è½½å…¥
 void COptionsPage::OnBnClickedButton6()
 {
 	int index = m_list.GetCurSel();
 	if (index == LB_ERR)
 	{
-		AfxMessageBox(_T("ÇëÑ¡ÔñÒ»¸ö·½°¸£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("è¯·é€‰æ‹©ä¸€ä¸ªæ–¹æ¡ˆï¼"), MB_ICONERROR);
 		return;
 	}
 	CString name;
 	m_list.GetText(index, name);
 	((CSettingDlg*)GetParent()->GetParent())->ShowPlanInFile(OPTIONS_DIR_PATH + name + _T(".xml"));
-	m_currentOptionStatic.SetWindowText(_T("µ±Ç°·½°¸£º") + name);
+	m_currentOptionStatic.SetWindowText(_T("å½“å‰æ–¹æ¡ˆï¼š") + name);
 }
 
-// ±£´æ
+// ä¿å­˜
 void COptionsPage::OnBnClickedButton4()
 {
 	int index = m_list.GetCurSel();
 	if (index == LB_ERR)
 	{
-		AfxMessageBox(_T("ÇëÑ¡ÔñÒ»¸ö·½°¸£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("è¯·é€‰æ‹©ä¸€ä¸ªæ–¹æ¡ˆï¼"), MB_ICONERROR);
 		return;
 	}
 	CreateDir(OPTIONS_DIR_PATH);

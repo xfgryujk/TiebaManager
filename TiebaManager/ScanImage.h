@@ -1,9 +1,9 @@
-#pragma once
+﻿#pragma once
 #include <TiebaClawer.h>
 
 
-extern set<CString> g_leagalImage; // �Ѽ�鲻Υ���ͼƬ
-extern set<CString> g_illegalImage; // �Ѽ��Υ���ͼƬ
+extern set<CString> g_leagalImage; // 已检查不违规的图片
+extern set<CString> g_illegalImage; // 已检查违规的图片
 
 
 const CString IMG_CACHE_PATH = _T("ImageCache\\");

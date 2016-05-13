@@ -1,24 +1,24 @@
-#pragma once
+ï»¿#pragma once
 #include "NormalDlg.h"
 #include "explorer1.h"
 #include "afxwin.h"
 
 
-// CLoginDlg ¶Ô»°¿ò
+// CLoginDlg å¯¹è¯æ¡†
 
 class CLoginDlg : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CLoginDlg)
 
 public:
-	CLoginDlg(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CLoginDlg(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CLoginDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_LOGIN_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "afxcmn.h"
 #include "afxwin.h"
 #include "ExploreThreadPage.h"
@@ -8,21 +8,21 @@
 class CImageViewDlg;
 
 
-// CExplorerDlg ¶Ô»°¿ò
+// CExplorerDlg å¯¹è¯æ¡†
 
 class CExplorerDlg : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CExplorerDlg)
 
 public:
-	CExplorerDlg(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CExplorerDlg(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CExplorerDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_EXPLORER_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

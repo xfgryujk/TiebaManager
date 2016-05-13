@@ -1,8 +1,8 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <MiscHelper.h>
 
 
-// ²»×èÈûÏûÏ¢µÄÑÓ³Ù
+// ä¸é˜»å¡æ¶ˆæ¯çš„å»¶è¿Ÿ
 HELPER_API void Delay(DWORD time)
 {
 #pragma warning(suppress: 28159)
@@ -11,11 +11,11 @@ HELPER_API void Delay(DWORD time)
 	while (GetTickCount() - startTime < time)
 	{
 		DoEvents();
-		Sleep(1); // ·ÀÖ¹Õ¼ÓÃCPU
+		Sleep(1); // é˜²æ­¢å ç”¨CPU
 	}
 }
 
-// ´¦ÀíÏûÏ¢
+// å¤„ç†æ¶ˆæ¯
 HELPER_API void DoEvents()
 {
 	MSG msg;
@@ -26,7 +26,7 @@ HELPER_API void DoEvents()
 	}
 }
 
-// ´´½¨Ä¿Â¼
+// åˆ›å»ºç›®å½•
 HELPER_API BOOL CreateDir(const CString& path)
 {
 	if (PathFileExists(path))
@@ -41,14 +41,14 @@ HELPER_API BOOL CreateDir(const CString& path)
 	return CreateDirectory(path, NULL);
 }
 
-// ³õÊ¼»¯COM¿â
+// åˆå§‹åŒ–COMåº“
 HELPER_API BOOL CoInitializeHelper()
 {
 	HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	if (FAILED(hr))
 	{
 		CString tmp;
-		tmp.Format(_T("CoInitializeExÊ§°Ü£¡\r\n´íÎó´úÂë0x%08X"), hr);
+		tmp.Format(_T("CoInitializeExå¤±è´¥ï¼\r\né”™è¯¯ä»£ç 0x%08X"), hr);
 		AfxMessageBox(tmp, MB_ICONERROR);
 		return FALSE;
 	}

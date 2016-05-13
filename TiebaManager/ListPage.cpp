@@ -1,11 +1,11 @@
-// ListPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// ListPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
 #include "ListPage.h"
 
 
-// CListPage ¶Ô»°¿ò
+// CListPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CListPage, CNormalDlg)
 
@@ -52,10 +52,10 @@ BEGIN_MESSAGE_MAP(CListPage, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CListPage ÏûÏ¢´¦Àí³ÌĞò
+// CListPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 #pragma region UI
-// ¿Ø¼şÑÕÉ«
+// æ§ä»¶é¢œè‰²
 HBRUSH CListPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CNormalDlg::OnCtlColor(pDC, pWnd, nCtlColor);
@@ -63,12 +63,12 @@ HBRUSH CListPage::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	if (pWnd->m_hWnd == m_static.m_hWnd)
 		pDC->SetTextColor(m_staticColor);
 
-	// TODO:  Èç¹ûÄ¬ÈÏµÄ²»ÊÇËùĞè»­±Ê£¬Ôò·µ»ØÁíÒ»¸ö»­±Ê
+	// TODO:  å¦‚æœé»˜è®¤çš„ä¸æ˜¯æ‰€éœ€ç”»ç¬”ï¼Œåˆ™è¿”å›å¦ä¸€ä¸ªç”»ç¬”
 	return hbr;
 }
 #pragma endregion
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CListPage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -85,10 +85,10 @@ BOOL CListPage::OnInitDialog()
 	m_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// Ìí¼Ó
+// æ·»åŠ 
 void CListPage::OnClickedButton1()
 {
 	int index = m_list.GetSelectionMark() + 1;
@@ -103,7 +103,7 @@ void CListPage::OnClickedButton1()
 		m_list.DeleteItem(index);
 }
 
-// É¾³ı
+// åˆ é™¤
 void CListPage::OnClickedButton2()
 {
 	int index = m_list.GetSelectionMark();
@@ -116,7 +116,7 @@ void CListPage::OnClickedButton2()
 	m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
 }
 
-// ĞŞ¸Ä
+// ä¿®æ”¹
 void CListPage::OnClickedButton3()
 {
 	int index = m_list.GetSelectionMark();
@@ -126,19 +126,19 @@ void CListPage::OnClickedButton3()
 		OnAdd(index);
 }
 
-// µ¼³ö
+// å¯¼å‡º
 void CListPage::OnClickedButton4()
 {
 	CFileDialog dlg(FALSE, _T("xml"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-		_T("XMLÎÄ¼ş (*.xml)|*.xml|TXTÎÄ¼ş (*.txt)|*.txt|ËùÓĞÎÄ¼ş (*.*)|*.*||"), this);
+		_T("XMLæ–‡ä»¶ (*.xml)|*.xml|TXTæ–‡ä»¶ (*.txt)|*.txt|æ‰€æœ‰æ–‡ä»¶ (*.*)|*.*||"), this);
 	if (dlg.DoModal() == IDOK)
 	{
 		if (!Export(dlg.GetPathName()))
-			AfxMessageBox(_T("±£´æÊ§°Ü£¡"), MB_ICONERROR);
+			AfxMessageBox(_T("ä¿å­˜å¤±è´¥ï¼"), MB_ICONERROR);
 	}
 }
 
-// µ¼³ötxt
+// å¯¼å‡ºtxt
 BOOL CListPage::Export(const CString& path)
 {
 	CStdioFile file;
@@ -153,21 +153,21 @@ BOOL CListPage::Export(const CString& path)
 	return TRUE;
 }
 
-// µ¼Èë
+// å¯¼å…¥
 void CListPage::OnClickedButton5()
 {
 	CFileDialog dlg(TRUE, _T("xml"), NULL, 0,
-		_T("XMLÎÄ¼ş (*.xml)|*.xml|TXTÎÄ¼ş (*.txt)|*.txt|ËùÓĞÎÄ¼ş (*.*)|*.*||"), this);
+		_T("XMLæ–‡ä»¶ (*.xml)|*.xml|TXTæ–‡ä»¶ (*.txt)|*.txt|æ‰€æœ‰æ–‡ä»¶ (*.*)|*.*||"), this);
 	if (dlg.DoModal() == IDOK)
 	{
 		if (!Import(dlg.GetPathName()))
-			AfxMessageBox(_T("¶ÁÈ¡Ê§°Ü£¡"), MB_ICONERROR);
+			AfxMessageBox(_T("è¯»å–å¤±è´¥ï¼"), MB_ICONERROR);
 		else
 			OnAdd(-1);
 	}
 }
 
-// µ¼Èëtxt
+// å¯¼å…¥txt
 BOOL CListPage::Import(const CString& path)
 {
 	CStdioFile file;
@@ -182,7 +182,7 @@ BOOL CListPage::Import(const CString& path)
 	return TRUE;
 }
 
-// Ë«»÷
+// åŒå‡»
 void CListPage::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
@@ -191,7 +191,7 @@ void CListPage::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 	*pResult = 0;
 }
 
-// Çå³ı
+// æ¸…é™¤
 void CListPage::OnClickedButton6()
 {
 	m_list.DeleteAllItems();

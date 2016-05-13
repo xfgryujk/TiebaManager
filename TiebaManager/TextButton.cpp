@@ -1,4 +1,4 @@
-// TextButton.cpp : ÊµÏÖÎÄ¼þ
+ï»¿// TextButton.cpp : å®žçŽ°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -30,7 +30,7 @@ END_MESSAGE_MAP()
 
 
 
-// CTextButton ÏûÏ¢´¦Àí³ÌÐò
+// CTextButton æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 
 
@@ -73,7 +73,7 @@ HBRUSH CTextButton::CtlColor(CDC* pDC, UINT /*nCtlColor*/)
 	pDC->SetBkMode(TRANSPARENT);
 	pDC->SetTextColor(m_mouseHover ? m_hoverColor : m_normalColor);
 
-	// TODO:  Èç¹û²»Ó¦µ÷ÓÃ¸¸¼¶µÄ´¦Àí³ÌÐò£¬Ôò·µ»Ø·Ç null »­±Ê
+	// TODO:  å¦‚æžœä¸åº”è°ƒç”¨çˆ¶çº§çš„å¤„ç†ç¨‹åºï¼Œåˆ™è¿”å›žéž null ç”»ç¬”
 	return (HBRUSH)(COLOR_BTNFACE + 1);
 }
 

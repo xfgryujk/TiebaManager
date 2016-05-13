@@ -1,22 +1,22 @@
-#pragma once
+ï»¿#pragma once
 #include "RegListPage.h"
 
 
-// CBlackListTestPage ¶Ô»°¿ò
+// CBlackListTestPage å¯¹è¯æ¡†
 
 class CBlackListPage : public CRegListPage
 {
 	DECLARE_DYNAMIC(CBlackListPage)
 
 public:
-	CBlackListPage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CBlackListPage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CBlackListPage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_LIST_TEST_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

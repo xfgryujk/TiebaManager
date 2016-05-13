@@ -1,12 +1,12 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <TiebaClawer.h>
 #include <StringHelper.h>
 #include <NetworkHelper.h>
 
 
-// ²É¼¯Ìù°ÉÓÃµÄ³£Á¿
-// ÕıÔò±í´ïÊ½Ì«ÂıËùÒÔ²»ÓÃ
-#pragma region Ö÷ÌâÁĞ±í
+// é‡‡é›†è´´å§ç”¨çš„å¸¸é‡
+// æ­£åˆ™è¡¨è¾¾å¼å¤ªæ…¢æ‰€ä»¥ä¸ç”¨
+#pragma region ä¸»é¢˜åˆ—è¡¨
 const TCHAR THREAD_SPLIT[] = _T("data-field='{&quot;id&quot;:");
 const TCHAR THREAD_END[] = _T("<div id=\"frs_list_pager\"");
 //const TCHAR THREAD_TID_LEFT[] = _T("&quot;id&quot;:");
@@ -23,10 +23,10 @@ const TCHAR THREAD_AUTHOR_LEFT[] = _T("&quot;author_name&quot;:&quot;");
 const TCHAR THREAD_AUTHOR_RIGHT[] = _T("&quot;");
 const TCHAR THREAD_AUTHOR_ID_LEFT[] = _T("&quot;user_id&quot;:");
 const TCHAR THREAD_AUTHOR_ID_RIGHT[] = _T("}");
-const TCHAR THREAD_LAST_AUTHOR_LEFT[] = _T(R"(title="×îºó»Ø¸´ÈË: )");
+const TCHAR THREAD_LAST_AUTHOR_LEFT[] = _T(R"(title="æœ€åå›å¤äºº: )");
 const TCHAR THREAD_LAST_AUTHOR_RIGHT[] = _T("\"");
 #pragma endregion
-#pragma region Ìû×ÓÁĞ±í
+#pragma region å¸–å­åˆ—è¡¨
 const TCHAR POST_SPLIT[] = _T("data-field='{&quot;author&quot;:");
 const TCHAR POST_PID_LEFT[] = _T("&quot;post_id&quot;:");
 const TCHAR POST_PID_RIGHT[] = _T(",");
@@ -45,7 +45,7 @@ const TCHAR POST_CONTENT_RIGHT[] = _T("</cc>");
 const TCHAR POST_SIGN_LEFT[] = _T("<img class=\"j_user_sign\"");
 const TCHAR POST_SIGN_RIGHT[] = _T("/>");
 #pragma endregion
-#pragma region Â¥ÖĞÂ¥ÁĞ±í
+#pragma region æ¥¼ä¸­æ¥¼åˆ—è¡¨
 const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)during_time\":\\d+\\}\\]"));
 
 const TCHAR LZL_USER_SPLIT[] = _T("\"user_name\":\"");
@@ -69,7 +69,7 @@ const TCHAR LZL_DURING_TIME_RIGHT[] = _T("}");
 #pragma endregion
 
 
-// È¡Ö÷ÌâÁĞ±í
+// å–ä¸»é¢˜åˆ—è¡¨
 TIEBA_API_API BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& threads)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=UTF-8&kw=") + EncodeURI(forumName)
@@ -107,7 +107,7 @@ TIEBA_API_API BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<Th
 	return TRUE;
 }
 
-// È¡Ìû×ÓÁĞ±í
+// å–å¸–å­åˆ—è¡¨
 TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, vector<PostInfo>& posts)
 {
 	CString src = _src != _T("") ? _src : HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
@@ -131,22 +131,22 @@ TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, c
 
 		int left = rawPosts[iRawPosts].Find(POST_CONTENT_LEFT) + _tcslen(POST_CONTENT_LEFT);
 		left = rawPosts[iRawPosts].Find(_T(">"), left) + 1;
-		// È¥µôÊ×¿Õ¸ñ
+		// å»æ‰é¦–ç©ºæ ¼
 		while (left < rawPosts[iRawPosts].GetLength() && rawPosts[iRawPosts][left] == _T(' '))
 			left++;
 		int right = rawPosts[iRawPosts].Find(POST_CONTENT_RIGHT, left + 1);
-		// CString²»Ö§³Ö·´Ïò²éÕÒ×Ö·û´®£¿
+		// CStringä¸æ”¯æŒåå‘æŸ¥æ‰¾å­—ç¬¦ä¸²ï¼Ÿ
 		posts[iPosts].content = rawPosts[iRawPosts].Mid(left, right - left);
 		LPCTSTR pos = StrRStrI(posts[iPosts].content, NULL, _T("</div>"));
 		if (pos != NULL)
 		{
 			right = ((DWORD)pos - (DWORD)(LPCTSTR)posts[iPosts].content) / sizeof(TCHAR)-1;
-			// È¥µôÎ²¿Õ¸ñ
+			// å»æ‰å°¾ç©ºæ ¼
 			while (right >= 0 && posts[iPosts].content[right] == _T(' '))
 				right--;
 			posts[iPosts].content = posts[iPosts].content.Left(right + 1);
 		}
-		// Ç©Ãûµµ
+		// ç­¾åæ¡£
 		posts[iPosts].content += _T("\r\n") + GetStringBetween2(rawPosts[iRawPosts], POST_SIGN_LEFT, POST_SIGN_RIGHT);
 
 		//OutputDebugString(_T("\n"));
@@ -157,7 +157,7 @@ TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, c
 	return GET_POSTS_SUCCESS;
 }
 
-// È¡Â¥ÖĞÂ¥ÁĞ±í
+// å–æ¥¼ä¸­æ¥¼åˆ—è¡¨
 TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const vector<PostInfo>& posts, vector<PostInfo>& lzls)
 {
 	time_t timestamp;
@@ -167,13 +167,13 @@ TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString
 		timestamp, (LPCTSTR)tid, (LPCTSTR)fid, (LPCTSTR)page);
 	CString src = HTTPGet(url);
 	//WriteString(src, _T("lzl.txt"));
-	CStringArray splitedSrc; // 0Â¥ÖĞÂ¥£¬1ÓÃ»§
+	CStringArray splitedSrc; // 0æ¥¼ä¸­æ¥¼ï¼Œ1ç”¨æˆ·
 	SplitString(splitedSrc, src, _T("\"user_list\":{"));
 	lzls.clear();
 	if (splitedSrc.GetSize() != 2)
 		return;
 
-	// ±éÀúÓÃ»§²É¼¯Í·Ïñ¹şÏ£
+	// éå†ç”¨æˆ·é‡‡é›†å¤´åƒå“ˆå¸Œ
 	CStringArray users;
 	SplitString(users, splitedSrc[1], LZL_USER_SPLIT);
 	map<CString, CString> portrait;
@@ -183,12 +183,12 @@ TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString
 		portrait[id] = GetStringBetween(users[i], LZL_USER_PORTRAIT_LEFT, LZL_USER_PORTRAIT_RIGHT);
 	}
 
-	// ±éÀúÂ¥²ã
+	// éå†æ¥¼å±‚
 	int iLzls = 0;
 	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)splitedSrc[0], (LPCTSTR)splitedSrc[0] + splitedSrc[0].GetLength(), LZL_FLOOR_REG), end; it != end; ++it)
 	{
-		// ²éÕÒ¸Ã²ãÂ¥²ã
-		CString pid = (*it)[1].str().c_str(); // ¸Ã²ãPID
+		// æŸ¥æ‰¾è¯¥å±‚æ¥¼å±‚
+		CString pid = (*it)[1].str().c_str(); // è¯¥å±‚PID
 		CString floor;
 		for (PostInfo post : posts)
 		if (post.pid == pid)
@@ -197,7 +197,7 @@ TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString
 			break;
 		}
 
-		// ±éÀú¸Ã²ãÂ¥ÖĞÂ¥
+		// éå†è¯¥å±‚æ¥¼ä¸­æ¥¼
 		CStringArray rawLzls;
 		SplitString(rawLzls, (*it)[2].str().c_str(), LZL_SPLIT);
 		lzls.resize(lzls.size() + rawLzls.GetSize() - 1);
@@ -210,7 +210,7 @@ TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString
 			lzls[iLzls].authorPortrait = portrait[lzls[iLzls].author];
 			lzls[iLzls].content = HTMLUnescape(JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_CONTENT_LEFT, LZL_CONTENT_RIGHT)));
 
-			if (GetStringBetween(rawLzls[iRawLzls], LZL_PTYPE_LEFT, LZL_PTYPE_RIGHT) == _T("1")) // ÓïÒôÌù
+			if (GetStringBetween(rawLzls[iRawLzls], LZL_PTYPE_LEFT, LZL_PTYPE_RIGHT) == _T("1")) // è¯­éŸ³è´´
 			{
 				lzls[iLzls].content += _T(R"(<div class="voice_player voice_player_mini voice_player_lzl"><a class="voice_player_inner" href="#"><span class="before">&nbsp;</span><span class="middle"><span class="speaker speaker_animate">&nbsp;</span><span class="time" style="width: 65px;"><span class="second">)");
 				lzls[iLzls].content += GetStringBetween(rawLzls[iRawLzls], LZL_DURING_TIME_LEFT, LZL_DURING_TIME_RIGHT);

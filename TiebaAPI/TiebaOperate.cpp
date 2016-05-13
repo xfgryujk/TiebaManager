@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <TiebaOperate.h>
 #include <TiebaClawer.h>
 #include <StringHelper.h>
@@ -14,7 +14,7 @@ CTiebaOperate::CTiebaOperate(CString& cookie, const int& banDuration, const CStr
 	
 }
 
-// ÉèÖÃÒª²Ù×÷µÄÌù°É
+// è®¾ç½®è¦æ“ä½œçš„è´´å§
 CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 {
 	if (forumName == _T(""))
@@ -24,7 +24,7 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 	if (src == NET_TIMEOUT_TEXT)
 		return SET_TIEBA_TIMEOUT;
 
-	// ²É¼¯Ìù°ÉĞÅÏ¢
+	// é‡‡é›†è´´å§ä¿¡æ¯
 	CString tmp = GetStringBetween(src, _T("PageData.forum"), _T("}"));
 	tmp.Replace(_T("\r\n"), _T(""));
 	std::wcmatch res;
@@ -34,14 +34,14 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 		return SET_TIEBA_NOT_FOUND;
 	}
 
-	// È¡Ìù°ÉID
+	// å–è´´å§ID
 	m_forumID = res[3].str().c_str();
 
-	// È¡Ìù°ÉÃû
+	// å–è´´å§å
 	m_forumName = JSUnescape(res[7].str().c_str());
 	m_encodedForumName = EncodeURI(m_forumName);
 
-	// È¡ÓÃ»§Ãû
+	// å–ç”¨æˆ·å
 	if (std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData.user"), _T("}"))), res, USER_NAME_REG)
 		|| std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData"), _T("}"))), res, USER_NAME_REG))
 		m_userName = JSUnescape(res[3].str().c_str());
@@ -51,8 +51,8 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 		return SET_TIEBA_NOT_LOGIN;
 	}
 
-	// ÑéÖ¤ÓÃ»§È¨ÏŞ
-	// ¾É½Ó¿Ú
+	// éªŒè¯ç”¨æˆ·æƒé™
+	// æ—§æ¥å£
 	//CString src2 = HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(m_forumName));
 	CString src2 = HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/listBawuTeamInfo?word=") + m_encodedForumName + _T("&ie=utf-8"));
 	if (src2 == NET_TIMEOUT_TEXT)
@@ -64,8 +64,8 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 	{
 		bawuList[bawuList.GetSize() - 1] = GetStringBefore(bawuList[bawuList.GetSize() - 1], _T("</div></div>"));
 		for (int i = 1; i < bawuList.GetSize(); i++)
-		if ((bawuList[i].Find(_T("°ÉÖ÷<span")) != -1 // WTF£¬ÔõÃ´ÓĞÕâÃ´¶àÖÖ°ÉÖ÷
-			|| bawuList[i].Find(_T(">ÓïÒôĞ¡±à<span")) != -1)
+		if ((bawuList[i].Find(_T("å§ä¸»<span")) != -1 // WTFï¼Œæ€ä¹ˆæœ‰è¿™ä¹ˆå¤šç§å§ä¸»
+			|| bawuList[i].Find(_T(">è¯­éŸ³å°ç¼–<span")) != -1)
 			&& bawuList[i].Find(_T(">") + m_userName + _T("<")) != -1)
 		{
 			hasPower = TRUE;
@@ -75,7 +75,7 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 	if (!hasPower)
 		WriteString(src2, _T("admin.txt"));
 
-	// È¡tbs(¿ÚÁîºÅ)
+	// å–tbs(å£ä»¤å·)
 	m_tbs = GetStringBetween(src, _TBS_LEFT, _TBS_RIGHT);
 	if (m_tbs == _T("") && std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData"), _T("}"))), res, TBS_REG))
 		m_tbs = JSUnescape(res[3].str().c_str());
@@ -85,18 +85,18 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 		return SET_TIEBA_NO_TBS;
 	}
 
-	// È¡µÚÒ»¸ötid
+	// å–ç¬¬ä¸€ä¸ªtid
 	m_randomTid = GetStringBetween(src, _T("&quot;id&quot;:"), _T(","));
 	if (m_randomTid == _T(""))
 		m_randomTid = _T("4426261107");
 
-	// È·¶¨BDUSS
+	// ç¡®å®šBDUSS
 	m_bduss = GetStringBetween(m_cookie, _T("BDUSS="), _T(";"));
 	
 	return hasPower ? SET_TIEBA_OK : SET_TIEBA_NO_POWER;
 }
 
-// È¡´íÎó´úÂë
+// å–é”™è¯¯ä»£ç 
 static inline CString GetOperationErrorCode(const CString& src)
 {
 	if (src == NET_TIMEOUT_TEXT /*|| src == NET_STOP_TEXT*/)
@@ -109,7 +109,7 @@ static inline CString GetOperationErrorCode(const CString& src)
 	return code;
 }
 
-// ·âID£¬·µ»Ø´íÎó´úÂë
+// å°IDï¼Œè¿”å›é”™è¯¯ä»£ç 
 CString CTiebaOperate::BanID(const CString& userName, const CString& pid)
 {
 	CString data;
@@ -120,7 +120,7 @@ CString CTiebaOperate::BanID(const CString& userName, const CString& pid)
 	return GetOperationErrorCode(src);
 }
 
-// ·âID£¬·µ»Ø´íÎó´úÂë£¬²»ÓÃPID£¨ÓÃ»§±ØĞëÎª±¾°É»áÔ±£©
+// å°IDï¼Œè¿”å›é”™è¯¯ä»£ç ï¼Œä¸ç”¨PIDï¼ˆç”¨æˆ·å¿…é¡»ä¸ºæœ¬å§ä¼šå‘˜ï¼‰
 CString CTiebaOperate::BanID(const CString& userName)
 {
 	CString data;
@@ -131,7 +131,7 @@ CString CTiebaOperate::BanID(const CString& userName)
 	return GetOperationErrorCode(src);
 }
 
-// ·âID£¬·µ»Ø´íÎó´úÂë£¬WAP½Ó¿Ú£¬²»ÓÃPID£¬Ö»ÄÜ·â1Ìì£¨·ñÔòÒªÓÃTID£©
+// å°IDï¼Œè¿”å›é”™è¯¯ä»£ç ï¼ŒWAPæ¥å£ï¼Œä¸ç”¨PIDï¼Œåªèƒ½å°1å¤©ï¼ˆå¦åˆ™è¦ç”¨TIDï¼‰
 CString CTiebaOperate::BanIDWap(const CString& userName)
 {
 	CString url;
@@ -143,10 +143,10 @@ CString CTiebaOperate::BanIDWap(const CString& userName)
 	return GetOperationErrorCode(src);
 }
 
-// ·âID£¬·µ»Ø´íÎó´úÂë£¬¿Í»§¶Ë½Ó¿Ú£¬²»ÓÃPID£¬Ğ¡°É¿É·â10Ìì
+// å°IDï¼Œè¿”å›é”™è¯¯ä»£ç ï¼Œå®¢æˆ·ç«¯æ¥å£ï¼Œä¸ç”¨PIDï¼Œå°å§å¯å°10å¤©
 CString CTiebaOperate::BanIDClient(const CString& userName)
 {
-	// ¿Í»§¶ËPOSTÒª´øÊı×ÖÇ©Ãû£¬²ÎÊı°´×ÖµäĞòÅÅÁĞ£¬È¥µô&£¬¼ÓÉÏ"tiebaclient!!!"£¬×ª³ÉUTF-8£¬È¡MD5
+	// å®¢æˆ·ç«¯POSTè¦å¸¦æ•°å­—ç­¾åï¼Œå‚æ•°æŒ‰å­—å…¸åºæ’åˆ—ï¼Œå»æ‰&ï¼ŒåŠ ä¸Š"tiebaclient!!!"ï¼Œè½¬æˆUTF-8ï¼Œå–MD5
 	CString data;
 	data.Format(_T("BDUSS=%s&day=%d&fid=%s&from=tieba&net_type=1&ntn=banid&tbs=%s&un=%s&word=%s&z=%s"),
 		(LPCTSTR)m_bduss, m_banDuration, (LPCTSTR)m_forumID,
@@ -161,7 +161,7 @@ CString CTiebaOperate::BanIDClient(const CString& userName)
 	return GetOperationErrorCode(src);
 }
 
-// À­ºÚ£¬·µ»Ø´íÎó´úÂë
+// æ‹‰é»‘ï¼Œè¿”å›é”™è¯¯ä»£ç 
 CString CTiebaOperate::Defriend(const CString& userID)
 {
 	CString src = HTTPPost(_T("http://tieba.baidu.com/bawu2/platform/addBlack"), _T("ie=utf-8&tbs=") + m_tbs
@@ -169,7 +169,7 @@ CString CTiebaOperate::Defriend(const CString& userID)
 	return GetOperationErrorCode(src);
 }
 
-// É¾Ö÷Ìâ£¬·µ»Ø´íÎó´úÂë
+// åˆ ä¸»é¢˜ï¼Œè¿”å›é”™è¯¯ä»£ç 
 CString CTiebaOperate::DeleteThread(const CString& tid)
 {
 	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/thread/delete"), _T("kw=") + m_encodedForumName
@@ -177,7 +177,7 @@ CString CTiebaOperate::DeleteThread(const CString& tid)
 	return GetOperationErrorCode(src);
 }
 
-// É¾Ìû×Ó£¬·µ»Ø´íÎó´úÂë
+// åˆ å¸–å­ï¼Œè¿”å›é”™è¯¯ä»£ç 
 CString CTiebaOperate::DeletePost(const CString& tid, const CString& pid)
 {
 	CString data;
@@ -187,7 +187,7 @@ CString CTiebaOperate::DeletePost(const CString& tid, const CString& pid)
 	return GetOperationErrorCode(src);
 }
 
-// É¾Â¥ÖĞÂ¥£¬·µ»Ø´íÎó´úÂë
+// åˆ æ¥¼ä¸­æ¥¼ï¼Œè¿”å›é”™è¯¯ä»£ç 
 CString CTiebaOperate::DeleteLZL(const CString& tid, const CString& lzlid)
 {
 	CString data;
@@ -197,34 +197,34 @@ CString CTiebaOperate::DeleteLZL(const CString& tid, const CString& lzlid)
 	return GetOperationErrorCode(src);
 }
 
-// È¡´íÎóÎÄ±¾
+// å–é”™è¯¯æ–‡æœ¬
 TIEBA_API_API CString GetTiebaErrorText(const CString& errorCode)
 {
 	if (errorCode == _T("-65536"))
-		return _T("³¬Ê±");
+		return _T("è¶…æ—¶");
 	if (errorCode == _T("-1"))
-		return _T("È¨ÏŞ²»×ã");
+		return _T("æƒé™ä¸è¶³");
 	if (errorCode == _T("4"))
-		return _T("²ÎÊıĞ£ÑéÊ§°Ü");
+		return _T("å‚æ•°æ ¡éªŒå¤±è´¥");
 	if (errorCode == _T("11"))
-		return _T("¶ÈÄï³éÁË");
+		return _T("åº¦å¨˜æŠ½äº†");
 	if (errorCode == _T("14") || errorCode == _T("12"))
-		return _T("ÒÑ±»ÏµÍ³·â½û");
+		return _T("å·²è¢«ç³»ç»Ÿå°ç¦");
 	if (errorCode == _T("74"))
-		return _T("ÓÃ»§²»´æÔÚ(¿ÉÄÜÌû×ÓÒÑ±»É¾ÇÒÓÃ»§ÒÑÍË³ö±¾°É»áÔ±ÇÒÓÃ»§ÒÑÒş²Ø¶¯Ì¬)");
+		return _T("ç”¨æˆ·ä¸å­˜åœ¨(å¯èƒ½å¸–å­å·²è¢«åˆ ä¸”ç”¨æˆ·å·²é€€å‡ºæœ¬å§ä¼šå‘˜ä¸”ç”¨æˆ·å·²éšè—åŠ¨æ€)");
 	if (errorCode == _T("77"))
-		return _T("²Ù×÷Ê§°Ü");
+		return _T("æ“ä½œå¤±è´¥");
 	if (errorCode == _T("78"))
-		return _T("²ÎÊı´íÎó");
+		return _T("å‚æ•°é”™è¯¯");
 	if (errorCode == _T("308"))
-		return _T("Äã±»·â½û»òÊ§È¥È¨ÏŞ");
+		return _T("ä½ è¢«å°ç¦æˆ–å¤±å»æƒé™");
 	if (errorCode == _T("871"))
-		return _T("¸ßÂ¥²»ÄÜÉ¾");
+		return _T("é«˜æ¥¼ä¸èƒ½åˆ ");
 	if (errorCode == _T("872"))
-		return _T("¾«Æ·Ìù²»ÄÜÉ¾");
+		return _T("ç²¾å“è´´ä¸èƒ½åˆ ");
 	if (errorCode == _T("890"))
-		return _T("Ìù×ÓÒÑÉ¾");
+		return _T("è´´å­å·²åˆ ");
 	if (errorCode == _T("4011"))
-		return _T("ĞèÒªÑéÖ¤Âë(²Ù×÷Ì«¿ì£¿)");
-	return _T("Î´Öª´íÎó");
+		return _T("éœ€è¦éªŒè¯ç (æ“ä½œå¤ªå¿«ï¼Ÿ)");
+	return _T("æœªçŸ¥é”™è¯¯");
 }

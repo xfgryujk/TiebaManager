@@ -1,4 +1,4 @@
-// ×ª×Ôhttp://blog.csdn.net/jrckkyy/article/details/4715810
+ï»¿// è½¬è‡ªhttp://blog.csdn.net/jrckkyy/article/details/4715810
 
 #pragma once
 #include "HelperCommon.h"
@@ -51,5 +51,5 @@ public:
 };
 
 
-// ×ª³ÉUTF-8±àÂëÈ¡MD5
+// è½¬æˆUTF-8ç¼–ç å–MD5
 HELPER_API CString GetMD5_UTF8(const CString& data);

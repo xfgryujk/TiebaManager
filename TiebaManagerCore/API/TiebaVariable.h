@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include <TBMConfig.h>
 
 
-// CookieÎÄ¼ş
+// Cookieæ–‡ä»¶
 class CCookieConfig : public CConfigBase
 {
 public:
@@ -16,25 +16,25 @@ public:
 };
 extern CCookieConfig g_cookieConfig;
 
-// É¨Ãè
+// æ‰«æ
 extern volatile BOOL g_stopScanFlag;
 extern CWinThread* g_scanThread;
-// »º´æ
+// ç¼“å­˜
 class CUserCache : public CConfigBase
 {
 public:
-	COption<set<__int64> > m_initIgnoredTID;		// ²»É¾µÄÖ÷ÌâID(ÊÖ¶¯ºöÂÔ)£¬ÒªĞ´ÈëÎÄ¼ş
-	COption<set<__int64> > m_initIgnoredPID;		// ²»É¾µÄÌû×ÓID(ÊÖ¶¯ºöÂÔ)£¬ÒªĞ´ÈëÎÄ¼ş
-	COption<set<__int64> > m_initIgnoredLZLID;		// ²»É¾µÄÂ¥ÖĞÂ¥ID(ÊÖ¶¯ºöÂÔ)£¬ÒªĞ´ÈëÎÄ¼ş
-	set<__int64> m_ignoredTID;						// ²»É¾µÄÖ÷ÌâID(ÒÑÉ¨ÃèÇÒÎ¥¹æ)
-	set<__int64> m_ignoredPID;						// ²»É¾µÄÌû×ÓID(ÒÑÉ¨ÃèÇÒÎ¥¹æ)
-	set<__int64> m_ignoredLZLID;					// ²»É¾µÄÂ¥ÖĞÂ¥ID(ÒÑÉ¨ÃèÇÒÎ¥¹æ)
-	set<__int64> m_deletedTID;						// ÒÑÉ¾µÄÖ÷ÌâID
-	COption<map<__int64, int> > m_reply;			// Ö÷ÌâµÄ»Ø¸´Êı£¬ÒªĞ´ÈëÎÄ¼ş
-	COption<map<__int64, CString> > m_lastAuthor;	// Ö÷ÌâµÄ×îºó»Ø¸´×÷Õß£¬ÒªĞ´ÈëÎÄ¼ş
-	COption<map<CString, int> > m_userTrigCount;	// Ä³ÓÃ»§Î¥¹æ´ÎÊı£¬ÒªĞ´ÈëÎÄ¼ş
-	COption<set<CString> > m_bannedUser;			// ÒÑ·âµÄÓÃ»§£¬ÒªĞ´ÈëÎÄ¼ş
-	COption<set<CString> > m_defriendedUser;		// ÒÑÀ­ºÚµÄÓÃ»§£¬ÒªĞ´ÈëÎÄ¼ş
+	COption<set<__int64> > m_initIgnoredTID;		// ä¸åˆ çš„ä¸»é¢˜ID(æ‰‹åŠ¨å¿½ç•¥)ï¼Œè¦å†™å…¥æ–‡ä»¶
+	COption<set<__int64> > m_initIgnoredPID;		// ä¸åˆ çš„å¸–å­ID(æ‰‹åŠ¨å¿½ç•¥)ï¼Œè¦å†™å…¥æ–‡ä»¶
+	COption<set<__int64> > m_initIgnoredLZLID;		// ä¸åˆ çš„æ¥¼ä¸­æ¥¼ID(æ‰‹åŠ¨å¿½ç•¥)ï¼Œè¦å†™å…¥æ–‡ä»¶
+	set<__int64> m_ignoredTID;						// ä¸åˆ çš„ä¸»é¢˜ID(å·²æ‰«æä¸”è¿è§„)
+	set<__int64> m_ignoredPID;						// ä¸åˆ çš„å¸–å­ID(å·²æ‰«æä¸”è¿è§„)
+	set<__int64> m_ignoredLZLID;					// ä¸åˆ çš„æ¥¼ä¸­æ¥¼ID(å·²æ‰«æä¸”è¿è§„)
+	set<__int64> m_deletedTID;						// å·²åˆ çš„ä¸»é¢˜ID
+	COption<map<__int64, int> > m_reply;			// ä¸»é¢˜çš„å›å¤æ•°ï¼Œè¦å†™å…¥æ–‡ä»¶
+	COption<map<__int64, CString> > m_lastAuthor;	// ä¸»é¢˜çš„æœ€åå›å¤ä½œè€…ï¼Œè¦å†™å…¥æ–‡ä»¶
+	COption<map<CString, int> > m_userTrigCount;	// æŸç”¨æˆ·è¿è§„æ¬¡æ•°ï¼Œè¦å†™å…¥æ–‡ä»¶
+	COption<set<CString> > m_bannedUser;			// å·²å°çš„ç”¨æˆ·ï¼Œè¦å†™å…¥æ–‡ä»¶
+	COption<set<CString> > m_defriendedUser;		// å·²æ‹‰é»‘çš„ç”¨æˆ·ï¼Œè¦å†™å…¥æ–‡ä»¶
 
 	CUserCache()
 		: CConfigBase("Cache"),
@@ -67,6 +67,6 @@ public:
 };
 extern CUserCache g_userCache;
 
-// ²Ù×÷
+// æ“ä½œ
 extern CWinThread* g_confirmThread;
 extern CWinThread* g_operateThread;

@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "HelperCommon.h"
 #include <tinyxml2.h>
 
@@ -39,17 +39,17 @@ public:
 	T* operator -> (){ return &m_value; }
 	void UseDefault(){ m_value = m_default; }
 
-	// √≤À∆»´≤ø”√dllexport“≤ø…“‘£ø
+	// Ë≤å‰ººÂÖ®ÈÉ®Áî®dllexport‰πüÂèØ‰ª•Ôºü
 	__declspec(dllexport) void Read(const tinyxml2::XMLElement& root);
 	__declspec(dllexport) void Write(tinyxml2::XMLElement& root) const;
 };
 
-// ∂¡Option
+// ËØªOption
 #define DECLEAR_READ(T) void COption<T >::Read(const tinyxml2::XMLElement& root)
-// –¥Option
+// ÂÜôOption
 #define DECLEAR_WRITE(T) void COption<T >::Write(tinyxml2::XMLElement& root) const
 
-// ∂¡vector
+// ËØªvector
 #define DEFINE_READ_VECTOR(T) \
 DECLEAR_READ(vector<T>)\
 {\
@@ -71,7 +71,7 @@ DECLEAR_READ(vector<T>)\
 		UseDefault(); \
 }
 
-// ∂¡set
+// ËØªset
 #define DEFINE_READ_SET(T) \
 DECLEAR_READ(set<T>)\
 {\
@@ -93,7 +93,7 @@ DECLEAR_READ(set<T>)\
 		UseDefault(); \
 }
 
-// ∂¡map
+// ËØªmap
 #define COMMA ,
 
 #define DEFINE_READ_MAP(T1, T2) \
@@ -119,7 +119,7 @@ DECLEAR_READ(map<T1 COMMA T2>)\
 		UseDefault(); \
 }
 
-// –¥»›∆˜
+// ÂÜôÂÆπÂô®
 #define DEFINE_WRITE_CONTAINER(T, CONTAINER) \
 DECLEAR_WRITE(CONTAINER<T>)\
 {\
@@ -137,13 +137,13 @@ DECLEAR_WRITE(CONTAINER<T>)\
 	}\
 }
 
-// –¥vector
+// ÂÜôvector
 #define DEFINE_WRITE_VECTOR(T) DEFINE_WRITE_CONTAINER(T, vector)
 
-// –¥set
+// ÂÜôset
 #define DEFINE_WRITE_SET(T) DEFINE_WRITE_CONTAINER(T, set)
 
-// –¥map
+// ÂÜômap
 #define DEFINE_WRITE_MAP(T1, T2) \
 DECLEAR_WRITE(map<T1 COMMA T2>)\
 {\

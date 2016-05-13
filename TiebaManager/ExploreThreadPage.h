@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "ExplorerPage.h"
 struct ThreadInfo;
 
 
-// CExploreThreadPage ¶Ô»°¿ò
+// CExploreThreadPage å¯¹è¯æ¡†
 
 class CExploreThreadPage : public CExplorerPage
 {
 	DECLARE_DYNAMIC(CExploreThreadPage)
 
 public:
-	CExploreThreadPage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CExploreThreadPage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CExploreThreadPage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_EXPLORER_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

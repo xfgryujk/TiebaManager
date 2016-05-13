@@ -1,24 +1,24 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "TextButton.h"
 #include "NormalDlg.h"
 
 
-// CAboutPage ¶Ô»°¿ò
+// CAboutPage å¯¹è¯æ¡†
 
 class CAboutPage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CAboutPage)
 
 public:
-	CAboutPage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CAboutPage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CAboutPage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_ABOUT_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

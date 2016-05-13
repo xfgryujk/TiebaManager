@@ -1,4 +1,4 @@
-// RegListPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// RegListPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -8,7 +8,7 @@
 #include <StringHelper.h>
 
 
-// CRegListPage ¶Ô»°¿ò
+// CRegListPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CRegListPage, CListTestPage)
 
@@ -32,7 +32,7 @@ BEGIN_MESSAGE_MAP(CRegListPage, CListTestPage)
 END_MESSAGE_MAP()
 
 
-// CRegListPage ÏûÏ¢´¦Àí³ÌĞò
+// CRegListPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 
 BOOL CRegListPage::OnInitDialog()
@@ -40,11 +40,11 @@ BOOL CRegListPage::OnInitDialog()
 	CListTestPage::OnInitDialog();
 
 	int i = 0;
-	m_list.InsertColumn(i++, _T("ÄÚÈİ"), LVCFMT_LEFT, 500);
-	m_list.InsertColumn(i++, _T("ÕıÔò"), LVCFMT_LEFT, 50);
+	m_list.InsertColumn(i++, _T("å†…å®¹"), LVCFMT_LEFT, 500);
+	m_list.InsertColumn(i++, _T("æ­£åˆ™"), LVCFMT_LEFT, 50);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
 class CRegListFile : public CConfigBase
@@ -60,7 +60,7 @@ public:
 	}
 };
 
-// µ¼³öxml
+// å¯¼å‡ºxml
 BOOL CRegListPage::Export(const CString& path)
 {
 	if (path.Right(4).CompareNoCase(_T(".xml")) != 0)
@@ -71,7 +71,7 @@ BOOL CRegListPage::Export(const CString& path)
 	return tmp.Save(path);
 }
 
-// µ¼Èëxml
+// å¯¼å…¥xml
 BOOL CRegListPage::Import(const CString& path)
 {
 	if (path.Right(4).CompareNoCase(_T(".xml")) != 0)
@@ -93,7 +93,7 @@ BOOL CRegListPage::SetItem(int index)
 	{
 		if (CheckMatchTooMuch(content, isRegex))
 		{
-			AfxMessageBox(_T("Æ¥ÅäÌ«¶àÁË£¡"), MB_ICONERROR);
+			AfxMessageBox(_T("åŒ¹é…å¤ªå¤šäº†ï¼"), MB_ICONERROR);
 			return FALSE;
 		}
 		m_list.SetItemText(index, 0, content);

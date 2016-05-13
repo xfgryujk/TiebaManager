@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include "ResizeControl.h"
 
 
-// CNormalDlg ¶Ô»°¿ò
+// CNormalDlg å¯¹è¯æ¡†
 
 class CNormalDlg : public CDialog
 {
@@ -13,7 +13,7 @@ public:
 	virtual ~CNormalDlg();
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

@@ -1,11 +1,11 @@
-// ExplorerPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// ExplorerPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
 #include "ExplorerPage.h"
 
 
-// CExplorerPage ¶Ô»°¿ò
+// CExplorerPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CExplorerPage, CNormalDlg)
 
@@ -34,9 +34,9 @@ BEGIN_MESSAGE_MAP(CExplorerPage, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CExplorerPage ÏûÏ¢´¦Àí³ÌĞò
+// CExplorerPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CExplorerPage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -44,5 +44,5 @@ BOOL CExplorerPage::OnInitDialog()
 	m_resize.AddControl(&m_list, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }

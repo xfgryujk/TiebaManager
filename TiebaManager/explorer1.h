@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 
-// ¼ÆËã»úÉú³ÉÁËÓÉ Microsoft Visual C++ ´´½¨µÄ IDispatch °ü×°Æ÷Àà
+// è®¡ç®—æœºç”Ÿæˆäº†ç”± Microsoft Visual C++ åˆ›å»ºçš„ IDispatch åŒ…è£…å™¨ç±»
 
-// ×¢Òâ:  ²»ÒªĞŞ¸Ä´ËÎÄ¼şµÄÄÚÈİ¡£  Èç¹û´ËÀàÓÉ
-//  Microsoft Visual C++ ÖØĞÂÉú³É£¬ÄúµÄĞŞ¸Ä½«±»¸²¸Ç¡£
+// æ³¨æ„:  ä¸è¦ä¿®æ”¹æ­¤æ–‡ä»¶çš„å†…å®¹ã€‚  å¦‚æœæ­¤ç±»ç”±
+//  Microsoft Visual C++ é‡æ–°ç”Ÿæˆï¼Œæ‚¨çš„ä¿®æ”¹å°†è¢«è¦†ç›–ã€‚
 
 /////////////////////////////////////////////////////////////////////////////
-// CExplorer1 °ü×°Æ÷Àà
+// CExplorer1 åŒ…è£…å™¨ç±»
 
 class CExplorer1 : public CWnd
 {
@@ -34,7 +34,7 @@ public:
 		pPersist, bStorage, bstrLicKey); 
 	}
 
-// ÌØĞÔ
+// ç‰¹æ€§
 public:
 enum
 {
@@ -180,7 +180,7 @@ enum
 }ShellWindowFindWindowOptions;
 
 
-// ²Ù×÷
+// æ“ä½œ
 public:
 
 // IWebBrowser2

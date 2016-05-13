@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "InputDlg.h"
 
 
-// CInputKeywordDlg ¶Ô»°¿ò
+// CInputKeywordDlg å¯¹è¯æ¡†
 
 class CInputKeywordDlg : public CInputDlg
 {
 	DECLARE_DYNAMIC(CInputKeywordDlg)
 
 public:
-	CInputKeywordDlg(const CString& title, CString& content, BOOL* isRegex = NULL, BOOL* forceToConfirm = NULL, CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CInputKeywordDlg(const CString& title, CString& content, BOOL* isRegex = NULL, BOOL* forceToConfirm = NULL, CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CInputKeywordDlg();
 
-	// ¶Ô»°¿òÊı¾İ
+	// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_INPUT_KEYWORD_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

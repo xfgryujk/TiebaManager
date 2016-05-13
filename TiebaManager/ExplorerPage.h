@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "NormalDlg.h"
 
 
-// CExplorerPage ¶Ô»°¿ò
+// CExplorerPage å¯¹è¯æ¡†
 
 class CExplorerPage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CExplorerPage)
 
 public:
-	CExplorerPage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CExplorerPage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CExplorerPage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_EXPLORER_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

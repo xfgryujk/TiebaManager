@@ -1,4 +1,4 @@
-// ExploreThreadPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// ExploreThreadPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -9,7 +9,7 @@
 #include "ScanImage.h"
 
 
-// CExploreThreadPage ¶Ô»°¿ò
+// CExploreThreadPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CExploreThreadPage, CExplorerPage)
 
@@ -37,9 +37,9 @@ BEGIN_MESSAGE_MAP(CExploreThreadPage, CExplorerPage)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CExploreThreadPage ÏûÏ¢´¦Àí³ÌĞò
+// CExploreThreadPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CExploreThreadPage::OnInitDialog()
 {
 	CExplorerPage::OnInitDialog();
@@ -49,18 +49,18 @@ BOOL CExploreThreadPage::OnInitDialog()
 	m_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	int i = 0;
 	m_list.InsertColumn(i++, _T(""), LVCFMT_LEFT, 0);
-	m_list.InsertColumn(i++, _T("»Ø¸´"), LVCFMT_RIGHT, 50);
-	m_list.InsertColumn(i++, _T("±êÌâ"), LVCFMT_CENTER, 540);
-	m_list.InsertColumn(i++, _T("×÷Õß"), LVCFMT_CENTER, 130);
-	m_list.DeleteColumn(0); // ½â¾öµÚÒ»ÁĞÎÄ×Ö²»ÄÜÓÒ¶ÔÆëµÄÎÊÌâ
+	m_list.InsertColumn(i++, _T("å›å¤"), LVCFMT_RIGHT, 50);
+	m_list.InsertColumn(i++, _T("æ ‡é¢˜"), LVCFMT_CENTER, 540);
+	m_list.InsertColumn(i++, _T("ä½œè€…"), LVCFMT_CENTER, 130);
+	m_list.DeleteColumn(0); // è§£å†³ç¬¬ä¸€åˆ—æ–‡å­—ä¸èƒ½å³å¯¹é½çš„é—®é¢˜
 
 	OnBnClickedButton1();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// ×ªµ½
+// è½¬åˆ°
 void CExploreThreadPage::OnBnClickedButton1()
 {
 	m_gotoButton.EnableWindow(FALSE);
@@ -73,7 +73,7 @@ void CExploreThreadPage::OnBnClickedButton1()
 		m_edit.SetWindowText(_T("1"));
 		iPage = 1;
 	}
-	CString ignoreThread; // ºöÂÔÇ°¼¸¸öÖ÷Ìâ
+	CString ignoreThread; // å¿½ç•¥å‰å‡ ä¸ªä¸»é¢˜
 	ignoreThread.Format(_T("%d"), (iPage - 1) * 50);
 
 	GetThreads(g_tiebaOperate->GetForumName(), ignoreThread, m_threads);
@@ -90,7 +90,7 @@ void CExploreThreadPage::OnBnClickedButton1()
 	m_gotoButton.EnableWindow(TRUE);
 }
 
-// Ñ¡ÖĞÏî¸Ä±ä
+// é€‰ä¸­é¡¹æ”¹å˜
 void CExploreThreadPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
@@ -108,7 +108,7 @@ void CExploreThreadPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 	*pResult = 0;
 }
 
-// Ë«»÷ÁĞ±í
+// åŒå‡»åˆ—è¡¨
 void CExploreThreadPage::OnDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);

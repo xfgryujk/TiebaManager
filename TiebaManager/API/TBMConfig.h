@@ -1,52 +1,52 @@
-#pragma once
+ï»¿#pragma once
 #include "TBMCommon.h"
 #include <ConfigFile.h>
 #include <StringHelper.h>
 #include <opencv2\core\mat.hpp>
 
 
-// ÅäÖÃÎÄ¼şÂ·¾¶
-extern TIEBA_MANAGER_API CString GLOBAL_CONFIG_PATH;	// ³ÌĞò³õÊ¼»¯Ê±³õÊ¼»¯
-extern TIEBA_MANAGER_API CString USER_CONFIG_PATH;		// È·¶¨ÓÃ»§Ê±³õÊ¼»¯
+// é…ç½®æ–‡ä»¶è·¯å¾„
+extern TIEBA_MANAGER_API CString GLOBAL_CONFIG_PATH;	// ç¨‹åºåˆå§‹åŒ–æ—¶åˆå§‹åŒ–
+extern TIEBA_MANAGER_API CString USER_CONFIG_PATH;		// ç¡®å®šç”¨æˆ·æ—¶åˆå§‹åŒ–
 extern TIEBA_MANAGER_API CString OPTIONS_DIR_PATH;
-extern TIEBA_MANAGER_API CString USERS_DIR_PATH;		// ³ÌĞò³õÊ¼»¯Ê±³õÊ¼»¯
-extern TIEBA_MANAGER_API CString CURRENT_USER_DIR_PATH;	// È·¶¨ÓÃ»§Ê±³õÊ¼»¯
-extern TIEBA_MANAGER_API CString COOKIE_PATH;			// È·¶¨ÓÃ»§Ê±³õÊ¼»¯
-extern TIEBA_MANAGER_API CString CACHE_PATH;			// È·¶¨ÓÃ»§Ê±³õÊ¼»¯
+extern TIEBA_MANAGER_API CString USERS_DIR_PATH;		// ç¨‹åºåˆå§‹åŒ–æ—¶åˆå§‹åŒ–
+extern TIEBA_MANAGER_API CString CURRENT_USER_DIR_PATH;	// ç¡®å®šç”¨æˆ·æ—¶åˆå§‹åŒ–
+extern TIEBA_MANAGER_API CString COOKIE_PATH;			// ç¡®å®šç”¨æˆ·æ—¶åˆå§‹åŒ–
+extern TIEBA_MANAGER_API CString CACHE_PATH;			// ç¡®å®šç”¨æˆ·æ—¶åˆå§‹åŒ–
 
 
-// È«¾ÖÅäÖÃ
+// å…¨å±€é…ç½®
 class TIEBA_MANAGER_API CGlobalConfig : public CConfigBase
 {
 public:
-	COption<BOOL> m_firstRun;				// µÚÒ»´ÎÔËĞĞ
-	COption<BOOL> m_firstRunAfterUpdate;	// ¸üĞÂºóµÚÒ»´ÎÔËĞĞ
-	COption<CString> m_currentUser;			// µ±Ç°ÕËºÅ
-	COption<BOOL> m_autoUpdate;				// ×Ô¶¯¸üĞÂ
+	COption<BOOL> m_firstRun;				// ç¬¬ä¸€æ¬¡è¿è¡Œ
+	COption<BOOL> m_firstRunAfterUpdate;	// æ›´æ–°åç¬¬ä¸€æ¬¡è¿è¡Œ
+	COption<CString> m_currentUser;			// å½“å‰è´¦å·
+	COption<BOOL> m_autoUpdate;				// è‡ªåŠ¨æ›´æ–°
 
 	CGlobalConfig();
 };
 extern TIEBA_MANAGER_API CGlobalConfig g_globalConfig;
 
-// ÓÃ»§ÅäÖÃ
+// ç”¨æˆ·é…ç½®
 class TIEBA_MANAGER_API CUserConfig : public CConfigBase
 {
 public:
-	COption<CString> m_plan;		// µ±Ç°·½°¸
-	COption<CString> m_forumName;	// Ìù°ÉÃû
+	COption<CString> m_plan;		// å½“å‰æ–¹æ¡ˆ
+	COption<CString> m_forumName;	// è´´å§å
 
 	CUserConfig();
 };
 extern TIEBA_MANAGER_API CUserConfig g_userConfig;
 
-// ·½°¸
+// æ–¹æ¡ˆ
 class TIEBA_MANAGER_API CPlan : public CConfigBase
 {
 public:
 	struct Keyword : RegexText
 	{
-		BOOL forceToConfirm;	// Ç¿ÖÆÈ·ÈÏ
-		int trigCount;			// ´¥·¢´ÎÊı
+		BOOL forceToConfirm;	// å¼ºåˆ¶ç¡®è®¤
+		int trigCount;			// è§¦å‘æ¬¡æ•°
 	};
 
 	struct NameImage
@@ -56,35 +56,35 @@ public:
 	};
 	
 public:
-	CCriticalSection m_optionsLock; // ·½°¸ÁÙ½çÇø
-	BOOL m_updateImage; // ¶ÁÈ¡ºó¸üĞÂÎ¥¹æÍ¼Æ¬
+	CCriticalSection m_optionsLock; // æ–¹æ¡ˆä¸´ç•ŒåŒº
+	BOOL m_updateImage; // è¯»å–åæ›´æ–°è¿è§„å›¾ç‰‡
 
-	COption<int>		m_scanInterval;			// É¨Ãè¼ä¸ô
-	COption<BOOL>		m_onlyScanTitle;		// Ö»É¨Ãè±êÌâ
-	COption<int>		m_scanPageCount;		// É¨Ãè×îºóÒ³Êı
-	COption<BOOL>		m_briefLog;				// Ö»Êä³öÉ¾Ìû·âºÅ
-	COption<int>		m_threadCount;			// Ïß³ÌÊı
-	COption<BOOL>		m_autoSaveLog;			// ×Ô¶¯±£´æÈÕÖ¾
-	COption<int>		m_illegalLevel;			// Î¥¹æµÈ¼¶
-	COption<BOOL>		m_delete;				// É¾Ìû
-	COption<BOOL>		m_banID;				// ·âID
-	COption<BOOL>		m_defriend;				// À­ºÚ
-	COption<float>		m_deleteInterval;		// É¾Ìû¼ä¸ô
-	COption<int>		m_banDuration;			// ·â½ûÊ±³¤
-	COption<CString>	m_banReason;			// ·âºÅÔ­Òò
-	COption<int>		m_banTrigCount;			// ·â½ûÎ¥¹æ´ÎÊı
-	COption<int>		m_defriendTrigCount;	// À­ºÚÎ¥¹æ´ÎÊı
-	COption<BOOL>		m_confirm;				// ²Ù×÷Ç°ÌáÊ¾
-	COption<BOOL>		m_wapBanInterface;		// ·â½ûÓÃWAP½Ó¿Ú
-	COption<BOOL>		m_autoLoopBan;			// ×Ô¶¯Ñ­»··â
-	COption<vector<Keyword> >	m_keywords;		// Î¥¹æÄÚÈİ
-	vector<NameImage>			m_images;		// Î¥¹æÍ¼Æ¬
-	COption<CString>	m_imageDir;				// Î¥¹æÍ¼Æ¬Ä¿Â¼
-	COption<double>		m_SSIMThreshold;		// ãĞÖµ
-	COption<vector<RegexText> >	m_blackList;	// ÆÁ±ÎÓÃ»§
-	COption<set<CString> >		m_whiteList;	// ĞÅÈÎÓÃ»§
-	COption<vector<RegexText> >	m_whiteContent;	// ĞÅÈÎÄÚÈİ
-	COption<set<CString> >		m_trustedThread;// ĞÅÈÎÖ÷Ìâ
+	COption<int>		m_scanInterval;			// æ‰«æé—´éš”
+	COption<BOOL>		m_onlyScanTitle;		// åªæ‰«ææ ‡é¢˜
+	COption<int>		m_scanPageCount;		// æ‰«ææœ€åé¡µæ•°
+	COption<BOOL>		m_briefLog;				// åªè¾“å‡ºåˆ å¸–å°å·
+	COption<int>		m_threadCount;			// çº¿ç¨‹æ•°
+	COption<BOOL>		m_autoSaveLog;			// è‡ªåŠ¨ä¿å­˜æ—¥å¿—
+	COption<int>		m_illegalLevel;			// è¿è§„ç­‰çº§
+	COption<BOOL>		m_delete;				// åˆ å¸–
+	COption<BOOL>		m_banID;				// å°ID
+	COption<BOOL>		m_defriend;				// æ‹‰é»‘
+	COption<float>		m_deleteInterval;		// åˆ å¸–é—´éš”
+	COption<int>		m_banDuration;			// å°ç¦æ—¶é•¿
+	COption<CString>	m_banReason;			// å°å·åŸå› 
+	COption<int>		m_banTrigCount;			// å°ç¦è¿è§„æ¬¡æ•°
+	COption<int>		m_defriendTrigCount;	// æ‹‰é»‘è¿è§„æ¬¡æ•°
+	COption<BOOL>		m_confirm;				// æ“ä½œå‰æç¤º
+	COption<BOOL>		m_wapBanInterface;		// å°ç¦ç”¨WAPæ¥å£
+	COption<BOOL>		m_autoLoopBan;			// è‡ªåŠ¨å¾ªç¯å°
+	COption<vector<Keyword> >	m_keywords;		// è¿è§„å†…å®¹
+	vector<NameImage>			m_images;		// è¿è§„å›¾ç‰‡
+	COption<CString>	m_imageDir;				// è¿è§„å›¾ç‰‡ç›®å½•
+	COption<double>		m_SSIMThreshold;		// é˜ˆå€¼
+	COption<vector<RegexText> >	m_blackList;	// å±è”½ç”¨æˆ·
+	COption<set<CString> >		m_whiteList;	// ä¿¡ä»»ç”¨æˆ·
+	COption<vector<RegexText> >	m_whiteContent;	// ä¿¡ä»»å†…å®¹
+	COption<set<CString> >		m_trustedThread;// ä¿¡ä»»ä¸»é¢˜
 
 	CPlan();
 	void OnChange(){ m_optionsLock.Lock(); }

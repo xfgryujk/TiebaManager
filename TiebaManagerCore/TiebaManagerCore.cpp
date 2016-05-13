@@ -1,4 +1,4 @@
-// TiebaManagerCore.cpp : ¶¨Òå DLL µÄ³õÊ¼»¯Àı³Ì¡£
+ï»¿// TiebaManagerCore.cpp : å®šä¹‰ DLL çš„åˆå§‹åŒ–ä¾‹ç¨‹ã€‚
 //
 
 #include "stdafx.h"

@@ -1,22 +1,22 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 
 
-// CInputDlg ¶Ô»°¿ò
+// CInputDlg å¯¹è¯æ¡†
 
 class CInputDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CInputDlg)
 
 public:
-	CInputDlg(const CString& title, CString& content, BOOL* isRegex = NULL, BOOL showRegexCheck = FALSE, UINT nIDTemplate = IDD, CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CInputDlg(const CString& title, CString& content, BOOL* isRegex = NULL, BOOL showRegexCheck = FALSE, UINT nIDTemplate = IDD, CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CInputDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_INPUT_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

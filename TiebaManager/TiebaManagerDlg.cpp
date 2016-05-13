@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 Copyright (C) 2015  xfgryujk
 http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
@@ -44,12 +44,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #endif
 
 
-// ³£Á¿
+// å¸¸é‡
 static const UINT WM_TASKBARCREATED = RegisterWindowMessage(_T("TaskbarCreated"));
 static const UINT WM_TRAY = WM_APP + 1;
 
 
-// ¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°
 CTiebaManagerDlg::CTiebaManagerDlg(CWnd* pParent /*=NULL*/)
 	: CNormalDlg(CTiebaManagerDlg::IDD, pParent), 
 	m_log(m_logExplorer)
@@ -63,10 +63,10 @@ CTiebaManagerDlg::CTiebaManagerDlg(CWnd* pParent /*=NULL*/)
 	m_settingDlg = NULL;
 	m_superFunctionDlg = NULL;
 
-	// ³õÊ¼»¯ÍĞÅÌÍ¼±êÊı¾İ
+	// åˆå§‹åŒ–æ‰˜ç›˜å›¾æ ‡æ•°æ®
 	m_nfData.cbSize = sizeof(NOTIFYICONDATA);
 	m_nfData.hIcon = AfxGetApp()->LoadIcon(IDI_TRAY);	
-	_tcscpy_s(m_nfData.szTip, _T("Ìù°É¹ÜÀíÆ÷"));
+	_tcscpy_s(m_nfData.szTip, _T("è´´å§ç®¡ç†å™¨"));
 	m_nfData.uCallbackMessage = WM_TRAY;
 	m_nfData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
 }
@@ -115,22 +115,22 @@ BEGIN_EVENTSINK_MAP(CTiebaManagerDlg, CNormalDlg)
 END_EVENTSINK_MAP()
 
 
-// CTiebaManagerDlg ÏûÏ¢´¦Àí³ÌĞò
+// CTiebaManagerDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 
-// Èç¹ûÏò¶Ô»°¿òÌí¼Ó×îĞ¡»¯°´Å¥£¬ÔòĞèÒªÏÂÃæµÄ´úÂë
-//  À´»æÖÆ¸ÃÍ¼±ê¡£  ¶ÔÓÚÊ¹ÓÃÎÄµµ/ÊÓÍ¼Ä£ĞÍµÄ MFC Ó¦ÓÃ³ÌĞò£¬
-//  Õâ½«ÓÉ¿ò¼Ü×Ô¶¯Íê³É¡£
+// å¦‚æœå‘å¯¹è¯æ¡†æ·»åŠ æœ€å°åŒ–æŒ‰é’®ï¼Œåˆ™éœ€è¦ä¸‹é¢çš„ä»£ç 
+//  æ¥ç»˜åˆ¶è¯¥å›¾æ ‡ã€‚  å¯¹äºä½¿ç”¨æ–‡æ¡£/è§†å›¾æ¨¡å‹çš„ MFC åº”ç”¨ç¨‹åºï¼Œ
+//  è¿™å°†ç”±æ¡†æ¶è‡ªåŠ¨å®Œæˆã€‚
 
 void CTiebaManagerDlg::OnPaint()
 {
 	if (IsIconic())
 	{
-		CPaintDC dc(this); // ÓÃÓÚ»æÖÆµÄÉè±¸ÉÏÏÂÎÄ
+		CPaintDC dc(this); // ç”¨äºç»˜åˆ¶çš„è®¾å¤‡ä¸Šä¸‹æ–‡
 
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-		// Ê¹Í¼±êÔÚ¹¤×÷Çø¾ØĞÎÖĞ¾ÓÖĞ
+		// ä½¿å›¾æ ‡åœ¨å·¥ä½œåŒºçŸ©å½¢ä¸­å±…ä¸­
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
 		CRect rect;
@@ -138,7 +138,7 @@ void CTiebaManagerDlg::OnPaint()
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
 
-		// »æÖÆÍ¼±ê
+		// ç»˜åˆ¶å›¾æ ‡
 		dc.DrawIcon(x, y, m_hIcon);
 	}
 	else
@@ -147,23 +147,23 @@ void CTiebaManagerDlg::OnPaint()
 	}
 }
 
-//µ±ÓÃ»§ÍÏ¶¯×îĞ¡»¯´°¿ÚÊ±ÏµÍ³µ÷ÓÃ´Ëº¯ÊıÈ¡µÃ¹â±ê
-//ÏÔÊ¾¡£
+//å½“ç”¨æˆ·æ‹–åŠ¨æœ€å°åŒ–çª—å£æ—¶ç³»ç»Ÿè°ƒç”¨æ­¤å‡½æ•°å–å¾—å…‰æ ‡
+//æ˜¾ç¤ºã€‚
 HCURSOR CTiebaManagerDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
 #pragma endregion
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CTiebaManagerDlg::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
 
-	// ÉèÖÃ´Ë¶Ô»°¿òµÄÍ¼±ê¡£  µ±Ó¦ÓÃ³ÌĞòÖ÷´°¿Ú²»ÊÇ¶Ô»°¿òÊ±£¬¿ò¼Ü½«×Ô¶¯
-	//  Ö´ĞĞ´Ë²Ù×÷
-	SetIcon(m_hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(m_hIcon, FALSE);		// ÉèÖÃĞ¡Í¼±ê
+	// è®¾ç½®æ­¤å¯¹è¯æ¡†çš„å›¾æ ‡ã€‚  å½“åº”ç”¨ç¨‹åºä¸»çª—å£ä¸æ˜¯å¯¹è¯æ¡†æ—¶ï¼Œæ¡†æ¶å°†è‡ªåŠ¨
+	//  æ‰§è¡Œæ­¤æ“ä½œ
+	SetIcon(m_hIcon, TRUE);			// è®¾ç½®å¤§å›¾æ ‡
+	SetIcon(m_hIcon, FALSE);		// è®¾ç½®å°å›¾æ ‡
 
 	m_resize.AddControl(&m_explorerButton, RT_KEEP_DIST_TO_RIGHT, this);
 	m_resize.AddControl(&m_superFunctionButton, RT_KEEP_DIST_TO_RIGHT, this);
@@ -177,21 +177,21 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 
 	m_pageEdit.SetWindowText(_T("1"));
 
-	// ³õÊ¼»¯ÍĞÅÌ´°¿Ú¾ä±ú
+	// åˆå§‹åŒ–æ‰˜ç›˜çª—å£å¥æŸ„
 	m_nfData.hWnd = m_hWnd;
 
-	// ³õÊ¼»¯ÈÕÖ¾
+	// åˆå§‹åŒ–æ—¥å¿—
 	m_log.Init();
 
-	// ¶ÁÈ¡ÉèÖÃ
+	// è¯»å–è®¾ç½®
 	g_globalConfig.Load(GLOBAL_CONFIG_PATH);
 	SetCurrentUser(g_globalConfig.m_currentUser, FALSE);
 	
-	// ×Ô¶¯¸üĞÂ
+	// è‡ªåŠ¨æ›´æ–°
 	if (g_globalConfig.m_autoUpdate)
 		AfxBeginThread(AutoUpdateThread, this);
 
-	// ³õ´ÎÔËĞĞÏÈ¿´¹ØÓÚ
+	// åˆæ¬¡è¿è¡Œå…ˆçœ‹å…³äº
 	if (g_globalConfig.m_firstRun)
 	{
 		*g_globalConfig.m_firstRun = FALSE;
@@ -203,7 +203,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 		LRESULT tmp;
 		m_settingDlg->OnTcnSelchangeTab1(NULL, &tmp);
 	}
-	else if (g_globalConfig.m_firstRunAfterUpdate) // µ¯³ö¸üĞÂÈÕÖ¾
+	else if (g_globalConfig.m_firstRunAfterUpdate) // å¼¹å‡ºæ›´æ–°æ—¥å¿—
 	{
 		*g_globalConfig.m_firstRunAfterUpdate = FALSE;
 		g_globalConfig.Save(GLOBAL_CONFIG_PATH);
@@ -211,14 +211,14 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	}
 
 
-	// Ã¿24Ğ¡Ê±Çå³ıÒÑ·âÃûµ¥¡¢¿ªÊ¼Ñ­»··â
+	// æ¯24å°æ—¶æ¸…é™¤å·²å°åå•ã€å¼€å§‹å¾ªç¯å°
 	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
 		{
 			g_userCache.m_bannedUser->clear();
 			AfxBeginThread(LoopBanThread, (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd);
 		});
 
-	// Ã¿30·ÖÖÓÇå³ıÍ¼Æ¬»º´æ
+	// æ¯30åˆ†é’Ÿæ¸…é™¤å›¾ç‰‡ç¼“å­˜
 	SetTimer(1, 30 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
 		{
 			CFileFind fileFind;
@@ -231,18 +231,18 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 		});
 
 
-	// ²âÊÔ
+	// æµ‹è¯•
 	/*vector<ThreadInfo> threads;
-	GetThreads(_T("Ò»¸ö¼«ÆäÒşÃØÖ»ÓĞxfgryujkÖªµÀµÄµØ·½"), _T("0"), threads);
+	GetThreads(_T("ä¸€ä¸ªæå…¶éšç§˜åªæœ‰xfgryujkçŸ¥é“çš„åœ°æ–¹"), _T("0"), threads);
 	g_userTiebaInfo.m_forumID = _T("309740");
 	vector<PostInfo> posts, lzls;
 	GetPosts(_T("3033489261"), _T(""), _T("1"), posts, lzls);*/
 
 
-	return TRUE;  // ³ı·Ç½«½¹µãÉèÖÃµ½¿Ø¼ş£¬·ñÔò·µ»Ø TRUE
+	return TRUE;  // é™¤éå°†ç„¦ç‚¹è®¾ç½®åˆ°æ§ä»¶ï¼Œå¦åˆ™è¿”å› TRUE
 }
 
-// ±£´æ´¢´æÔÚ´°¿ÚµÄÊı¾İ
+// ä¿å­˜å‚¨å­˜åœ¨çª—å£çš„æ•°æ®
 void CTiebaManagerDlg::OnClose()
 {
 	if (g_plan.m_autoSaveLog)
@@ -252,7 +252,7 @@ void CTiebaManagerDlg::OnClose()
 	CNormalDlg::OnClose();
 }
 
-// ±£´æÆäËûÊı¾İ¡¢ÊÍ·Å
+// ä¿å­˜å…¶ä»–æ•°æ®ã€é‡Šæ”¾
 void CTiebaManagerDlg::OnDestroy()
 {
 	CNormalDlg::OnDestroy();
@@ -261,17 +261,17 @@ void CTiebaManagerDlg::OnDestroy()
 	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
 	g_plan.Save(OPTIONS_DIR_PATH + g_userConfig.m_plan + _T(".xml"));
 
-	g_stopScanFlag = TRUE; // Êµ¼ÊÉÏÏß³Ì²»»á·µ»Ø£¨·µ»ØÇ°¾Í±ÀÀ£ÁË£¿£©
+	g_stopScanFlag = TRUE; // å®é™…ä¸Šçº¿ç¨‹ä¸ä¼šè¿”å›ï¼ˆè¿”å›å‰å°±å´©æºƒäº†ï¼Ÿï¼‰
 
-	g_plan.m_images.clear(); // ²»ÖªµÀÎªÊ²Ã´²»¼ÓÕâ¸öRelease°æ¹Ø±Õºó»á±ÀÀ£...
+	g_plan.m_images.clear(); // ä¸çŸ¥é“ä¸ºä»€ä¹ˆä¸åŠ è¿™ä¸ªReleaseç‰ˆå…³é—­åä¼šå´©æºƒ...
 
-	// »¹ÊÇÓĞÄÚ´æĞ¹Â©£¬µ«ÎÒÕÒ²»³öÁË...
+	// è¿˜æ˜¯æœ‰å†…å­˜æ³„æ¼ï¼Œä½†æˆ‘æ‰¾ä¸å‡ºäº†...
 }
 
 #pragma region UI
-// ´°¿Ú /////////////////////////////////////////////////////////////////////////////////
+// çª—å£ /////////////////////////////////////////////////////////////////////////////////
 
-// ÏŞÖÆ×îĞ¡³ß´ç
+// é™åˆ¶æœ€å°å°ºå¯¸
 void CTiebaManagerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
 	/*lpMMI->ptMinTrackSize.x = 705;
@@ -280,12 +280,12 @@ void CTiebaManagerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }
 
-// ÍĞÅÌ /////////////////////////////////////////////////////////////////////////////////
+// æ‰˜ç›˜ /////////////////////////////////////////////////////////////////////////////////
 
-// ×îĞ¡»¯
+// æœ€å°åŒ–
 void CTiebaManagerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
-	if (nID == SC_MINIMIZE) // ×îĞ¡»¯Ê±Òş²Ø´°¿Ú
+	if (nID == SC_MINIMIZE) // æœ€å°åŒ–æ—¶éšè—çª—å£
 	{
 		ShowWindow(SW_HIDE);
 		Shell_NotifyIcon(NIM_ADD, &m_nfData);
@@ -295,10 +295,10 @@ void CTiebaManagerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	CNormalDlg::OnSysCommand(nID, lParam);
 }
 
-// ÍĞÅÌÏûÏ¢
+// æ‰˜ç›˜æ¶ˆæ¯
 LRESULT CTiebaManagerDlg::OnTray(WPARAM wParam, LPARAM lParam)
 {
-	if (lParam == WM_LBUTTONDOWN) // µ¥»÷ÏÔÊ¾´°¿Ú
+	if (lParam == WM_LBUTTONDOWN) // å•å‡»æ˜¾ç¤ºçª—å£
 	{
 		Shell_NotifyIcon(NIM_DELETE, &m_nfData);
 		ShowWindow(SW_SHOW);
@@ -307,7 +307,7 @@ LRESULT CTiebaManagerDlg::OnTray(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-// ÈÎÎñÀ¸ÖØ½¨
+// ä»»åŠ¡æ é‡å»º
 LRESULT CTiebaManagerDlg::OnTaskBarCreated(WPARAM wParam, LPARAM lParam)
 {
 	if (!IsWindowVisible())
@@ -316,8 +316,8 @@ LRESULT CTiebaManagerDlg::OnTaskBarCreated(WPARAM wParam, LPARAM lParam)
 }
 #pragma endregion
 
-#pragma region ÈÕÖ¾
-// ÈÕÖ¾ä¯ÀÀÆ÷½«µ¼º½
+#pragma region æ—¥å¿—
+// æ—¥å¿—æµè§ˆå™¨å°†å¯¼èˆª
 void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers, BOOL* Cancel)
 {
 	CString url = _bstr_t(URL->bstrVal);
@@ -326,70 +326,70 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	*Cancel = TRUE;
 
 	CString prefix = url.Left(3);
-	if (prefix == _T("dt:")) // É¾Ö÷Ìâ
+	if (prefix == _T("dt:")) // åˆ ä¸»é¢˜
 	{
 		CString code = g_tiebaOperate->DeleteThread(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
-			m_log.Log(_T("<font color=green>É¾³ı³É¹¦£¡</font>"));
+			m_log.Log(_T("<font color=green>åˆ é™¤æˆåŠŸï¼</font>"));
 		else
-			m_log.Log(_T("<font color=red>É¾³ıÊ§°Ü£¡</font>"));
+			m_log.Log(_T("<font color=red>åˆ é™¤å¤±è´¥ï¼</font>"));
 	}
-	else if (prefix == _T("dp:")) // É¾Ìû×Ó
+	else if (prefix == _T("dp:")) // åˆ å¸–å­
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
 		CString code = g_tiebaOperate->DeletePost(args[0], args[1]);
 		if (code == _T("0"))
-			m_log.Log(_T("<font color=green>É¾³ı³É¹¦£¡</font>"));
+			m_log.Log(_T("<font color=green>åˆ é™¤æˆåŠŸï¼</font>"));
 		else
-			m_log.Log(_T("<font color=red>É¾³ıÊ§°Ü£¡</font>"));
+			m_log.Log(_T("<font color=red>åˆ é™¤å¤±è´¥ï¼</font>"));
 	}
-	else if (prefix == _T("dl:")) // É¾Â¥ÖĞÂ¥
+	else if (prefix == _T("dl:")) // åˆ æ¥¼ä¸­æ¥¼
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
 		CString code = g_tiebaOperate->DeleteLZL(args[0], args[1]);
 		if (code == _T("0"))
-			m_log.Log(_T("<font color=green>É¾³ı³É¹¦£¡</font>"));
+			m_log.Log(_T("<font color=green>åˆ é™¤æˆåŠŸï¼</font>"));
 		else
-			m_log.Log(_T("<font color=red>É¾³ıÊ§°Ü£¡</font>"));
+			m_log.Log(_T("<font color=red>åˆ é™¤å¤±è´¥ï¼</font>"));
 	}
-	else if (prefix == _T("bd:")) // ·âID
+	else if (prefix == _T("bd:")) // å°ID
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
 		CString code = (g_plan.m_wapBanInterface /*|| g_plan.m_banDuration == 1*/ || args[1] == _T("")) ? 
 			g_tiebaOperate->BanIDClient(args[0]) : g_tiebaOperate->BanID(args[0], args[1]);
 		if (code == _T("0"))
-			m_log.Log(_T("<font color=green>·â½û³É¹¦£¡</font>"));
+			m_log.Log(_T("<font color=green>å°ç¦æˆåŠŸï¼</font>"));
 		else
-			m_log.Log(_T("<font color=red>·â½ûÊ§°Ü£¡</font>"));
+			m_log.Log(_T("<font color=red>å°ç¦å¤±è´¥ï¼</font>"));
 	}
-	else if (prefix == _T("df:")) // À­ºÚ
+	else if (prefix == _T("df:")) // æ‹‰é»‘
 	{
 		CString code = g_tiebaOperate->Defriend(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
-			m_log.Log(_T("<font color=green>À­ºÚ³É¹¦£¡</font>"));
+			m_log.Log(_T("<font color=green>æ‹‰é»‘æˆåŠŸï¼</font>"));
 		else
-			m_log.Log(_T("<font color=red>À­ºÚÊ§°Ü£¡</font>"));
+			m_log.Log(_T("<font color=red>æ‹‰é»‘å¤±è´¥ï¼</font>"));
 	}
 	else
 		ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }
 
-// Çå¿ÕÈÕÖ¾
+// æ¸…ç©ºæ—¥å¿—
 void CTiebaManagerDlg::OnStnClickedStatic6()
 {
 	m_log.Clear();
 }
 
-// ±£´æÈÕÖ¾
+// ä¿å­˜æ—¥å¿—
 void CTiebaManagerDlg::OnStnClickedStatic7()
 {
 	m_saveLogStatic.EnableWindow(FALSE);
 	BROWSEINFO bi;
 	ZeroMemory(&bi, sizeof(bi));
-	bi.lpszTitle = _T("Òª±£´æµÄÄ¿Â¼£º");
+	bi.lpszTitle = _T("è¦ä¿å­˜çš„ç›®å½•ï¼š");
 	bi.ulFlags = BIF_STATUSTEXT;
 	LPITEMIDLIST pidlSel = SHBrowseForFolder(&bi);
 
@@ -410,8 +410,8 @@ void CTiebaManagerDlg::OnStnClickedStatic7()
 }
 #pragma endregion
 
-#pragma region ´ò¿ªÆäËû¶Ô»°¿ò
-// ²é¿´Ìû×Ó
+#pragma region æ‰“å¼€å…¶ä»–å¯¹è¯æ¡†
+// æŸ¥çœ‹å¸–å­
 void CTiebaManagerDlg::OnBnClickedButton7()
 {
 	if (m_explorerDlg == NULL)
@@ -421,7 +421,7 @@ void CTiebaManagerDlg::OnBnClickedButton7()
 	}
 }
 
-// ³¬¼¶¹¦ÄÜ
+// è¶…çº§åŠŸèƒ½
 void CTiebaManagerDlg::OnBnClickedButton4()
 {
 	if (m_superFunctionDlg == NULL)
@@ -431,7 +431,7 @@ void CTiebaManagerDlg::OnBnClickedButton4()
 	}
 }
 
-// ÉèÖÃ
+// è®¾ç½®
 void CTiebaManagerDlg::OnBnClickedButton5()
 {
 	if (m_settingDlg == NULL)
@@ -442,76 +442,76 @@ void CTiebaManagerDlg::OnBnClickedButton5()
 }
 #pragma endregion
 
-// É¨Ãè /////////////////////////////////////////////////////////////////////////////////
+// æ‰«æ /////////////////////////////////////////////////////////////////////////////////
 
-// È·¶¨
+// ç¡®å®š
 void CTiebaManagerDlg::OnBnClickedButton1()
 {
 	CString forumName;
 	m_forumNameEdit.GetWindowText(forumName);
 	if (forumName == _T(""))
 	{
-		AfxMessageBox(_T("ÇëÊäÈëÌù°ÉÃû£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("è¯·è¾“å…¥è´´å§åï¼"), MB_ICONERROR);
 		return;
 	}
 
 	m_forumNameEdit.EnableWindow(FALSE);
 	m_confirmButton.EnableWindow(FALSE);
-	m_stateStatic.SetWindowText(_T("ÑéÖ¤Ìù°ÉÖĞ"));
+	m_stateStatic.SetWindowText(_T("éªŒè¯è´´å§ä¸­"));
 
 
 	g_tiebaOperate.reset(new CTiebaOperate(g_cookieConfig.m_cookie, g_plan.m_banDuration, g_plan.m_banReason));
 	switch (g_tiebaOperate->SetTieba(forumName))
 	{
 	case CTiebaOperate::SET_TIEBA_TIMEOUT:
-		AfxMessageBox(_T("Á¬½Ó³¬Ê±..."), MB_ICONERROR);
+		AfxMessageBox(_T("è¿æ¥è¶…æ—¶..."), MB_ICONERROR);
 		goto Error;
 	case CTiebaOperate::SET_TIEBA_NOT_FOUND:
-		AfxMessageBox(_T("Ìù°É²»´æÔÚ£¡(Ò²¿ÉÄÜÊÇ¶ÈÄï³éÁË...)"), MB_ICONERROR);
+		AfxMessageBox(_T("è´´å§ä¸å­˜åœ¨ï¼(ä¹Ÿå¯èƒ½æ˜¯åº¦å¨˜æŠ½äº†...)"), MB_ICONERROR);
 		goto Error;
 	case CTiebaOperate::SET_TIEBA_NOT_LOGIN:
-		AfxMessageBox(_T("ÇëÔÚÉèÖÃ-ÕËºÅ¹ÜÀíµÇÂ¼°Ù¶ÈÕËºÅ"), MB_ICONERROR);
+		AfxMessageBox(_T("è¯·åœ¨è®¾ç½®-è´¦å·ç®¡ç†ç™»å½•ç™¾åº¦è´¦å·"), MB_ICONERROR);
 		goto Error;
 	case CTiebaOperate::SET_TIEBA_NO_POWER:
-		AfxMessageBox(_T("Äú²»ÊÇ°ÉÖ÷»òĞ¡°ÉÖ÷»òÓïÒôĞ¡±à£¬ÎŞ·¨É¾Ìû·âºÅ£¡"), MB_ICONWARNING);
+		AfxMessageBox(_T("æ‚¨ä¸æ˜¯å§ä¸»æˆ–å°å§ä¸»æˆ–è¯­éŸ³å°ç¼–ï¼Œæ— æ³•åˆ å¸–å°å·ï¼"), MB_ICONWARNING);
 		break;
 	case CTiebaOperate::SET_TIEBA_NO_TBS:
-		AfxMessageBox(_T("»ñÈ¡¿ÚÁîºÅÊ§°Ü£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("è·å–å£ä»¤å·å¤±è´¥ï¼"), MB_ICONERROR);
 		goto Error;
 	}
 
-	SetWindowText(_T("Ìù°É¹ÜÀíÆ÷ - ") + g_tiebaOperate->GetUserName_());
+	SetWindowText(_T("è´´å§ç®¡ç†å™¨ - ") + g_tiebaOperate->GetUserName_());
 
-	// ¼ÓÈëĞÅÈÎÓÃ»§
+	// åŠ å…¥ä¿¡ä»»ç”¨æˆ·
 	g_plan.m_whiteList->insert(g_tiebaOperate->GetUserName_());
 
 
-	m_stateStatic.SetWindowText(_T("´ı»úÖĞ"));
+	m_stateStatic.SetWindowText(_T("å¾…æœºä¸­"));
 	m_startButton.EnableWindow(TRUE);
 	m_pageEdit.EnableWindow(TRUE);
 	m_explorerButton.EnableWindow(TRUE);
 	m_superFunctionButton.EnableWindow(TRUE);
 	*g_userConfig.m_forumName = g_tiebaOperate->GetForumName();
 	g_userConfig.Save(USER_CONFIG_PATH);
-	m_log.Log(_T("<font color=green>È·ÈÏ¼à¿ØÌù°É£º</font>") + g_tiebaOperate->GetForumName()
-		+ _T("<font color=green> °É£¬Ê¹ÓÃÕËºÅ£º</font>" + g_tiebaOperate->GetUserName_()));
-	// ¿ªÊ¼Ñ­»··â
+	m_log.Log(_T("<font color=green>ç¡®è®¤ç›‘æ§è´´å§ï¼š</font>") + g_tiebaOperate->GetForumName()
+		+ _T("<font color=green> å§ï¼Œä½¿ç”¨è´¦å·ï¼š</font>" + g_tiebaOperate->GetUserName_()));
+	// å¼€å§‹å¾ªç¯å°
 	AfxBeginThread(LoopBanThread, this);
 
 	return;
 
 Error:
-	m_stateStatic.SetWindowText(_T("´ı»úÖĞ"));
+	m_stateStatic.SetWindowText(_T("å¾…æœºä¸­"));
 	m_forumNameEdit.EnableWindow(TRUE);
 	m_confirmButton.EnableWindow(TRUE);
 }
 
-// ¿ªÊ¼
+// å¼€å§‹
 void CTiebaManagerDlg::OnBnClickedButton2()
 {
 	if (g_plan.m_keywords->empty() && g_plan.m_images.empty() && g_plan.m_blackList->empty() && g_plan.m_illegalLevel <= 0)
 	{
-		AfxMessageBox(_T("ÖÁÉÙÉèÖÃÒ»¸öÎ¥¹æ¹æÔò£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("è‡³å°‘è®¾ç½®ä¸€ä¸ªè¿è§„è§„åˆ™ï¼"), MB_ICONERROR);
 		OnBnClickedButton5();
 		return;
 	}
@@ -522,7 +522,7 @@ void CTiebaManagerDlg::OnBnClickedButton2()
 	g_scanThread = AfxBeginThread(ScanThread, this);
 }
 
-// Í£Ö¹
+// åœæ­¢
 void CTiebaManagerDlg::OnBnClickedButton3()
 {
 	g_stopScanFlag = TRUE;

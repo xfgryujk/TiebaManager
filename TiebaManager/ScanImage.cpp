@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "ScanImage.h"
 #include <ImageHelper.h>
 #include <TBMConfig.h>
@@ -7,17 +7,17 @@
 #include <MiscHelper.h>
 
 
-set<CString> g_leagalImage; // ÒÑ¼ì²é²»Î¥¹æµÄÍ¼Æ¬
-set<CString> g_illegalImage; // ÒÑ¼ì²éÎ¥¹æµÄÍ¼Æ¬
+set<CString> g_leagalImage; // å·²æ£€æŸ¥ä¸è¿è§„çš„å›¾ç‰‡
+set<CString> g_illegalImage; // å·²æ£€æŸ¥è¿è§„çš„å›¾ç‰‡
 
 
-// 1ÊÇÍ¼Æ¬µØÖ·
+// 1æ˜¯å›¾ç‰‡åœ°å€
 static const wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
-// 2ÊÇÍ¼Æ¬µØÖ·
+// 2æ˜¯å›¾ç‰‡åœ°å€
 static const wregex POST_IMG_REG(_T("<img .*?class=\"(BDE_Image|j_user_sign)\".*?src=\"(.*?)\".*?>"));
 
 
-// ´ÓÄ¿Â¼¶ÁÈ¡Í¼Æ¬µ½g_images
+// ä»ç›®å½•è¯»å–å›¾ç‰‡åˆ°g_images
 void ReadImages(const CString& dir)
 {
 	vector<CString> imagePath;
@@ -51,13 +51,13 @@ void ReadImages(const CString& dir)
 	{
 		g_plan.m_images.resize(imgCount);
 		CString msg;
-		msg.Format(_T("%uÕÅÍ¼Æ¬¼ÓÔØÊ§°Ü£¡"), imagePath.size() - imgCount);
+		msg.Format(_T("%uå¼ å›¾ç‰‡åŠ è½½å¤±è´¥ï¼"), imagePath.size() - imgCount);
 		AfxMessageBox(msg, MB_ICONINFORMATION);
 	}
 }
 
 
-// ´ÓÖ÷ÌâÔ¤ÀÀÈ¡Í¼Æ¬µØÖ·
+// ä»ä¸»é¢˜é¢„è§ˆå–å›¾ç‰‡åœ°å€
 void GetThreadImage::GetImage(vector<CString>& img)
 {
 	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_preview, (LPCTSTR)m_preview + m_preview.GetLength(), THREAD_IMG_REG), 
@@ -65,7 +65,7 @@ void GetThreadImage::GetImage(vector<CString>& img)
 		img.push_back((*it)[1].str().c_str());
 }
 
-// ´ÓÌû×ÓÈ¡Í¼Æ¬µØÖ·
+// ä»å¸–å­å–å›¾ç‰‡åœ°å€
 void GetPostImage::GetImage(vector<CString>& img)
 {
 	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_content, (LPCTSTR)m_content + m_content.GetLength(), POST_IMG_REG), 
@@ -76,13 +76,13 @@ void GetPostImage::GetImage(vector<CString>& img)
 }
 
 
-// ¼ì²éÍ¼Æ¬Î¥¹æ1£¬¼ì²âĞÅÈÎÓÃ»§¡¢»ñÈ¡Í¼Æ¬µØÖ·
+// æ£€æŸ¥å›¾ç‰‡è¿è§„1ï¼Œæ£€æµ‹ä¿¡ä»»ç”¨æˆ·ã€è·å–å›¾ç‰‡åœ°å€
 BOOL CheckImageIllegal(const CString& author, GetImagesBase& getImage, CString& msg)
 {
 	if (g_plan.m_images.empty())
 		return FALSE;
 
-	// ĞÅÈÎÓÃ»§
+	// ä¿¡ä»»ç”¨æˆ·
 	g_plan.m_optionsLock.Lock();
 	if (g_plan.m_whiteList->find(author) != g_plan.m_whiteList->end())
 	{
@@ -96,7 +96,7 @@ BOOL CheckImageIllegal(const CString& author, GetImagesBase& getImage, CString& 
 	return DoCheckImageIllegal(imgs, msg);
 }
 
-// SSIMËã·¨±È½ÏÍ¼Æ¬
+// SSIMç®—æ³•æ¯”è¾ƒå›¾ç‰‡
 static double getMSSIM(const Mat& i1, const Mat& i2)
 {
 	static const double C1 = 6.5025, C2 = 58.5225;
@@ -104,7 +104,7 @@ static double getMSSIM(const Mat& i1, const Mat& i2)
 	try
 	{
 		Mat I1, I2;
-		i1.convertTo(I1, d);           // ²»ÄÜÔÚµ¥×Ö½ÚÏñËØÉÏ½øĞĞ¼ÆËã£¬·¶Î§²»¹»¡£
+		i1.convertTo(I1, d);           // ä¸èƒ½åœ¨å•å­—èŠ‚åƒç´ ä¸Šè¿›è¡Œè®¡ç®—ï¼ŒèŒƒå›´ä¸å¤Ÿã€‚
 		i2.convertTo(I2, d);
 
 		if (I1.rows * I1.cols < I2.rows * I2.cols)
@@ -116,7 +116,7 @@ static double getMSSIM(const Mat& i1, const Mat& i2)
 		Mat I1_2 = I1.mul(I1);        // I1^2
 		Mat I1_I2 = I1.mul(I2);        // I1 * I2
 
-		///////////////////////// ³õ²½¼ÆËã ///////////////////////////////
+		///////////////////////// åˆæ­¥è®¡ç®— ///////////////////////////////
 
 		Mat mu1, mu2;
 		GaussianBlur(I1, mu1, cv::Size(11, 11), 1.5);
@@ -144,7 +144,7 @@ static double getMSSIM(const Mat& i1, const Mat& i2)
 		I1_I2.release();
 		sigma12 -= mu1_mu2;
 
-		///////////////////////////////// ¹«Ê½ ////////////////////////////////
+		///////////////////////////////// å…¬å¼ ////////////////////////////////
 		Mat t1, t2, t3;
 
 		t1 = 2 * mu1_mu2 + C1;
@@ -161,38 +161,38 @@ static double getMSSIM(const Mat& i1, const Mat& i2)
 		t1.release();
 		t3.release();
 
-		cv::Scalar mssim = mean(ssim_map); // mssim = ssim_mapµÄÆ½¾ùÖµ
+		cv::Scalar mssim = mean(ssim_map); // mssim = ssim_mapçš„å¹³å‡å€¼
 		return mssim.val[0] + mssim.val[1] + mssim.val[2];
 	}
-	catch (...) // GaussianBlur´´½¨MatÊ±¿ÉÄÜÅ×³öÒì³£-215£¿
+	catch (...) // GaussianBluråˆ›å»ºMatæ—¶å¯èƒ½æŠ›å‡ºå¼‚å¸¸-215ï¼Ÿ
 	{
 		return 0;
 	}
 }
 
-// ¼ì²éÍ¼Æ¬Î¥¹æ2£¬ÏÂÔØÍ¼Æ¬¡¢±È½ÏÍ¼Æ¬
+// æ£€æŸ¥å›¾ç‰‡è¿è§„2ï¼Œä¸‹è½½å›¾ç‰‡ã€æ¯”è¾ƒå›¾ç‰‡
 BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 {
 	for (const CString& img : imgs)
 	{
 		CString imgName = GetImageName(img);
 
-		// ¼ì²é»º´æ½á¹û
+		// æ£€æŸ¥ç¼“å­˜ç»“æœ
 		if (g_leagalImage.find(imgName) != g_leagalImage.end())
 			continue;
 		if (g_illegalImage.find(imgName) != g_illegalImage.end())
 			return TRUE;
 
-		// ¶ÁÈ¡Í¼Æ¬
+		// è¯»å–å›¾ç‰‡
 		Mat image;
 		if (PathFileExists(IMG_CACHE_PATH + imgName))
 		{
-			// ¶ÁÈ¡Í¼Æ¬»º´æ
+			// è¯»å–å›¾ç‰‡ç¼“å­˜
 			ReadImage(IMG_CACHE_PATH + imgName, image);
 		}
 		else
 		{
-			// ÏÂÔØÍ¼Æ¬
+			// ä¸‹è½½å›¾ç‰‡
 			unique_ptr<BYTE[]> buffer;
 			ULONG size;
 			if (HTTPGetRaw(img, &buffer, &size) == NET_SUCCESS)
@@ -206,18 +206,18 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 			}
 		}
 
-		if (image.data == NULL || image.cols < 30 || image.rows < 30) // ³ß´çÌ«Ğ¡²»±È½Ï
+		if (image.data == NULL || image.cols < 30 || image.rows < 30) // å°ºå¯¸å¤ªå°ä¸æ¯”è¾ƒ
 			continue;
-		// ÅĞ¶ÏºÍÎ¥¹æÍ¼Æ¬±È½Ï´óÓÚãĞÖµ
+		// åˆ¤æ–­å’Œè¿è§„å›¾ç‰‡æ¯”è¾ƒå¤§äºé˜ˆå€¼
 		g_plan.m_optionsLock.Lock();
 		for (const auto& i : g_plan.m_images)
 		{
-			if (i.img.cols < 30 || i.img.rows < 30) // ³ß´çÌ«Ğ¡²»±È½Ï
+			if (i.img.cols < 30 || i.img.rows < 30) // å°ºå¯¸å¤ªå°ä¸æ¯”è¾ƒ
 				continue;
 			double mssim = getMSSIM(image, i.img);
 			if (mssim > g_plan.m_SSIMThreshold)
 			{
-				msg.Format(_T("<font color=red> ´¥·¢Î¥¹æÍ¼Æ¬ </font>%s<font color=red> ÏàËÆ¶È%.3lf</font>"),
+				msg.Format(_T("<font color=red> è§¦å‘è¿è§„å›¾ç‰‡ </font>%s<font color=red> ç›¸ä¼¼åº¦%.3lf</font>"),
 					(LPCTSTR)i.name, mssim);
 				g_illegalImage.insert(imgName);
 				g_plan.m_optionsLock.Unlock();

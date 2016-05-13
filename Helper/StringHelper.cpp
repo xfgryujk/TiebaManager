@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <StringHelper.h>
 #include <ConfigFile.h>
 #import <msscript.ocx> no_namespace
@@ -44,7 +44,7 @@ HELPER_API DEFINE_READ_VECTOR(RegexText)
 HELPER_API DEFINE_WRITE_VECTOR(RegexText)
 
 
-// ·Ö¸î×Ö·û´®
+// åˆ†å‰²å­—ç¬¦ä¸²
 HELPER_API void SplitString(CStringArray& dst, const CString& src, const CString& slipt)
 {
 	dst.RemoveAll();
@@ -60,13 +60,13 @@ HELPER_API void SplitString(CStringArray& dst, const CString& src, const CString
 }
 
 
-// ×Ö·û´®°üº¬
+// å­—ç¬¦ä¸²åŒ…å«
 HELPER_API BOOL StringIncludes(const CString& str, const CString& content)
 {
 	return str.Find(content) != -1;
 }
 
-// ×Ö·û´®°üº¬
+// å­—ç¬¦ä¸²åŒ…å«
 HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL isRegex)
 {
 	if (isRegex)
@@ -78,7 +78,7 @@ HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL 
 		}
 		catch (...)
 		{
-			AfxMessageBox(_T("ÕıÔò±í´ïÊ½´íÎó£¡"), MB_ICONERROR);
+			AfxMessageBox(_T("æ­£åˆ™è¡¨è¾¾å¼é”™è¯¯ï¼"), MB_ICONERROR);
 			return FALSE;
 		}
 	}
@@ -86,7 +86,7 @@ HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL 
 		return StringIncludes(str, content);
 }
 
-// ×Ö·û´®°üº¬
+// å­—ç¬¦ä¸²åŒ…å«
 HELPER_API BOOL StringIncludes(const CString& str, const RegexText& content, int* _pos, int* length)
 {
 	BOOL result;
@@ -99,7 +99,7 @@ HELPER_API BOOL StringIncludes(const CString& str, const RegexText& content, int
 		}
 		catch (...)
 		{
-			AfxMessageBox(_T("ÕıÔò±í´ïÊ½´íÎó£¡"), MB_ICONERROR);
+			AfxMessageBox(_T("æ­£åˆ™è¡¨è¾¾å¼é”™è¯¯ï¼"), MB_ICONERROR);
 			return FALSE;
 		}
 
@@ -122,7 +122,7 @@ HELPER_API BOOL StringIncludes(const CString& str, const RegexText& content, int
 	return result;
 }
 
-// ×Ö·û´®Æ¥Åä
+// å­—ç¬¦ä¸²åŒ¹é…
 HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL isRegex)
 {
 	if (isRegex)
@@ -134,7 +134,7 @@ HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL is
 		}
 		catch (...)
 		{
-			AfxMessageBox(_T("ÕıÔò±í´ïÊ½´íÎó£¡"), MB_ICONERROR);
+			AfxMessageBox(_T("æ­£åˆ™è¡¨è¾¾å¼é”™è¯¯ï¼"), MB_ICONERROR);
 			return FALSE;
 		}
 	}
@@ -142,7 +142,7 @@ HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL is
 		return str == content;
 }
 
-// ×Ö·û´®Æ¥Åä
+// å­—ç¬¦ä¸²åŒ¹é…
 HELPER_API BOOL StringMatchs(const CString& str, const RegexText& content)
 {
 	if (content.isRegex)
@@ -153,7 +153,7 @@ HELPER_API BOOL StringMatchs(const CString& str, const RegexText& content)
 		}
 		catch (...)
 		{
-			AfxMessageBox(_T("ÕıÔò±í´ïÊ½´íÎó£¡"), MB_ICONERROR);
+			AfxMessageBox(_T("æ­£åˆ™è¡¨è¾¾å¼é”™è¯¯ï¼"), MB_ICONERROR);
 			return FALSE;
 		}
 	}
@@ -162,7 +162,7 @@ HELPER_API BOOL StringMatchs(const CString& str, const RegexText& content)
 }
 
 
-// È¡×Ö·û´®Ö®¼äµÄ×Ö·û´®
+// å–å­—ç¬¦ä¸²ä¹‹é—´çš„å­—ç¬¦ä¸²
 HELPER_API CString GetStringBetween(const CString& src, const CString& left, const CString& right, int startPos)
 {
 	int leftPos = src.Find(left, startPos);
@@ -175,7 +175,7 @@ HELPER_API CString GetStringBetween(const CString& src, const CString& left, con
 	return src.Mid(leftPos, rightPos - leftPos);
 }
 
-// È¡×Ö·û´®Ö®¼äµÄ×Ö·û´®£¬°üÀ¨×óÓÒµÄ×Ö·û´®
+// å–å­—ç¬¦ä¸²ä¹‹é—´çš„å­—ç¬¦ä¸²ï¼ŒåŒ…æ‹¬å·¦å³çš„å­—ç¬¦ä¸²
 HELPER_API CString GetStringBetween2(const CString& src, const CString& left, const CString& right, int startPos)
 {
 	int leftPos = src.Find(left, startPos);
@@ -188,7 +188,7 @@ HELPER_API CString GetStringBetween2(const CString& src, const CString& left, co
 	return src.Mid(leftPos, rightPos - leftPos);
 }
 
-// È¡×Ö·û´®Ö®Ç°µÄ×Ö·û´®
+// å–å­—ç¬¦ä¸²ä¹‹å‰çš„å­—ç¬¦ä¸²
 HELPER_API CString GetStringBefore(const CString& src, const CString& right, int startPos)
 {
 	int rightPos = src.Find(right, startPos);
@@ -198,7 +198,7 @@ HELPER_API CString GetStringBefore(const CString& src, const CString& right, int
 }
 
 
-// Ğ´×Ö·û´®µ½ÎÄ¼ş
+// å†™å­—ç¬¦ä¸²åˆ°æ–‡ä»¶
 HELPER_API BOOL WriteString(const CString& src, const CString& path)
 {
 	CStdioFile file;
@@ -209,7 +209,7 @@ HELPER_API BOOL WriteString(const CString& src, const CString& path)
 }
 
 
-// Unicode×ªGBK
+// Unicodeè½¬GBK
 HELPER_API CStringA W2GBK(const CStringW& src)
 {
 	int dstLen = WideCharToMultiByte(936, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
@@ -221,7 +221,7 @@ HELPER_API CStringA W2GBK(const CStringW& src)
 	return res;
 }
 
-// GBK×ªUnicode
+// GBKè½¬Unicode
 HELPER_API CStringW GBK2W(const CStringA& src)
 {
 	int dstLen = MultiByteToWideChar(936, 0, src, src.GetLength(), NULL, 0);
@@ -233,7 +233,7 @@ HELPER_API CStringW GBK2W(const CStringA& src)
 	return res;
 }
 
-// URL±àÂë
+// URLç¼–ç 
 HELPER_API CString EncodeURI(const CString& src)
 {
 	CComPtr<IScriptControl> script;
@@ -251,7 +251,7 @@ HELPER_API CString EncodeURI(const CString& src)
 	return (LPCTSTR)(_bstr_t)result;
 }
 
-// URL±àÂë GBK°æ
+// URLç¼–ç  GBKç‰ˆ
 HELPER_API CString EncodeURI_GBK(const CString& _src)
 {
 	CString result, tmp;
@@ -265,7 +265,7 @@ HELPER_API CString EncodeURI_GBK(const CString& _src)
 	return result;
 }
 
-// HTML×ªÒå
+// HTMLè½¬ä¹‰
 HELPER_API CString HTMLEscape(const CString& src)
 {
 	CString result = src;
@@ -276,11 +276,11 @@ HELPER_API CString HTMLEscape(const CString& src)
 	return result;
 }
 
-// HTML·´×ªÒå
+// HTMLåè½¬ä¹‰
 HELPER_API CString HTMLUnescape(const CString& src)
 {
 	CString result = src;
-	//result.Replace(_T("<br>"), _T("\r\n")); // ²»×ª»»ĞĞ·û
+	//result.Replace(_T("<br>"), _T("\r\n")); // ä¸è½¬æ¢è¡Œç¬¦
 	result.Replace(_T("&nbsp;"), _T(" "));
 	result.Replace(_T("&quot;"), _T("\""));
 	result.Replace(_T("&&#039;"), _T("'"));
@@ -290,7 +290,7 @@ HELPER_API CString HTMLUnescape(const CString& src)
 	return result;
 }
 
-// JS·´×ªÒå£¬µ÷ÓÃÕßÓ¦×ÔĞĞ×ªÒåsrcÀïµÄË«ÒıºÅ
+// JSåè½¬ä¹‰ï¼Œè°ƒç”¨è€…åº”è‡ªè¡Œè½¬ä¹‰srcé‡Œçš„åŒå¼•å·
 HELPER_API CString JSUnescape(const CString& src)
 {
 	CComPtr<IScriptControl> script;

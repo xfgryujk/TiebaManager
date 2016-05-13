@@ -1,26 +1,26 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "TBMOperate.h"
 #include "ResizeControl.h"
 class CImageViewDlg;
 
 
-// CConfirmDlg ¶Ô»°¿ò
+// CConfirmDlg å¯¹è¯æ¡†
 
 class CConfirmDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CConfirmDlg)
 
 public:
-	CConfirmDlg(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
-	CConfirmDlg(Operation* operation, CWnd* pParent = NULL);   // Ö¸¶¨ÄÚÈİµÄ¹¹Ôìº¯Êı
+	CConfirmDlg(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
+	CConfirmDlg(Operation* operation, CWnd* pParent = NULL);   // æŒ‡å®šå†…å®¹çš„æ„é€ å‡½æ•°
 	virtual ~CConfirmDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_CONFIRM_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

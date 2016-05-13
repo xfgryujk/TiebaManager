@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "NormalDlg.h"
 
 
-// CUsersPage ¶Ô»°¿ò
+// CUsersPage å¯¹è¯æ¡†
 
 class CUsersPage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(CUsersPage)
 
 public:
-	CUsersPage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CUsersPage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CUsersPage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_USERS_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

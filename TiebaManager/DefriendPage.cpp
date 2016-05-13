@@ -1,4 +1,4 @@
-// DefriendPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿// DefriendPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -11,7 +11,7 @@
 #include "TBMOperate.h"
 
 
-// CDefriendPage ¶Ô»°¿ò
+// CDefriendPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CDefriendPage, CNormalDlg)
 
@@ -45,7 +45,7 @@ BEGIN_MESSAGE_MAP(CDefriendPage, CNormalDlg)
 END_MESSAGE_MAP()
 
 
-// CDefriendPage ÏûÏ¢´¦Àí³ÌĞò
+// CDefriendPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 CDefriendPage* CDefriendPage::s_instance = NULL;
 CCriticalSection CDefriendPage::s_instanceLock;
@@ -54,7 +54,7 @@ CString CDefriendPage::s_startPage;
 CString CDefriendPage::s_endPage;
 BOOL CDefriendPage::s_defriendNewUsers = FALSE;
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CDefriendPage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -70,14 +70,14 @@ BOOL CDefriendPage::OnInitDialog()
 		m_defriendNewUsersCheck.EnableWindow(FALSE);
 		m_startButton.EnableWindow(FALSE);
 		m_stopButton.EnableWindow(TRUE);
-		m_stateStatic.SetWindowText(_T("À­ºÚÖĞ"));
+		m_stateStatic.SetWindowText(_T("æ‹‰é»‘ä¸­"));
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// Ïú»Ù
+// é”€æ¯
 void CDefriendPage::OnDestroy()
 {
 	s_instanceLock.Lock();
@@ -87,7 +87,7 @@ void CDefriendPage::OnDestroy()
 	CNormalDlg::OnDestroy();
 }
 
-// À­ºÚĞÂ¹Ø×¢µÄ
+// æ‹‰é»‘æ–°å…³æ³¨çš„
 void CDefriendPage::OnBnClickedCheck1()
 {
 	if (m_defriendNewUsersCheck.GetCheck())
@@ -99,7 +99,7 @@ void CDefriendPage::OnBnClickedCheck1()
 		m_startPageEdit.EnableWindow(TRUE);
 }
 
-// ¿ªÊ¼
+// å¼€å§‹
 void CDefriendPage::OnBnClickedButton1()
 {
 	m_startPageEdit.GetWindowText(s_startPage);
@@ -118,7 +118,7 @@ void CDefriendPage::OnBnClickedButton1()
 	}
 	if (iStartPage < 1)
 	{
-		AfxMessageBox(_T("ÆğÊ¼Ò³ÊıÓ¦´óÓÚ0£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("èµ·å§‹é¡µæ•°åº”å¤§äº0ï¼"), MB_ICONERROR);
 		return;
 	}
 	s_defriendNewUsers = m_defriendNewUsersCheck.GetCheck();
@@ -132,7 +132,7 @@ void CDefriendPage::OnBnClickedButton1()
 	AfxBeginThread(DefriendThread, NULL);
 }
 
-// Í£Ö¹
+// åœæ­¢
 void CDefriendPage::OnBnClickedButton2()
 {
 	s_stopFlag = TRUE;
@@ -140,7 +140,7 @@ void CDefriendPage::OnBnClickedButton2()
 
 UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 {
-	// ³õÊ¼»¯
+	// åˆå§‹åŒ–
 	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
 	if (!CoInitializeHelper())
 		return 0;
@@ -154,15 +154,15 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 			CString url;
 			url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s"), (LPCTSTR)g_tiebaOperate->GetEncodedForumName());
 			CString src = HTTPGet(url, &*g_cookieConfig.m_cookie);
-			CString totalPage = GetStringBetween(src, _T(R"(class="tbui_total_page">¹²)"), _T("Ò³"));
+			CString totalPage = GetStringBetween(src, _T(R"(class="tbui_total_page">å…±)"), _T("é¡µ"));
 			if (totalPage == _T(""))
 			{
-				AfxMessageBox(_T("»ñÈ¡×ÜÒ³ÊıÊ§°Ü£¡"), MB_ICONERROR);
+				AfxMessageBox(_T("è·å–æ€»é¡µæ•°å¤±è´¥ï¼"), MB_ICONERROR);
 				break;
 			}
 			int iTotalPage = _ttoi(totalPage);
 
-			if (iTotalPage <= iPrevTotalPage) // Ã»ÓĞĞÂ¹Ø×¢µÄÓÃ»§£¨»òÕß²»×ã1Ò³£©
+			if (iTotalPage <= iPrevTotalPage) // æ²¡æœ‰æ–°å…³æ³¨çš„ç”¨æˆ·ï¼ˆæˆ–è€…ä¸è¶³1é¡µï¼‰
 				break;
 			if (iPrevTotalPage != 0)
 			{
@@ -172,11 +172,11 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 			iPrevTotalPage = iTotalPage;
 		}
 
-		// À­ºÚ
+		// æ‹‰é»‘
 		DoDefriend(iStartPage, iEndPage);
-	} while (s_defriendNewUsers); // Ñ­»·Ö±µ½Ã»ÓĞĞÂ¹Ø×¢µÄÓÃ»§
+	} while (s_defriendNewUsers); // å¾ªç¯ç›´åˆ°æ²¡æœ‰æ–°å…³æ³¨çš„ç”¨æˆ·
 
-	// ½áÊø
+	// ç»“æŸ
 	s_stopFlag = TRUE;
 	CoUninitialize();
 	s_instanceLock.Lock();
@@ -197,7 +197,7 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 {
 	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
 
-	// »ñÈ¡À­ºÚÁĞ±í
+	// è·å–æ‹‰é»‘åˆ—è¡¨
 	int index = 0;
 	std::vector<CString> userName, userID;
 	for (int page = startPage; page <= endPage; page++)
@@ -205,7 +205,7 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 		if (s_stopFlag)
 			break;
 		CString state;
-		state.Format(_T("²É¼¯µÚ%dÒ³"), page);
+		state.Format(_T("é‡‡é›†ç¬¬%dé¡µ"), page);
 		s_instanceLock.Lock();
 		if (s_instance != NULL)
 			s_instance->m_stateStatic.SetWindowText(state);
@@ -237,7 +237,7 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 		}
 	}
 
-	// À­ºÚ
+	// æ‹‰é»‘
 	for (UINT i = 0; i < userName.size(); i++)
 	{
 		if (s_stopFlag)
@@ -246,7 +246,7 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 		continue;*/
 
 		CString state;
-		state.Format(_T("À­ºÚÖĞ£¬Ê£Óà%u"), userName.size() - i - 1);
+		state.Format(_T("æ‹‰é»‘ä¸­ï¼Œå‰©ä½™%u"), userName.size() - i - 1);
 		s_instanceLock.Lock();
 		if (s_instance != NULL)
 			s_instance->m_stateStatic.SetWindowText(state);
@@ -256,22 +256,22 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 		if (code != _T("0"))
 		{
 			CString content;
-			content.Format(_T("<font color=red>À­ºÚ </font>%s<font color=red> Ê§°Ü£¡´íÎó´úÂë£º%s(%s)</font><a href=")
-				_T("\"df:%s\">ÖØÊÔ</a>"), (LPCTSTR)userName[i], (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)userID[i]);
+			content.Format(_T("<font color=red>æ‹‰é»‘ </font>%s<font color=red> å¤±è´¥ï¼é”™è¯¯ä»£ç ï¼š%s(%s)</font><a href=")
+				_T("\"df:%s\">é‡è¯•</a>"), (LPCTSTR)userName[i], (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)userID[i]);
 			mainDlg->m_log.Log(content);
 		}
 		else
 		{
 			g_userCache.m_defriendedUser->insert(userName[i]);
-			mainDlg->m_log.Log(_T("<font color=red>À­ºÚ </font>") + userName[i]);
+			mainDlg->m_log.Log(_T("<font color=red>æ‹‰é»‘ </font>") + userName[i]);
 		}
 
-		// Ã¿·ÖÖÓ×î¶àÀ­ºÚ20¸ö
+		// æ¯åˆ†é’Ÿæœ€å¤šæ‹‰é»‘20ä¸ª
 		if (i % 20 == 19 && i < userName.size() - 1)
 		{
 			s_instanceLock.Lock();
 			if (s_instance != NULL)
-				s_instance->m_stateStatic.SetWindowText(_T("ÑÓ³ÙÖĞ"));
+				s_instance->m_stateStatic.SetWindowText(_T("å»¶è¿Ÿä¸­"));
 			s_instanceLock.Unlock();
 			for (int i = 0; i < 400; i++)
 			{

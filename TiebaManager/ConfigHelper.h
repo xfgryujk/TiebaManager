@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 
 
-// ±£´æµ±Ç°ÕËºÅÅäÖÃ
+// ä¿å­˜å½“å‰è´¦å·é…ç½®
 void SaveCurrentUserConfig();
-// ÉèÖÃµ±Ç°ÕËºÅ
+// è®¾ç½®å½“å‰è´¦å·
 void SetCurrentUser(const CString& userName, BOOL save);

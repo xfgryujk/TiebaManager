@@ -1,23 +1,23 @@
-#pragma once
+ï»¿#pragma once
 #include "afxwin.h"
 #include "NormalDlg.h"
 
 
-// COperatePage ¶Ô»°¿ò
+// COperatePage å¯¹è¯æ¡†
 
 class COperatePage : public CNormalDlg
 {
 	DECLARE_DYNAMIC(COperatePage)
 
 public:
-	COperatePage(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	COperatePage(CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~COperatePage();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_OPERATE_PAGE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:

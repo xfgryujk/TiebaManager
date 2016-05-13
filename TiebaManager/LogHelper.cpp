@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "LogHelper.h"
 
 #include "explorer1.h"
@@ -6,10 +6,10 @@
 #include <StringHelper.h>
 
 
-static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=gbk\" /><title>ÈÕÖ¾</title>\r\n")
+static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=gbk\" /><title>æ—¥å¿—</title>\r\n")
 								 _T("<style type=\"text/css\">\r\n")
 								 _T("body {border:1px solid black; overflow:auto; margin:0px; padding:3px;")
-								 _T(" font-family:\"ËÎÌå\",Verdana; font-size:9pt; line-height:9pt}\r\n")
+								 _T(" font-family:\"å®‹ä½“\",Verdana; font-size:9pt; line-height:9pt}\r\n")
 								 _T("a:link {text-decoration:none}\r\na:hover {text-decoration:underline}\r\na:visited {text-decoration:none}\r\n")
 								 _T("</style>\r\n</head><body>\r\n");
 
@@ -19,10 +19,10 @@ static const UINT WM_LOG = WM_APP + 2;
 WNDPROC CLog::s_oldExplorerWndProc = NULL;
 
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 void CLog::Init()
 {
-	// È¡document
+	// å–document
 	m_logExplorer.Navigate(_T("about:blank"), NULL, NULL, NULL, NULL);
 	while (TRUE)
 	{
@@ -34,26 +34,26 @@ void CLog::Init()
 			break;
 	}
 
-	// Ğ´¿ò¼Ü
+	// å†™æ¡†æ¶
 	WriteDocument(LOG_FRAME);
 
-	// ÆÁ±ÎÓÒ¼ü²Ëµ¥¡¢¼àÌıLogÏûÏ¢
+	// å±è”½å³é”®èœå•ã€ç›‘å¬Logæ¶ˆæ¯
 	m_explorerHwnd = m_logExplorer.m_hWnd;
 	EnumChildWindows(m_explorerHwnd, EnumChildProc, (LPARAM)&m_explorerHwnd);
 	s_oldExplorerWndProc = (WNDPROC)SetWindowLong(m_explorerHwnd, GWL_WNDPROC, (LONG)ExplorerWndProc);
 
-	// ÈÕÖ¾¿ªÊ¼Ê±¼ä
+	// æ—¥å¿—å¼€å§‹æ—¶é—´
 	GetLocalTime(&m_logStartTime);
 }
 
-// ÊÍ·Å
+// é‡Šæ”¾
 void CLog::Release()
 {
 	m_explorerHwnd = NULL;
 	m_logDocument.Release();
 }
 
-// Êä³öÈÕÖ¾1£¬°ÑÄÚÈİ¸ñÊ½»¯·¢ËÍµ½ÏûÏ¢¶ÓÁĞ
+// è¾“å‡ºæ—¥å¿—1ï¼ŒæŠŠå†…å®¹æ ¼å¼åŒ–å‘é€åˆ°æ¶ˆæ¯é˜Ÿåˆ—
 void CLog::Log(LPCTSTR content)
 {
 	if (m_explorerHwnd == NULL)
@@ -66,7 +66,7 @@ void CLog::Log(LPCTSTR content)
 	PostMessage(m_explorerHwnd, WM_LOG, (WPARAM)this, (LPARAM)output);
 }
 
-// Êä³öÈÕÖ¾2£¬ÔÚm_logExplorerĞ´ÈÕÖ¾
+// è¾“å‡ºæ—¥å¿—2ï¼Œåœ¨m_logExplorerå†™æ—¥å¿—
 void CLog::DoLog(const CString* output)
 {
 	if (m_logDocument.p == NULL)
@@ -78,10 +78,10 @@ void CLog::DoLog(const CString* output)
 	WriteDocument(*output);
 	delete output;
 
-	// ¹ö¶¯µ½µ×¶Ë
+	// æ»šåŠ¨åˆ°åº•ç«¯
 	CComPtr<IHTMLElement> body;
 	m_logDocument->get_body(&body);
-	// È¡ID
+	// å–ID
 	static LPOLESTR scrollHeightName = OLESTR("scrollHeight"), scrollTopName = OLESTR("scrollTop");
 	static DISPID scrollHeightID = -1, scrollTopID = -1;
 	if (scrollHeightID == -1)
@@ -102,7 +102,7 @@ void CLog::DoLog(const CString* output)
 		body->Invoke(scrollTopID, IID_NULL, LOCALE_SYSTEM_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, NULL, NULL);
 }
 
-// Çå¿ÕÈÕÖ¾
+// æ¸…ç©ºæ—¥å¿—
 void CLog::Clear()
 {
 	if (m_logDocument.p == NULL)
@@ -116,13 +116,13 @@ void CLog::Clear()
 	GetSystemTime(&m_logStartTime);
 }
 
-// ±£´æÈÕÖ¾
+// ä¿å­˜æ—¥å¿—
 void CLog::Save(LPCTSTR folder)
 {
 	if (m_logDocument.p == NULL)
 		return;
 
-	// È¡ÈÕÖ¾HTML
+	// å–æ—¥å¿—HTML
 	CComDispatchDriver documentDisp(m_logDocument);
 
 	// document.documentElement.outerHTML
@@ -134,7 +134,7 @@ void CLog::Save(LPCTSTR folder)
 		return;
 	CString strHtml = (LPCTSTR)(_bstr_t)res;
 
-	// ÁíÒ»ÖÖÈ¡ÍøÒ³HTML·½·¨£¬Ä©Î²ÓĞËÄ¸öÂÒÂë£¿
+	// å¦ä¸€ç§å–ç½‘é¡µHTMLæ–¹æ³•ï¼Œæœ«å°¾æœ‰å››ä¸ªä¹±ç ï¼Ÿ
 	/*CComPtr<IPersistStreamInit> psi;
 	document->QueryInterface(&psi);
 	HGLOBAL html = GlobalAlloc(GMEM_MOVEABLE, 5 * 1024 * 1024);
@@ -146,15 +146,15 @@ void CLog::Save(LPCTSTR folder)
 	GlobalUnlock(html);
 	stream->Release();*/
 
-	// ±£´æ
+	// ä¿å­˜
 	CreateDir(folder);
 	CString path;
-	path.Format(_T("%s\\%d-%02d-%02d %02d£º%02d£º%02d.html"), folder, m_logStartTime.wYear, m_logStartTime.wMonth,
+	path.Format(_T("%s\\%d-%02d-%02d %02dï¼š%02dï¼š%02d.html"), folder, m_logStartTime.wYear, m_logStartTime.wMonth,
 		m_logStartTime.wDay, m_logStartTime.wHour, m_logStartTime.wMinute, m_logStartTime.wSecond);
 	WriteString(strHtml, path);
 }
 
-// Ã¶¾ÙÑ°ÕÒInternet Explorer_Server´°¿Ú
+// æšä¸¾å¯»æ‰¾Internet Explorer_Serverçª—å£
 BOOL CALLBACK CLog::EnumChildProc(HWND hwnd, LPARAM lParam)
 {
 	TCHAR buf[30];
@@ -168,7 +168,7 @@ BOOL CALLBACK CLog::EnumChildProc(HWND hwnd, LPARAM lParam)
 		return TRUE;
 }
 
-// ÆÁ±ÎÈÕÖ¾ÓÒ¼ü²Ëµ¥¡¢¼àÌıLogÏûÏ¢
+// å±è”½æ—¥å¿—å³é”®èœå•ã€ç›‘å¬Logæ¶ˆæ¯
 LRESULT CALLBACK CLog::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (uMsg == WM_LOG)
@@ -181,7 +181,7 @@ LRESULT CALLBACK CLog::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
 	return CallWindowProc(s_oldExplorerWndProc, hwnd, uMsg, wParam, lParam);
 }
 
-// Ğ´HTMLµ½document
+// å†™HTMLåˆ°document
 void CLog::WriteDocument(const CString& content)
 {
 	SAFEARRAY *arr = SafeArrayCreateVector(VT_VARIANT, 0, 1);
