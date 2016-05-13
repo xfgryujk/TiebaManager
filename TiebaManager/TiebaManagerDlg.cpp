@@ -259,7 +259,7 @@ void CTiebaManagerDlg::OnDestroy()
 
 	SaveCurrentUserConfig();
 	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
-	g_plan.Save(OPTIONS_PATH + g_userConfig.m_plan + _T(".xml"));
+	g_plan.Save(OPTIONS_DIR_PATH + g_userConfig.m_plan + _T(".xml"));
 
 	g_stopScanFlag = TRUE; // 实际上线程不会返回（返回前就崩溃了？）
 
@@ -466,19 +466,15 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	case CTiebaOperate::SET_TIEBA_TIMEOUT:
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
 		goto Error;
-
 	case CTiebaOperate::SET_TIEBA_NOT_FOUND:
 		AfxMessageBox(_T("贴吧不存在！(也可能是度娘抽了...)"), MB_ICONERROR);
 		goto Error;
-
 	case CTiebaOperate::SET_TIEBA_NOT_LOGIN:
 		AfxMessageBox(_T("请在设置-账号管理登录百度账号"), MB_ICONERROR);
 		goto Error;
-
 	case CTiebaOperate::SET_TIEBA_NO_POWER:
 		AfxMessageBox(_T("您不是吧主或小吧主或语音小编，无法删帖封号！"), MB_ICONWARNING);
 		break;
-
 	case CTiebaOperate::SET_TIEBA_NO_TBS:
 		AfxMessageBox(_T("获取口令号失败！"), MB_ICONERROR);
 		goto Error;
@@ -496,7 +492,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_explorerButton.EnableWindow(TRUE);
 	m_superFunctionButton.EnableWindow(TRUE);
 	*g_userConfig.m_forumName = g_tiebaOperate->GetForumName();
-	g_userConfig.Save(USER_PROFILE_PATH);
+	g_userConfig.Save(USER_CONFIG_PATH);
 	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + g_tiebaOperate->GetForumName()
 		+ _T("<font color=green> 吧，使用账号：</font>" + g_tiebaOperate->GetUserName_()));
 	// 开始循环封

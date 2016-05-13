@@ -156,7 +156,7 @@ void CSuperFunctionDlg::ShowCurrentOptions()
 	CString tmp;
 	// 循环封
 	CLoopBanConfig loopBanConfig;
-	loopBanConfig.Load(CURRENT_USER_PATH + _T("\\options2.xml"));
+	loopBanConfig.Load(CURRENT_USER_DIR_PATH + _T("options2.xml"));
 	
 	m_loopBanPage.ShowList(loopBanConfig.m_userList);				// 用户名
 	m_loopBanPage.m_pid = std::move(*loopBanConfig.m_pidList);		// PID
@@ -180,10 +180,10 @@ void CSuperFunctionDlg::ApplyOptionsInDlg()
 	m_loopBanPage.m_banIntervalEdit.GetWindowText(strBuf);
 	*loopBanConfig.m_banInterval = (float)_ttof(strBuf);				// 封禁间隔
 
-	loopBanConfig.Save(CURRENT_USER_PATH + _T("\\options2.xml"));
+	loopBanConfig.Save(CURRENT_USER_DIR_PATH + _T("options2.xml"));
 
 	if (m_clearCache)
-		DeleteFile(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
+		DeleteFile(CURRENT_USER_DIR_PATH + _T("LoopBanDate.xml"));
 }
 
 // 确认

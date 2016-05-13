@@ -16,14 +16,8 @@
     <Filter Include="头文件\Helper">
       <UniqueIdentifier>{f6b833c5-6084-445f-bf59-bbd2b3d45d17}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\Tieba">
-      <UniqueIdentifier>{92a52f04-0870-498e-88cc-9addc737d7c9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\Helper">
       <UniqueIdentifier>{2d735068-f5a1-4836-ad11-184c413fb3b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Tieba">
-      <UniqueIdentifier>{d83135bf-1ff5-4b8f-a0ed-8472441e5fb3}</UniqueIdentifier>
     </Filter>
     <Filter Include="头文件\GUI">
       <UniqueIdentifier>{a59bd095-6dcc-4d3a-94ba-2500a67bdbeb}</UniqueIdentifier>
@@ -165,17 +159,11 @@
     <ClInclude Include="DefriendPage.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
-    <ClInclude Include="TiebaScan.h">
-      <Filter>头文件\Tieba</Filter>
-    </ClInclude>
     <ClInclude Include="Update.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
     <ClInclude Include="ScanImage.h">
       <Filter>头文件\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="TiebaVariable.h">
-      <Filter>头文件\Tieba</Filter>
     </ClInclude>
     <ClInclude Include="LockThreadPage.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
@@ -209,9 +197,6 @@
     </ClInclude>
     <ClInclude Include="ConfigHelper.h">
       <Filter>头文件\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="TBMOperate.h">
-      <Filter>头文件\Tieba</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -299,17 +284,11 @@
     <ClCompile Include="DefriendPage.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
-    <ClCompile Include="TiebaScan.cpp">
-      <Filter>源文件\Tieba</Filter>
-    </ClCompile>
     <ClCompile Include="Update.cpp">
       <Filter>源文件\Helper</Filter>
     </ClCompile>
     <ClCompile Include="ScanImage.cpp">
       <Filter>源文件\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="TiebaVariable.cpp">
-      <Filter>源文件\Tieba</Filter>
     </ClCompile>
     <ClCompile Include="LockThreadPage.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>
@@ -340,9 +319,6 @@
     </ClCompile>
     <ClCompile Include="ConfigHelper.cpp">
       <Filter>源文件\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="TBMOperate.cpp">
-      <Filter>源文件\Tieba</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

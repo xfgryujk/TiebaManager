@@ -130,12 +130,12 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	SYSTEMTIME time = {};
 	GetLocalTime(&time);
 	CLoopBanDate lastTime;
-	lastTime.Load(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
+	lastTime.Load(CURRENT_USER_DIR_PATH + _T("LoopBanDate.xml"));
 	if (time.wDay == lastTime.m_day && time.wMonth == lastTime.m_month && time.wYear == lastTime.m_year)
 		return 0;
 
 	CLoopBanConfig config;
-	config.Load(CURRENT_USER_PATH + _T("\\options2.xml"));
+	config.Load(CURRENT_USER_DIR_PATH + _T("options2.xml"));
 	if (!config.m_enable)
 		return 0;
 
@@ -185,13 +185,13 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 
 	// 更新PID
 	if (updatePID)
-		config.Save(CURRENT_USER_PATH + _T("\\options2.xml"));
+		config.Save(CURRENT_USER_DIR_PATH + _T("options2.xml"));
 
 	// 更新时间
 	*lastTime.m_year = time.wYear;
 	*lastTime.m_month = time.wMonth;
 	*lastTime.m_day = time.wDay;
-	lastTime.Save(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
+	lastTime.Save(CURRENT_USER_DIR_PATH + _T("LoopBanDate.xml"));
 
 	dlg->m_stateStatic.SetWindowText(_T("待机中"));
 	return 0;

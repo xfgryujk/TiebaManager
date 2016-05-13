@@ -75,13 +75,14 @@ UINT AFX_CDECL ConfirmThread(LPVOID mainDlg)
 				{
 				case Operation::TBOBJ_THREAD:
 					if (op.floor == _T("1"))
-						goto casePost;
+						goto CasePost;
 					g_userCache.m_initIgnoredTID->insert(_ttoi64(op.tid));
 					dlg->m_log.Log(_T("<font color=green>ºöÂÔ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
 					break;
 				case Operation::TBOBJ_POST:
-				casePost : g_userCache.m_initIgnoredPID->insert(_ttoi64(op.pid));
+				CasePost:
+					g_userCache.m_initIgnoredPID->insert(_ttoi64(op.pid));
 					dlg->m_log.Log(_T("<font color=green>ºöÂÔ </font><a href=\"http://tieba.baidu.com/p/") + op.tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + op.floor + _T("Â¥"));
 					break;
@@ -182,14 +183,14 @@ UINT AFX_CDECL OperateThread(LPVOID mainDlg)
 			if (g_plan.m_autoLoopBan)
 			{
 				CLoopBanConfig config;
-				config.Load(CURRENT_USER_PATH + _T("\\options2.xml"));
+				config.Load(CURRENT_USER_DIR_PATH + _T("options2.xml"));
 				auto it = std::find(config.m_userList->cbegin(), config.m_userList->cend(), op.author);
 				if (it == config.m_userList->cend())
 				{
 					config.m_userList->push_back(op.author);
 					config.m_pidList->push_back(_T(""));
-					config.Save(CURRENT_USER_PATH + _T("\\options2.xml"));
-					DeleteFile(CURRENT_USER_PATH + _T("\\LoopBanDate.xml"));
+					config.Save(CURRENT_USER_DIR_PATH + _T("options2.xml"));
+					DeleteFile(CURRENT_USER_DIR_PATH + _T("LoopBanDate.xml"));
 				}
 			}
 		}

@@ -86,8 +86,8 @@ void COptionsPage::OnBnClickedButton1()
 		return;
 	}
 	
-	CreateDir(OPTIONS_PATH);
-	if (PathFileExists(OPTIONS_PATH + name + _T(".xml")))
+	CreateDir(OPTIONS_DIR_PATH);
+	if (PathFileExists(OPTIONS_DIR_PATH + name + _T(".xml")))
 	{
 		AfxMessageBox(_T("方案已存在！"), MB_ICONERROR);
 		return;
@@ -105,7 +105,7 @@ void COptionsPage::OnBnClickedButton2()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (!DeleteFile(OPTIONS_PATH + name + _T(".xml")))
+	if (!DeleteFile(OPTIONS_DIR_PATH + name + _T(".xml")))
 	{
 		AfxMessageBox(_T("删除方案失败！"), MB_ICONERROR);
 		return;
@@ -136,7 +136,7 @@ void COptionsPage::OnBnClickedButton3()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (!MoveFile(OPTIONS_PATH + name + _T(".xml"), OPTIONS_PATH + newName + _T(".xml")))
+	if (!MoveFile(OPTIONS_DIR_PATH + name + _T(".xml"), OPTIONS_DIR_PATH + newName + _T(".xml")))
 	{
 		AfxMessageBox(_T("重命名方案失败！"), MB_ICONERROR);
 		return;
@@ -162,7 +162,7 @@ void COptionsPage::OnBnClickedButton6()
 	}
 	CString name;
 	m_list.GetText(index, name);
-	((CSettingDlg*)GetParent()->GetParent())->ShowPlanInFile(OPTIONS_PATH + name + _T(".xml"));
+	((CSettingDlg*)GetParent()->GetParent())->ShowPlanInFile(OPTIONS_DIR_PATH + name + _T(".xml"));
 	m_currentOptionStatic.SetWindowText(_T("当前方案：") + name);
 }
 
@@ -175,8 +175,8 @@ void COptionsPage::OnBnClickedButton4()
 		AfxMessageBox(_T("请选择一个方案！"), MB_ICONERROR);
 		return;
 	}
-	CreateDir(OPTIONS_PATH);
+	CreateDir(OPTIONS_DIR_PATH);
 	CString name;
 	m_list.GetText(index, name);
-	((CSettingDlg*)GetParent()->GetParent())->SavePlanInDlg(OPTIONS_PATH + name + _T(".xml"));
+	((CSettingDlg*)GetParent()->GetParent())->SavePlanInDlg(OPTIONS_DIR_PATH + name + _T(".xml"));
 }

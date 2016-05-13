@@ -7,13 +7,13 @@ using tinyxml2::XMLElement;
 
 
 // 配置文件路径
-TIEBA_MANAGER_API CString GLOBAL_CONFIG_PATH = _T("\\options.xml");	// 程序运行时初始化
-TIEBA_MANAGER_API CString USER_PROFILE_PATH;						// 确定贴吧时初始化
-TIEBA_MANAGER_API CString OPTIONS_PATH = _T("Option\\");
-TIEBA_MANAGER_API CString USERS_PATH = _T("\\User\\");				// 程序运行时初始化
-TIEBA_MANAGER_API CString CURRENT_USER_PATH;						// 确定贴吧时初始化
-TIEBA_MANAGER_API CString COOKIE_PATH;								// 确定贴吧时初始化
-TIEBA_MANAGER_API CString CACHE_PATH;								// 确定贴吧时初始化
+TIEBA_MANAGER_API CString GLOBAL_CONFIG_PATH = _T("\\options.xml");	// 程序初始化时初始化
+TIEBA_MANAGER_API CString USER_CONFIG_PATH;							// 确定用户时初始化
+TIEBA_MANAGER_API CString OPTIONS_DIR_PATH = _T("Option\\");
+TIEBA_MANAGER_API CString USERS_DIR_PATH = _T("\\User\\");			// 程序初始化时初始化
+TIEBA_MANAGER_API CString CURRENT_USER_DIR_PATH;					// 确定用户时初始化
+TIEBA_MANAGER_API CString COOKIE_PATH;								// 确定用户时初始化
+TIEBA_MANAGER_API CString CACHE_PATH;								// 确定用户时初始化
 
 
 // 全局配置
@@ -21,7 +21,7 @@ TIEBA_MANAGER_API CGlobalConfig g_globalConfig;
 CGlobalConfig::CGlobalConfig() : CConfigBase("Global"),
 	m_firstRun("FirstRun", TRUE),
 	m_firstRunAfterUpdate("FirstRunAfter" + CStringA(UPDATE_CURRENT_VERSION_A), TRUE),
-	m_currentUser("UserName", _T("[NULL]"), [](const CString& value)->BOOL{ return value != _T("") && PathFileExists(USERS_PATH + value + _T("\\ck.xml")); }),
+	m_currentUser("UserName", _T("[NULL]"), [](const CString& value)->BOOL{ return value != _T("") && PathFileExists(USERS_DIR_PATH + value + _T("\\ck.xml")); }),
 	m_autoUpdate("AutoUpdate", TRUE)
 {
 	m_options.push_back(&m_firstRun);

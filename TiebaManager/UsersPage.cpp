@@ -73,13 +73,13 @@ void CUsersPage::OnBnClickedButton1()
 	if (loginDlg.DoModal() != IDOK)
 		return;
 	// 创建目录
-	CreateDir(USERS_PATH + loginDlg.m_userName);
+	CreateDir(USERS_DIR_PATH + loginDlg.m_userName);
 
 	// 保存Cookie
 	CCookieConfig ck;
 	*ck.m_cookie = loginDlg.m_cookie;
 	TRACE(_T("%s\n"), (LPCTSTR)*ck.m_cookie);
-	if (!ck.Save(USERS_PATH + loginDlg.m_userName + _T("\\ck.xml")))
+	if (!ck.Save(USERS_DIR_PATH + loginDlg.m_userName + _T("\\ck.xml")))
 	{
 		AfxMessageBox(_T("保存账号失败！"), MB_ICONERROR);
 		return;
@@ -108,7 +108,7 @@ void CUsersPage::OnBnClickedButton2()
 		AfxMessageBox(_T("不能删除当前账号！"), MB_ICONERROR);
 		return;
 	}
-	CString path = USERS_PATH + name + _T("\\");
+	CString path = USERS_DIR_PATH + name + _T("\\");
 	if (!DeleteFile(path + _T("ck.xml")))
 	{
 		AfxMessageBox(_T("删除账号失败！"), MB_ICONERROR);

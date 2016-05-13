@@ -252,12 +252,12 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		ThreadInfo& thread = g_threads[g_threadIndex++];
 		g_threadIndexLock.Unlock();
 		if (g_userCache.m_deletedTID.find(_ttoi64(thread.tid)) != g_userCache.m_deletedTID.end()) // 已删
-			goto next;
+			goto Next;
 		g_plan.m_optionsLock.Lock();
 		if (g_plan.m_trustedThread->find(thread.tid) != g_plan.m_trustedThread->end()) // 信任
 		{
 			g_plan.m_optionsLock.Unlock();
-			goto next;
+			goto Next;
 		}
 		g_plan.m_optionsLock.Unlock();
 
@@ -271,7 +271,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 		{
 			// 无新回复，跳过
 			historyReplyIt->second = reply;
-			goto next;
+			goto Next;
 		}
 
 		// 第一页
@@ -281,7 +281,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 			if (!g_plan.m_briefLog)
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
 				+ _T("</a> <font color=red>获取贴子列表失败(超时)，暂时跳过</font>"));
-			goto next;
+			goto Next;
 		}
 
 		// 帖子页数
@@ -292,7 +292,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 			if (!g_plan.m_briefLog)
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
 				+ _T("</a> <font color=red>获取贴子列表失败(可能已被删)，暂时跳过</font>"));
-			goto next;
+			goto Next;
 		}
 
 		// 扫描帖子页
@@ -308,7 +308,7 @@ UINT AFX_CDECL ScanPostThread(LPVOID _threadID)
 			(*g_userCache.m_lastAuthor)[tid] = thread.lastAuthor;
 		}
 
-	next:
+	Next:
 		g_threadIndexLock.Lock();
 	}
 	g_threadIndexLock.Unlock();
@@ -355,7 +355,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			&& CheckIllegal(post.content, post.author, post.authorLevel, msg, forceToConfirm, pos, length))
 		{
 			AddConfirm(forceToConfirm, post.content, post.floor == _T("1") ? Operation::TBOBJ_THREAD : Operation::TBOBJ_POST,
-				tid, title, post.floor, post.pid, post.author, post.authorID, _T(""), pos, length);
+				tid, title, post.floor, post.pid, post.author, post.authorID, post.authorPortrait, pos, length);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + post.floor + _T("楼") + msg);
 			g_userCache.m_ignoredPID.insert(pid);
@@ -373,7 +373,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			if (g_userCache.m_ignoredLZLID.find(lzlid) == g_userCache.m_ignoredLZLID.end())
 			{
 				AddConfirm(forceToConfirm, lzl.content, Operation::TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, 
-					lzl.authorID, _T(""), pos, length);
+					lzl.authorID, lzl.authorPortrait, pos, length);
 				dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 				g_userCache.m_ignoredLZLID.insert(lzlid);
@@ -391,7 +391,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			&& CheckImageIllegal(post.author, GetPostImage(post), msg))
 		{
 			AddConfirm(FALSE, post.content, post.floor == _T("1") ? Operation::TBOBJ_THREAD : Operation::TBOBJ_POST,
-				tid, title, post.floor, post.pid, post.author, post.authorID);
+				tid, title, post.floor, post.pid, post.author, post.authorID, post.authorPortrait);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + post.floor + _T("楼") + msg);
 			g_userCache.m_ignoredPID.insert(pid);
@@ -407,7 +407,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 		if (g_userCache.m_ignoredLZLID.find(pid) == g_userCache.m_ignoredLZLID.end()
 			&& CheckImageIllegal(lzl.author, GetPostImage(lzl), msg))
 		{
-			AddConfirm(FALSE, lzl.content, Operation::TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID);
+			AddConfirm(FALSE, lzl.content, Operation::TBOBJ_LZL, tid, title, lzl.floor, lzl.pid, lzl.author, lzl.authorID, lzl.authorPortrait);
 			dlg->m_log.Log(_T("<a href=\"http://tieba.baidu.com/p/") + tid + _T("\">") + HTMLEscape(title) +
 				_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 			g_userCache.m_ignoredLZLID.insert(pid);

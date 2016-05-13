@@ -135,7 +135,7 @@ BOOL CSettingDlg::OnInitDialog()
 	m_optionsPage.m_currentOptionStatic.SetWindowText(_T("当前方案：") + g_userConfig.m_plan); // 当前方案
 	// 方案
 	CFileFind fileFind;
-	BOOL flag = fileFind.FindFile(OPTIONS_PATH + _T("*.xml"));
+	BOOL flag = fileFind.FindFile(OPTIONS_DIR_PATH + _T("*.xml"));
 	while (flag)
 	{
 		flag = fileFind.FindNextFile();
@@ -145,7 +145,7 @@ BOOL CSettingDlg::OnInitDialog()
 	m_usersPage.m_currentUserStatic.SetWindowText(_T("当前账号：") + g_globalConfig.m_currentUser); // 当前账号
 	// 账号
 	m_usersPage.m_list.AddString(_T("[NULL]"));
-	flag = fileFind.FindFile(USERS_PATH + _T("*"));
+	flag = fileFind.FindFile(USERS_DIR_PATH + _T("*"));
 	while (flag)
 	{
 		flag = fileFind.FindNextFile();
@@ -378,10 +378,10 @@ void CSettingDlg::OnOK()
 	CString tmp;
 	m_optionsPage.m_currentOptionStatic.GetWindowText(tmp);
 	*g_userConfig.m_plan = tmp.Right(tmp.GetLength() - 5); // "当前方案："
-	g_userConfig.Save(USER_PROFILE_PATH);
+	g_userConfig.Save(USER_CONFIG_PATH);
 
-	CreateDir(OPTIONS_PATH);
-	SavePlanInDlg(OPTIONS_PATH + g_userConfig.m_plan + _T(".xml"));
+	CreateDir(OPTIONS_DIR_PATH);
+	SavePlanInDlg(OPTIONS_DIR_PATH + g_userConfig.m_plan + _T(".xml"));
 	ApplyPlanInDlg(g_plan);
 
 	DestroyWindow();
