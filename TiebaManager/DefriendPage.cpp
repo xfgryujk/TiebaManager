@@ -152,8 +152,8 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 		if (s_defriendNewUsers)
 		{
 			CString url;
-			url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s"), (LPCTSTR)g_userTiebaInfo.m_encodedForumName);
-			CString src = HTTPGet(url, &*g_userTiebaInfo.m_cookie);
+			url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s"), (LPCTSTR)g_tiebaOperate->GetEncodedForumName());
+			CString src = HTTPGet(url, &*g_cookieConfig.m_cookie);
 			CString totalPage = GetStringBetween(src, _T(R"(class="tbui_total_page">¹²)"), _T("Ò³"));
 			if (totalPage == _T(""))
 			{
@@ -211,8 +211,8 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 			s_instance->m_stateStatic.SetWindowText(state);
 		s_instanceLock.Unlock();
 		CString url;
-		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), (LPCTSTR)g_userTiebaInfo.m_encodedForumName, page);
-		CString src = HTTPGet(url, &*g_userTiebaInfo.m_cookie);
+		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), (LPCTSTR)g_tiebaOperate->GetEncodedForumName(), page);
+		CString src = HTTPGet(url, &*g_cookieConfig.m_cookie);
 		if (s_stopFlag)
 			break;
 

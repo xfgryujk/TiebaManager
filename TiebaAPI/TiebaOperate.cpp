@@ -1,23 +1,99 @@
 #include "stdafx.h"
 #include <TiebaOperate.h>
+#include <TiebaClawer.h>
 #include <StringHelper.h>
 #include <NetworkHelper.h>
 #include <Md5.h>
 
 
-CTiebaOperate::CTiebaOperate(const CString& forumID, const CString& forumName, CString& cookie, const CString& bduss,
-	const CString& tbs, const int& banDuration, const CString& banReason, const CString& randomTid) :
-	m_forumID(forumID), 
-	m_forumName(forumName), 
-	m_encodedForumName(EncodeURI(forumName)),
+CTiebaOperate::CTiebaOperate(CString& cookie, const int& banDuration, const CString& banReason) :
 	m_cookie(cookie), 
-	m_bduss(bduss), 
-	m_tbs(tbs), 
 	m_banDuration(banDuration), 
-	m_banReason(banReason), 
-	m_randomTid(randomTid)
+	m_banReason(banReason)
 {
 	
+}
+
+// 设置要操作的贴吧
+CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
+{
+	if (forumName == _T(""))
+		return SET_TIEBA_NOT_FOUND;
+
+	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=") + EncodeURI(forumName), &m_cookie);
+	if (src == NET_TIMEOUT_TEXT)
+		return SET_TIEBA_TIMEOUT;
+
+	// 采集贴吧信息
+	CString tmp = GetStringBetween(src, _T("PageData.forum"), _T("}"));
+	tmp.Replace(_T("\r\n"), _T(""));
+	std::wcmatch res;
+	if (!std::regex_search((LPCTSTR)tmp, res, FORUM_ID_NAME_REG))
+	{
+		WriteString(src, _T("forum.txt"));
+		return SET_TIEBA_NOT_FOUND;
+	}
+
+	// 取贴吧ID
+	m_forumID = res[3].str().c_str();
+
+	// 取贴吧名
+	m_forumName = JSUnescape(res[7].str().c_str());
+	m_encodedForumName = EncodeURI(m_forumName);
+
+	// 取用户名
+	if (std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData.user"), _T("}"))), res, USER_NAME_REG)
+		|| std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData"), _T("}"))), res, USER_NAME_REG))
+		m_userName = JSUnescape(res[3].str().c_str());
+	if (m_userName == _T(""))
+	{
+		WriteString(src, _T("forum.txt"));
+		return SET_TIEBA_NOT_LOGIN;
+	}
+
+	// 验证用户权限
+	// 旧接口
+	//CString src2 = HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(m_forumName));
+	CString src2 = HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/listBawuTeamInfo?word=") + m_encodedForumName + _T("&ie=utf-8"));
+	if (src2 == NET_TIMEOUT_TEXT)
+		return SET_TIEBA_TIMEOUT;
+	CStringArray bawuList;
+	SplitString(bawuList, src2, _T("class=\"bawu_single_type"));
+	BOOL hasPower = FALSE;
+	if (bawuList.GetSize() > 1)
+	{
+		bawuList[bawuList.GetSize() - 1] = GetStringBefore(bawuList[bawuList.GetSize() - 1], _T("</div></div>"));
+		for (int i = 1; i < bawuList.GetSize(); i++)
+		if ((bawuList[i].Find(_T("吧主<span")) != -1 // WTF，怎么有这么多种吧主
+			|| bawuList[i].Find(_T(">语音小编<span")) != -1)
+			&& bawuList[i].Find(_T(">") + m_userName + _T("<")) != -1)
+		{
+			hasPower = TRUE;
+			break;
+		}
+	}
+	if (!hasPower)
+		WriteString(src2, _T("admin.txt"));
+
+	// 取tbs(口令号)
+	m_tbs = GetStringBetween(src, _TBS_LEFT, _TBS_RIGHT);
+	if (m_tbs == _T("") && std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData"), _T("}"))), res, TBS_REG))
+		m_tbs = JSUnescape(res[3].str().c_str());
+	if (m_tbs == _T(""))
+	{
+		WriteString(src, _T("forum.txt"));
+		return SET_TIEBA_NO_TBS;
+	}
+
+	// 取第一个tid
+	m_randomTid = GetStringBetween(src, _T("&quot;id&quot;:"), _T(","));
+	if (m_randomTid == _T(""))
+		m_randomTid = _T("4426261107");
+
+	// 确定BDUSS
+	m_bduss = GetStringBetween(m_cookie, _T("BDUSS="), _T(";"));
+	
+	return hasPower ? SET_TIEBA_OK : SET_TIEBA_NO_POWER;
 }
 
 // 取错误代码

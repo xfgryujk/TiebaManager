@@ -143,7 +143,7 @@ UINT AFX_CDECL ScanThread(LPVOID mainDlg)
 			dlg->m_log.Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + g_userConfig.m_plan);
 
 		// 获取主题列表
-		if (!GetThreads(g_userTiebaInfo.m_forumName, ignoreThread, g_threads))
+		if (!GetThreads(g_tiebaOperate->GetForumName(), ignoreThread, g_threads))
 		{
 			if (g_stopScanFlag)
 				break;
@@ -340,7 +340,7 @@ BOOL ScanPostPage(const CString& tid, int page, const CString& title, BOOL hasHi
 			_T("可能已被删")) + _T(")，暂时跳过</font>"));
 		return FALSE;
 	}
-	GetLzls(g_userTiebaInfo.m_forumID, tid, sPage, posts, lzls);
+	GetLzls(g_tiebaOperate->GetForumID(), tid, sPage, posts, lzls);
 
 	CString msg;
 	BOOL forceToConfirm;

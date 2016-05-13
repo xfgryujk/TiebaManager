@@ -447,8 +447,9 @@ void CTiebaManagerDlg::OnBnClickedButton5()
 // 确定
 void CTiebaManagerDlg::OnBnClickedButton1()
 {
-	m_forumNameEdit.GetWindowText(g_userTiebaInfo.m_forumName);
-	if (g_userTiebaInfo.m_forumName == _T(""))
+	CString forumName;
+	m_forumNameEdit.GetWindowText(forumName);
+	if (forumName == _T(""))
 	{
 		AfxMessageBox(_T("请输入贴吧名！"), MB_ICONERROR);
 		return;
@@ -457,99 +458,36 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_forumNameEdit.EnableWindow(FALSE);
 	m_confirmButton.EnableWindow(FALSE);
 	m_stateStatic.SetWindowText(_T("验证贴吧中"));
-	CString src, src2, tmp, userName, randomTid;
-	CStringArray bawuList;
-	std::wcmatch res;
 
 
-	src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=") + EncodeURI(g_userTiebaInfo.m_forumName), &*g_userTiebaInfo.m_cookie);
-	if (src == NET_TIMEOUT_TEXT)
+	g_tiebaOperate.reset(new CTiebaOperate(g_cookieConfig.m_cookie, g_plan.m_banDuration, g_plan.m_banReason));
+	switch (g_tiebaOperate->SetTieba(forumName))
 	{
+	case CTiebaOperate::SET_TIEBA_TIMEOUT:
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
-		goto error;
-	}
+		goto Error;
 
-	// 采集贴吧信息
-	tmp = GetStringBetween(src, _T("PageData.forum"), _T("}"));
-	tmp.Replace(_T("\r\n"), _T(""));
-	if (!std::regex_search((LPCTSTR)tmp, res, FORUM_ID_NAME_REG))
-	{
-		WriteString(src, _T("forum.txt"));
+	case CTiebaOperate::SET_TIEBA_NOT_FOUND:
 		AfxMessageBox(_T("贴吧不存在！(也可能是度娘抽了...)"), MB_ICONERROR);
-		goto error;
-	}
+		goto Error;
 
-	// 取贴吧ID
-	g_userTiebaInfo.m_forumID = res[3].str().c_str();
-
-	// 取贴吧名
-	g_userTiebaInfo.m_forumName = JSUnescape(res[7].str().c_str());
-	g_userTiebaInfo.m_encodedForumName = EncodeURI(g_userTiebaInfo.m_forumName);
-
-	// 取用户名
-	if (std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData.user"), _T("}"))), res, USER_NAME_REG)
-		|| std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData"), _T("}"))), res, USER_NAME_REG))
-		userName = JSUnescape(res[3].str().c_str());
-	if (userName == _T(""))
-	{
-		WriteString(src, _T("forum.txt"));
+	case CTiebaOperate::SET_TIEBA_NOT_LOGIN:
 		AfxMessageBox(_T("请在设置-账号管理登录百度账号"), MB_ICONERROR);
-		goto error;
-	}
-	SetWindowText(_T("贴吧管理器 - ") + userName);
+		goto Error;
 
-	// 验证用户权限
-	// 旧接口
-	//src2 = HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(g_forumName));
-	src2 = HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/listBawuTeamInfo?word=") + g_userTiebaInfo.m_encodedForumName + _T("&ie=utf-8"));
-	if (src2 == NET_TIMEOUT_TEXT)
-	{
-		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
-		goto error;
-	}
-	SplitString(bawuList, src2, _T("class=\"bawu_single_type"));
-	BOOL hasPower = FALSE;
-	if (bawuList.GetSize() > 1)
-	{
-		bawuList[bawuList.GetSize() - 1] = GetStringBefore(bawuList[bawuList.GetSize() - 1], _T("</div></div>"));
-		for (int i = 1; i < bawuList.GetSize(); i++)
-			if ((bawuList[i].Find(_T("吧主<span")) != -1 // WTF，怎么有这么多种吧主
-				|| bawuList[i].Find(_T(">语音小编<span")) != -1)
-				&& bawuList[i].Find(_T(">") + userName + _T("<")) != -1)
-			{
-				hasPower = TRUE;
-				break;
-			}
-	}
-	if (!hasPower)
-	{
-		WriteString(src2, _T("admin.txt"));
+	case CTiebaOperate::SET_TIEBA_NO_POWER:
 		AfxMessageBox(_T("您不是吧主或小吧主或语音小编，无法删帖封号！"), MB_ICONWARNING);
-		/*SetWindowText(_T("贴吧管理器"));
-		goto error;*/
+		break;
+
+	case CTiebaOperate::SET_TIEBA_NO_TBS:
+		AfxMessageBox(_T("获取口令号失败！"), MB_ICONERROR);
+		goto Error;
 	}
+
+	SetWindowText(_T("贴吧管理器 - ") + g_tiebaOperate->GetUserName_());
 
 	// 加入信任用户
-	g_plan.m_whiteList->insert(userName);
-
-	// 取tbs(口令号)
-	g_userTiebaInfo.m_tbs = GetStringBetween(src, _TBS_LEFT, _TBS_RIGHT);
-	if (g_userTiebaInfo.m_tbs == _T("") && std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData"), _T("}"))), res, TBS_REG))
-		g_userTiebaInfo.m_tbs = JSUnescape(res[3].str().c_str());
-	if (g_userTiebaInfo.m_tbs == _T(""))
-	{
-		WriteString(src, _T("forum.txt"));
-		AfxMessageBox(_T("获取口令号失败！"), MB_ICONERROR);
-		SetWindowText(_T("贴吧管理器"));
-		goto error;
-	}
-
-	// 取第一个tid
-	randomTid = GetStringBetween(src, _T("&quot;id&quot;:"), _T(","));
-	if (randomTid == _T(""))
-		randomTid = _T("4426261107");
-	g_tiebaOperate.reset(new CTiebaOperate(g_userTiebaInfo.m_forumID, g_userTiebaInfo.m_forumName, g_userTiebaInfo.m_cookie, g_userTiebaInfo.m_bduss,
-		g_userTiebaInfo.m_tbs, g_plan.m_banDuration, g_plan.m_banReason, randomTid));
+	g_plan.m_whiteList->insert(g_tiebaOperate->GetUserName_());
 
 
 	m_stateStatic.SetWindowText(_T("待机中"));
@@ -557,15 +495,16 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_pageEdit.EnableWindow(TRUE);
 	m_explorerButton.EnableWindow(TRUE);
 	m_superFunctionButton.EnableWindow(TRUE);
-	*g_userConfig.m_forumName = g_userTiebaInfo.m_forumName;
+	*g_userConfig.m_forumName = g_tiebaOperate->GetForumName();
 	g_userConfig.Save(USER_PROFILE_PATH);
-	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + g_userTiebaInfo.m_forumName + _T("<font color=green> 吧，使用账号：</font>" + userName));
+	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + g_tiebaOperate->GetForumName()
+		+ _T("<font color=green> 吧，使用账号：</font>" + g_tiebaOperate->GetUserName_()));
 	// 开始循环封
 	AfxBeginThread(LoopBanThread, this);
 
 	return;
 
-error:
+Error:
 	m_stateStatic.SetWindowText(_T("待机中"));
 	m_forumNameEdit.EnableWindow(TRUE);
 	m_confirmButton.EnableWindow(TRUE);

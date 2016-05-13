@@ -9,7 +9,6 @@
 #include <MiscHelper.h>
 #include <TBMConfig.h>
 
-#include "TiebaVariable.h"
 #include "TBMOperate.h"
 
 #include "SuperFunctionDlg.h"
@@ -93,7 +92,7 @@ void CLoopBanPage::OnDelete(int index)
 // 取用户发的帖子ID
 static CString GetPIDFromUser(const CString& userName)
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + g_userTiebaInfo.m_encodedForumName + _T("&qw=&rn=10&un=")
+	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + g_tiebaOperate->GetEncodedForumName() + _T("&qw=&rn=10&un=")
 		+ userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"));
 	if (src == NET_TIMEOUT_TEXT)
 		return NET_TIMEOUT_TEXT;

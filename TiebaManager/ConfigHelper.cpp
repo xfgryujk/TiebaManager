@@ -17,7 +17,7 @@ void SaveCurrentUserConfig()
 	g_userConfig.Save(USER_PROFILE_PATH);
 
 	// Cookie
-	g_userTiebaInfo.Save(COOKIE_PATH);
+	g_cookieConfig.Save(COOKIE_PATH);
 
 	// 历史回复、忽略ID等
 	g_userCache.Save(CACHE_PATH);
@@ -46,7 +46,7 @@ void SetCurrentUser(const CString& userName, BOOL save)
 	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_forumNameEdit.SetWindowText(*g_userConfig.m_forumName);
 
 	// Cookie
-	g_userTiebaInfo.Load(COOKIE_PATH);
+	g_cookieConfig.Load(COOKIE_PATH);
 
 	// 历史回复、忽略ID等
 	g_userCache.Load(CACHE_PATH);

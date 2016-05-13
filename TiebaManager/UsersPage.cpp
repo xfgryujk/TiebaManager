@@ -76,7 +76,7 @@ void CUsersPage::OnBnClickedButton1()
 	CreateDir(USERS_PATH + loginDlg.m_userName);
 
 	// ±£¥ÊCookie
-	CUserTiebaInfo ck;
+	CCookieConfig ck;
 	*ck.m_cookie = loginDlg.m_cookie;
 	TRACE(_T("%s\n"), (LPCTSTR)*ck.m_cookie);
 	if (!ck.Save(USERS_PATH + loginDlg.m_userName + _T("\\ck.xml")))
@@ -85,10 +85,7 @@ void CUsersPage::OnBnClickedButton1()
 		return;
 	}
 	if (g_globalConfig.m_currentUser == loginDlg.m_userName)
-	{
-		*g_userTiebaInfo.m_cookie = loginDlg.m_cookie;
-		g_userTiebaInfo.PostChange();
-	}
+		*g_cookieConfig.m_cookie = loginDlg.m_cookie;
 
 	int index = m_list.FindStringExact(-1, loginDlg.m_userName);
 	if (index == LB_ERR)

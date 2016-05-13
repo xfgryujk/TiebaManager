@@ -2,27 +2,19 @@
 #include <TBMConfig.h>
 
 
-// 贴吧、用户信息
-class CUserTiebaInfo : public CConfigBase
+// Cookie文件
+class CCookieConfig : public CConfigBase
 {
 public:
-	CString m_forumName;
-	CString m_encodedForumName;
-	CString m_forumID;
 	COption<CString> m_cookie;
-	CString m_bduss;
-	CString m_tbs; // 备用获取tbs地址：http://tieba.baidu.com/dc/common/tbs
 
-	CUserTiebaInfo()
-		: CConfigBase("Cookie"),
+	CCookieConfig() : CConfigBase("Cookie"),
 		m_cookie("Cookie")
 	{
 		m_options.push_back(&m_cookie);
 	}
-
-	virtual void PostChange();
 };
-extern CUserTiebaInfo g_userTiebaInfo;
+extern CCookieConfig g_cookieConfig;
 
 // 扫描
 extern volatile BOOL g_stopScanFlag;

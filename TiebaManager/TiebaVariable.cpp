@@ -4,8 +4,8 @@
 #include <StringHelper.h>
 
 
-// 贴吧、用户信息
-CUserTiebaInfo g_userTiebaInfo;
+// Cookie文件
+CCookieConfig g_cookieConfig;
 
 // 扫描
 volatile BOOL g_stopScanFlag = FALSE;
@@ -15,9 +15,3 @@ CUserCache g_userCache;
 // 操作
 CWinThread* g_confirmThread = NULL;
 CWinThread* g_operateThread = NULL;
-
-
-void CUserTiebaInfo::PostChange()
-{
-	m_bduss = GetStringBetween(m_cookie, _T("BDUSS="), _T(";"));
-}
