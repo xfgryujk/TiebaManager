@@ -21,8 +21,8 @@ public:
 	unique_ptr<CTiebaOperate> m_tiebaOperate;
 
 	// 关于操作
-	thread m_confirmThread;
-	thread m_operateThread;
+	unique_ptr<thread> m_confirmThread;
+	unique_ptr<thread> m_operateThread;
 
 	struct Operation
 	{

@@ -181,7 +181,6 @@ ScanThreadEnd:
 	m_eventBus.Post(ScanThreadEndEvent);
 
 	m_scanThread->detach();
-	m_scanThread = nullptr;
 	TRACE(_T("总扫描线程结束\n"));
 }
 

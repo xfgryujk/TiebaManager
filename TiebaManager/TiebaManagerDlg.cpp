@@ -246,13 +246,16 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 // 保存储存在窗口的数据
 void CTiebaManagerDlg::OnClose()
 {
-	if (theApp.m_plan->m_autoSaveLog)
-		m_log.Save(_T("Log"));
+	if (m_isClosing)
+		return;
+	m_isClosing = TRUE;
 
 	theApp.m_scan->StopScan();
-	while (theApp.m_scan->m_scanThread != nullptr)
+	while (theApp.m_scan->m_scanThread != nullptr && theApp.m_scan->m_scanThread->joinable())
 		Delay(100);
 
+	if (theApp.m_plan->m_autoSaveLog)
+		m_log.Save(_T("Log"));
 	m_log.Release();
 
 	CNormalDlg::OnClose();

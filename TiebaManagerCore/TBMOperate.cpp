@@ -13,21 +13,20 @@
 
 
 CTBMOperate::CTBMOperate(CString& cookie, const int& banDuration, const CString& banReason) : 
-	m_tiebaOperate(new CTiebaOperate(cookie, banDuration, banReason)),
-	m_confirmThread(&CTBMOperate::ConfirmThread, this),
-	m_operateThread(&CTBMOperate::OperateThread, this)
+	m_tiebaOperate(new CTiebaOperate(cookie, banDuration, banReason))
 {
-	
+	m_operateThread.reset(new thread(&CTBMOperate::OperateThread, this));
+	m_confirmThread.reset(new thread(&CTBMOperate::ConfirmThread, this));
 }
 
 CTBMOperate::~CTBMOperate()
 {
 	m_operationQueue.Stop();
 	m_confirmQueue.Stop();
-	if (m_operateThread.joinable())
-		m_operateThread.join();
-	if (m_confirmThread.joinable())
-		m_confirmThread.join();
+	if (m_operateThread != nullptr && m_operateThread->joinable())
+		m_operateThread->join();
+	if (m_confirmThread != nullptr && m_confirmThread->joinable())
+		m_confirmThread->join();
 }
 
 

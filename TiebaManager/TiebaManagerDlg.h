@@ -77,6 +77,8 @@ public:
 
 	CExplorerLog m_log;
 
+	BOOL m_isClosing = FALSE;
+
 protected:
 	NOTIFYICONDATA m_nfData;
 };
