@@ -5,9 +5,12 @@
 #include "ImageViewDlg.h"
 #include "ExplorerDlg.h"
 #include "TiebaManagerDlg.h"
-#include "TiebaVariable.h"
+#include "TiebaManager.h"
+#include <TBMConfig.h>
 #include <TiebaClawer.h>
-#include "TBMOperate.h"
+#include <TiebaOperate.h>
+#include <TBMOperate.h>
+#include <TBMScan.h>
 #include <Mmsystem.h>
 
 
@@ -157,14 +160,14 @@ void CExplorerDlg::OnBnClickedButton1()
 	if (tabIndex == 0) // 主题
 	{
 		ThreadInfo& thread = m_exploreThreadPage.m_threads[index];
-		code = g_tiebaOperate->DeleteThread(thread.tid);
+		code = theApp.m_operate->m_tiebaOperate->DeleteThread(thread.tid);
 		if (code == _T("0"))
-			g_userCache.m_deletedTID.insert(_ttoi64(thread.tid));
+			theApp.m_userCache->m_deletedTID.insert(_ttoi64(thread.tid));
 	}
 	else if (tabIndex == 1) // 帖子
-		code = g_tiebaOperate->DeletePost(m_explorePostPage.m_tid, m_explorePostPage.m_posts[index].pid);
+		code = theApp.m_operate->m_tiebaOperate->DeletePost(m_explorePostPage.m_tid, m_explorePostPage.m_posts[index].pid);
 	else // 楼中楼
-		code = g_tiebaOperate->DeleteLZL(m_explorePostPage.m_tid, m_exploreLzlPage.m_lzls[index].pid);
+		code = theApp.m_operate->m_tiebaOperate->DeleteLZL(m_explorePostPage.m_tid, m_exploreLzlPage.m_lzls[index].pid);
 
 
 	if (code != _T("0"))
@@ -187,7 +190,7 @@ void CExplorerDlg::OnBnClickedButton2()
 	if (tabIndex == 0) // 主题
 	{
 		author = m_exploreThreadPage.m_threads[index].author;
-		if (!g_plan.m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
+		if (!theApp.m_plan->m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
 		{
 			vector<PostInfo> posts;
 			GetPosts(m_exploreThreadPage.m_threads[index].tid, _T(""), _T("1"), posts);
@@ -198,13 +201,13 @@ void CExplorerDlg::OnBnClickedButton2()
 	else if (tabIndex == 1) // 帖子
 	{
 		author = m_explorePostPage.m_posts[index].author;
-		if (!g_plan.m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
+		if (!theApp.m_plan->m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
 			pid = m_explorePostPage.m_posts[index].pid;
 	}
 	else // 楼中楼
 	{
 		author = m_exploreLzlPage.m_lzls[index].author;
-		if (!g_plan.m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
+		if (!theApp.m_plan->m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
 			pid = m_exploreLzlPage.m_lzls[index].pid;
 	}
 
@@ -214,7 +217,7 @@ void CExplorerDlg::OnBnClickedButton2()
 		AfxMessageBox(_T("封禁失败(获取帖子ID失败)"), MB_ICONERROR);
 		return;
 	}*/
-	CString code = pid == _T("") ? g_tiebaOperate->BanIDClient(author) : g_tiebaOperate->BanID(author, pid);
+	CString code = pid == _T("") ? theApp.m_operate->m_tiebaOperate->BanIDClient(author) : theApp.m_operate->m_tiebaOperate->BanID(author, pid);
 	if (code != _T("0"))
 		AfxMessageBox(_T("封禁失败，错误代码" + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
 	else

@@ -1,10 +1,11 @@
 ﻿#pragma once
+#include <TBMCoreConfig.h>
 #include <mshtml.h>
 class CExplorer1;
 struct IHTMLDocument2;
 
 
-class CLog
+class CExplorerLog : public ILog
 {
 protected:
 	CExplorer1& m_logExplorer;
@@ -16,14 +17,14 @@ protected:
 	static WNDPROC s_oldExplorerWndProc;
 
 public:
-	CLog(CExplorer1& explorer) : m_logExplorer(explorer)
+	CExplorerLog(CExplorer1& explorer) : m_logExplorer(explorer)
 	{
 		m_explorerHwnd = NULL;
 	}
 
 	void Init();
 	void Release();
-	void Log(LPCTSTR content);
+	void Log(const CString& content);
 	void Clear();
 	void Save(LPCTSTR folder);
 

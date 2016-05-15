@@ -1,18 +1,8 @@
 ﻿#pragma once
-#include "TBMCommon.h"
-#include <ConfigFile.h>
+#include "TiebaManagerCommon.h"
+#include <TBMCoreConfig.h>
 #include <StringHelper.h>
 #include <opencv2\core\mat.hpp>
-
-
-// 配置文件路径
-extern TIEBA_MANAGER_API CString GLOBAL_CONFIG_PATH;	// 程序初始化时初始化
-extern TIEBA_MANAGER_API CString USER_CONFIG_PATH;		// 确定用户时初始化
-extern TIEBA_MANAGER_API CString OPTIONS_DIR_PATH;
-extern TIEBA_MANAGER_API CString USERS_DIR_PATH;		// 程序初始化时初始化
-extern TIEBA_MANAGER_API CString CURRENT_USER_DIR_PATH;	// 确定用户时初始化
-extern TIEBA_MANAGER_API CString COOKIE_PATH;			// 确定用户时初始化
-extern TIEBA_MANAGER_API CString CACHE_PATH;			// 确定用户时初始化
 
 
 // 全局配置
@@ -26,7 +16,6 @@ public:
 
 	CGlobalConfig();
 };
-extern TIEBA_MANAGER_API CGlobalConfig g_globalConfig;
 
 // 用户配置
 class TIEBA_MANAGER_API CUserConfig : public CConfigBase
@@ -37,10 +26,23 @@ public:
 
 	CUserConfig();
 };
-extern TIEBA_MANAGER_API CUserConfig g_userConfig;
 
+// Cookie文件
+class TIEBA_MANAGER_API CCookieConfig : public CConfigBase
+{
+public:
+	COption<CString> m_cookie;
+
+	CCookieConfig();
+};
+
+// 用不相关的两个内容做测试
+const TCHAR MATCH_TOO_MUCH_CONTENT_TEST1[] = _T("【吧务导航】删帖查询，帖子申精，吧规，刷豆，刷粉");
+const TCHAR MATCH_TOO_MUCH_CONTENT_TEST2[] = _T("贺岁·番外14·叫兽教你烤地瓜");
+const TCHAR MATCH_TOO_MUCH_USERNAME_TEST1[] = _T("盗我原号的没J8");
+const TCHAR MATCH_TOO_MUCH_USERNAME_TEST2[] = _T("从容人生");
 // 方案
-class TIEBA_MANAGER_API CPlan : public CConfigBase
+class TIEBA_MANAGER_API CPlan : public CTBMCoreConfig
 {
 public:
 	struct Keyword : RegexText
@@ -59,35 +61,19 @@ public:
 	CCriticalSection m_optionsLock; // 方案临界区
 	BOOL m_updateImage; // 读取后更新违规图片
 
-	COption<int>		m_scanInterval;			// 扫描间隔
-	COption<BOOL>		m_onlyScanTitle;		// 只扫描标题
-	COption<int>		m_scanPageCount;		// 扫描最后页数
-	COption<BOOL>		m_briefLog;				// 只输出删帖封号
-	COption<int>		m_threadCount;			// 线程数
-	COption<BOOL>		m_autoSaveLog;			// 自动保存日志
-	COption<int>		m_illegalLevel;			// 违规等级
-	COption<BOOL>		m_delete;				// 删帖
-	COption<BOOL>		m_banID;				// 封ID
-	COption<BOOL>		m_defriend;				// 拉黑
-	COption<float>		m_deleteInterval;		// 删帖间隔
-	COption<int>		m_banDuration;			// 封禁时长
-	COption<CString>	m_banReason;			// 封号原因
-	COption<int>		m_banTrigCount;			// 封禁违规次数
-	COption<int>		m_defriendTrigCount;	// 拉黑违规次数
-	COption<BOOL>		m_confirm;				// 操作前提示
-	COption<BOOL>		m_wapBanInterface;		// 封禁用WAP接口
-	COption<BOOL>		m_autoLoopBan;			// 自动循环封
-	COption<vector<Keyword> >	m_keywords;		// 违规内容
-	vector<NameImage>			m_images;		// 违规图片
-	COption<CString>	m_imageDir;				// 违规图片目录
-	COption<double>		m_SSIMThreshold;		// 阈值
-	COption<vector<RegexText> >	m_blackList;	// 屏蔽用户
-	COption<set<CString> >		m_whiteList;	// 信任用户
-	COption<vector<RegexText> >	m_whiteContent;	// 信任内容
-	COption<set<CString> >		m_trustedThread;// 信任主题
+	COption<BOOL>				m_autoSaveLog;		// 自动保存日志
+	COption<int>				m_illegalLevel;		// 违规等级
+	COption<BOOL>				m_autoLoopBan;		// 自动循环封
+	COption<vector<Keyword> >	m_keywords;			// 违规内容
+	vector<NameImage>			m_images;			// 违规图片
+	COption<CString>			m_imageDir;			// 违规图片目录
+	COption<double>				m_SSIMThreshold;	// 阈值
+	COption<vector<RegexText> >	m_blackList;		// 屏蔽用户
+	COption<set<CString> >		m_whiteList;		// 信任用户
+	COption<vector<RegexText> >	m_whiteContent;		// 信任内容
+	COption<set<CString> >		m_trustedThread;	// 信任主题
 
 	CPlan();
-	void OnChange(){ m_optionsLock.Lock(); }
+	void OnChange();
 	void PostChange();
 };
-extern TIEBA_MANAGER_API CPlan g_plan;

@@ -1,15 +1,13 @@
 ﻿#pragma once
 #include <TiebaClawer.h>
+#include <TBMConfig.h>
 
 
 extern set<CString> g_leagalImage; // 已检查不违规的图片
 extern set<CString> g_illegalImage; // 已检查违规的图片
 
 
-const CString IMG_CACHE_PATH = _T("ImageCache\\");
-
-
-void ReadImages(const CString& dir);
+void ReadImages(const CString& dir, vector<CPlan::NameImage>& images);
 
 class GetImagesBase
 {

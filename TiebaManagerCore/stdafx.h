@@ -44,9 +44,13 @@
 #include <map>
 #include <regex>
 #include <memory>
+#include <thread>
+#include <mutex>
 using std::vector;
 using std::queue;
 using std::set;
 using std::map;
 using std::wregex;
 using std::unique_ptr;
+using std::thread;
+using std::mutex;

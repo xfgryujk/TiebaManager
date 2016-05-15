@@ -67,6 +67,12 @@
     <Filter Include="源文件\API">
       <UniqueIdentifier>{221d2e54-0bbb-47de-aa55-4398bc1a30a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Event">
+      <UniqueIdentifier>{61b96252-7cbb-47ee-91f4-5244d84edb41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Event">
+      <UniqueIdentifier>{0b3266a7-e269-4104-9b92-22c84540524a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -189,14 +195,23 @@
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
     </ClInclude>
+    <ClInclude Include="ConfigHelper.h">
+      <Filter>头文件\Helper</Filter>
+    </ClInclude>
     <ClInclude Include="API\TBMConfig.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\TBMCommon.h">
+    <ClInclude Include="API\TBMConfigPath.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="ConfigHelper.h">
-      <Filter>头文件\Helper</Filter>
+    <ClInclude Include="API\TiebaManagerCommon.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMOperateListeners.h">
+      <Filter>头文件\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMScanListeners.h">
+      <Filter>头文件\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -314,11 +329,20 @@
     <ClCompile Include="InputKeywordDlg.cpp">
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
     </ClCompile>
+    <ClCompile Include="ConfigHelper.cpp">
+      <Filter>源文件\Helper</Filter>
+    </ClCompile>
     <ClCompile Include="TBMConfig.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
-    <ClCompile Include="ConfigHelper.cpp">
-      <Filter>源文件\Helper</Filter>
+    <ClCompile Include="TBMConfigPath.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMScanListeners.cpp">
+      <Filter>源文件\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMOperateListeners.cpp">
+      <Filter>源文件\Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

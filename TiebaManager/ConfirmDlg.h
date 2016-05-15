@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "afxwin.h"
-#include "TBMOperate.h"
 #include "ResizeControl.h"
+#include <TBMOperate.h>
 class CImageViewDlg;
 
 
@@ -13,7 +13,7 @@ class CConfirmDlg : public CDialog
 
 public:
 	CConfirmDlg(CWnd* pParent = NULL);   // 标准构造函数
-	CConfirmDlg(Operation* operation, CWnd* pParent = NULL);   // 指定内容的构造函数
+	CConfirmDlg(const CTBMOperate::Operation* operation, CWnd* pParent = NULL);   // 指定内容的构造函数
 	virtual ~CConfirmDlg();
 
 // 对话框数据
@@ -42,5 +42,5 @@ public:
 protected:
 	CResizeControl m_resize;
 
-	Operation* m_operation;
+	const CTBMOperate::Operation* m_operation;
 };

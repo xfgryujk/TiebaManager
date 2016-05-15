@@ -21,9 +21,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "SettingDlg.h"
 #include "TiebaManagerDlg.h"
 #include <TBMConfig.h>
-#include "TiebaVariable.h"
+#include <TBMConfigPath.h>
+#include "TiebaManager.h"
 #include "ScanImage.h"
 #include <MiscHelper.h>
+#include <TBMScan.h>
 
 
 // CSettingDlg 对话框
@@ -129,10 +131,10 @@ BOOL CSettingDlg::OnInitDialog()
 		m_pagesResize.AddControl(m_pages[i], RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_tab, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
 
 	// 显示配置
-	ShowPlan(g_plan);
+	ShowPlan(*theApp.m_plan);
 	m_clearScanCache = FALSE; // 在m_scanPage.m_scanPageCountEdit.SetWindowText后初始化
 
-	m_optionsPage.m_currentOptionStatic.SetWindowText(_T("当前方案：") + g_userConfig.m_plan); // 当前方案
+	m_optionsPage.m_currentOptionStatic.SetWindowText(_T("当前方案：") + theApp.m_userConfig->m_plan); // 当前方案
 	// 方案
 	CFileFind fileFind;
 	BOOL flag = fileFind.FindFile(OPTIONS_DIR_PATH + _T("*.xml"));
@@ -142,7 +144,7 @@ BOOL CSettingDlg::OnInitDialog()
 		m_optionsPage.m_list.AddString(fileFind.GetFileTitle());
 	}
 
-	m_usersPage.m_currentUserStatic.SetWindowText(_T("当前账号：") + g_globalConfig.m_currentUser); // 当前账号
+	m_usersPage.m_currentUserStatic.SetWindowText(_T("当前账号：") + theApp.m_globalConfig->m_currentUser); // 当前账号
 	// 账号
 	m_usersPage.m_list.AddString(_T("[NULL]"));
 	flag = fileFind.FindFile(USERS_DIR_PATH + _T("*"));
@@ -158,7 +160,7 @@ BOOL CSettingDlg::OnInitDialog()
 		}
 	}
 
-	m_aboutPage.m_autoCheckUpdateCheck.SetCheck(g_globalConfig.m_autoUpdate); // 自动更新
+	m_aboutPage.m_autoCheckUpdateCheck.SetCheck(theApp.m_globalConfig->m_autoUpdate); // 自动更新
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -329,7 +331,7 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 	m_trustedThreadPage.ApplyList(plan.m_trustedThread);
 
 	// 违规图片
-	BOOL updateImage = &plan == &g_plan && plan.m_updateImage;
+	BOOL updateImage = &plan == theApp.m_plan.get() && plan.m_updateImage;
 	if (updateImage)
 	{
 		g_leagalImage.clear();
@@ -344,11 +346,11 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 		AfxMessageBox(strBuf, MB_ICONINFORMATION);
 	}
 
-	if (&plan == &g_plan && m_clearScanCache)
+	if (&plan == theApp.m_plan.get() && m_clearScanCache)
 	{
 		if (!plan.m_briefLog)
 			((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_log.Log(_T("<font color=green>清除历史回复</font>"));
-		g_userCache.m_reply->clear();
+		theApp.m_userCache->m_reply->clear();
 	}
 }
 
@@ -357,7 +359,7 @@ void CSettingDlg::ShowPlanInFile(const CString& path)
 {
 	CPlan tmp;
 	tmp.Load(path);
-	g_plan.m_updateImage = TRUE;
+	theApp.m_plan->m_updateImage = TRUE;
 	ShowPlan(tmp);
 }
 
@@ -372,17 +374,17 @@ void CSettingDlg::SavePlanInDlg(const CString& path)
 // 确认
 void CSettingDlg::OnOK()
 {
-	*g_globalConfig.m_autoUpdate = m_aboutPage.m_autoCheckUpdateCheck.GetCheck();
-	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
+	*theApp.m_globalConfig->m_autoUpdate = m_aboutPage.m_autoCheckUpdateCheck.GetCheck();
+	theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
 
 	CString tmp;
 	m_optionsPage.m_currentOptionStatic.GetWindowText(tmp);
-	*g_userConfig.m_plan = tmp.Right(tmp.GetLength() - 5); // "当前方案："
-	g_userConfig.Save(USER_CONFIG_PATH);
+	*theApp.m_userConfig->m_plan = tmp.Right(tmp.GetLength() - 5); // "当前方案："
+	theApp.m_userConfig->Save(USER_CONFIG_PATH);
 
 	CreateDir(OPTIONS_DIR_PATH);
-	SavePlanInDlg(OPTIONS_DIR_PATH + g_userConfig.m_plan + _T(".xml"));
-	ApplyPlanInDlg(g_plan);
+	SavePlanInDlg(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
+	ApplyPlanInDlg(*theApp.m_plan);
 
 	DestroyWindow();
 }

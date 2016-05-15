@@ -33,9 +33,3 @@ public:
 	CEdit m_testEdit;
 	CButton m_testButton;
 };
-
-// 用不相关的两个内容做测试
-static const TCHAR MATCH_TOO_MUCH_CONTENT_TEST1[] = _T("【吧务导航】删帖查询，帖子申精，吧规，刷豆，刷粉");
-static const TCHAR MATCH_TOO_MUCH_CONTENT_TEST2[] = _T("贺岁·番外14·叫兽教你烤地瓜");
-static const TCHAR MATCH_TOO_MUCH_USERNAME_TEST1[] = _T("盗我原号的没J8");
-static const TCHAR MATCH_TOO_MUCH_USERNAME_TEST2[] = _T("从容人生");

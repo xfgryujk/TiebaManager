@@ -16,11 +16,11 @@ static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type
 static const UINT WM_LOG = WM_APP + 2;
 
 
-WNDPROC CLog::s_oldExplorerWndProc = NULL;
+WNDPROC CExplorerLog::s_oldExplorerWndProc = NULL;
 
 
 // 初始化
-void CLog::Init()
+void CExplorerLog::Init()
 {
 	// 取document
 	m_logExplorer.Navigate(_T("about:blank"), NULL, NULL, NULL, NULL);
@@ -47,14 +47,14 @@ void CLog::Init()
 }
 
 // 释放
-void CLog::Release()
+void CExplorerLog::Release()
 {
 	m_explorerHwnd = NULL;
 	m_logDocument.Release();
 }
 
 // 输出日志1，把内容格式化发送到消息队列
-void CLog::Log(LPCTSTR content)
+void CExplorerLog::Log(const CString& content)
 {
 	if (m_explorerHwnd == NULL)
 		return;
@@ -67,7 +67,7 @@ void CLog::Log(LPCTSTR content)
 }
 
 // 输出日志2，在m_logExplorer写日志
-void CLog::DoLog(const CString* output)
+void CExplorerLog::DoLog(const CString* output)
 {
 	if (m_logDocument.p == NULL)
 	{
@@ -103,7 +103,7 @@ void CLog::DoLog(const CString* output)
 }
 
 // 清空日志
-void CLog::Clear()
+void CExplorerLog::Clear()
 {
 	if (m_logDocument.p == NULL)
 		return;
@@ -117,7 +117,7 @@ void CLog::Clear()
 }
 
 // 保存日志
-void CLog::Save(LPCTSTR folder)
+void CExplorerLog::Save(LPCTSTR folder)
 {
 	if (m_logDocument.p == NULL)
 		return;
@@ -155,7 +155,7 @@ void CLog::Save(LPCTSTR folder)
 }
 
 // 枚举寻找Internet Explorer_Server窗口
-BOOL CALLBACK CLog::EnumChildProc(HWND hwnd, LPARAM lParam)
+BOOL CALLBACK CExplorerLog::EnumChildProc(HWND hwnd, LPARAM lParam)
 {
 	TCHAR buf[30];
 	GetClassName(hwnd, buf, _countof(buf));
@@ -169,11 +169,11 @@ BOOL CALLBACK CLog::EnumChildProc(HWND hwnd, LPARAM lParam)
 }
 
 // 屏蔽日志右键菜单、监听Log消息
-LRESULT CALLBACK CLog::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK CExplorerLog::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (uMsg == WM_LOG)
 	{
-		((CLog*)wParam)->DoLog((CString*)lParam);
+		((CExplorerLog*)wParam)->DoLog((CString*)lParam);
 		return 0;
 	}
 	if (uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP)
@@ -182,7 +182,7 @@ LRESULT CALLBACK CLog::ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
 }
 
 // 写HTML到document
-void CLog::WriteDocument(const CString& content)
+void CExplorerLog::WriteDocument(const CString& content)
 {
 	SAFEARRAY *arr = SafeArrayCreateVector(VT_VARIANT, 0, 1);
 	VARIANT *str = NULL;

@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "SuperFunctionDlg.h"
 #include "TiebaManagerDlg.h"
+#include <TBMConfigPath.h>
 
 
 // CSuperFunctionDlg 对话框

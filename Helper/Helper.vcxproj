@@ -113,6 +113,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="EventHelper.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="ImageHelper.cpp" />
     <ClCompile Include="Md5.cpp" />
@@ -129,6 +130,8 @@
     <None Include="res\Helper.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="API\BlockingQueue.h" />
+    <ClInclude Include="API\EventHelper.h" />
     <ClInclude Include="API\HelperCommon.h" />
     <ClInclude Include="API\ConfigFile.h" />
     <ClInclude Include="API\ImageHelper.h" />

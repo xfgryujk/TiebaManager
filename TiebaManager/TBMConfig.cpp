@@ -2,22 +2,11 @@
 #include <TBMConfig.h>
 using tinyxml2::XMLElement;
 #include "Update.h"
-#include "ListTestPage.h"
+#include <TBMConfigPath.h>
 #include "ScanImage.h"
 
 
-// 配置文件路径
-TIEBA_MANAGER_API CString GLOBAL_CONFIG_PATH = _T("\\options.xml");	// 程序初始化时初始化
-TIEBA_MANAGER_API CString USER_CONFIG_PATH;							// 确定用户时初始化
-TIEBA_MANAGER_API CString OPTIONS_DIR_PATH = _T("Option\\");
-TIEBA_MANAGER_API CString USERS_DIR_PATH = _T("\\User\\");			// 程序初始化时初始化
-TIEBA_MANAGER_API CString CURRENT_USER_DIR_PATH;					// 确定用户时初始化
-TIEBA_MANAGER_API CString COOKIE_PATH;								// 确定用户时初始化
-TIEBA_MANAGER_API CString CACHE_PATH;								// 确定用户时初始化
-
-
 // 全局配置
-TIEBA_MANAGER_API CGlobalConfig g_globalConfig;
 CGlobalConfig::CGlobalConfig() : CConfigBase("Global"),
 	m_firstRun("FirstRun", TRUE),
 	m_firstRunAfterUpdate("FirstRunAfter" + CStringA(UPDATE_CURRENT_VERSION_A), TRUE),
@@ -31,13 +20,19 @@ CGlobalConfig::CGlobalConfig() : CConfigBase("Global"),
 }
 
 // 用户配置
-TIEBA_MANAGER_API CUserConfig g_userConfig;
 CUserConfig::CUserConfig() : CConfigBase("User"),
 	m_plan("Plan", _T("默认")),
 	m_forumName("ForumName")
 {
 	m_options.push_back(&m_plan);
 	m_options.push_back(&m_forumName);
+}
+
+// Cookie文件
+CCookieConfig::CCookieConfig() : CConfigBase("Cookie"),
+	m_cookie("Cookie")
+{
+	m_options.push_back(&m_cookie);
 }
 
 // 方案
@@ -91,25 +86,9 @@ TIEBA_MANAGER_API DEFINE_READ_VECTOR(CPlan::Keyword)
 
 TIEBA_MANAGER_API DEFINE_WRITE_VECTOR(CPlan::Keyword)
 
-TIEBA_MANAGER_API CPlan g_plan;
-CPlan::CPlan() : CConfigBase("Plan"),
-	m_scanInterval		("ScanInterval",		5,		[](const int& value)->BOOL{ return 0 <= value && value <= 600; }),
-	m_onlyScanTitle		("OnlyScanTitle",		FALSE),
-	m_scanPageCount		("ScanPageCount",		1,		[](const int& value)->BOOL{ return 1 <= value; }),
-	m_briefLog			("BriefLog",			FALSE),
-	m_threadCount		("ThreadCount",			2,		[](const int& value)->BOOL{ return 1 <= value && value <= 16; }),
+CPlan::CPlan() : CTBMCoreConfig("Plan"),
 	m_autoSaveLog		("AutoSaveLog",			FALSE),
 	m_illegalLevel		("IllegalLevel",		0,		[](const int& value)->BOOL{ return 0 <= value && value <= 6; }),
-	m_delete			("Delete",				TRUE),
-	m_banID				("BanID",				FALSE),
-	m_defriend			("Defriend",			FALSE),
-	m_deleteInterval	("DeleteInterval",		2.5f,	[](const float& value)->BOOL{ return 0.0f <= value && value <= 60.0f; }),
-	m_banDuration		("BanDuration",			1,		[](const int& value)->BOOL{ return value == 1 || value == 3 || value == 10; }),
-	m_banReason			("BanReason",			_T("")),
-	m_banTrigCount		("BanTrigCount",		1,		[](const int& value)->BOOL{ return 1 <= value; }),
-	m_defriendTrigCount	("DefriendTrigCount",	5,		[](const int& value)->BOOL{ return 1 <= value; }),
-	m_confirm			("Confirm",				TRUE),
-	m_wapBanInterface	("WapBanInterface",		FALSE),
 	m_autoLoopBan		("AutoLoopBan",			FALSE),
 	m_keywords			("IllegalContent", [](const vector<Keyword>& value)->BOOL
 											{
@@ -134,23 +113,8 @@ CPlan::CPlan() : CConfigBase("Plan"),
 	m_trustedThread		("TrustedThread")
 {
 	m_updateImage = TRUE;
-	m_options.push_back(&m_scanInterval);
-	m_options.push_back(&m_onlyScanTitle);
-	m_options.push_back(&m_scanPageCount);
-	m_options.push_back(&m_briefLog);
-	m_options.push_back(&m_threadCount);
 	m_options.push_back(&m_autoSaveLog);
 	m_options.push_back(&m_illegalLevel);
-	m_options.push_back(&m_delete);
-	m_options.push_back(&m_banID);
-	m_options.push_back(&m_defriend);
-	m_options.push_back(&m_deleteInterval);
-	m_options.push_back(&m_banDuration);
-	m_options.push_back(&m_banReason);
-	m_options.push_back(&m_banTrigCount);
-	m_options.push_back(&m_defriendTrigCount);
-	m_options.push_back(&m_confirm);
-	m_options.push_back(&m_wapBanInterface);
 	m_options.push_back(&m_autoLoopBan);
 	m_options.push_back(&m_keywords);
 	m_options.push_back(&m_imageDir);
@@ -159,14 +123,19 @@ CPlan::CPlan() : CConfigBase("Plan"),
 	m_options.push_back(&m_whiteList);
 	m_options.push_back(&m_whiteContent);
 	m_options.push_back(&m_trustedThread);
-};
+}
+
+void CPlan::OnChange()
+{
+	m_optionsLock.Lock();
+}
 
 void CPlan::PostChange()
 {
 	if (m_updateImage)
 	{
 		m_updateImage = FALSE;
-		ReadImages(m_imageDir); 
+		ReadImages(m_imageDir, m_images); 
 	}
 	m_optionsLock.Unlock();
 }

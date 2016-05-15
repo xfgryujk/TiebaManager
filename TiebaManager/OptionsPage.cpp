@@ -3,7 +3,8 @@
 
 #include "stdafx.h"
 #include "OptionsPage.h"
-#include <TBMConfig.h>
+#include <TBMConfigPath.h>
+#include "TiebaManager.h"
 #include "SettingDlg.h"
 #include <MiscHelper.h>
 
@@ -114,8 +115,8 @@ void COptionsPage::OnBnClickedButton2()
 	m_list.SetCurSel(index == 0 ? 0 : index - 1);
 	if (m_list.GetCurSel() == LB_ERR)
 	{
-		g_plan.UseDefault();
-		((CSettingDlg*)GetParent()->GetParent())->ShowPlan(g_plan);
+		theApp.m_plan->UseDefault();
+		((CSettingDlg*)GetParent()->GetParent())->ShowPlan(*theApp.m_plan);
 	}
 	else
 		OnBnClickedButton6();
@@ -141,9 +142,9 @@ void COptionsPage::OnBnClickedButton3()
 		AfxMessageBox(_T("重命名方案失败！"), MB_ICONERROR);
 		return;
 	}
-	if (g_userConfig.m_plan == name)
+	if (theApp.m_userConfig->m_plan == name)
 	{
-		*g_userConfig.m_plan = newName;
+		*theApp.m_userConfig->m_plan = newName;
 		m_currentOptionStatic.SetWindowText(_T("当前方案：") + newName);
 	}
 	m_list.DeleteString(index);

@@ -4,7 +4,9 @@
 #include "stdafx.h"
 #include "ExploreThreadPage.h"
 #include "ExplorerDlg.h"
-#include "TBMOperate.h"
+#include "TiebaManager.h"
+#include <TiebaOperate.h>
+#include <TBMOperate.h>
 #include <TiebaClawer.h>
 #include "ScanImage.h"
 
@@ -76,7 +78,7 @@ void CExploreThreadPage::OnBnClickedButton1()
 	CString ignoreThread; // 忽略前几个主题
 	ignoreThread.Format(_T("%d"), (iPage - 1) * 50);
 
-	GetThreads(g_tiebaOperate->GetForumName(), ignoreThread, m_threads);
+	GetThreads(theApp.m_operate->m_tiebaOperate->GetForumName(), ignoreThread, m_threads);
 	m_list.DeleteAllItems();
 	((CExplorerDlg*)GetParent()->GetParent())->m_edit.SetWindowText(_T(""));
 	for (const ThreadInfo& i : m_threads)

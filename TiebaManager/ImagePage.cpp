@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "ImagePage.h"
+#include "TiebaManager.h"
 #include "SettingDlg.h"
 
 
@@ -13,7 +14,7 @@ IMPLEMENT_DYNAMIC(CImagePage, CNormalDlg)
 CImagePage::CImagePage(CWnd* pParent /*=NULL*/)
 	: CNormalDlg(CImagePage::IDD, pParent)
 {
-	g_plan.m_updateImage = FALSE;
+	theApp.m_plan->m_updateImage = FALSE;
 }
 
 #pragma region MFC
@@ -75,7 +76,7 @@ void CImagePage::OnBnClickedButton1()
 // 更新图片
 void CImagePage::OnBnClickedButton2()
 {
-	g_plan.m_updateImage = TRUE;
+	theApp.m_plan->m_updateImage = TRUE;
 	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 }
 
@@ -88,10 +89,10 @@ void CImagePage::OnEnKillfocusEdit5()
 	if (threshold < 1.0 || threshold > 3.0)
 		m_thresholdEdit.SetWindowText(_T("2.43"));
 
-	if (abs(threshold - g_plan.m_SSIMThreshold) > 0.00001)
+	if (abs(threshold - theApp.m_plan->m_SSIMThreshold) > 0.00001)
 	{
-		g_plan.m_updateImage = TRUE;
-		if (threshold < g_plan.m_SSIMThreshold)
+		theApp.m_plan->m_updateImage = TRUE;
+		if (threshold < theApp.m_plan->m_SSIMThreshold)
 			((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 	}
 }

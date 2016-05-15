@@ -38,4 +38,4 @@ protected:
 	const CString m_inputTitle;
 };
 
-static const TCHAR IS_REGEX_TEXT[] = _T("√");
+const TCHAR IS_REGEX_TEXT[] = _T("√");

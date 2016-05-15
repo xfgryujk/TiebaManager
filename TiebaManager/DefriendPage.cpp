@@ -7,8 +7,11 @@
 #include <StringHelper.h>
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
-#include "TiebaVariable.h"
-#include "TBMOperate.h"
+#include <TBMConfig.h>
+#include "TiebaManager.h"
+#include <TBMScan.h>
+#include <TBMOperate.h>
+#include <TiebaOperate.h>
 
 
 // CDefriendPage 对话框
@@ -152,8 +155,8 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 		if (s_defriendNewUsers)
 		{
 			CString url;
-			url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s"), (LPCTSTR)g_tiebaOperate->GetEncodedForumName());
-			CString src = HTTPGet(url, &*g_cookieConfig.m_cookie);
+			url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s"), (LPCTSTR)theApp.m_operate->m_tiebaOperate->GetEncodedForumName());
+			CString src = HTTPGet(url, &*theApp.m_cookieConfig->m_cookie);
 			CString totalPage = GetStringBetween(src, _T(R"(class="tbui_total_page">共)"), _T("页"));
 			if (totalPage == _T(""))
 			{
@@ -211,8 +214,8 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 			s_instance->m_stateStatic.SetWindowText(state);
 		s_instanceLock.Unlock();
 		CString url;
-		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), (LPCTSTR)g_tiebaOperate->GetEncodedForumName(), page);
-		CString src = HTTPGet(url, &*g_cookieConfig.m_cookie);
+		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), (LPCTSTR)theApp.m_operate->m_tiebaOperate->GetEncodedForumName(), page);
+		CString src = HTTPGet(url, &*theApp.m_cookieConfig->m_cookie);
 		if (s_stopFlag)
 			break;
 
@@ -252,7 +255,7 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 			s_instance->m_stateStatic.SetWindowText(state);
 		s_instanceLock.Unlock();
 
-		CString code = g_tiebaOperate->Defriend(userID[i]);
+		CString code = theApp.m_operate->m_tiebaOperate->Defriend(userID[i]);
 		if (code != _T("0"))
 		{
 			CString content;
@@ -262,7 +265,7 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 		}
 		else
 		{
-			g_userCache.m_defriendedUser->insert(userName[i]);
+			theApp.m_userCache->m_defriendedUser->insert(userName[i]);
 			mainDlg->m_log.Log(_T("<font color=red>拉黑 </font>") + userName[i]);
 		}
 

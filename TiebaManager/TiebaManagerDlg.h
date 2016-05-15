@@ -75,7 +75,7 @@ public:
 	CExplorerDlg* m_explorerDlg;
 	CSuperFunctionDlg* m_superFunctionDlg;
 
-	CLog m_log;
+	CExplorerLog m_log;
 
 protected:
 	NOTIFYICONDATA m_nfData;

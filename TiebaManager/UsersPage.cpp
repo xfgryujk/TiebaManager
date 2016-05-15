@@ -5,8 +5,9 @@
 #include "UsersPage.h"
 #include "LoginDlg.h"
 #include <TBMConfig.h>
+#include <TBMConfigPath.h>
+#include "TiebaManager.h"
 #include "ConfigHelper.h"
-#include "TiebaVariable.h"
 #include "SettingDlg.h"
 #include "TiebaManagerDlg.h"
 #include <MiscHelper.h>
@@ -84,14 +85,14 @@ void CUsersPage::OnBnClickedButton1()
 		AfxMessageBox(_T("保存账号失败！"), MB_ICONERROR);
 		return;
 	}
-	if (g_globalConfig.m_currentUser == loginDlg.m_userName)
-		*g_cookieConfig.m_cookie = loginDlg.m_cookie;
+	if (theApp.m_globalConfig->m_currentUser == loginDlg.m_userName)
+		*theApp.m_cookieConfig->m_cookie = loginDlg.m_cookie;
 
 	int index = m_list.FindStringExact(-1, loginDlg.m_userName);
 	if (index == LB_ERR)
 		index = m_list.AddString(loginDlg.m_userName);
 	m_list.SetCurSel(index);
-	if (g_globalConfig.m_currentUser == _T("[NULL]"))
+	if (theApp.m_globalConfig->m_currentUser == _T("[NULL]"))
 		OnBnClickedButton3();
 }
 
@@ -103,7 +104,7 @@ void CUsersPage::OnBnClickedButton2()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (name == g_globalConfig.m_currentUser)
+	if (name == theApp.m_globalConfig->m_currentUser)
 	{
 		AfxMessageBox(_T("不能删除当前账号！"), MB_ICONERROR);
 		return;
@@ -130,6 +131,6 @@ void CUsersPage::OnBnClickedButton3()
 	CString name;
 	m_list.GetText(index, name);
 	SetCurrentUser(name, TRUE);
-	((CSettingDlg*)GetParent()->GetParent())->ShowPlan(g_plan);
-	m_currentUserStatic.SetWindowText(_T("当前账号：") + g_globalConfig.m_currentUser);
+	((CSettingDlg*)GetParent()->GetParent())->ShowPlan(*theApp.m_plan);
+	m_currentUserStatic.SetWindowText(_T("当前账号：") + theApp.m_globalConfig->m_currentUser);
 }

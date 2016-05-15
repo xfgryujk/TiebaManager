@@ -48,6 +48,9 @@
     <ClCompile Include="NetworkHelper.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
+    <ClCompile Include="EventHelper.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Helper.def">
@@ -86,6 +89,12 @@
       <Filter>头文件\API</Filter>
     </ClInclude>
     <ClInclude Include="API\NetworkHelper.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\EventHelper.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\BlockingQueue.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>

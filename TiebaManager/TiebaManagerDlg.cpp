@@ -19,12 +19,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "TiebaManagerDlg.h"
+#include "TiebaManager.h"
 
 #include "SettingDlg.h"
 #include "ExplorerDlg.h"
 #include "SuperFunctionDlg.h"
-#include "LoopBanPage.h"
 
+#include <TBMConfigPath.h>
 #include <TBMConfig.h>
 #include "ConfigHelper.h"
 #include <StringHelper.h>
@@ -32,12 +33,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <MiscHelper.h>
 #include "Update.h"
 
-#include "TiebaVariable.h"
 #include <TiebaClawer.h>
-#include "TiebaScan.h"
-#include "TBMOperate.h"
-
-#include "ScanImage.h"
+#include <TiebaOperate.h>
+#include <TBMScan.h>
+#include <TBMOperate.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -182,31 +181,33 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 
 	// 初始化日志
 	m_log.Init();
+	theApp.m_scan->m_log = &m_log;
+	theApp.m_operate->m_log = &m_log;
 
 	// 读取设置
-	g_globalConfig.Load(GLOBAL_CONFIG_PATH);
-	SetCurrentUser(g_globalConfig.m_currentUser, FALSE);
+	theApp.m_globalConfig->Load(GLOBAL_CONFIG_PATH);
+	SetCurrentUser(theApp.m_globalConfig->m_currentUser, FALSE);
 	
 	// 自动更新
-	if (g_globalConfig.m_autoUpdate)
+	if (theApp.m_globalConfig->m_autoUpdate)
 		AfxBeginThread(AutoUpdateThread, this);
 
 	// 初次运行先看关于
-	if (g_globalConfig.m_firstRun)
+	if (theApp.m_globalConfig->m_firstRun)
 	{
-		*g_globalConfig.m_firstRun = FALSE;
-		*g_globalConfig.m_firstRunAfterUpdate = FALSE;
-		g_globalConfig.Save(GLOBAL_CONFIG_PATH);
+		*theApp.m_globalConfig->m_firstRun = FALSE;
+		*theApp.m_globalConfig->m_firstRunAfterUpdate = FALSE;
+		theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
 		m_settingDlg = new CSettingDlg();
 		m_settingDlg->Create(m_settingDlg->IDD, this);
 		m_settingDlg->m_tab.SetCurSel(SETTING_DLG_PAGE_COUNT - 1);
 		LRESULT tmp;
 		m_settingDlg->OnTcnSelchangeTab1(NULL, &tmp);
 	}
-	else if (g_globalConfig.m_firstRunAfterUpdate) // 弹出更新日志
+	else if (theApp.m_globalConfig->m_firstRunAfterUpdate) // 弹出更新日志
 	{
-		*g_globalConfig.m_firstRunAfterUpdate = FALSE;
-		g_globalConfig.Save(GLOBAL_CONFIG_PATH);
+		*theApp.m_globalConfig->m_firstRunAfterUpdate = FALSE;
+		theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
 		AfxMessageBox(UPDATE_LOG, MB_ICONINFORMATION);
 	}
 
@@ -214,7 +215,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	// 每24小时清除已封名单、开始循环封
 	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
 		{
-			g_userCache.m_bannedUser->clear();
+			theApp.m_userCache->m_bannedUser->clear();
 			AfxBeginThread(LoopBanThread, (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd);
 		});
 
@@ -245,8 +246,13 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 // 保存储存在窗口的数据
 void CTiebaManagerDlg::OnClose()
 {
-	if (g_plan.m_autoSaveLog)
+	if (theApp.m_plan->m_autoSaveLog)
 		m_log.Save(_T("Log"));
+
+	theApp.m_scan->StopScan();
+	while (theApp.m_scan->m_scanThread != nullptr)
+		Delay(100);
+
 	m_log.Release();
 
 	CNormalDlg::OnClose();
@@ -258,12 +264,10 @@ void CTiebaManagerDlg::OnDestroy()
 	CNormalDlg::OnDestroy();
 
 	SaveCurrentUserConfig();
-	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
-	g_plan.Save(OPTIONS_DIR_PATH + g_userConfig.m_plan + _T(".xml"));
+	theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
+	theApp.m_plan->Save(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
 
-	g_stopScanFlag = TRUE; // 实际上线程不会返回（返回前就崩溃了？）
-
-	g_plan.m_images.clear(); // 不知道为什么不加这个Release版关闭后会崩溃...
+	//theApp.m_plan->m_images.clear(); // 不知道为什么不加这个Release版关闭后会崩溃...
 
 	// 还是有内存泄漏，但我找不出了...
 }
@@ -326,9 +330,10 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	*Cancel = TRUE;
 
 	CString prefix = url.Left(3);
+	CTiebaOperate& tiebaOperate = *theApp.m_operate->m_tiebaOperate;
 	if (prefix == _T("dt:")) // 删主题
 	{
-		CString code = g_tiebaOperate->DeleteThread(url.Right(url.GetLength() - 3));
+		CString code = tiebaOperate.DeleteThread(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
@@ -338,7 +343,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = g_tiebaOperate->DeletePost(args[0], args[1]);
+		CString code = tiebaOperate.DeletePost(args[0], args[1]);
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
@@ -348,7 +353,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = g_tiebaOperate->DeleteLZL(args[0], args[1]);
+		CString code = tiebaOperate.DeleteLZL(args[0], args[1]);
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
@@ -358,8 +363,8 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = (g_plan.m_wapBanInterface /*|| g_plan.m_banDuration == 1*/ || args[1] == _T("")) ? 
-			g_tiebaOperate->BanIDClient(args[0]) : g_tiebaOperate->BanID(args[0], args[1]);
+		CString code = (theApp.m_plan->m_wapBanInterface /*|| theApp.m_plan->m_banDuration == 1*/ || args[1] == _T("")) ? 
+			tiebaOperate.BanIDClient(args[0]) : tiebaOperate.BanID(args[0], args[1]);
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>封禁成功！</font>"));
 		else
@@ -367,7 +372,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	}
 	else if (prefix == _T("df:")) // 拉黑
 	{
-		CString code = g_tiebaOperate->Defriend(url.Right(url.GetLength() - 3));
+		CString code = tiebaOperate.Defriend(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
 			m_log.Log(_T("<font color=green>拉黑成功！</font>"));
 		else
@@ -460,8 +465,8 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_stateStatic.SetWindowText(_T("验证贴吧中"));
 
 
-	g_tiebaOperate.reset(new CTiebaOperate(g_cookieConfig.m_cookie, g_plan.m_banDuration, g_plan.m_banReason));
-	switch (g_tiebaOperate->SetTieba(forumName))
+	CTiebaOperate& tiebaOperate = *theApp.m_operate->m_tiebaOperate;
+	switch (tiebaOperate.SetTieba(forumName))
 	{
 	case CTiebaOperate::SET_TIEBA_TIMEOUT:
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
@@ -480,10 +485,10 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		goto Error;
 	}
 
-	SetWindowText(_T("贴吧管理器 - ") + g_tiebaOperate->GetUserName_());
+	SetWindowText(_T("贴吧管理器 - ") + tiebaOperate.GetUserName_());
 
 	// 加入信任用户
-	g_plan.m_whiteList->insert(g_tiebaOperate->GetUserName_());
+	theApp.m_plan->m_whiteList->insert(tiebaOperate.GetUserName_());
 
 
 	m_stateStatic.SetWindowText(_T("待机中"));
@@ -491,10 +496,10 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_pageEdit.EnableWindow(TRUE);
 	m_explorerButton.EnableWindow(TRUE);
 	m_superFunctionButton.EnableWindow(TRUE);
-	*g_userConfig.m_forumName = g_tiebaOperate->GetForumName();
-	g_userConfig.Save(USER_CONFIG_PATH);
-	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + g_tiebaOperate->GetForumName()
-		+ _T("<font color=green> 吧，使用账号：</font>" + g_tiebaOperate->GetUserName_()));
+	*theApp.m_userConfig->m_forumName = tiebaOperate.GetForumName();
+	theApp.m_userConfig->Save(USER_CONFIG_PATH);
+	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + tiebaOperate.GetForumName()
+		+ _T("<font color=green> 吧，使用账号：</font>" + tiebaOperate.GetUserName_()));
 	// 开始循环封
 	AfxBeginThread(LoopBanThread, this);
 
@@ -509,7 +514,7 @@ Error:
 // 开始
 void CTiebaManagerDlg::OnBnClickedButton2()
 {
-	if (g_plan.m_keywords->empty() && g_plan.m_images.empty() && g_plan.m_blackList->empty() && g_plan.m_illegalLevel <= 0)
+	if (theApp.m_plan->m_keywords->empty() && theApp.m_plan->m_images.empty() && theApp.m_plan->m_blackList->empty() && theApp.m_plan->m_illegalLevel <= 0)
 	{
 		AfxMessageBox(_T("至少设置一个违规规则！"), MB_ICONERROR);
 		OnBnClickedButton5();
@@ -519,11 +524,11 @@ void CTiebaManagerDlg::OnBnClickedButton2()
 	m_pageEdit.GetWindowText(tmp);
 	if (_ttoi(tmp) < 1)
 		m_pageEdit.SetWindowText(_T("1"));
-	g_scanThread = AfxBeginThread(ScanThread, this);
+	theApp.m_scan->StartScan(tmp);
 }
 
 // 停止
 void CTiebaManagerDlg::OnBnClickedButton3()
 {
-	g_stopScanFlag = TRUE;
+	theApp.m_scan->StopScan();
 }

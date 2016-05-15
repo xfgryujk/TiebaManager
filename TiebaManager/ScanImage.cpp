@@ -2,7 +2,9 @@
 #include "ScanImage.h"
 #include <ImageHelper.h>
 #include <TBMConfig.h>
+#include <TBMConfigPath.h>
 #include <opencv2\imgproc\imgproc.hpp>
+#include "TiebaManager.h"
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
 
@@ -17,14 +19,14 @@ static const wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
 static const wregex POST_IMG_REG(_T("<img .*?class=\"(BDE_Image|j_user_sign)\".*?src=\"(.*?)\".*?>"));
 
 
-// 从目录读取图片到g_images
-void ReadImages(const CString& dir)
+// 从目录读取图片到images
+void ReadImages(const CString& dir, vector<CPlan::NameImage>& images)
 {
 	vector<CString> imagePath;
 
 	if (dir == _T(""))
 	{
-		g_plan.m_images.clear();
+		images.clear();
 		return;
 	}
 	CFileFind fileFind;
@@ -39,17 +41,17 @@ void ReadImages(const CString& dir)
 		}
 	}
 
-	g_plan.m_images.resize(imagePath.size());
+	images.resize(imagePath.size());
 	UINT imgCount = 0;
 	for (CString& i : imagePath)
 	{
-		g_plan.m_images[imgCount].name = GetImageName(i);
-		if (ReadImage(i, g_plan.m_images[imgCount].img))
+		images[imgCount].name = GetImageName(i);
+		if (ReadImage(i, images[imgCount].img))
 			imgCount++;
 	}
 	if (imagePath.size() != imgCount)
 	{
-		g_plan.m_images.resize(imgCount);
+		images.resize(imgCount);
 		CString msg;
 		msg.Format(_T("%u张图片加载失败！"), imagePath.size() - imgCount);
 		AfxMessageBox(msg, MB_ICONINFORMATION);
@@ -79,17 +81,17 @@ void GetPostImage::GetImage(vector<CString>& img)
 // 检查图片违规1，检测信任用户、获取图片地址
 BOOL CheckImageIllegal(const CString& author, GetImagesBase& getImage, CString& msg)
 {
-	if (g_plan.m_images.empty())
+	if (theApp.m_plan->m_images.empty())
 		return FALSE;
 
 	// 信任用户
-	g_plan.m_optionsLock.Lock();
-	if (g_plan.m_whiteList->find(author) != g_plan.m_whiteList->end())
+	theApp.m_plan->m_optionsLock.Lock();
+	if (theApp.m_plan->m_whiteList->find(author) != theApp.m_plan->m_whiteList->end())
 	{
-		g_plan.m_optionsLock.Unlock();
+		theApp.m_plan->m_optionsLock.Unlock();
 		return FALSE;
 	}
-	g_plan.m_optionsLock.Unlock();
+	theApp.m_plan->m_optionsLock.Unlock();
 
 	vector<CString> imgs;
 	getImage.GetImage(imgs);
@@ -209,23 +211,23 @@ BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 		if (image.data == NULL || image.cols < 30 || image.rows < 30) // 尺寸太小不比较
 			continue;
 		// 判断和违规图片比较大于阈值
-		g_plan.m_optionsLock.Lock();
-		for (const auto& i : g_plan.m_images)
+		theApp.m_plan->m_optionsLock.Lock();
+		for (const auto& i : theApp.m_plan->m_images)
 		{
 			if (i.img.cols < 30 || i.img.rows < 30) // 尺寸太小不比较
 				continue;
 			double mssim = getMSSIM(image, i.img);
-			if (mssim > g_plan.m_SSIMThreshold)
+			if (mssim > theApp.m_plan->m_SSIMThreshold)
 			{
 				msg.Format(_T("<font color=red> 触发违规图片 </font>%s<font color=red> 相似度%.3lf</font>"),
 					(LPCTSTR)i.name, mssim);
 				g_illegalImage.insert(imgName);
-				g_plan.m_optionsLock.Unlock();
+				theApp.m_plan->m_optionsLock.Unlock();
 				return TRUE;
 			}
 		}
 		g_leagalImage.insert(imgName);
-		g_plan.m_optionsLock.Unlock();
+		theApp.m_plan->m_optionsLock.Unlock();
 	}
 
 	return FALSE;

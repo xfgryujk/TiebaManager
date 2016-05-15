@@ -7,8 +7,10 @@
 #include <StringHelper.h>
 #include <MiscHelper.h>
 #include <TiebaClawer.h>
-#include "TBMOperate.h"
+#include <TBMOperate.h>
 #include <TBMConfig.h>
+#include "TiebaManager.h"
+#include <TiebaOperate.h>
 #include <Mmsystem.h>
 
 
@@ -130,7 +132,7 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 		for (const PostInfo& post : posts)
 			if (_ttoi(post.floor) > iFloor)
 			{
-				CString code = g_tiebaOperate->DeletePost(tid, post.pid);
+				CString code = theApp.m_operate->m_tiebaOperate->DeletePost(tid, post.pid);
 				if (code != _T("0"))
 				{
 					CString content;
@@ -142,7 +144,7 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 				{
 					sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
 					mainDlg->m_log.Log(_T("<font color=red>锁帖：删除 </font>") + post.floor + _T("楼"));
-					for (int i = 0; i < (int)(g_plan.m_deleteInterval * 10); i++)
+					for (int i = 0; i < (int)(theApp.m_plan->m_deleteInterval * 10); i++)
 					{
 						if (m_stopFlag)
 							break;

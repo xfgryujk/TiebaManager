@@ -118,8 +118,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
+    <ClInclude Include="API\TiebaManagerCommon.h" />
     <ClInclude Include="API\TBMConfig.h" />
-    <ClInclude Include="API\TBMCommon.h" />
+    <ClInclude Include="API\TBMConfigPath.h" />
     <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="ConfigHelper.h" />
     <ClInclude Include="InputDlg.h" />
@@ -154,6 +155,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SuperFunctionDlg.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TBMOperateListeners.h" />
+    <ClInclude Include="TBMScanListeners.h" />
     <ClInclude Include="TextButton.h" />
     <ClInclude Include="TiebaManager.h" />
     <ClInclude Include="TiebaManagerDlg.h" />
@@ -192,16 +195,19 @@
     <ClCompile Include="LoginDlg.cpp" />
     <ClCompile Include="OptionsPage.cpp" />
     <ClCompile Include="ScanPage.cpp" />
-    <ClCompile Include="TBMConfig.cpp" />
     <ClCompile Include="SettingDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SuperFunctionDlg.cpp" />
+    <ClCompile Include="TBMConfig.cpp" />
+    <ClCompile Include="TBMConfigPath.cpp" />
+    <ClCompile Include="TBMOperateListeners.cpp" />
     <ClCompile Include="TextButton.cpp" />
     <ClCompile Include="TiebaManager.cpp" />
     <ClCompile Include="TiebaManagerDlg.cpp" />
+    <ClCompile Include="TBMScanListeners.cpp" />
     <ClCompile Include="Update.cpp" />
     <ClCompile Include="UsersPage.cpp" />
     <ClCompile Include="WhiteContentPage.cpp" />

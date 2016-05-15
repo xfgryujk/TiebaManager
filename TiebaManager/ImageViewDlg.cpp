@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ImageViewDlg.h"
 #include <ImageHelper.h>
+#include <TBMConfigPath.h>
 #include "ScanImage.h"
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
