@@ -4,7 +4,7 @@
 #include <TBMScan.h>
 #include <TBMScanEvent.h>
 
-#include <TBMConfig.h>
+#include "TBMConfig.h"
 #include "ScanImage.h"
 
 #include "TiebaManager.h"

@@ -71,9 +71,9 @@ public:
 	CTextButton m_saveLogStatic;
 	CListBox m_stateList;
 
-	CSettingDlg* m_settingDlg;
-	CExplorerDlg* m_explorerDlg;
-	CSuperFunctionDlg* m_superFunctionDlg;
+	CSettingDlg* m_settingDlg = NULL;
+	CExplorerDlg* m_explorerDlg = NULL;
+	CSuperFunctionDlg* m_superFunctionDlg = NULL;
 
 	CExplorerLog m_log;
 

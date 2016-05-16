@@ -9,7 +9,7 @@ class CExplorerLog : public ILog
 {
 protected:
 	CExplorer1& m_logExplorer;
-	HWND m_explorerHwnd;
+	HWND m_explorerHwnd = NULL;
 	CComPtr<IHTMLDocument2> m_logDocument;
 
 	SYSTEMTIME m_logStartTime;
@@ -17,16 +17,13 @@ protected:
 	static WNDPROC s_oldExplorerWndProc;
 
 public:
-	CExplorerLog(CExplorer1& explorer) : m_logExplorer(explorer)
-	{
-		m_explorerHwnd = NULL;
-	}
+	CExplorerLog(CExplorer1& explorer) : m_logExplorer(explorer){ }
 
 	void Init();
 	void Release();
 	void Log(const CString& content);
 	void Clear();
-	void Save(LPCTSTR folder);
+	void Save(const CString& folder);
 
 protected:
 	static BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam);

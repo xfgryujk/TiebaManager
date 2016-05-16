@@ -15,10 +15,19 @@ static const TCHAR PAGE_COUNT_LEFT[] = _T(",\"total_page\":");
 static const TCHAR PAGE_COUNT_RIGHT[] = _T("}");
 
 
+CTBMScan::CTBMScan(CTBMCoreConfig* config, CUserCache* userCache, CTBMOperate* operate, ILog* log) :
+	m_config(config),
+	m_userCache(userCache),
+	m_operate(operate),
+	m_log(log)
+{
+
+}
+
 CTBMScan::~CTBMScan()
 {
 	m_stopScanFlag = TRUE;
-	if (m_scanThread != nullptr && m_scanThread->joinable())
+	if (IsScanning())
 		m_scanThread->join();
 }
 
@@ -32,6 +41,12 @@ void CTBMScan::StartScan(const CString& sPage)
 void CTBMScan::StopScan()
 {
 	m_stopScanFlag = TRUE;
+}
+
+// 正在扫描
+BOOL CTBMScan::IsScanning()
+{
+	return m_scanThread != nullptr && m_scanThread->joinable();
 }
 
 // 扫描主题图片
@@ -51,8 +66,8 @@ void CTBMScan::ScanThreadImage()
 			event_.result = FALSE;
 			if (m_eventBus.Post(CheckThreadImageIllegalEvent, event_) && event_.result)
 			{
-				m_operate->AddConfirm(forceToConfirm, thread.title + _T("\r\n") + thread.preview, CTBMOperate::Operation::TBOBJ_THREAD, thread.tid,
-					thread.title, _T("1"), _T(""), thread.author, thread.authorID, _T(""), pos, length);
+				m_operate->AddConfirm(Operation(forceToConfirm, thread.title + _T("\r\n") + thread.preview, Operation::TBOBJ_THREAD, thread.tid,
+					thread.title, _T("1"), _T(""), thread.author, thread.authorID, _T(""), pos, length));
 				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 					+ HTMLEscape(thread.title) + _T("</a>") + msg);
 				m_userCache->m_ignoredTID.insert(tid);
@@ -113,8 +128,8 @@ void CTBMScan::ScanThread(CString sPage)
 					event_.result = FALSE;
 					if (m_eventBus.Post(CheckThreadIllegalEvent, event_) && event_.result)
 					{
-						m_operate->AddConfirm(forceToConfirm, thread.title + _T("\r\n") + thread.preview, CTBMOperate::Operation::TBOBJ_THREAD, thread.tid,
-							thread.title, _T("0"), _T(""), thread.author, thread.authorID, _T(""), pos, length);
+						m_operate->AddConfirm(Operation(forceToConfirm, thread.title + _T("\r\n") + thread.preview, Operation::TBOBJ_THREAD, thread.tid,
+							thread.title, _T("0"), _T(""), thread.author, thread.authorID, _T(""), pos, length));
 						m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 							+ HTMLEscape(thread.title) + _T("</a>") + msg);
 						m_userCache->m_ignoredTID.insert(tid);
@@ -316,8 +331,8 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 			event_.result = FALSE;
 			if (m_eventBus.Post(CheckPostIllegalEvent, event_) && event_.result)
 			{
-				m_operate->AddConfirm(forceToConfirm, post.content, post.floor == _T("1") ? CTBMOperate::Operation::TBOBJ_THREAD : CTBMOperate::Operation::TBOBJ_POST,
-					thread.tid, thread.title, post.floor, post.pid, post.author, post.authorID, post.authorPortrait, pos, length);
+				m_operate->AddConfirm(Operation(forceToConfirm, post.content, post.floor == _T("1") ? Operation::TBOBJ_THREAD : Operation::TBOBJ_POST,
+					thread.tid, thread.title, post.floor, post.pid, post.author, post.authorID, post.authorPortrait, pos, length));
 				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + post.floor + _T("楼") + msg);
 				m_userCache->m_ignoredPID.insert(pid);
@@ -337,8 +352,8 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 			__int64 lzlid = _ttoi64(lzl.pid);
 			if (m_userCache->m_ignoredLZLID.find(lzlid) == m_userCache->m_ignoredLZLID.end())
 			{
-				m_operate->AddConfirm(forceToConfirm, lzl.content, CTBMOperate::Operation::TBOBJ_LZL, thread.tid, thread.title, lzl.floor, lzl.pid, lzl.author,
-					lzl.authorID, lzl.authorPortrait, pos, length);
+				m_operate->AddConfirm(Operation(forceToConfirm, lzl.content, Operation::TBOBJ_LZL, thread.tid, thread.title, lzl.floor, lzl.pid, lzl.author,
+					lzl.authorID, lzl.authorPortrait, pos, length));
 				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 				m_userCache->m_ignoredLZLID.insert(lzlid);
@@ -358,8 +373,8 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 			event_.result = FALSE;
 			if (m_eventBus.Post(CheckPostImageIllegalEvent, event_) && event_.result)
 			{
-				m_operate->AddConfirm(FALSE, post.content, post.floor == _T("1") ? CTBMOperate::Operation::TBOBJ_THREAD : CTBMOperate::Operation::TBOBJ_POST,
-					thread.tid, thread.title, post.floor, post.pid, post.author, post.authorID, post.authorPortrait);
+				m_operate->AddConfirm(Operation(FALSE, post.content, post.floor == _T("1") ? Operation::TBOBJ_THREAD : Operation::TBOBJ_POST,
+					thread.tid, thread.title, post.floor, post.pid, post.author, post.authorID, post.authorPortrait));
 				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + post.floor + _T("楼") + msg);
 				m_userCache->m_ignoredPID.insert(pid);
@@ -379,8 +394,8 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 			event_.result = FALSE;
 			if (m_eventBus.Post(CheckLzlImageIllegalEvent, event_) && event_.result)
 			{
-				m_operate->AddConfirm(FALSE, lzl.content, CTBMOperate::Operation::TBOBJ_LZL, thread.tid, thread.title, lzl.floor, 
-					lzl.pid, lzl.author, lzl.authorID, lzl.authorPortrait);
+				m_operate->AddConfirm(Operation(FALSE, lzl.content, Operation::TBOBJ_LZL, thread.tid, thread.title, lzl.floor,
+					lzl.pid, lzl.author, lzl.authorID, lzl.authorPortrait));
 				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 				m_userCache->m_ignoredLZLID.insert(pid);

@@ -6,12 +6,14 @@
 #include "TiebaManager.h"
 #include "TiebaManagerDlg.h"
 #include <Dbghelp.h>
-#include <TBMConfigPath.h>
+#include "TBMConfigPath.h"
 
-#include <TBMConfig.h>
+#include "TBMConfig.h"
 #include <TBMCoreConfig.h>
+#include <TiebaOperate.h>
 #include <TBMScan.h>
 #include <TBMOperate.h>
+
 #include "TBMScanListeners.h"
 #include "TBMOperateListeners.h"
 
@@ -132,13 +134,11 @@ void CTiebaManagerApp::init()
 	m_cookieConfig.reset(new CCookieConfig());
 	m_plan.reset(new CPlan());
 	m_userCache.reset(new CUserCache());
-	m_operate.reset(new CTBMOperate(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason));
-	m_operate->m_config = m_plan.get();
-	m_operate->m_userCache = m_userCache.get();
-	m_scan.reset(new CTBMScan());
-	m_scan->m_config = m_plan.get();
-	m_scan->m_userCache = m_userCache.get();
-	m_scan->m_operate = m_operate.get();
+
+	m_tiebaOperate.reset(new CTiebaOperate(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason));
+	m_operate.reset(new CTBMOperate(m_plan.get(), m_userCache.get())); // 日志在对话框初始化时初始化
+	m_scan.reset(new CTBMScan(m_plan.get(), m_userCache.get(), m_operate.get())); // 日志在对话框初始化时初始化
+
 	m_scanListeners.reset(new CTBMScanListeners(*m_scan));
 	m_operateListeners.reset(new CTBMOperateListeners(*m_operate));
 }

@@ -1,8 +1,8 @@
 ﻿#include "stdafx.h"
 #include "ConfigHelper.h"
 #include <MiscHelper.h>
-#include <TBMConfig.h>
-#include <TBMConfigPath.h>
+#include "TBMConfig.h"
+#include "TBMConfigPath.h"
 #include "TiebaManager.h"
 #include <TBMScan.h>
 #include "ScanImage.h"

@@ -1,8 +1,8 @@
 ﻿#include "stdafx.h"
-#include <TBMConfig.h>
+#include "TBMConfig.h"
 using tinyxml2::XMLElement;
 #include "Update.h"
-#include <TBMConfigPath.h>
+#include "TBMConfigPath.h"
 #include "ScanImage.h"
 
 
@@ -36,7 +36,7 @@ CCookieConfig::CCookieConfig() : CConfigBase("Cookie"),
 }
 
 // 方案
-TIEBA_MANAGER_API DECLEAR_READ(CPlan::Keyword)
+DECLEAR_READ(CPlan::Keyword)
 {
 	const XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
@@ -62,7 +62,7 @@ TIEBA_MANAGER_API DECLEAR_READ(CPlan::Keyword)
 		UseDefault();
 }
 
-TIEBA_MANAGER_API DECLEAR_WRITE(CPlan::Keyword)
+DECLEAR_WRITE(CPlan::Keyword)
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
 	XMLElement* optionNode = doc->NewElement(m_name);
@@ -82,9 +82,9 @@ TIEBA_MANAGER_API DECLEAR_WRITE(CPlan::Keyword)
 	trigCount.Write(*optionNode);
 }
 
-TIEBA_MANAGER_API DEFINE_READ_VECTOR(CPlan::Keyword)
+DEFINE_READ_VECTOR(CPlan::Keyword)
 
-TIEBA_MANAGER_API DEFINE_WRITE_VECTOR(CPlan::Keyword)
+DEFINE_WRITE_VECTOR(CPlan::Keyword)
 
 CPlan::CPlan() : CTBMCoreConfig("Plan"),
 	m_autoSaveLog		("AutoSaveLog",			FALSE),

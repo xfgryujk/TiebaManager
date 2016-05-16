@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "WhiteContentPage.h"
 #include <StringHelper.h>
-#include <TBMConfig.h>
+#include "TBMConfig.h"
 
 
 // CWhiteContentPage 对话框

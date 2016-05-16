@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "RegListPage.h"
-#include <TBMConfig.h>
+#include "TBMConfig.h"
 #include "InputDlg.h"
 #include <StringHelper.h>
 

@@ -3,14 +3,16 @@
 
 #include "stdafx.h"
 #include "LockThreadPage.h"
-#include "TiebaManagerDlg.h"
+
 #include <StringHelper.h>
 #include <MiscHelper.h>
-#include <TiebaClawer.h>
-#include <TBMOperate.h>
-#include <TBMConfig.h>
+#include "TiebaManagerDlg.h"
+
+#include "TBMConfig.h"
 #include "TiebaManager.h"
+#include <TiebaClawer.h>
 #include <TiebaOperate.h>
+
 #include <Mmsystem.h>
 
 
@@ -132,7 +134,7 @@ UINT AFX_CDECL CLockThreadPage::LockThreadThread(LPVOID)
 		for (const PostInfo& post : posts)
 			if (_ttoi(post.floor) > iFloor)
 			{
-				CString code = theApp.m_operate->m_tiebaOperate->DeletePost(tid, post.pid);
+				CString code = theApp.m_tiebaOperate->DeletePost(tid, post.pid);
 				if (code != _T("0"))
 				{
 					CString content;

@@ -3,7 +3,7 @@
 #include "LoopBanPage.h"
 #include "DefriendPage.h"
 #include "LockThreadPage.h"
-#include <TBMConfig.h>
+#include "TBMConfig.h"
 
 
 // CSuperFunctionDlg 对话框

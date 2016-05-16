@@ -119,8 +119,6 @@
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="API\TiebaManagerCommon.h" />
-    <ClInclude Include="API\TBMConfig.h" />
-    <ClInclude Include="API\TBMConfigPath.h" />
     <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="ConfigHelper.h" />
     <ClInclude Include="InputDlg.h" />
@@ -155,6 +153,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SuperFunctionDlg.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TBMConfig.h" />
+    <ClInclude Include="TBMConfigPath.h" />
     <ClInclude Include="TBMOperateListeners.h" />
     <ClInclude Include="TBMScanListeners.h" />
     <ClInclude Include="TextButton.h" />

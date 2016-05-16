@@ -7,15 +7,14 @@
 #include <StringHelper.h>
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
-#include <TBMConfig.h>
-#include <TBMConfigPath.h>
+#include "TiebaManagerDlg.h"
 
-#include <TBMOperate.h>
-#include <TiebaOperate.h>
+#include "TBMConfig.h"
+#include "TBMConfigPath.h"
 #include "TiebaManager.h"
+#include <TiebaOperate.h>
 
 #include "SuperFunctionDlg.h"
-#include "TiebaManagerDlg.h"
 
 
 // CLoopBanPage 对话框
@@ -95,7 +94,7 @@ void CLoopBanPage::OnDelete(int index)
 // 取用户发的帖子ID
 static CString GetPIDFromUser(const CString& userName)
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + theApp.m_operate->m_tiebaOperate->GetEncodedForumName() + _T("&qw=&rn=10&un=")
+	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + theApp.m_tiebaOperate->GetEncodedForumName() + _T("&qw=&rn=10&un=")
 		+ userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"));
 	if (src == NET_TIMEOUT_TEXT)
 		return NET_TIMEOUT_TEXT;
@@ -150,19 +149,19 @@ UINT AFX_CDECL LoopBanThread(LPVOID _dlg)
 	{
 		CString code;
 		if (theApp.m_plan->m_wapBanInterface)
-			code = theApp.m_operate->m_tiebaOperate->BanIDClient((*config.m_userList)[i]); // 用WAP接口封禁
+			code = theApp.m_tiebaOperate->BanIDClient((*config.m_userList)[i]); // 用WAP接口封禁
 		else
 		{
 			if ((*config.m_pidList)[i] != _T("")) // 尝试用PID封禁
-				code = theApp.m_operate->m_tiebaOperate->BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
+				code = theApp.m_tiebaOperate->BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
 			if ((*config.m_pidList)[i] == _T("") || code != _T("0")) // 尝试不用PID封禁（用户必须为本吧会员）
 			{
-				code = theApp.m_operate->m_tiebaOperate->BanID((*config.m_userList)[i]);
+				code = theApp.m_tiebaOperate->BanID((*config.m_userList)[i]);
 				if (code != _T("0")) // 尝试获取新的PID并用PID封禁
 				{
 					(*config.m_pidList)[i] = GetPIDFromUser((*config.m_userList)[i]);
 					updatePID = TRUE;
-					code = theApp.m_operate->m_tiebaOperate->BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
+					code = theApp.m_tiebaOperate->BanID((*config.m_userList)[i], (*config.m_pidList)[i]);
 				}
 			}
 		}

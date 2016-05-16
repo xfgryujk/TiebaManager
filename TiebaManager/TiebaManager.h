@@ -19,8 +19,11 @@ class CUserConfig;
 class CCookieConfig;
 class CPlan;
 class CUserCache;
+
+class CTiebaOperate;
 class CTBMScan;
 class CTBMOperate;
+
 class CTBMScanListeners;
 class CTBMOperateListeners;
 
@@ -40,8 +43,11 @@ public:
 	unique_ptr<CCookieConfig> m_cookieConfig;
 	unique_ptr<CPlan> m_plan;
 	unique_ptr<CUserCache> m_userCache;
+
+	unique_ptr<CTiebaOperate> m_tiebaOperate;
 	unique_ptr<CTBMScan> m_scan;
 	unique_ptr<CTBMOperate> m_operate;
+
 	unique_ptr<CTBMScanListeners> m_scanListeners;
 	unique_ptr<CTBMOperateListeners> m_operateListeners;
 

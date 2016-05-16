@@ -73,6 +73,12 @@
     <Filter Include="头文件\Event">
       <UniqueIdentifier>{0b3266a7-e269-4104-9b92-22c84540524a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Config">
+      <UniqueIdentifier>{58b6d463-cd2f-4ec9-9d8d-7f899f83826f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Config">
+      <UniqueIdentifier>{e4de78a8-bc57-4e5c-9116-7216938abea6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -195,15 +201,6 @@
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
     </ClInclude>
-    <ClInclude Include="ConfigHelper.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="API\TBMConfig.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
-    <ClInclude Include="API\TBMConfigPath.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
     <ClInclude Include="API\TiebaManagerCommon.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
@@ -212,6 +209,15 @@
     </ClInclude>
     <ClInclude Include="TBMScanListeners.h">
       <Filter>头文件\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMConfig.h">
+      <Filter>头文件\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMConfigPath.h">
+      <Filter>头文件\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigHelper.h">
+      <Filter>头文件\Config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -329,20 +335,20 @@
     <ClCompile Include="InputKeywordDlg.cpp">
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
     </ClCompile>
-    <ClCompile Include="ConfigHelper.cpp">
-      <Filter>源文件\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="TBMConfig.cpp">
-      <Filter>源文件\API</Filter>
-    </ClCompile>
-    <ClCompile Include="TBMConfigPath.cpp">
-      <Filter>源文件\API</Filter>
-    </ClCompile>
     <ClCompile Include="TBMScanListeners.cpp">
       <Filter>源文件\Event</Filter>
     </ClCompile>
     <ClCompile Include="TBMOperateListeners.cpp">
       <Filter>源文件\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMConfig.cpp">
+      <Filter>源文件\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMConfigPath.cpp">
+      <Filter>源文件\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigHelper.cpp">
+      <Filter>源文件\Config</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

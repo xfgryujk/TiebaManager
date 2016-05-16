@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "RegListPage.h"
-#include <TBMConfig.h>
+#include "TBMConfig.h"
 
 
 // CKeywordsPage 对话框

@@ -1,12 +1,11 @@
 ﻿#pragma once
-#include "TiebaManagerCommon.h"
 #include <TBMCoreConfig.h>
 #include <StringHelper.h>
 #include <opencv2\core\mat.hpp>
 
 
 // 全局配置
-class TIEBA_MANAGER_API CGlobalConfig : public CConfigBase
+class CGlobalConfig : public CConfigBase
 {
 public:
 	COption<BOOL> m_firstRun;				// 第一次运行
@@ -18,7 +17,7 @@ public:
 };
 
 // 用户配置
-class TIEBA_MANAGER_API CUserConfig : public CConfigBase
+class CUserConfig : public CConfigBase
 {
 public:
 	COption<CString> m_plan;		// 当前方案
@@ -28,7 +27,7 @@ public:
 };
 
 // Cookie文件
-class TIEBA_MANAGER_API CCookieConfig : public CConfigBase
+class CCookieConfig : public CConfigBase
 {
 public:
 	COption<CString> m_cookie;
@@ -42,7 +41,7 @@ const TCHAR MATCH_TOO_MUCH_CONTENT_TEST2[] = _T("贺岁·番外14·叫兽教你�
 const TCHAR MATCH_TOO_MUCH_USERNAME_TEST1[] = _T("盗我原号的没J8");
 const TCHAR MATCH_TOO_MUCH_USERNAME_TEST2[] = _T("从容人生");
 // 方案
-class TIEBA_MANAGER_API CPlan : public CTBMCoreConfig
+class CPlan : public CTBMCoreConfig
 {
 public:
 	struct Keyword : RegexText

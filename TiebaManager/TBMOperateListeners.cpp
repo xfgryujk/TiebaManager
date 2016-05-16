@@ -4,8 +4,8 @@
 #include <TBMOperate.h>
 #include <TBMOperateEvent.h>
 
-#include <TBMConfig.h>
-#include <TBMConfigPath.h>
+#include "TBMConfig.h"
+#include "TBMConfigPath.h"
 
 #include "ConfirmDlg.h"
 #include "TiebaManager.h"

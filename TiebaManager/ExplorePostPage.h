@@ -10,7 +10,7 @@ class CExplorePostPage : public CExplorerPage
 	DECLARE_DYNAMIC(CExplorePostPage)
 
 public:
-	CExplorePostPage(CWnd* pParent = NULL);   // 标准构造函数
+	CExplorePostPage(const CString& forumID, CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CExplorePostPage();
 
 // 对话框数据
@@ -29,4 +29,7 @@ public:
 public:
 	CString m_tid;
 	vector<PostInfo> m_posts;
+
+protected:
+	const CString& m_forumID;
 };

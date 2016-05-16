@@ -12,8 +12,11 @@
 #include <Mmsystem.h>
 
 
-CTBMOperate::CTBMOperate(CString& cookie, const int& banDuration, const CString& banReason) : 
-	m_tiebaOperate(new CTiebaOperate(cookie, banDuration, banReason))
+CTBMOperate::CTBMOperate(CTBMCoreConfig* config, CUserCache* userCache, CTiebaOperate* tiebaOperate, ILog* log) :
+	m_config(config),
+	m_userCache(userCache),
+	m_tiebaOperate(tiebaOperate),
+	m_log(log)
 {
 	m_operateThread.reset(new thread(&CTBMOperate::OperateThread, this));
 	m_confirmThread.reset(new thread(&CTBMOperate::ConfirmThread, this));
@@ -31,24 +34,9 @@ CTBMOperate::~CTBMOperate()
 
 
 // 添加确认
-void CTBMOperate::AddConfirm(BOOL forceToConfirm, const CString& msg, Operation::TBObject object, const CString& tid, const CString& title,
-	const CString& floor, const CString& pid, const CString& author, const CString& authorID,
-	const CString& authorPortrait, int pos, int length)
+void CTBMOperate::AddConfirm(Operation&& op)
 {
-	Operation tmp;
-	tmp.forceToConfirm = forceToConfirm;
-	tmp.msg = msg;
-	tmp.pos = pos;
-	tmp.length = length;
-	tmp.object = object;
-	tmp.tid = tid;
-	tmp.title = title;
-	tmp.floor = floor;
-	tmp.pid = pid;
-	tmp.author = author;
-	tmp.authorID = authorID;
-	tmp.authorPortrait = authorPortrait;
-	m_confirmQueue.push(std::move(tmp));
+	m_confirmQueue.push(op);
 }
 
 // 确认线程

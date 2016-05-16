@@ -2,7 +2,7 @@
 #include <TBMOperateEvent.h>
 
 
-COperateEvent::COperateEvent(const CTBMOperate::Operation& op) :
+COperateEvent::COperateEvent(const Operation& op) :
 	m_op(op)
 {
 

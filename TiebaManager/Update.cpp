@@ -61,6 +61,7 @@ UINT AFX_CDECL AutoUpdateThread(LPVOID _dlg)
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)_dlg;
 	if (!CoInitializeHelper())
 		return 0;
+
 	CheckUpdateResult res = CheckUpdate();
 	CoUninitialize();
 	switch (res)
@@ -74,5 +75,6 @@ UINT AFX_CDECL AutoUpdateThread(LPVOID _dlg)
 		break;
 	}
 
+	CoUninitialize();
 	return 0;
 }

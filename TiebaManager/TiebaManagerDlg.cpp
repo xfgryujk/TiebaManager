@@ -25,8 +25,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ExplorerDlg.h"
 #include "SuperFunctionDlg.h"
 
-#include <TBMConfigPath.h>
-#include <TBMConfig.h>
+#include "TBMConfigPath.h"
+#include "TBMConfig.h"
 #include "ConfigHelper.h"
 #include <StringHelper.h>
 #include <NetworkHelper.h>
@@ -57,10 +57,6 @@ CTiebaManagerDlg::CTiebaManagerDlg(CWnd* pParent /*=NULL*/)
 
 	m_clearLogStatic.m_normalColor = m_saveLogStatic.m_normalColor = RGB(128, 128, 128);
 	m_clearLogStatic.m_hoverColor = m_saveLogStatic.m_hoverColor = RGB(192, 192, 192);
-
-	m_explorerDlg = NULL;
-	m_settingDlg = NULL;
-	m_superFunctionDlg = NULL;
 
 	// 初始化托盘图标数据
 	m_nfData.cbSize = sizeof(NOTIFYICONDATA);
@@ -251,7 +247,7 @@ void CTiebaManagerDlg::OnClose()
 	m_isClosing = TRUE;
 
 	theApp.m_scan->StopScan();
-	while (theApp.m_scan->m_scanThread != nullptr && theApp.m_scan->m_scanThread->joinable())
+	while (theApp.m_scan->IsScanning())
 		Delay(100);
 
 	if (theApp.m_plan->m_autoSaveLog)
@@ -333,7 +329,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	*Cancel = TRUE;
 
 	CString prefix = url.Left(3);
-	CTiebaOperate& tiebaOperate = *theApp.m_operate->m_tiebaOperate;
+	CTiebaOperate& tiebaOperate = *theApp.m_tiebaOperate;
 	if (prefix == _T("dt:")) // 删主题
 	{
 		CString code = tiebaOperate.DeleteThread(url.Right(url.GetLength() - 3));
@@ -406,12 +402,8 @@ void CTiebaManagerDlg::OnStnClickedStatic7()
 		CString folder;
 		SHGetPathFromIDList(pidlSel, folder.GetBuffer(MAX_PATH));
 		folder.ReleaseBuffer();
-		if (!CoInitializeHelper())
-			return;
 
 		m_log.Save(folder);
-
-		CoUninitialize();
 	}
 
 	m_saveLogStatic.EnableWindow(TRUE);
@@ -424,7 +416,7 @@ void CTiebaManagerDlg::OnBnClickedButton7()
 {
 	if (m_explorerDlg == NULL)
 	{
-		m_explorerDlg = new CExplorerDlg();
+		m_explorerDlg = new CExplorerDlg(&m_explorerDlg);
 		m_explorerDlg->Create(m_explorerDlg->IDD, GetDesktopWindow());
 	}
 }
@@ -468,7 +460,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_stateStatic.SetWindowText(_T("验证贴吧中"));
 
 
-	CTiebaOperate& tiebaOperate = *theApp.m_operate->m_tiebaOperate;
+	CTiebaOperate& tiebaOperate = *theApp.m_tiebaOperate;
 	switch (tiebaOperate.SetTieba(forumName))
 	{
 	case CTiebaOperate::SET_TIEBA_TIMEOUT:
@@ -499,10 +491,13 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_pageEdit.EnableWindow(TRUE);
 	m_explorerButton.EnableWindow(TRUE);
 	m_superFunctionButton.EnableWindow(TRUE);
+
 	*theApp.m_userConfig->m_forumName = tiebaOperate.GetForumName();
 	theApp.m_userConfig->Save(USER_CONFIG_PATH);
+	
 	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + tiebaOperate.GetForumName()
 		+ _T("<font color=green> 吧，使用账号：</font>" + tiebaOperate.GetUserName_()));
+
 	// 开始循环封
 	AfxBeginThread(LoopBanThread, this);
 
@@ -523,10 +518,15 @@ void CTiebaManagerDlg::OnBnClickedButton2()
 		OnBnClickedButton5();
 		return;
 	}
+
 	CString tmp;
 	m_pageEdit.GetWindowText(tmp);
 	if (_ttoi(tmp) < 1)
+	{
 		m_pageEdit.SetWindowText(_T("1"));
+		tmp = _T("1");
+	}
+
 	theApp.m_scan->StartScan(tmp);
 }
 

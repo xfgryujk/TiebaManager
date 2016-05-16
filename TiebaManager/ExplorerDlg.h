@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include "afxcmn.h"
 #include "afxwin.h"
-#include "ExploreThreadPage.h"
-#include "ExplorePostPage.h"
-#include "ExploreLzlPage.h"
 #include "NormalDlg.h"
+class CExploreThreadPage;
+class CExplorePostPage;
+class CExploreLzlPage;
 class CImageViewDlg;
 
 
@@ -15,7 +15,7 @@ class CExplorerDlg : public CNormalDlg
 	DECLARE_DYNAMIC(CExplorerDlg)
 
 public:
-	CExplorerDlg(CWnd* pParent = NULL);   // 标准构造函数
+	CExplorerDlg(CExplorerDlg** pThis, CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CExplorerDlg();
 
 // 对话框数据
@@ -41,9 +41,9 @@ public:
 
 public:
 	CTabCtrl m_tab;
-	CExploreThreadPage m_exploreThreadPage;
-	CExplorePostPage m_explorePostPage;
-	CExploreLzlPage m_exploreLzlPage;
+	unique_ptr<CExploreThreadPage> m_exploreThreadPage;
+	unique_ptr<CExplorePostPage> m_explorePostPage;
+	unique_ptr<CExploreLzlPage> m_exploreLzlPage;
 	CEdit m_edit;
 	CButton m_deleteButton;
 	CButton m_banButton;
@@ -52,6 +52,8 @@ public:
 	CImageViewDlg* m_imageViewDlg;
 
 protected:
+	CExplorerDlg** m_pThis;
+
 	CExplorerPage* m_pages[3];
 	CResizeControl m_pagesResize;
 };

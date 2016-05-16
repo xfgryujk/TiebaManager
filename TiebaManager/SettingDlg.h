@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "afxcmn.h"
 #include "afxwin.h"
-#include <TBMConfig.h>
+#include "TBMConfig.h"
 #include "ScanPage.h"
 #include "OperatePage.h"
 #include "KeywordsPage.h"

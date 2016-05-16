@@ -4,10 +4,7 @@
 #include "stdafx.h"
 #include "ExploreThreadPage.h"
 #include "ExplorerDlg.h"
-#include "TiebaManager.h"
-#include <TiebaOperate.h>
-#include <TBMOperate.h>
-#include <TiebaClawer.h>
+
 #include "ScanImage.h"
 
 
@@ -15,8 +12,8 @@
 
 IMPLEMENT_DYNAMIC(CExploreThreadPage, CExplorerPage)
 
-CExploreThreadPage::CExploreThreadPage(CWnd* pParent /*=NULL*/)
-	: CExplorerPage(pParent)
+CExploreThreadPage::CExploreThreadPage(const CString& forumName, CWnd* pParent /*=NULL*/) : CExplorerPage(pParent),
+	m_forumName(forumName)
 {
 
 }
@@ -78,7 +75,7 @@ void CExploreThreadPage::OnBnClickedButton1()
 	CString ignoreThread; // 忽略前几个主题
 	ignoreThread.Format(_T("%d"), (iPage - 1) * 50);
 
-	GetThreads(theApp.m_operate->m_tiebaOperate->GetForumName(), ignoreThread, m_threads);
+	GetThreads(m_forumName, ignoreThread, m_threads);
 	m_list.DeleteAllItems();
 	((CExplorerDlg*)GetParent()->GetParent())->m_edit.SetWindowText(_T(""));
 	for (const ThreadInfo& i : m_threads)
@@ -118,7 +115,7 @@ void CExploreThreadPage::OnDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 	if (pNMItemActivate->iItem != LB_ERR)
 	{
 		CExplorerDlg* parentDlg = (CExplorerDlg*)GetParent()->GetParent();
-		CExplorePostPage& explorePostPage = parentDlg->m_explorePostPage;
+		CExplorePostPage& explorePostPage = *parentDlg->m_explorePostPage;
 		explorePostPage.m_tid = m_threads[pNMItemActivate->iItem].tid;
 		explorePostPage.m_edit.SetWindowText(_T("1"));
 		explorePostPage.OnBnClickedButton1();

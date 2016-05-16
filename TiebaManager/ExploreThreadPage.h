@@ -10,7 +10,7 @@ class CExploreThreadPage : public CExplorerPage
 	DECLARE_DYNAMIC(CExploreThreadPage)
 
 public:
-	CExploreThreadPage(CWnd* pParent = NULL);   // 标准构造函数
+	CExploreThreadPage(const CString& forumName, CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CExploreThreadPage();
 
 // 对话框数据
@@ -29,4 +29,7 @@ public:
 
 public:
 	vector<ThreadInfo> m_threads;
+
+protected:
+	const CString& m_forumName;
 };

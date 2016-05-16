@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "OptionsPage.h"
-#include <TBMConfigPath.h>
+#include "TBMConfigPath.h"
 #include "TiebaManager.h"
 #include "SettingDlg.h"
 #include <MiscHelper.h>

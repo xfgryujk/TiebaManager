@@ -2,15 +2,17 @@
 //
 
 #include "stdafx.h"
-#include "ImageViewDlg.h"
 #include "ExplorerDlg.h"
-#include "TiebaManagerDlg.h"
+#include "ExploreThreadPage.h"
+#include "ExplorePostPage.h"
+#include "ExploreLzlPage.h"
+#include "ImageViewDlg.h"
+
 #include "TiebaManager.h"
-#include <TBMConfig.h>
+#include "TBMConfig.h"
 #include <TiebaClawer.h>
 #include <TiebaOperate.h>
-#include <TBMOperate.h>
-#include <TBMScan.h>
+
 #include <Mmsystem.h>
 
 
@@ -19,15 +21,18 @@
 IMPLEMENT_DYNAMIC(CExplorerDlg, CNormalDlg)
 
 // 构造函数
-CExplorerDlg::CExplorerDlg(CWnd* pParent /*=NULL*/)
-	: CNormalDlg(CExplorerDlg::IDD, pParent),
-	m_pagesResize(&m_tab)
+CExplorerDlg::CExplorerDlg(CExplorerDlg** pThis, CWnd* pParent /*=NULL*/) : CNormalDlg(CExplorerDlg::IDD, pParent),
+	m_pagesResize(&m_tab),
+	m_exploreThreadPage(new CExploreThreadPage(theApp.m_tiebaOperate->GetForumName())),
+	m_explorePostPage(new CExplorePostPage(theApp.m_tiebaOperate->GetForumID())),
+	m_exploreLzlPage(new CExploreLzlPage()),
+	m_pThis(pThis)
 {
 	// 初始化m_pages
 	int i = 0;
-	m_pages[i++] = &m_exploreThreadPage;
-	m_pages[i++] = &m_explorePostPage;
-	m_pages[i++] = &m_exploreLzlPage;
+	m_pages[i++] = m_exploreThreadPage.get();
+	m_pages[i++] = m_explorePostPage.get();
+	m_pages[i++] = m_exploreLzlPage.get();
 
 	m_imageViewDlg = NULL;
 }
@@ -75,7 +80,7 @@ void CExplorerDlg::PostNcDestroy()
 {
 	CNormalDlg::PostNcDestroy();
 
-	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_explorerDlg = NULL;
+	*m_pThis = NULL;
 	delete this;
 }
 
@@ -122,7 +127,7 @@ BOOL CExplorerDlg::OnInitDialog()
 	m_tab.InsertItem(i++, _T("楼中楼"));
 
 	// 初始化各页
-#define CREATE_PAGE(page) page.Create(page.IDD, &m_tab)
+#define CREATE_PAGE(page) page->Create(page->IDD, &m_tab)
 	CREATE_PAGE(m_exploreThreadPage);
 	CREATE_PAGE(m_explorePostPage);
 	CREATE_PAGE(m_exploreLzlPage);
@@ -159,15 +164,15 @@ void CExplorerDlg::OnBnClickedButton1()
 	CString code;
 	if (tabIndex == 0) // 主题
 	{
-		ThreadInfo& thread = m_exploreThreadPage.m_threads[index];
-		code = theApp.m_operate->m_tiebaOperate->DeleteThread(thread.tid);
+		ThreadInfo& thread = m_exploreThreadPage->m_threads[index];
+		code = theApp.m_tiebaOperate->DeleteThread(thread.tid);
 		if (code == _T("0"))
 			theApp.m_userCache->m_deletedTID.insert(_ttoi64(thread.tid));
 	}
 	else if (tabIndex == 1) // 帖子
-		code = theApp.m_operate->m_tiebaOperate->DeletePost(m_explorePostPage.m_tid, m_explorePostPage.m_posts[index].pid);
+		code = theApp.m_tiebaOperate->DeletePost(m_explorePostPage->m_tid, m_explorePostPage->m_posts[index].pid);
 	else // 楼中楼
-		code = theApp.m_operate->m_tiebaOperate->DeleteLZL(m_explorePostPage.m_tid, m_exploreLzlPage.m_lzls[index].pid);
+		code = theApp.m_tiebaOperate->DeleteLZL(m_explorePostPage->m_tid, m_exploreLzlPage->m_lzls[index].pid);
 
 
 	if (code != _T("0"))
@@ -189,26 +194,26 @@ void CExplorerDlg::OnBnClickedButton2()
 	CString author, pid;
 	if (tabIndex == 0) // 主题
 	{
-		author = m_exploreThreadPage.m_threads[index].author;
+		author = m_exploreThreadPage->m_threads[index].author;
 		if (!theApp.m_plan->m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
 		{
 			vector<PostInfo> posts;
-			GetPosts(m_exploreThreadPage.m_threads[index].tid, _T(""), _T("1"), posts);
+			GetPosts(m_exploreThreadPage->m_threads[index].tid, _T(""), _T("1"), posts);
 			if (posts.size() > 0)
 				pid = posts[0].pid;
 		}
 	}
 	else if (tabIndex == 1) // 帖子
 	{
-		author = m_explorePostPage.m_posts[index].author;
+		author = m_explorePostPage->m_posts[index].author;
 		if (!theApp.m_plan->m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
-			pid = m_explorePostPage.m_posts[index].pid;
+			pid = m_explorePostPage->m_posts[index].pid;
 	}
 	else // 楼中楼
 	{
-		author = m_exploreLzlPage.m_lzls[index].author;
+		author = m_exploreLzlPage->m_lzls[index].author;
 		if (!theApp.m_plan->m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
-			pid = m_exploreLzlPage.m_lzls[index].pid;
+			pid = m_exploreLzlPage->m_lzls[index].pid;
 	}
 
 
@@ -217,7 +222,7 @@ void CExplorerDlg::OnBnClickedButton2()
 		AfxMessageBox(_T("封禁失败(获取帖子ID失败)"), MB_ICONERROR);
 		return;
 	}*/
-	CString code = pid == _T("") ? theApp.m_operate->m_tiebaOperate->BanIDClient(author) : theApp.m_operate->m_tiebaOperate->BanID(author, pid);
+	CString code = pid == _T("") ? theApp.m_tiebaOperate->BanIDClient(author) : theApp.m_tiebaOperate->BanID(author, pid);
 	if (code != _T("0"))
 		AfxMessageBox(_T("封禁失败，错误代码" + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
 	else
@@ -230,21 +235,21 @@ void CExplorerDlg::OnBnClickedButton3()
 	CString url;
 	if (m_tab.GetCurSel() == 0)
 	{
-		POSITION pos = m_exploreThreadPage.m_list.GetFirstSelectedItemPosition();
+		POSITION pos = m_exploreThreadPage->m_list.GetFirstSelectedItemPosition();
 		if (pos == NULL)
 			return;
-		int index = m_exploreThreadPage.m_list.GetNextSelectedItem(pos);
-		url = _T("http://tieba.baidu.com/p/") + m_exploreThreadPage.m_threads[index].tid;
+		int index = m_exploreThreadPage->m_list.GetNextSelectedItem(pos);
+		url = _T("http://tieba.baidu.com/p/") + m_exploreThreadPage->m_threads[index].tid;
 	}
 	else
 	{
-		POSITION pos = m_exploreThreadPage.m_list.GetFirstSelectedItemPosition();
+		POSITION pos = m_exploreThreadPage->m_list.GetFirstSelectedItemPosition();
 		if (pos == NULL)
 			return;
-		int index = m_exploreThreadPage.m_list.GetNextSelectedItem(pos);
+		int index = m_exploreThreadPage->m_list.GetNextSelectedItem(pos);
 		CString page;
-		m_exploreThreadPage.m_edit.GetWindowText(page);
-		url = _T("http://tieba.baidu.com/p/") + m_explorePostPage.m_tid + _T("?pn=") + page;
+		m_exploreThreadPage->m_edit.GetWindowText(page);
+		url = _T("http://tieba.baidu.com/p/") + m_explorePostPage->m_tid + _T("?pn=") + page;
 	}
 	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }

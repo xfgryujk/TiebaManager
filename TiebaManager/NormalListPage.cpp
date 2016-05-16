@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "NormalListPage.h"
-#include <TBMConfig.h>
+#include "TBMConfig.h"
 #include "InputDlg.h"
 
 

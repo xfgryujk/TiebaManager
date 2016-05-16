@@ -25,6 +25,7 @@ public:
 	CString GetEncodedForumName() { return m_encodedForumName; }
 	CString GetUserName_() { return m_userName; }
 	CString GetTBS() { return m_tbs; }
+	BOOL HasSetTieba() { return m_bduss != _T(""); }
 
 	CTiebaOperate(CString& cookie, const int& banDuration, const CString& banReason);
 

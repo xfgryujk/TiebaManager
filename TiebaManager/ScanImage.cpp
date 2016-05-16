@@ -1,8 +1,8 @@
 ﻿#include "stdafx.h"
 #include "ScanImage.h"
 #include <ImageHelper.h>
-#include <TBMConfig.h>
-#include <TBMConfigPath.h>
+#include "TBMConfig.h"
+#include "TBMConfigPath.h"
 #include <opencv2\imgproc\imgproc.hpp>
 #include "TiebaManager.h"
 #include <NetworkHelper.h>

@@ -20,7 +20,7 @@ enum TIEBA_MANAGER_CORE_API TBMOperateEventID
 class TIEBA_MANAGER_CORE_API COperateEvent : public CEventBase
 {
 public:
-	const CTBMOperate::Operation& m_op;
+	const Operation& m_op;
 
-	COperateEvent(const CTBMOperate::Operation& op);
+	COperateEvent(const Operation& op);
 };

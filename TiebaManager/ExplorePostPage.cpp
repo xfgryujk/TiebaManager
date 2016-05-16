@@ -3,12 +3,9 @@
 
 #include "stdafx.h"
 #include "ExplorePostPage.h"
-#include <TiebaClawer.h>
-#include "TiebaManager.h"
-#include <TiebaOperate.h>
-#include <TBMOperate.h>
-#include "ExplorerDlg.h"
 #include "ExploreLzlPage.h"
+#include "ExplorerDlg.h"
+
 #include "ScanImage.h"
 
 
@@ -16,8 +13,8 @@
 
 IMPLEMENT_DYNAMIC(CExplorePostPage, CExplorerPage)
 
-CExplorePostPage::CExplorePostPage(CWnd* pParent /*=NULL*/)
-	: CExplorerPage(pParent)
+CExplorePostPage::CExplorePostPage(const CString& forumID, CWnd* pParent /*=NULL*/) : CExplorerPage(pParent),
+	m_forumID(forumID)
 {
 
 }
@@ -77,9 +74,9 @@ void CExplorePostPage::OnBnClickedButton1()
 
 
 	CExplorerDlg* parentDlg = (CExplorerDlg*)GetParent()->GetParent();
-	CExploreLzlPage& exploreLzlPage = parentDlg->m_exploreLzlPage;
+	CExploreLzlPage& exploreLzlPage = *parentDlg->m_exploreLzlPage;
 	GetPosts(m_tid, _T(""), sPage, m_posts);
-	GetLzls(theApp.m_operate->m_tiebaOperate->GetForumID(), m_tid, sPage, m_posts, exploreLzlPage.m_lzls);
+	GetLzls(m_forumID, m_tid, sPage, m_posts, exploreLzlPage.m_lzls);
 	m_list.DeleteAllItems();
 	parentDlg->m_edit.SetWindowText(_T(""));
 	for (const PostInfo& i : m_posts)

@@ -6,12 +6,12 @@
 #include <StringHelper.h>
 
 
-static const TCHAR LOG_FRAME[] = _T("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=gbk\" /><title>日志</title>\r\n")
-								 _T("<style type=\"text/css\">\r\n")
-								 _T("body {border:1px solid black; overflow:auto; margin:0px; padding:3px;")
-								 _T(" font-family:\"宋体\",Verdana; font-size:9pt; line-height:9pt}\r\n")
-								 _T("a:link {text-decoration:none}\r\na:hover {text-decoration:underline}\r\na:visited {text-decoration:none}\r\n")
-								 _T("</style>\r\n</head><body>\r\n");
+static const TCHAR LOG_FRAME[] = _T(R"(<html><head><meta http-equiv="Content-Type" content="text/html; charset=gbk" /><title>日志</title>)")
+								 _T(R"(<style type="text/css">)")
+								 _T(R"(body {border:1px solid black; overflow:auto; margin:0px; padding:3px; font-family:"宋体",Verdana; font-size:9pt; line-height:9pt} )")
+								 _T(R"(a:link {text-decoration:none} a:hover {text-decoration:underline} a:visited {text-decoration:none})")
+								 _T(R"(</style>)")
+								 _T(R"(</head><body>)");
 
 static const UINT WM_LOG = WM_APP + 2;
 
@@ -62,7 +62,7 @@ void CExplorerLog::Log(const CString& content)
 	SYSTEMTIME time;
 	GetLocalTime(&time);
 	CString* output = new CString();
-	output->Format(_T("%02d:%02d:%02d %s<br />\r\n"), time.wHour, time.wMinute, time.wSecond, content);
+	output->Format(_T("%02d:%02d:%02d %s<br />"), time.wHour, time.wMinute, time.wSecond, content);
 	PostMessage(m_explorerHwnd, WM_LOG, (WPARAM)this, (LPARAM)output);
 }
 
@@ -117,7 +117,7 @@ void CExplorerLog::Clear()
 }
 
 // 保存日志
-void CExplorerLog::Save(LPCTSTR folder)
+void CExplorerLog::Save(const CString& folder)
 {
 	if (m_logDocument.p == NULL)
 		return;
@@ -133,18 +133,6 @@ void CExplorerLog::Save(LPCTSTR folder)
 	if (FAILED(documentElementDisp.GetPropertyByName(OLESTR("outerHTML"), res.GetAddress())))
 		return;
 	CString strHtml = (LPCTSTR)(_bstr_t)res;
-
-	// 另一种取网页HTML方法，末尾有四个乱码？
-	/*CComPtr<IPersistStreamInit> psi;
-	document->QueryInterface(&psi);
-	HGLOBAL html = GlobalAlloc(GMEM_MOVEABLE, 5 * 1024 * 1024);
-	IStream *stream;
-	CreateStreamOnHGlobal(html, TRUE, &stream);
-	psi->Save(stream, FALSE);
-	CString strHtml = (LPCTSTR)GlobalLock(html);
-	strHtml += _T("</body></html>");
-	GlobalUnlock(html);
-	stream->Release();*/
 
 	// 保存
 	CreateDir(folder);
