@@ -21,12 +21,12 @@
 IMPLEMENT_DYNAMIC(CExplorerDlg, CNormalDlg)
 
 // 构造函数
-CExplorerDlg::CExplorerDlg(CExplorerDlg** pThis, CWnd* pParent /*=NULL*/) : CNormalDlg(CExplorerDlg::IDD, pParent),
+CExplorerDlg::CExplorerDlg(CExplorerDlg*& pThis, CWnd* pParent /*=NULL*/) : CNormalDlg(CExplorerDlg::IDD, pParent),
+	m_pThis(pThis),
 	m_pagesResize(&m_tab),
 	m_exploreThreadPage(new CExploreThreadPage(theApp.m_tiebaOperate->GetForumName())),
 	m_explorePostPage(new CExplorePostPage(theApp.m_tiebaOperate->GetForumID())),
-	m_exploreLzlPage(new CExploreLzlPage()),
-	m_pThis(pThis)
+	m_exploreLzlPage(new CExploreLzlPage())
 {
 	// 初始化m_pages
 	int i = 0;
@@ -80,7 +80,7 @@ void CExplorerDlg::PostNcDestroy()
 {
 	CNormalDlg::PostNcDestroy();
 
-	*m_pThis = NULL;
+	m_pThis = NULL;
 	delete this;
 }
 

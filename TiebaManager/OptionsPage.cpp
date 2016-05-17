@@ -3,10 +3,13 @@
 
 #include "stdafx.h"
 #include "OptionsPage.h"
-#include "TBMConfigPath.h"
-#include "TiebaManager.h"
 #include "SettingDlg.h"
+
 #include <MiscHelper.h>
+
+#include "TBMConfigPath.h"
+#include "TBMConfig.h"
+#include "TiebaManager.h"
 
 
 // COptionsPage 对话框

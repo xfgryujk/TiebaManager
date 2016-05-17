@@ -3,14 +3,17 @@
 
 #include "stdafx.h"
 #include "UsersPage.h"
-#include "LoginDlg.h"
+#include "SettingDlg.h"
+
+#include <MiscHelper.h>
+
 #include "TBMConfig.h"
 #include "TBMConfigPath.h"
+#include <TiebaOperate.h>
 #include "TiebaManager.h"
+
 #include "ConfigHelper.h"
-#include "SettingDlg.h"
-#include "TiebaManagerDlg.h"
-#include <MiscHelper.h>
+#include "LoginDlg.h"
 
 
 // CUsersPage 对话框
@@ -60,7 +63,7 @@ BOOL CUsersPage::OnInitDialog()
 	m_resize.AddControl(&m_switchButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 
 	// 已确认贴吧
-	if (!((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_confirmButton.IsWindowEnabled())
+	if (theApp.m_tiebaOperate->HasSetTieba())
 		m_switchButton.EnableWindow(FALSE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -126,7 +129,7 @@ void CUsersPage::OnBnClickedButton3()
 	if (index == LB_ERR)
 		return;
 	// 已确认贴吧
-	if (!((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_confirmButton.IsWindowEnabled())
+	if (theApp.m_tiebaOperate->HasSetTieba())
 		return;
 	CString name;
 	m_list.GetText(index, name);

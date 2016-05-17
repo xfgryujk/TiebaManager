@@ -180,9 +180,6 @@
     <ClInclude Include="LockThreadPage.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
-    <ClInclude Include="LogHelper.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="NormalListPage.h">
       <Filter>头文件\GUI\UIHelper\ListPage</Filter>
     </ClInclude>
@@ -218,6 +215,9 @@
     </ClInclude>
     <ClInclude Include="ConfigHelper.h">
       <Filter>头文件\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplorerLog.h">
+      <Filter>头文件\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -314,9 +314,6 @@
     <ClCompile Include="LockThreadPage.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
-    <ClCompile Include="LogHelper.cpp">
-      <Filter>源文件\Helper</Filter>
-    </ClCompile>
     <ClCompile Include="ListPage.cpp">
       <Filter>源文件\GUI\UIHelper\ListPage</Filter>
     </ClCompile>
@@ -349,6 +346,9 @@
     </ClCompile>
     <ClCompile Include="ConfigHelper.cpp">
       <Filter>源文件\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplorerLog.cpp">
+      <Filter>源文件\Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

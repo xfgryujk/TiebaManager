@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "LogHelper.h"
+#include "ExplorerLog.h"
 
 #include "explorer1.h"
 #include <MiscHelper.h>

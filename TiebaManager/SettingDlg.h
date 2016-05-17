@@ -1,18 +1,21 @@
 ﻿#pragma once
 #include "afxcmn.h"
 #include "afxwin.h"
-#include "TBMConfig.h"
-#include "ScanPage.h"
-#include "OperatePage.h"
-#include "KeywordsPage.h"
-#include "ImagePage.h"
-#include "BlackListPage.h"
-#include "NormalListPage.h"
-#include "WhiteContentPage.h"
-#include "OptionsPage.h"
-#include "UsersPage.h"
-#include "AboutPage.h"
 #include "NormalDlg.h"
+class ILog;
+class CPlan;
+
+class CScanPage;
+class COperatePage;
+class CKeywordsPage;
+class CImagePage;
+class CImagePage;
+class CBlackListPage;
+class CNormalListPage;
+class CWhiteContentPage;
+class COptionsPage;
+class CUsersPage;
+class CAboutPage;
 
 
 // CSettingDlg 对话框
@@ -24,7 +27,7 @@ class CSettingDlg : public CNormalDlg
 	DECLARE_DYNAMIC(CSettingDlg)
 
 public:
-	CSettingDlg(CWnd* pParent = NULL);   // 标准构造函数
+	CSettingDlg(CSettingDlg*& pThis, ILog& log, CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CSettingDlg();
 
 // 对话框数据
@@ -52,22 +55,25 @@ public:
 
 public:
 	CTabCtrl m_tab;
-	CScanPage m_scanPage;
-	COperatePage m_operatePage;
-	CKeywordsPage m_keywordsPage;
-	CImagePage m_imagePage;
-	CBlackListPage m_blackListPage;
-	CNormalListPage m_whiteListPage;
-	CWhiteContentPage m_whiteContentPage;
-	CNormalListPage m_trustedThreadPage;
-	COptionsPage m_optionsPage;
-	CUsersPage m_usersPage;
-	CAboutPage m_aboutPage;
+	unique_ptr<CScanPage> m_scanPage;
+	unique_ptr<COperatePage> m_operatePage;
+	unique_ptr<CKeywordsPage> m_keywordsPage;
+	unique_ptr<CImagePage> m_imagePage;
+	unique_ptr<CBlackListPage> m_blackListPage;
+	unique_ptr<CNormalListPage> m_whiteListPage;
+	unique_ptr<CWhiteContentPage> m_whiteContentPage;
+	unique_ptr<CNormalListPage> m_trustedThreadPage;
+	unique_ptr<COptionsPage> m_optionsPage;
+	unique_ptr<CUsersPage> m_usersPage;
+	unique_ptr<CAboutPage> m_aboutPage;
 	CButton m_okButton;
 	CButton m_cancelButton;
 
 	BOOL m_clearScanCache;
 protected:
+	CSettingDlg*& m_pThis;
+	ILog& m_log;
+
 	CWnd* m_pages[SETTING_DLG_PAGE_COUNT];
 	CResizeControl m_pagesResize;
 };

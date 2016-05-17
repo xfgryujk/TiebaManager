@@ -3,8 +3,10 @@
 
 #include "stdafx.h"
 #include "ImagePage.h"
-#include "TiebaManager.h"
 #include "SettingDlg.h"
+
+#include "TBMConfig.h"
+#include "TiebaManager.h"
 
 
 // CImagePage 对话框

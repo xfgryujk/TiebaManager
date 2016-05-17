@@ -31,5 +31,5 @@ public:
 	vector<ThreadInfo> m_threads;
 
 protected:
-	const CString& m_forumName;
+	CString m_forumName;
 };

@@ -3,8 +3,11 @@
 
 #include "stdafx.h"
 #include "BlackListPage.h"
-#include <StringHelper.h>
 #include "SettingDlg.h"
+
+#include <StringHelper.h>
+
+#include "TBMConfig.h"
 
 
 // CBlackListPage 对话框

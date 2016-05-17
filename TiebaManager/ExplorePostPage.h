@@ -31,5 +31,5 @@ public:
 	vector<PostInfo> m_posts;
 
 protected:
-	const CString& m_forumID;
+	CString m_forumID;
 };

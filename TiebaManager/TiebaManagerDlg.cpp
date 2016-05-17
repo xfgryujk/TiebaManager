@@ -24,6 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "SettingDlg.h"
 #include "ExplorerDlg.h"
 #include "SuperFunctionDlg.h"
+#include "LoopBanPage.h"
 
 #include "TBMConfigPath.h"
 #include "TBMConfig.h"
@@ -194,8 +195,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 		*theApp.m_globalConfig->m_firstRun = FALSE;
 		*theApp.m_globalConfig->m_firstRunAfterUpdate = FALSE;
 		theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
-		m_settingDlg = new CSettingDlg();
-		m_settingDlg->Create(m_settingDlg->IDD, this);
+		OnBnClickedButton5();
 		m_settingDlg->m_tab.SetCurSel(SETTING_DLG_PAGE_COUNT - 1);
 		LRESULT tmp;
 		m_settingDlg->OnTcnSelchangeTab1(NULL, &tmp);
@@ -209,23 +209,21 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 
 
 	// 每24小时清除已封名单、开始循环封
-	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
-		{
-			theApp.m_userCache->m_bannedUser->clear();
-			AfxBeginThread(LoopBanThread, (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd);
-		});
+	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD) {
+		theApp.m_userCache->m_bannedUser->clear();
+		AfxBeginThread(LoopBanThread, (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd);
+	});
 
 	// 每30分钟清除图片缓存
-	SetTimer(1, 30 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD)
+	SetTimer(1, 30 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD) {
+		CFileFind fileFind;
+		BOOL flag = fileFind.FindFile(IMG_CACHE_PATH + _T("*"));
+		while (flag)
 		{
-			CFileFind fileFind;
-			BOOL flag = fileFind.FindFile(IMG_CACHE_PATH + _T("*"));
-			while (flag)
-			{
-				flag = fileFind.FindNextFile();
-				DeleteFile(fileFind.GetFilePath());
-			}
-		});
+			flag = fileFind.FindNextFile();
+			DeleteFile(fileFind.GetFilePath());
+		}
+	});
 
 
 	// 测试
@@ -265,8 +263,6 @@ void CTiebaManagerDlg::OnDestroy()
 	SaveCurrentUserConfig();
 	theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
 	theApp.m_plan->Save(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
-
-	//theApp.m_plan->m_images.clear(); // 不知道为什么不加这个Release版关闭后会崩溃...
 
 	// 还是有内存泄漏，但我找不出了...
 }
@@ -416,7 +412,7 @@ void CTiebaManagerDlg::OnBnClickedButton7()
 {
 	if (m_explorerDlg == NULL)
 	{
-		m_explorerDlg = new CExplorerDlg(&m_explorerDlg);
+		m_explorerDlg = new CExplorerDlg(m_explorerDlg);
 		m_explorerDlg->Create(m_explorerDlg->IDD, GetDesktopWindow());
 	}
 }
@@ -426,7 +422,7 @@ void CTiebaManagerDlg::OnBnClickedButton4()
 {
 	if (m_superFunctionDlg == NULL)
 	{
-		m_superFunctionDlg = new CSuperFunctionDlg();
+		m_superFunctionDlg = new CSuperFunctionDlg(m_superFunctionDlg);
 		m_superFunctionDlg->Create(m_superFunctionDlg->IDD, this);
 	}
 }
@@ -436,7 +432,7 @@ void CTiebaManagerDlg::OnBnClickedButton5()
 {
 	if (m_settingDlg == NULL)
 	{
-		m_settingDlg = new CSettingDlg();
+		m_settingDlg = new CSettingDlg(m_settingDlg, m_log);
 		m_settingDlg->Create(m_settingDlg->IDD, this);
 	}
 }

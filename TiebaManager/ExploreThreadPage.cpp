@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ExploreThreadPage.h"
 #include "ExplorerDlg.h"
+#include "ExplorePostPage.h"
 
 #include "ScanImage.h"
 

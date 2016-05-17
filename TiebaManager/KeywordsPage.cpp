@@ -3,8 +3,10 @@
 
 #include "stdafx.h"
 #include "KeywordsPage.h"
-#include <StringHelper.h>
 #include "SettingDlg.h"
+
+#include <StringHelper.h>
+
 #include "InputKeywordDlg.h"
 
 

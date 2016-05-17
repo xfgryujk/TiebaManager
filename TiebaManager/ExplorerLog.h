@@ -2,7 +2,6 @@
 #include <TBMCoreConfig.h>
 #include <mshtml.h>
 class CExplorer1;
-struct IHTMLDocument2;
 
 
 class CExplorerLog : public ILog

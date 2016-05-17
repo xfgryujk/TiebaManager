@@ -5,6 +5,7 @@
 class CExploreThreadPage;
 class CExplorePostPage;
 class CExploreLzlPage;
+class CExplorerPage;
 class CImageViewDlg;
 
 
@@ -15,7 +16,7 @@ class CExplorerDlg : public CNormalDlg
 	DECLARE_DYNAMIC(CExplorerDlg)
 
 public:
-	CExplorerDlg(CExplorerDlg** pThis, CWnd* pParent = NULL);   // 标准构造函数
+	CExplorerDlg(CExplorerDlg*& pThis, CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CExplorerDlg();
 
 // 对话框数据
@@ -52,7 +53,7 @@ public:
 	CImageViewDlg* m_imageViewDlg;
 
 protected:
-	CExplorerDlg** m_pThis;
+	CExplorerDlg*& m_pThis;
 
 	CExplorerPage* m_pages[3];
 	CResizeControl m_pagesResize;

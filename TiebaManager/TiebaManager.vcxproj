@@ -59,6 +59,7 @@
       <PreprocessorDefinitions>TIEBA_MANAGER_EXPORTS;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -78,6 +79,9 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -124,7 +128,7 @@
     <ClInclude Include="InputDlg.h" />
     <ClInclude Include="InputKeywordDlg.h" />
     <ClInclude Include="LockThreadPage.h" />
-    <ClInclude Include="LogHelper.h" />
+    <ClInclude Include="ExplorerLog.h" />
     <ClInclude Include="NormalListPage.h" />
     <ClInclude Include="RegListPage.h" />
     <ClInclude Include="DefriendPage.h" />
@@ -174,7 +178,7 @@
     <ClCompile Include="InputKeywordDlg.cpp" />
     <ClCompile Include="ListPage.cpp" />
     <ClCompile Include="LockThreadPage.cpp" />
-    <ClCompile Include="LogHelper.cpp" />
+    <ClCompile Include="ExplorerLog.cpp" />
     <ClCompile Include="LoopBanPage.cpp" />
     <ClCompile Include="NormalDlg.cpp" />
     <ClCompile Include="NormalListPage.cpp" />

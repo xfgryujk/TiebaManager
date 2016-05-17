@@ -7,7 +7,7 @@
 #include "afxwin.h"
 #include "TextButton.h"
 #include "NormalDlg.h"
-#include "LogHelper.h"
+#include "ExplorerLog.h"
 class CSettingDlg;
 class CExplorerDlg;
 class CSuperFunctionDlg;

@@ -9,7 +9,7 @@
 
 #include "ConfirmDlg.h"
 #include "TiebaManager.h"
-#include "SuperFunctionDlg.h"
+#include "LoopBanPage.h"
 
 
 CTBMOperateListeners::CTBMOperateListeners(CTBMOperate& operate) :
