@@ -79,6 +79,12 @@
     <Filter Include="源文件\Config">
       <UniqueIdentifier>{e4de78a8-bc57-4e5c-9116-7216938abea6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Plugin">
+      <UniqueIdentifier>{6e324abd-5f81-43ef-a975-44719f412e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Plugin">
+      <UniqueIdentifier>{87cce4d1-a426-4a61-bd2b-60df129c4bd8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -219,6 +225,21 @@
     <ClInclude Include="ExplorerLog.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="PluginManager.h">
+      <Filter>头文件\Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugin.h">
+      <Filter>头文件\Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="API\PluginFunctions.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\TBMEvent.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\TBMAPI.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -349,6 +370,18 @@
     </ClCompile>
     <ClCompile Include="ExplorerLog.cpp">
       <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="PluginManager.cpp">
+      <Filter>源文件\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin.cpp">
+      <Filter>源文件\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMEvent.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMAPI.cpp">
+      <Filter>源文件\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

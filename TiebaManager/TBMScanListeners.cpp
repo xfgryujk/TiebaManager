@@ -39,7 +39,9 @@ CTBMScanListeners::CTBMScanListeners(CTBMScan& scan) :
 // 检查违规
 static BOOL CheckIllegal(const CString& content, const CString& author, const CString& authorLevel, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
 {
+	msg = _T("");
 	forceToConfirm = FALSE;
+	pos = length = 0;
 	theApp.m_plan->m_optionsLock.Lock();
 
 	// 信任用户
@@ -61,34 +63,34 @@ static BOOL CheckIllegal(const CString& content, const CString& author, const CS
 
 	// 屏蔽用户
 	for (const RegexText& blackList : *theApp.m_plan->m_blackList)
-	if (StringMatchs(author, blackList))
-	{
-		pos = 0;
-		length = 0;
-		msg = _T("<font color=red> 触发屏蔽用户 </font>") + HTMLEscape(blackList.text);
-		theApp.m_plan->m_optionsLock.Unlock();
-		return TRUE;
-	}
+		if (blackList.text != _T("") && StringMatchs(author, blackList))
+		{
+			pos = 0;
+			length = 0;
+			msg = _T("<font color=red> 触发屏蔽用户 </font>") + HTMLEscape(blackList.text);
+			theApp.m_plan->m_optionsLock.Unlock();
+			return TRUE;
+		}
 
 
 	// 信任内容
 	for (const RegexText& whiteContent : *theApp.m_plan->m_whiteContent)
-	if (StringIncludes(content, whiteContent))
-	{
-		theApp.m_plan->m_optionsLock.Unlock();
-		return FALSE;
-	}
+		if (whiteContent.text != _T("") && StringIncludes(content, whiteContent))
+		{
+			theApp.m_plan->m_optionsLock.Unlock();
+			return FALSE;
+		}
 
 	// 违规内容
 	for (CPlan::Keyword& keyword : *theApp.m_plan->m_keywords)
-	if (StringIncludes(content, keyword, &pos, &length))
-	{
-		keyword.trigCount++;
-		forceToConfirm = keyword.forceToConfirm;
-		msg = _T("<font color=red> 触发违禁词 </font>") + HTMLEscape(keyword.text);
-		theApp.m_plan->m_optionsLock.Unlock();
-		return TRUE;
-	}
+		if (keyword.text != _T("") && StringIncludes(content, keyword, &pos, &length))
+		{
+			keyword.trigCount++;
+			forceToConfirm = keyword.forceToConfirm;
+			msg = _T("<font color=red> 触发违禁词 </font>") + HTMLEscape(keyword.text);
+			theApp.m_plan->m_optionsLock.Unlock();
+			return TRUE;
+		}
 
 	theApp.m_plan->m_optionsLock.Unlock();
 	return FALSE;
@@ -196,6 +198,12 @@ void CTBMScanListeners::OnPreScanThread(CEventBase* event__)
 	if (theApp.m_plan->m_trustedThread->find(event_->m_thread.tid) != theApp.m_plan->m_trustedThread->end()) // 信任
 		event_->canceled = TRUE;
 	theApp.m_plan->m_optionsLock.Unlock();
+
+	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)theApp.m_pMainWnd;
+	m_stateListLock.Lock();
+	dlg->m_stateList.DeleteString(event_->m_threadID);
+	dlg->m_stateList.InsertString(event_->m_threadID, event_->m_thread.tid + _T(" ") + event_->m_thread.title);
+	m_stateListLock.Unlock();
 }
 
 

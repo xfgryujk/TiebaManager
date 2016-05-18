@@ -19,6 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "TiebaManagerDlg.h"
+#include <TBMEvent.h>
+#include <TBMAPI.h>
 #include "TiebaManager.h"
 
 #include "SettingDlg.h"
@@ -180,6 +182,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	m_log.Init();
 	theApp.m_scan->m_log = &m_log;
 	theApp.m_operate->m_log = &m_log;
+	theApp.m_tbmApi->m_log = &m_log;
 
 	// 读取设置
 	theApp.m_globalConfig->Load(GLOBAL_CONFIG_PATH);
@@ -226,6 +229,9 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	});
 
 
+	theApp.m_tbmEventBus->Post(MainDialogPostInitEvent);
+
+
 	// 测试
 	/*vector<ThreadInfo> threads;
 	GetThreads(_T("一个极其隐秘只有xfgryujk知道的地方"), _T("0"), threads);
@@ -242,6 +248,8 @@ void CTiebaManagerDlg::OnClose()
 {
 	if (m_isClosing)
 		return;
+	if (!theApp.m_tbmEventBus->Post(MainDialogCloseEvent))
+		return;
 	m_isClosing = TRUE;
 
 	theApp.m_scan->StopScan();
@@ -251,6 +259,7 @@ void CTiebaManagerDlg::OnClose()
 	if (theApp.m_plan->m_autoSaveLog)
 		m_log.Save(_T("Log"));
 	m_log.Release();
+	theApp.m_tbmApi->m_log = NULL;
 
 	CNormalDlg::OnClose();
 }
@@ -263,6 +272,8 @@ void CTiebaManagerDlg::OnDestroy()
 	SaveCurrentUserConfig();
 	theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
 	theApp.m_plan->Save(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
+
+	theApp.m_tbmEventBus->Post(MainDialogDestroyEvent);
 
 	// 还是有内存泄漏，但我找不出了...
 }
@@ -451,6 +462,9 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		return;
 	}
 
+	if (!theApp.m_tbmEventBus->Post(PreSetTiebaEvent, CSetTiebaEvent(forumName)))
+		return;
+
 	m_forumNameEdit.EnableWindow(FALSE);
 	m_confirmButton.EnableWindow(FALSE);
 	m_stateStatic.SetWindowText(_T("验证贴吧中"));
@@ -494,9 +508,9 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + tiebaOperate.GetForumName()
 		+ _T("<font color=green> 吧，使用账号：</font>" + tiebaOperate.GetUserName_()));
 
+	theApp.m_tbmEventBus->Post(PostSetTiebaEvent, CSetTiebaEvent(forumName));
 	// 开始循环封
 	AfxBeginThread(LoopBanThread, this);
-
 	return;
 
 Error:

@@ -122,6 +122,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
+    <ClInclude Include="API\PluginFunctions.h" />
+    <ClInclude Include="API\TBMAPI.h" />
+    <ClInclude Include="API\TBMEvent.h" />
     <ClInclude Include="API\TiebaManagerCommon.h" />
     <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="ConfigHelper.h" />
@@ -130,6 +133,8 @@
     <ClInclude Include="LockThreadPage.h" />
     <ClInclude Include="ExplorerLog.h" />
     <ClInclude Include="NormalListPage.h" />
+    <ClInclude Include="Plugin.h" />
+    <ClInclude Include="PluginManager.h" />
     <ClInclude Include="RegListPage.h" />
     <ClInclude Include="DefriendPage.h" />
     <ClInclude Include="ImageViewDlg.h" />
@@ -172,6 +177,7 @@
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="BlackListPage.cpp" />
     <ClCompile Include="ConfigHelper.cpp" />
+    <ClCompile Include="TBMAPI.cpp" />
     <ClCompile Include="DefriendPage.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />
     <ClCompile Include="InputDlg.cpp" />
@@ -183,6 +189,8 @@
     <ClCompile Include="NormalDlg.cpp" />
     <ClCompile Include="NormalListPage.cpp" />
     <ClCompile Include="OperatePage.cpp" />
+    <ClCompile Include="Plugin.cpp" />
+    <ClCompile Include="PluginManager.cpp" />
     <ClCompile Include="RegListPage.cpp" />
     <ClCompile Include="ResizeControl.cpp" />
     <ClCompile Include="ScanImage.cpp" />
@@ -207,6 +215,7 @@
     <ClCompile Include="SuperFunctionDlg.cpp" />
     <ClCompile Include="TBMConfig.cpp" />
     <ClCompile Include="TBMConfigPath.cpp" />
+    <ClCompile Include="TBMEvent.cpp" />
     <ClCompile Include="TBMOperateListeners.cpp" />
     <ClCompile Include="TextButton.cpp" />
     <ClCompile Include="TiebaManager.cpp" />

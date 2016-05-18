@@ -46,9 +46,9 @@ void CTBMOperate::ConfirmThread()
 	if (!CoInitializeHelper())
 		return;
 
+	Operation op;
 	while (TRUE)
 	{
-		Operation op;
 		PopResult res = m_confirmQueue.pop(op);
 		if (res == POP_STOP)
 			break;
@@ -113,9 +113,9 @@ void CTBMOperate::OperateThread()
 	if (!CoInitializeHelper())
 		return;
 
+	Operation op;
 	while (TRUE)
 	{
-		Operation op;
 		PopResult res = m_operationQueue.pop(op);
 		if (res == POP_STOP)
 			break;

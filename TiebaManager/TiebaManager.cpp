@@ -17,6 +17,9 @@
 #include "TBMScanListeners.h"
 #include "TBMOperateListeners.h"
 
+#include <TBMAPI.h>
+#include "PluginManager.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -136,22 +139,34 @@ void CTiebaManagerApp::init()
 	m_userCache.reset(new CUserCache());
 
 	m_tiebaOperate.reset(new CTiebaOperate(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason));
-	m_operate.reset(new CTBMOperate(m_plan.get(), m_userCache.get())); // 日志在对话框初始化时初始化
+	m_operate.reset(new CTBMOperate(m_plan.get(), m_userCache.get(), m_tiebaOperate.get())); // 日志在对话框初始化时初始化
 	m_scan.reset(new CTBMScan(m_plan.get(), m_userCache.get(), m_operate.get())); // 日志在对话框初始化时初始化
 
 	m_scanListeners.reset(new CTBMScanListeners(*m_scan));
 	m_operateListeners.reset(new CTBMOperateListeners(*m_operate));
+
+	m_tbmEventBus.reset(new CEventBus());
+	m_tbmApi.reset(new CTBMAPI(m_tbmEventBus.get(), m_tiebaOperate.get(), m_scan.get(), m_operate.get())); // 日志在对话框初始化时初始化
+	m_pluginManager.reset(new CPluginManager());
+	m_pluginManager->LoadDir(PLUGIN_PATH);
 }
 
 // 释放
 int CTiebaManagerApp::ExitInstance()
 {
+	TRACE(_T("释放m_pluginManager\n"));
+	m_pluginManager = nullptr;
+	TRACE(_T("释放m_tbmApi\n"));
+	m_tbmApi = nullptr;
+	TRACE(_T("释放m_tbmEventBus\n"));
+	m_tbmEventBus = nullptr;
 	TRACE(_T("释放m_scan\n"));
 	m_scan = nullptr;
 	TRACE(_T("释放m_operate\n"));
 	m_operate = nullptr;
 	TRACE(_T("释放m_plan\n"));
 	m_plan = nullptr;
+	TRACE(_T("退出程序\n"));
 
 	return CWinApp::ExitInstance();
 }
