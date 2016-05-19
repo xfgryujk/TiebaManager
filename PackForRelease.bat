@@ -1,38 +1,29 @@
 @echo off
 
-if not exist Release\TiebaManager.exe (
-move Release\TiebaManager旧版.exe Release\TiebaManager.exe >nul
-move Release\TiebaManager旧版.pdb Release\TiebaManager.pdb >nul
-)
-if not exist Release\Helper.dll (
-move Release\Helper旧版.dll Release\Helper.dll >nul
-move Release\Helper旧版.pdb Release\Helper.pdb >nul
-)
-if not exist Release\TiebaAPI.dll (
-move Release\TiebaAPI旧版.dll Release\TiebaAPI.dll >nul
-move Release\TiebaAPI旧版.pdb Release\TiebaAPI.pdb >nul
-)
-if not exist Release\TiebaManagerCore.dll (
-move Release\TiebaManagerCore旧版.dll Release\TiebaManagerCore.dll >nul
-move Release\TiebaManagerCore旧版.pdb Release\TiebaManagerCore.pdb >nul
-)
-
 ren 发布用 贴吧管理器
-move Release\TiebaManager.exe 贴吧管理器 >nul
-move Release\Helper.dll 贴吧管理器 >nul
-move Release\TiebaAPI.dll 贴吧管理器 >nul
-move Release\TiebaManagerCore.dll 贴吧管理器 >nul
+copy /y Release\TiebaManager.exe 贴吧管理器
+copy /y Release\Helper.dll 贴吧管理器
+copy /y Release\TiebaAPI.dll 贴吧管理器
+copy /y Release\TiebaManagerCore.dll 贴吧管理器
+copy /y Release\plugin\*.dll 贴吧管理器\plugin
 del 贴吧管理器.zip >nul 2>nul
 "F:\Program Files\7-Zip\7z.exe" a -tzip 贴吧管理器 贴吧管理器
-
-:Restore
 ping 127.0.0.1 -n 3 >nul
-move 贴吧管理器\TiebaManager.exe Release\TiebaManager旧版.exe >nul 2>nul || goto Restore
-move Release\TiebaManager.pdb Release\TiebaManager旧版.pdb >nul 2>nul || goto Restore
-move 贴吧管理器\Helper.dll Release\Helper旧版.dll >nul 2>nul || goto Restore
-move Release\Helper.pdb Release\Helper旧版.pdb >nul 2>nul || goto Restore
-move 贴吧管理器\TiebaAPI.dll Release\TiebaAPI旧版.dll >nul 2>nul || goto Restore
-move Release\TiebaAPI.pdb Release\TiebaAPI旧版.pdb >nul 2>nul || goto Restore
-move 贴吧管理器\TiebaManagerCore.dll Release\TiebaManagerCore旧版.dll >nul 2>nul || goto Restore
-move Release\TiebaManagerCore.pdb Release\TiebaManagerCore旧版.pdb >nul 2>nul || goto Restore
-ren 贴吧管理器 发布用 2>nul || goto Restore
+
+set VER=%date:~2,8%
+set VER=%VER:/=-%
+set BACKUPDIR=历史备份\%VER%
+md %BACKUPDIR% 2>nul
+md %BACKUPDIR%\plugin 2>nul
+
+move /y 贴吧管理器\TiebaManager.exe %BACKUPDIR%
+move /y 贴吧管理器\Helper.dll %BACKUPDIR%
+move /y 贴吧管理器\TiebaAPI.dll %BACKUPDIR%
+move /y 贴吧管理器\TiebaManagerCore.dll %BACKUPDIR%
+move /y 贴吧管理器\plugin\*.dll %BACKUPDIR%\plugin
+copy /y Release\*.pdb %BACKUPDIR%
+copy /y Release\plugin\*.pdb %BACKUPDIR%\plugin
+
+ren 贴吧管理器 发布用
+
+pause
