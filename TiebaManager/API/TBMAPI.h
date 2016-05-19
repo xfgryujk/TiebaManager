@@ -24,7 +24,10 @@ protected:
 		CTBMScan* scan = NULL, CTBMOperate* operate = NULL, ILog* log = NULL);
 
 public:
-	CTBMAPI& GetInstance();
+	static CTBMAPI& GetInstance();
+
+	static CString GetCurrentUserDir();
+	static CString GetImgCacheDir();
 
 	CEventBus* GetEventBus() { return m_eventBus; }
 	ILog* GetLog() { return m_log; }

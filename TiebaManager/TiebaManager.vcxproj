@@ -140,9 +140,7 @@
     <ClInclude Include="ImageViewDlg.h" />
     <ClInclude Include="ListPage.h" />
     <ClInclude Include="LoopBanPage.h" />
-    <ClInclude Include="NormalDlg.h" />
     <ClInclude Include="OperatePage.h" />
-    <ClInclude Include="ResizeControl.h" />
     <ClInclude Include="ScanImage.h" />
     <ClInclude Include="ConfirmDlg.h" />
     <ClInclude Include="ExploreLzlPage.h" />
@@ -186,13 +184,11 @@
     <ClCompile Include="LockThreadPage.cpp" />
     <ClCompile Include="ExplorerLog.cpp" />
     <ClCompile Include="LoopBanPage.cpp" />
-    <ClCompile Include="NormalDlg.cpp" />
     <ClCompile Include="NormalListPage.cpp" />
     <ClCompile Include="OperatePage.cpp" />
     <ClCompile Include="Plugin.cpp" />
     <ClCompile Include="PluginManager.cpp" />
     <ClCompile Include="RegListPage.cpp" />
-    <ClCompile Include="ResizeControl.cpp" />
     <ClCompile Include="ScanImage.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
     <ClCompile Include="ExploreLzlPage.cpp" />

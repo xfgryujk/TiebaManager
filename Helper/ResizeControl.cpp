@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "ResizeControl.h"
+#include <ResizeControl.h>
 
 
 CResizeControl::CResizeControl(CWnd* parentWnd)
@@ -86,19 +86,16 @@ void CResizeControl::AddControl(CWnd* wnd, ResizeType lType, CWnd* lWnd, ResizeT
 		}
 	}
 
-	m_controlList.AddTail(info);
+	m_controlList.insert(info);
 }
 
 void CResizeControl::Resize()
 {
-	int count = m_controlList.GetCount();
-	if (count <= 0)
+	if (m_controlList.empty())
 		return;
 
-	POSITION pos = m_controlList.GetHeadPosition();
-	for (int i = 0; i < count; i++)
+	for (const auto& info : m_controlList)
 	{
-		ResizeInfo& info = m_controlList.GetNext(pos);
 		RECT rect1, rect2;
 		info.wnd->GetWindowRect(&rect1);
 		m_parentWnd->ScreenToClient(&rect1);

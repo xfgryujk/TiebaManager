@@ -6,7 +6,7 @@
 #include "explorer1.h"
 #include "afxwin.h"
 #include "TextButton.h"
-#include "NormalDlg.h"
+#include <NormalDlg.h>
 #include "ExplorerLog.h"
 class CSettingDlg;
 class CExplorerDlg;

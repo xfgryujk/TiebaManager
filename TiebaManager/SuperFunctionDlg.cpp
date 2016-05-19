@@ -18,7 +18,10 @@ IMPLEMENT_DYNAMIC(CSuperFunctionDlg, CNormalDlg)
 // 构造函数
 CSuperFunctionDlg::CSuperFunctionDlg(CSuperFunctionDlg*& pThis, CWnd* pParent /*=NULL*/) : CNormalDlg(CSuperFunctionDlg::IDD, pParent),
 	m_pThis(pThis),
-	m_pagesResize(&m_tab)
+	m_pagesResize(&m_tab),
+	m_loopBanPage(new CLoopBanPage()),
+	m_defriendPage(new CDefriendPage()),
+	m_lockThreadPage(new CLockThreadPage())
 {
 	// 初始化m_pages
 	int i = 0;
@@ -160,15 +163,15 @@ void CSuperFunctionDlg::ShowCurrentOptions()
 {
 	CString tmp;
 	// 循环封
-	CLoopBanConfig loopBanConfig;
-	loopBanConfig.Load(CURRENT_USER_DIR_PATH + _T("options2.xml"));
-	
-	m_loopBanPage->ShowList(loopBanConfig.m_userList);				// 用户名
-	m_loopBanPage->m_pid = std::move(*loopBanConfig.m_pidList);		// PID
-	m_loopBanPage->m_logCheck.SetCheck(loopBanConfig.m_log);		// 输出日志
-	m_loopBanPage->m_enableCheck.SetCheck(loopBanConfig.m_enable);	// 开启
-	tmp.Format(_T("%g"), *loopBanConfig.m_banInterval);
-	m_loopBanPage->m_banIntervalEdit.SetWindowText(tmp);			// 封禁间隔
+	//CLoopBanConfig loopBanConfig;
+	//loopBanConfig.Load(CURRENT_USER_DIR_PATH + _T("options2.xml"));
+	//
+	//m_loopBanPage->ShowList(loopBanConfig.m_userList);				// 用户名
+	//m_loopBanPage->m_pid = std::move(*loopBanConfig.m_pidList);		// PID
+	//m_loopBanPage->m_logCheck.SetCheck(loopBanConfig.m_log);		// 输出日志
+	//m_loopBanPage->m_enableCheck.SetCheck(loopBanConfig.m_enable);	// 开启
+	//tmp.Format(_T("%g"), *loopBanConfig.m_banInterval);
+	//m_loopBanPage->m_banIntervalEdit.SetWindowText(tmp);			// 封禁间隔
 }
 
 // 应用对话框中的设置
@@ -176,16 +179,16 @@ void CSuperFunctionDlg::ApplyOptionsInDlg()
 {
 	CString strBuf;
 	// 循环封
-	CLoopBanConfig loopBanConfig;
+	//CLoopBanConfig loopBanConfig;
 
-	m_loopBanPage->ApplyList(loopBanConfig.m_userList);					// 用户名
-	*loopBanConfig.m_pidList = m_loopBanPage->m_pid;					// PID
-	*loopBanConfig.m_log = m_loopBanPage->m_logCheck.GetCheck();		// 输出日志
-	*loopBanConfig.m_enable = m_loopBanPage->m_enableCheck.GetCheck();	// 开启
-	m_loopBanPage->m_banIntervalEdit.GetWindowText(strBuf);
-	*loopBanConfig.m_banInterval = (float)_ttof(strBuf);				// 封禁间隔
+	//m_loopBanPage->ApplyList(loopBanConfig.m_userList);					// 用户名
+	//*loopBanConfig.m_pidList = m_loopBanPage->m_pid;					// PID
+	//*loopBanConfig.m_log = m_loopBanPage->m_logCheck.GetCheck();		// 输出日志
+	//*loopBanConfig.m_enable = m_loopBanPage->m_enableCheck.GetCheck();	// 开启
+	//m_loopBanPage->m_banIntervalEdit.GetWindowText(strBuf);
+	//*loopBanConfig.m_banInterval = (float)_ttof(strBuf);				// 封禁间隔
 
-	loopBanConfig.Save(CURRENT_USER_DIR_PATH + _T("options2.xml"));
+	//loopBanConfig.Save(CURRENT_USER_DIR_PATH + _T("options2.xml"));
 
 	if (m_clearCache)
 		DeleteFile(CURRENT_USER_DIR_PATH + _T("LoopBanDate.xml"));

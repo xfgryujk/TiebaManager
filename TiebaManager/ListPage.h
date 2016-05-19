@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "NormalDlg.h"
+#include <NormalDlg.h>
 
 
 // CListPage 对话框

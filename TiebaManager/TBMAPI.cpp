@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include <TBMAPI.h>
 #include "TiebaManager.h"
+#include "TBMConfigPath.h"
 
 
 CTBMAPI::CTBMAPI(CEventBus* eventBus, CTiebaOperate* tiebaOperate, CTBMScan* scan, CTBMOperate* operate, ILog* log) :
@@ -16,4 +17,14 @@ CTBMAPI::CTBMAPI(CEventBus* eventBus, CTiebaOperate* tiebaOperate, CTBMScan* sca
 CTBMAPI& CTBMAPI::GetInstance()
 {
 	return *theApp.m_tbmApi;
+}
+
+CString CTBMAPI::GetCurrentUserDir()
+{
+	return CURRENT_USER_DIR_PATH;
+}
+
+CString CTBMAPI::GetImgCacheDir()
+{
+	return IMG_CACHE_PATH;
 }

@@ -34,7 +34,7 @@ void CTBMOperateListeners::OnPostBan(CEventBase* event__)
 {
 	COperateEvent* event_ = (COperateEvent*)event__;
 	// 自动循环封
-	if (theApp.m_plan->m_autoLoopBan)
+	/*if (theApp.m_plan->m_autoLoopBan)
 	{
 		CLoopBanConfig config;
 		config.Load(CURRENT_USER_DIR_PATH + _T("options2.xml"));
@@ -46,5 +46,5 @@ void CTBMOperateListeners::OnPostBan(CEventBase* event__)
 			config.Save(CURRENT_USER_DIR_PATH + _T("options2.xml"));
 			DeleteFile(CURRENT_USER_DIR_PATH + _T("LoopBanDate.xml"));
 		}
-	}
+	}*/
 }

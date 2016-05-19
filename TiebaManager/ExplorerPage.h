@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "afxwin.h"
-#include "NormalDlg.h"
+#include <NormalDlg.h>
 
 
 // CExplorerPage 对话框

@@ -26,7 +26,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "SettingDlg.h"
 #include "ExplorerDlg.h"
 #include "SuperFunctionDlg.h"
-#include "LoopBanPage.h"
 
 #include "TBMConfigPath.h"
 #include "TBMConfig.h"
@@ -211,10 +210,9 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	}
 
 
-	// 每24小时清除已封名单、开始循环封
+	// 每24小时清除已封名单
 	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD) {
 		theApp.m_userCache->m_bannedUser->clear();
-		AfxBeginThread(LoopBanThread, (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd);
 	});
 
 	// 每30分钟清除图片缓存
@@ -256,10 +254,10 @@ void CTiebaManagerDlg::OnClose()
 	while (theApp.m_scan->IsScanning())
 		Delay(100);
 
+	theApp.m_tbmApi->m_log = NULL;
 	if (theApp.m_plan->m_autoSaveLog)
 		m_log.Save(_T("Log"));
 	m_log.Release();
-	theApp.m_tbmApi->m_log = NULL;
 
 	CNormalDlg::OnClose();
 }
@@ -509,8 +507,6 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		+ _T("<font color=green> 吧，使用账号：</font>" + tiebaOperate.GetUserName_()));
 
 	theApp.m_tbmEventBus->Post(PostSetTiebaEvent, CSetTiebaEvent(forumName));
-	// 开始循环封
-	AfxBeginThread(LoopBanThread, this);
 	return;
 
 Error:

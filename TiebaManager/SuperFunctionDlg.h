@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "NormalDlg.h"
+#include <NormalDlg.h>
 class CLoopBanPage;
 class CDefriendPage;
 class CLockThreadPage;

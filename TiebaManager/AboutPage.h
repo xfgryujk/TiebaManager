@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "afxwin.h"
 #include "TextButton.h"
-#include "NormalDlg.h"
+#include <NormalDlg.h>
 
 
 // CAboutPage 对话框

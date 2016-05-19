@@ -159,12 +159,6 @@
     <ClInclude Include="SuperFunctionDlg.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
-    <ClInclude Include="ResizeControl.h">
-      <Filter>头文件\GUI\UIHelper</Filter>
-    </ClInclude>
-    <ClInclude Include="NormalDlg.h">
-      <Filter>头文件\GUI\UIHelper</Filter>
-    </ClInclude>
     <ClInclude Include="LoopBanPage.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
@@ -307,12 +301,6 @@
     </ClCompile>
     <ClCompile Include="SuperFunctionDlg.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>
-    </ClCompile>
-    <ClCompile Include="ResizeControl.cpp">
-      <Filter>源文件\GUI\UIHelper</Filter>
-    </ClCompile>
-    <ClCompile Include="NormalDlg.cpp">
-      <Filter>源文件\GUI\UIHelper</Filter>
     </ClCompile>
     <ClCompile Include="LoopBanPage.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>

@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "afxwin.h"
-#include "NormalDlg.h"
+#include <NormalDlg.h>
 
 
 // CImageViewDlg 对话框

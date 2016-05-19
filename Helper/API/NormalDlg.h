@@ -1,10 +1,11 @@
 ﻿#pragma once
-#include "ResizeControl.h"
+#include "HelperCommon.h"
+#include <ResizeControl.h>
 
 
 // CNormalDlg 对话框
 
-class CNormalDlg : public CDialog
+class HELPER_API CNormalDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CNormalDlg)
 

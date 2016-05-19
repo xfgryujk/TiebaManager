@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "afxwin.h"
-#include "NormalDlg.h"
+#include <NormalDlg.h>
 
 
 // COperatePage 对话框

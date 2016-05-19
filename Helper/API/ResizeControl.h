@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "HelperCommon.h"
 
 
 enum ResizeType{ RT_NULL, RT_KEEP_DIST_TO_LEFT, RT_KEEP_DIST_TO_TOP, RT_KEEP_DIST_TO_RIGHT, RT_KEEP_DIST_TO_BOTTOM };
@@ -9,9 +10,11 @@ struct ResizeInfo
 	ResizeType lType; ResizeType tType; ResizeType rType; ResizeType bType;
 	CWnd* lWnd; CWnd* tWnd; CWnd* rWnd; CWnd* bWnd;
 	int lDist; int tDist; int rDist; int bDist;
+
+	bool operator < (const ResizeInfo& other) const { return wnd < other.wnd; }
 };
 
-class CResizeControl
+class HELPER_API CResizeControl
 {
 public:
 	CResizeControl(CWnd* parentWnd);
@@ -21,5 +24,5 @@ public:
 	void Resize();
 
 	CWnd* m_parentWnd;
-	CList<ResizeInfo> m_controlList;
+	set<ResizeInfo> m_controlList;
 };

@@ -19,6 +19,12 @@
     <Filter Include="源文件\API">
       <UniqueIdentifier>{ab73ee2a-1ac0-4d6e-9cde-04185ae19132}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\API\UI">
+      <UniqueIdentifier>{aa5bef88-53bc-44ee-a846-3e88272c298c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\API\UI">
+      <UniqueIdentifier>{47df1563-4f21-43b8-8efe-0753903f4dc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Helper.cpp">
@@ -50,6 +56,12 @@
     </ClCompile>
     <ClCompile Include="EventHelper.cpp">
       <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="ResizeControl.cpp">
+      <Filter>源文件\API\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalDlg.cpp">
+      <Filter>源文件\API\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +108,12 @@
     </ClInclude>
     <ClInclude Include="API\BlockingQueue.h">
       <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\NormalDlg.h">
+      <Filter>头文件\API\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="API\ResizeControl.h">
+      <Filter>头文件\API\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

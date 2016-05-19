@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "NormalDlg.h"
+#include <NormalDlg.h>
 #include "afxwin.h"
 
 

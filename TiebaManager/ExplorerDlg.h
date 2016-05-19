@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "afxcmn.h"
 #include "afxwin.h"
-#include "NormalDlg.h"
+#include <NormalDlg.h>
 class CExploreThreadPage;
 class CExplorePostPage;
 class CExploreLzlPage;
