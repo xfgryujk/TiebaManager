@@ -120,10 +120,15 @@
     <ClCompile Include="EventHelper.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="ImageHelper.cpp" />
+    <ClCompile Include="InputDlg.cpp" />
+    <ClCompile Include="ListPage.cpp" />
+    <ClCompile Include="ListTestPage.cpp" />
     <ClCompile Include="Md5.cpp" />
     <ClCompile Include="MiscHelper.cpp" />
     <ClCompile Include="NetworkHelper.cpp" />
     <ClCompile Include="NormalDlg.cpp" />
+    <ClCompile Include="NormalListPage.cpp" />
+    <ClCompile Include="RegListPage.cpp" />
     <ClCompile Include="ResizeControl.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -141,10 +146,15 @@
     <ClInclude Include="API\HelperCommon.h" />
     <ClInclude Include="API\ConfigFile.h" />
     <ClInclude Include="API\ImageHelper.h" />
+    <ClInclude Include="API\InputDlg.h" />
+    <ClInclude Include="API\ListPage.h" />
+    <ClInclude Include="API\ListTestPage.h" />
     <ClInclude Include="API\Md5.h" />
     <ClInclude Include="API\MiscHelper.h" />
     <ClInclude Include="API\NetworkHelper.h" />
     <ClInclude Include="API\NormalDlg.h" />
+    <ClInclude Include="API\NormalListPage.h" />
+    <ClInclude Include="API\RegListPage.h" />
     <ClInclude Include="API\ResizeControl.h" />
     <ClInclude Include="API\StringHelper.h" />
     <ClInclude Include="Resource.h" />

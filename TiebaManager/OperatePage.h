@@ -40,5 +40,4 @@ public:
 	CEdit m_deleteIntervalEdit;
 	CButton m_confirmCheck;
 	CButton m_wapBanInterfaceCheck;
-	CButton m_autoLoopBanCheck;
 };

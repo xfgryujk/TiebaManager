@@ -2,8 +2,9 @@
 #include "Plugin.h"
 
 
-CPlugin::CPlugin(HMODULE handle) :
-	m_handle(handle)
+CPlugin::CPlugin(HMODULE handle, const CString& name) :
+	m_handle(handle),
+	m_name(name)
 {
 
 }

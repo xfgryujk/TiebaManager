@@ -1,11 +1,12 @@
 ﻿#pragma once
+#include "HelperCommon.h"
 #include "afxwin.h"
 #include "ListPage.h"
 
 
 // CListTestPage 对话框
 
-class CListTestPage : public CListPage
+class HELPER_API CListTestPage : public CListPage
 {
 	DECLARE_DYNAMIC(CListTestPage)
 
@@ -14,7 +15,6 @@ public:
 	virtual ~CListTestPage();
 
 // 对话框数据
-	enum { IDD = IDD_LIST_TEST_PAGE };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持

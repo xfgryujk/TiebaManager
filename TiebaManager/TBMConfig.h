@@ -62,7 +62,6 @@ public:
 
 	COption<BOOL>				m_autoSaveLog;		// 自动保存日志
 	COption<int>				m_illegalLevel;		// 违规等级
-	COption<BOOL>				m_autoLoopBan;		// 自动循环封
 	COption<vector<Keyword> >	m_keywords;			// 违规内容
 	vector<NameImage>			m_images;			// 违规图片
 	COption<CString>			m_imageDir;			// 违规图片目录

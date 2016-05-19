@@ -12,6 +12,4 @@ public:
 	CTBMOperateListeners(CTBMOperate& operate);
 
 	void OnComfirm(CEventBase* event__);
-
-	void OnPostBan(CEventBase* event__);
 };

@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "SettingDlg.h"
 #include "ExplorerDlg.h"
-#include "SuperFunctionDlg.h"
+#include "PluginDlg.h"
 
 #include "TBMConfigPath.h"
 #include "TBMConfig.h"
@@ -78,7 +78,7 @@ void CTiebaManagerDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON2, m_startButton);
 	DDX_Control(pDX, IDC_BUTTON3, m_stopButton);
 	DDX_Control(pDX, IDC_EDIT2, m_pageEdit);
-	DDX_Control(pDX, IDC_BUTTON4, m_superFunctionButton);
+	DDX_Control(pDX, IDC_BUTTON4, m_pluginButton);
 	DDX_Control(pDX, IDC_BUTTON5, m_settingButton);
 	DDX_Control(pDX, IDC_STATIC4, m_logStatic);
 	DDX_Control(pDX, IDC_STATIC5, m_stateStatic);
@@ -163,7 +163,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	m_resize.AddControl(&m_explorerButton, RT_KEEP_DIST_TO_RIGHT, this);
-	m_resize.AddControl(&m_superFunctionButton, RT_KEEP_DIST_TO_RIGHT, this);
+	m_resize.AddControl(&m_pluginButton, RT_KEEP_DIST_TO_RIGHT, this);
 	m_resize.AddControl(&m_settingButton, RT_KEEP_DIST_TO_RIGHT, this);
 	m_resize.AddControl(&m_logStatic, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
 	m_resize.AddControl(&m_logExplorer, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_logStatic, RT_KEEP_DIST_TO_BOTTOM, &m_logStatic);
@@ -426,13 +426,13 @@ void CTiebaManagerDlg::OnBnClickedButton7()
 	}
 }
 
-// 超级功能
+// 插件
 void CTiebaManagerDlg::OnBnClickedButton4()
 {
-	if (m_superFunctionDlg == NULL)
+	if (m_pluginDlg == NULL)
 	{
-		m_superFunctionDlg = new CSuperFunctionDlg(m_superFunctionDlg);
-		m_superFunctionDlg->Create(m_superFunctionDlg->IDD, this);
+		m_pluginDlg = new CPluginDlg(m_pluginDlg, *theApp.m_pluginManager);
+		m_pluginDlg->Create(m_pluginDlg->IDD, this);
 	}
 }
 
@@ -498,7 +498,6 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_startButton.EnableWindow(TRUE);
 	m_pageEdit.EnableWindow(TRUE);
 	m_explorerButton.EnableWindow(TRUE);
-	m_superFunctionButton.EnableWindow(TRUE);
 
 	*theApp.m_userConfig->m_forumName = tiebaOperate.GetForumName();
 	theApp.m_userConfig->Save(USER_CONFIG_PATH);

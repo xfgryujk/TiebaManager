@@ -2,18 +2,17 @@
 //
 
 #include "stdafx.h"
-#include "RegListPage.h"
-#include "TBMConfig.h"
-#include "InputDlg.h"
-#include <StringHelper.h>
+#include <RegListPage.h>
+#include "resource.h"
+#include <ConfigFile.h>
+#include <InputDlg.h>
 
 
 // CRegListPage 对话框
 
 IMPLEMENT_DYNAMIC(CRegListPage, CListTestPage)
 
-CRegListPage::CRegListPage(const CString& inputTitle, CWnd* pParent /*=NULL*/)
-	: CListTestPage(pParent), 
+CRegListPage::CRegListPage(const CString& inputTitle, CWnd* pParent /*=NULL*/) : CListTestPage(pParent), 
 	m_inputTitle(inputTitle)
 {
 }

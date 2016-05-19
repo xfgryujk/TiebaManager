@@ -25,6 +25,18 @@
     <Filter Include="源文件\API\UI">
       <UniqueIdentifier>{47df1563-4f21-43b8-8efe-0753903f4dc6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\API\UI\InputDlg">
+      <UniqueIdentifier>{63a15a0b-344d-4279-b0be-8c272df01b55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\API\UI\ListPage">
+      <UniqueIdentifier>{3e0c44dc-8389-4d33-9840-82d370740555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\API\UI\InputDlg">
+      <UniqueIdentifier>{c55fa0a1-ffc7-4ce4-9fcd-95f6b3563dd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\API\UI\ListPage">
+      <UniqueIdentifier>{2020d277-a4ca-48df-9228-27aae820e179}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Helper.cpp">
@@ -62,6 +74,21 @@
     </ClCompile>
     <ClCompile Include="NormalDlg.cpp">
       <Filter>源文件\API\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InputDlg.cpp">
+      <Filter>源文件\API\UI\InputDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="ListPage.cpp">
+      <Filter>源文件\API\UI\ListPage</Filter>
+    </ClCompile>
+    <ClCompile Include="ListTestPage.cpp">
+      <Filter>源文件\API\UI\ListPage</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalListPage.cpp">
+      <Filter>源文件\API\UI\ListPage</Filter>
+    </ClCompile>
+    <ClCompile Include="RegListPage.cpp">
+      <Filter>源文件\API\UI\ListPage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +141,21 @@
     </ClInclude>
     <ClInclude Include="API\ResizeControl.h">
       <Filter>头文件\API\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="API\InputDlg.h">
+      <Filter>头文件\API\UI\InputDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="API\RegListPage.h">
+      <Filter>头文件\API\UI\ListPage</Filter>
+    </ClInclude>
+    <ClInclude Include="API\ListPage.h">
+      <Filter>头文件\API\UI\ListPage</Filter>
+    </ClInclude>
+    <ClInclude Include="API\ListTestPage.h">
+      <Filter>头文件\API\UI\ListPage</Filter>
+    </ClInclude>
+    <ClInclude Include="API\NormalListPage.h">
+      <Filter>头文件\API\UI\ListPage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

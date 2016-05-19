@@ -2,15 +2,15 @@
 //
 
 #include "stdafx.h"
-#include "ListTestPage.h"
+#include <ListTestPage.h>
+#include "resource.h"
 
 
 // CListTestPage 对话框
 
 IMPLEMENT_DYNAMIC(CListTestPage, CListPage)
 
-CListTestPage::CListTestPage(CWnd* pParent /*=NULL*/)
-	: CListPage(CListTestPage::IDD, pParent)
+CListTestPage::CListTestPage(CWnd* pParent /*=NULL*/) : CListPage(IDD_LIST_TEST_PAGE, pParent)
 {
 }
 

@@ -2,23 +2,22 @@
 //
 
 #include "stdafx.h"
-#include "NormalListPage.h"
-#include "TBMConfig.h"
-#include "InputDlg.h"
+#include <NormalListPage.h>
+#include "resource.h"
+#include <ConfigFile.h>
+#include <InputDlg.h>
 
 
 // CNormalListPage 对话框
 
 IMPLEMENT_DYNAMIC(CNormalListPage, CListPage)
 
-CNormalListPage::CNormalListPage(const CString& inputTitle, CWnd* pParent /*=NULL*/)
-	: CListPage(pParent), 
+CNormalListPage::CNormalListPage(const CString& inputTitle, CWnd* pParent /*=NULL*/) : CListPage(IDD_LIST_PAGE, pParent),
 	m_inputTitle(inputTitle)
 {
 }
 
-CNormalListPage::CNormalListPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd /*=NULL*/)
-	: CListPage(nIDTemplate, pParentWnd),
+CNormalListPage::CNormalListPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd /*=NULL*/) : CListPage(nIDTemplate, pParentWnd),
 	m_inputTitle(inputTitle)
 {
 }

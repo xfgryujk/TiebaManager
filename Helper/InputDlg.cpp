@@ -2,11 +2,14 @@
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
-#include "InputDlg.h"
+#include <InputDlg.h>
+#include "resource.h"
 
 
 // CInputDlg 对话框
+
+const UINT CInputDlg::IDD = IDD_INPUT_DIALOG;
+
 
 IMPLEMENT_DYNAMIC(CInputDlg, CDialog)
 

@@ -49,12 +49,6 @@
     <Filter Include="源文件\GUI\SuperFunction">
       <UniqueIdentifier>{cfc04151-1699-4135-a7c2-5267823e2d3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\GUI\UIHelper\ListPage">
-      <UniqueIdentifier>{693bc208-62e8-4918-a984-60a6036004d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\GUI\UIHelper\ListPage">
-      <UniqueIdentifier>{2e9391c3-017f-451e-b8fd-2dbb2acb7953}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\GUI\UIHelper\InputDlg">
       <UniqueIdentifier>{7f818a4a-d7ae-4cd1-9295-6ecfd60ba343}</UniqueIdentifier>
     </Filter>
@@ -159,9 +153,6 @@
     <ClInclude Include="SuperFunctionDlg.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
-    <ClInclude Include="LoopBanPage.h">
-      <Filter>头文件\GUI\SuperFunction</Filter>
-    </ClInclude>
     <ClInclude Include="ScanPage.h">
       <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
@@ -179,21 +170,6 @@
     </ClInclude>
     <ClInclude Include="LockThreadPage.h">
       <Filter>头文件\GUI\SuperFunction</Filter>
-    </ClInclude>
-    <ClInclude Include="NormalListPage.h">
-      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
-    </ClInclude>
-    <ClInclude Include="ListTestPage.h">
-      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
-    </ClInclude>
-    <ClInclude Include="ListPage.h">
-      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
-    </ClInclude>
-    <ClInclude Include="RegListPage.h">
-      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
-    </ClInclude>
-    <ClInclude Include="InputDlg.h">
-      <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
     </ClInclude>
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
@@ -233,6 +209,9 @@
     </ClInclude>
     <ClInclude Include="API\TBMAPI.h">
       <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="PluginDlg.h">
+      <Filter>头文件\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -302,9 +281,6 @@
     <ClCompile Include="SuperFunctionDlg.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
-    <ClCompile Include="LoopBanPage.cpp">
-      <Filter>源文件\GUI\SuperFunction</Filter>
-    </ClCompile>
     <ClCompile Include="ScanPage.cpp">
       <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
@@ -322,21 +298,6 @@
     </ClCompile>
     <ClCompile Include="LockThreadPage.cpp">
       <Filter>源文件\GUI\SuperFunction</Filter>
-    </ClCompile>
-    <ClCompile Include="ListPage.cpp">
-      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
-    </ClCompile>
-    <ClCompile Include="ListTestPage.cpp">
-      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
-    </ClCompile>
-    <ClCompile Include="NormalListPage.cpp">
-      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
-    </ClCompile>
-    <ClCompile Include="RegListPage.cpp">
-      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
-    </ClCompile>
-    <ClCompile Include="InputDlg.cpp">
-      <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
     </ClCompile>
     <ClCompile Include="InputKeywordDlg.cpp">
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
@@ -370,6 +331,9 @@
     </ClCompile>
     <ClCompile Include="TBMAPI.cpp">
       <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="PluginDlg.cpp">
+      <Filter>源文件\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

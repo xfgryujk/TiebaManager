@@ -1,10 +1,11 @@
 ﻿#pragma once
+#include "HelperCommon.h"
 #include "afxwin.h"
 
 
 // CInputDlg 对话框
 
-class CInputDlg : public CDialog
+class HELPER_API CInputDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CInputDlg)
 
@@ -13,7 +14,7 @@ public:
 	virtual ~CInputDlg();
 
 // 对话框数据
-	enum { IDD = IDD_INPUT_DIALOG };
+	static const UINT IDD;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持

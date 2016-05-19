@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <ConfigFile.h>
 class CEventBase;
+class CLoopBanDlg;
 
 
 class CLoopBanConfig : public CConfigBase
@@ -11,19 +12,22 @@ public:
 	COption<float> m_banInterval;			// 封禁间隔
 	COption<vector<CString> > m_userList;	// 用户列表
 	COption<vector<CString> > m_pidList;	// PID列表
+	COption<BOOL> m_autoLoopBan;			// 自动循环封
 
 	CLoopBanConfig() : CConfigBase("LoopBan"),
 		m_enable("Enable", TRUE),
 		m_log("Log"),
 		m_banInterval("BanInterval", 0.0f, [](const float& value)->BOOL{ return 0.0f <= value && value <= 60.0f; }),
 		m_userList("Name"),
-		m_pidList("PID")
+		m_pidList("PID"),
+		m_autoLoopBan("AutoLoopBan", FALSE)
 	{
 		m_options.push_back(&m_enable);
 		m_options.push_back(&m_log);
 		m_options.push_back(&m_banInterval);
 		m_options.push_back(&m_userList);
 		m_options.push_back(&m_pidList);
+		m_options.push_back(&m_autoLoopBan);
 	}
 
 	BOOL Load(const CString& path)
@@ -40,13 +44,20 @@ class CLoopBan
 {
 protected:
 	int m_onPostSetTiebaID = -1;
+	int m_onPostBanID = -1;
 
 public:
 	bool Init();
 	bool Uninit();
+	void OnConfig();
 
 	void OnPostSetTieba(CEventBase* event__);
+	void OnPostBan(CEventBase* event__);
 
 	void LoopBanThread();
+
+
+	CLoopBanConfig m_config;
+	CLoopBanDlg* m_loopBanDlg = NULL;
 };
 extern CLoopBan g_loopBan;

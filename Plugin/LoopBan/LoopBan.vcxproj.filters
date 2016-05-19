@@ -24,6 +24,9 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LoopBanDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="LoopBan.def">
@@ -44,6 +47,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="LoopBan.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LoopBanDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

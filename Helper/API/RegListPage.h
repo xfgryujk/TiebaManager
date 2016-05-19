@@ -1,11 +1,12 @@
 ﻿#pragma once
+#include "HelperCommon.h"
 #include "ListTestPage.h"
 #include <StringHelper.h>
 
 
 // CRegListPage 对话框
 
-class CRegListPage : public CListTestPage
+class HELPER_API CRegListPage : public CListTestPage
 {
 	DECLARE_DYNAMIC(CRegListPage)
 
@@ -14,7 +15,6 @@ public:
 	virtual ~CRegListPage();
 
 	// 对话框数据
-	enum { IDD = IDD_LIST_TEST_PAGE };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持

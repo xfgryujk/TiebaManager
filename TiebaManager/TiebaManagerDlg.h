@@ -10,7 +10,7 @@
 #include "ExplorerLog.h"
 class CSettingDlg;
 class CExplorerDlg;
-class CSuperFunctionDlg;
+class CPluginDlg;
 
 
 // CTiebaManagerDlg 对话框
@@ -62,7 +62,7 @@ public:
 	CButton m_stopButton;
 	CEdit m_pageEdit;
 	CButton m_explorerButton;
-	CButton m_superFunctionButton;
+	CButton m_pluginButton;
 	CButton m_settingButton;
 	CStatic m_logStatic;
 	CExplorer1 m_logExplorer;
@@ -73,7 +73,7 @@ public:
 
 	CSettingDlg* m_settingDlg = NULL;
 	CExplorerDlg* m_explorerDlg = NULL;
-	CSuperFunctionDlg* m_superFunctionDlg = NULL;
+	CPluginDlg* m_pluginDlg = NULL;
 
 	CExplorerLog m_log;
 

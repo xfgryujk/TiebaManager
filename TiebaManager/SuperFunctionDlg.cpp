@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "SuperFunctionDlg.h"
 
-#include "LoopBanPage.h"
 #include "DefriendPage.h"
 #include "LockThreadPage.h"
 
@@ -19,13 +18,11 @@ IMPLEMENT_DYNAMIC(CSuperFunctionDlg, CNormalDlg)
 CSuperFunctionDlg::CSuperFunctionDlg(CSuperFunctionDlg*& pThis, CWnd* pParent /*=NULL*/) : CNormalDlg(CSuperFunctionDlg::IDD, pParent),
 	m_pThis(pThis),
 	m_pagesResize(&m_tab),
-	m_loopBanPage(new CLoopBanPage()),
 	m_defriendPage(new CDefriendPage()),
 	m_lockThreadPage(new CLockThreadPage())
 {
 	// 初始化m_pages
 	int i = 0;
-	m_pages[i++] = m_loopBanPage.get();
 	m_pages[i++] = m_defriendPage.get();
 	m_pages[i++] = m_lockThreadPage.get();
 }
@@ -67,13 +64,11 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 
 	// 初始化m_tab
 	int i = 0;
-	m_tab.InsertItem(i++, _T("循环封"));
 	m_tab.InsertItem(i++, _T("批量拉黑"));
 	m_tab.InsertItem(i++, _T("锁帖"));
 
 	// 初始化各页
 #define CREATE_PAGE(page) page->Create(page->IDD, &m_tab)
-	CREATE_PAGE(m_loopBanPage);
 	CREATE_PAGE(m_defriendPage);
 	CREATE_PAGE(m_lockThreadPage);
 
@@ -89,10 +84,6 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 	m_resize.AddControl(&m_cancelButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
 	for (i = 0; i < _countof(m_pages); i++)
 		m_pagesResize.AddControl(m_pages[i], RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_tab, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
-
-	// 显示配置
-	ShowCurrentOptions();
-	m_clearCache = FALSE;
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -158,46 +149,8 @@ void CSuperFunctionDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 }
 #pragma endregion
 
-// 显示当前设置
-void CSuperFunctionDlg::ShowCurrentOptions()
-{
-	CString tmp;
-	// 循环封
-	//CLoopBanConfig loopBanConfig;
-	//loopBanConfig.Load(CURRENT_USER_DIR_PATH + _T("options2.xml"));
-	//
-	//m_loopBanPage->ShowList(loopBanConfig.m_userList);				// 用户名
-	//m_loopBanPage->m_pid = std::move(*loopBanConfig.m_pidList);		// PID
-	//m_loopBanPage->m_logCheck.SetCheck(loopBanConfig.m_log);		// 输出日志
-	//m_loopBanPage->m_enableCheck.SetCheck(loopBanConfig.m_enable);	// 开启
-	//tmp.Format(_T("%g"), *loopBanConfig.m_banInterval);
-	//m_loopBanPage->m_banIntervalEdit.SetWindowText(tmp);			// 封禁间隔
-}
-
-// 应用对话框中的设置
-void CSuperFunctionDlg::ApplyOptionsInDlg()
-{
-	CString strBuf;
-	// 循环封
-	//CLoopBanConfig loopBanConfig;
-
-	//m_loopBanPage->ApplyList(loopBanConfig.m_userList);					// 用户名
-	//*loopBanConfig.m_pidList = m_loopBanPage->m_pid;					// PID
-	//*loopBanConfig.m_log = m_loopBanPage->m_logCheck.GetCheck();		// 输出日志
-	//*loopBanConfig.m_enable = m_loopBanPage->m_enableCheck.GetCheck();	// 开启
-	//m_loopBanPage->m_banIntervalEdit.GetWindowText(strBuf);
-	//*loopBanConfig.m_banInterval = (float)_ttof(strBuf);				// 封禁间隔
-
-	//loopBanConfig.Save(CURRENT_USER_DIR_PATH + _T("options2.xml"));
-
-	if (m_clearCache)
-		DeleteFile(CURRENT_USER_DIR_PATH + _T("LoopBanDate.xml"));
-}
-
 // 确认
 void CSuperFunctionDlg::OnOK()
 {
-	ApplyOptionsInDlg();
-
 	DestroyWindow();
 }

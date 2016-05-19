@@ -89,7 +89,6 @@ DEFINE_WRITE_VECTOR(CPlan::Keyword)
 CPlan::CPlan() : CTBMCoreConfig("Plan"),
 	m_autoSaveLog		("AutoSaveLog",			FALSE),
 	m_illegalLevel		("IllegalLevel",		0,		[](const int& value)->BOOL{ return 0 <= value && value <= 6; }),
-	m_autoLoopBan		("AutoLoopBan",			FALSE),
 	m_keywords			("IllegalContent", [](const vector<Keyword>& value)->BOOL
 											{
 												for (const RegexText& i : value)
@@ -115,7 +114,6 @@ CPlan::CPlan() : CTBMCoreConfig("Plan"),
 	m_updateImage = TRUE;
 	m_options.push_back(&m_autoSaveLog);
 	m_options.push_back(&m_illegalLevel);
-	m_options.push_back(&m_autoLoopBan);
 	m_options.push_back(&m_keywords);
 	m_options.push_back(&m_imageDir);
 	m_options.push_back(&m_SSIMThreshold);

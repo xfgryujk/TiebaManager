@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <NormalDlg.h>
-class CLoopBanPage;
 class CDefriendPage;
 class CLockThreadPage;
 
@@ -32,13 +31,9 @@ public:
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnClose();
 
-	void ShowCurrentOptions();
-	void ApplyOptionsInDlg();
-
 
 public:
 	CTabCtrl m_tab;
-	unique_ptr<CLoopBanPage> m_loopBanPage;
 	unique_ptr<CDefriendPage> m_defriendPage;
 	unique_ptr<CLockThreadPage> m_lockThreadPage;
 	CButton m_okButton;
@@ -49,6 +44,6 @@ public:
 protected:
 	CSuperFunctionDlg*& m_pThis;
 
-	CWnd* m_pages[3];
+	CWnd* m_pages[2];
 	CResizeControl m_pagesResize;
 };

@@ -15,7 +15,7 @@ protected:
 	OnConfigType m_onConfig = NULL;
 
 
-	CPlugin(HMODULE handle = NULL);
+	CPlugin(HMODULE handle, const CString& name);
 
 	BOOL Load();
 	BOOL Unload();
@@ -25,4 +25,6 @@ public:
 	CString GetDescription();
 	// 打开插件设置
 	void OnConfig();
+
+	const CString m_name;
 };

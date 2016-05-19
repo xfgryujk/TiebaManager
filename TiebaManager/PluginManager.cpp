@@ -13,7 +13,17 @@ BOOL CPluginManager::Load(const CString& path)
 	if (handle == NULL)
 		return FALSE;
 
-	unique_ptr<CPlugin> plugin(new CPlugin(handle));
+	int left = path.ReverseFind(_T('\\'));
+	if (left == -1)
+		left = 0;
+	else
+		left++;
+	int right = path.ReverseFind(_T('.'));
+	if (right == -1)
+		right = path.GetLength();
+	CString name = path.Mid(left, right - left);
+
+	unique_ptr<CPlugin> plugin(new CPlugin(handle, name));
 	if (!plugin->Load())
 	{
 		FreeLibrary(handle);

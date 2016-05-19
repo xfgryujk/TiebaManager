@@ -1,10 +1,11 @@
 ﻿#pragma once
+#include "HelperCommon.h"
 #include "ListPage.h"
 
 
 // CNormalListPage 对话框
 
-class CNormalListPage : public CListPage
+class HELPER_API CNormalListPage : public CListPage
 {
 	DECLARE_DYNAMIC(CNormalListPage)
 
@@ -14,7 +15,6 @@ public:
 	virtual ~CNormalListPage();
 
 	// 对话框数据
-	enum { IDD = IDD_LIST_PAGE };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
