@@ -129,7 +129,6 @@
     <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="ConfigHelper.h" />
     <ClInclude Include="InputKeywordDlg.h" />
-    <ClInclude Include="LockThreadPage.h" />
     <ClInclude Include="ExplorerLog.h" />
     <ClInclude Include="Plugin.h" />
     <ClInclude Include="PluginDlg.h" />
@@ -152,7 +151,6 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SettingDlg.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SuperFunctionDlg.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TBMConfig.h" />
     <ClInclude Include="TBMConfigPath.h" />
@@ -173,7 +171,6 @@
     <ClCompile Include="TBMAPI.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />
     <ClCompile Include="InputKeywordDlg.cpp" />
-    <ClCompile Include="LockThreadPage.cpp" />
     <ClCompile Include="ExplorerLog.cpp" />
     <ClCompile Include="OperatePage.cpp" />
     <ClCompile Include="Plugin.cpp" />
@@ -196,7 +193,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SuperFunctionDlg.cpp" />
     <ClCompile Include="TBMConfig.cpp" />
     <ClCompile Include="TBMConfigPath.cpp" />
     <ClCompile Include="TBMEvent.cpp" />

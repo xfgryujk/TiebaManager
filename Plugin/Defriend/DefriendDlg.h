@@ -25,21 +25,12 @@ public:
 	virtual void OnCancel();
 	virtual void PostNcDestroy();
 	afx_msg void OnClose();
-	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedCheck1();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
-protected:
-	static void DefriendThread();
-	static void DoDefriend(int startPage, int endPage);
 
 
-protected:
-	CDefriendDlg*& m_pThis;
-
-	static CDefriendDlg* s_instance;
-	static mutex s_instanceLock;
-	static volatile BOOL s_stopFlag;
+public:
 	static CString s_startPage;
 	static CString s_endPage;
 	static BOOL s_defriendNewUsers;
@@ -51,4 +42,7 @@ public:
 	CButton m_stopButton;
 	CButton m_defriendNewUsersCheck;
 	CStatic m_stateStatic;
+
+protected:
+	CDefriendDlg*& m_pThis;
 };

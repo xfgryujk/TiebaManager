@@ -31,9 +31,6 @@
     <Filter Include="头文件\GUI\UIHelper">
       <UniqueIdentifier>{4a72c8b2-5332-4604-95f9-9f761d9e9a3c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\GUI\SuperFunction">
-      <UniqueIdentifier>{628fdca5-b0af-4b2d-ad95-2780a193694c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\GUI">
       <UniqueIdentifier>{e81938cd-2fd1-4f21-9f11-91c8386c5d8a}</UniqueIdentifier>
     </Filter>
@@ -45,9 +42,6 @@
     </Filter>
     <Filter Include="源文件\GUI\UIHelper">
       <UniqueIdentifier>{5f92a814-ed20-4ebc-8d4f-560e1a02d9a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\GUI\SuperFunction">
-      <UniqueIdentifier>{cfc04151-1699-4135-a7c2-5267823e2d3f}</UniqueIdentifier>
     </Filter>
     <Filter Include="头文件\GUI\UIHelper\InputDlg">
       <UniqueIdentifier>{7f818a4a-d7ae-4cd1-9295-6ecfd60ba343}</UniqueIdentifier>
@@ -150,9 +144,6 @@
     <ClInclude Include="TextButton.h">
       <Filter>头文件\GUI\UIHelper</Filter>
     </ClInclude>
-    <ClInclude Include="SuperFunctionDlg.h">
-      <Filter>头文件\GUI\SuperFunction</Filter>
-    </ClInclude>
     <ClInclude Include="ScanPage.h">
       <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
@@ -164,9 +155,6 @@
     </ClInclude>
     <ClInclude Include="ScanImage.h">
       <Filter>头文件\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="LockThreadPage.h">
-      <Filter>头文件\GUI\SuperFunction</Filter>
     </ClInclude>
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
@@ -275,9 +263,6 @@
     <ClCompile Include="TextButton.cpp">
       <Filter>源文件\GUI\UIHelper</Filter>
     </ClCompile>
-    <ClCompile Include="SuperFunctionDlg.cpp">
-      <Filter>源文件\GUI\SuperFunction</Filter>
-    </ClCompile>
     <ClCompile Include="ScanPage.cpp">
       <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
@@ -289,9 +274,6 @@
     </ClCompile>
     <ClCompile Include="ScanImage.cpp">
       <Filter>源文件\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="LockThreadPage.cpp">
-      <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
     <ClCompile Include="InputKeywordDlg.cpp">
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>

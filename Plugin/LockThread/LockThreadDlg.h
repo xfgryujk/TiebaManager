@@ -3,18 +3,18 @@
 #include "afxwin.h"
 
 
-// CLockThreadPage 对话框
+// CLockThreadDlg 对话框
 
-class CLockThreadPage : public CNormalDlg
+class CLockThreadDlg : public CNormalDlg
 {
-	DECLARE_DYNAMIC(CLockThreadPage)
+	DECLARE_DYNAMIC(CLockThreadDlg)
 
 public:
-	CLockThreadPage(CWnd* pParent = NULL);   // 标准构造函数
-	virtual ~CLockThreadPage();
+	CLockThreadDlg(CLockThreadDlg*& pThis, CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CLockThreadDlg();
 
 // 对话框数据
-	enum { IDD = IDD_LOCK_THREAD_PAGE };
+	enum { IDD = IDD_LOCK_THREAD_DLG };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
@@ -22,16 +22,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
-	afx_msg void OnDestroy();
+	virtual void OnCancel();
+	virtual void PostNcDestroy();
+	afx_msg void OnClose();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
 
-	static UINT AFX_CDECL LockThreadThread(LPVOID _thiz);
-
-
-protected:
-	static CLockThreadPage* m_instance;
-	static volatile BOOL m_stopFlag;
 
 public:
 	CEdit m_tidEdit;
@@ -39,4 +35,7 @@ public:
 	CEdit m_floorEdit;
 	CButton m_startButton;
 	CButton m_stopButton;
+
+protected:
+	CLockThreadDlg*& m_pThis;
 };

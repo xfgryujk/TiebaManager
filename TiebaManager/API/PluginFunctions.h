@@ -6,5 +6,5 @@
 typedef bool(__cdecl *InitType)();
 // 必须卸载所有Listener
 typedef bool(__cdecl *UninitType)();
-typedef CString(__cdecl *GetDescriptionType)();
+typedef LPCWSTR(__cdecl *GetDescriptionType)();
 typedef void(__cdecl *OnConfigType)();

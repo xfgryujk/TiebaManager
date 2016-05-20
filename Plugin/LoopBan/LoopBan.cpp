@@ -36,7 +36,7 @@ extern "C" __declspec(dllexport) bool __cdecl Uninit()
 	return g_loopBan.Uninit();
 }
 
-extern "C" __declspec(dllexport) CString __cdecl GetDescription()
+extern "C" __declspec(dllexport) LPCWSTR __cdecl GetDescription()
 {
 	return _T("循环封插件\r\n")
 		   _T("\r\n")
