@@ -1,18 +1,40 @@
-// BlackListPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// BlackListPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
 #include "BlackListPage.h"
-#include "StringHelper.h"
 #include "SettingDlg.h"
 
+#include <StringHelper.h>
 
-// CBlackListPage ¶Ô»°¿ò
+#include "TBMConfig.h"
+
+
+// CBlackListPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CBlackListPage, CRegListPage)
 
 CBlackListPage::CBlackListPage(CWnd* pParent /*=NULL*/)
-	: CRegListPage(_T("ÓÃ»§Ãû£º"), pParent)
+	: CRegListPage(_T("ç”¨æˆ·åï¼š"), pParent)
 {
 
 }
@@ -31,18 +53,18 @@ BEGIN_MESSAGE_MAP(CBlackListPage, CRegListPage)
 END_MESSAGE_MAP()
 
 
-// CBlackListPage ÏûÏ¢´¦Àí³ÌĞò
+// CBlackListPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 
 BOOL CBlackListPage::OnInitDialog()
 {
 	CRegListPage::OnInitDialog();
 
-	m_static.SetWindowText(_T("µ±±»²âÎÄ±¾µÈÓÚÎÄ±¾Ê±Æ¥Åä\r\n")
-						   _T("×¢ÒâÕıÔò±í´ïÊ½.*Æ¥ÅäËùÓĞÎÄ±¾£¬Çë²»Òª²»¼ÓÏŞÖÆÊ¹ÓÃ£¡£¡"));
+	m_static.SetWindowText(_T("å½“è¢«æµ‹æ–‡æœ¬ç­‰äºæ–‡æœ¬æ—¶åŒ¹é…\r\n")
+						   _T("æ³¨æ„æ­£åˆ™è¡¨è¾¾å¼.*åŒ¹é…æ‰€æœ‰æ–‡æœ¬ï¼Œè¯·ä¸è¦ä¸åŠ é™åˆ¶ä½¿ç”¨ï¼ï¼"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
 BOOL CBlackListPage::CheckMatchTooMuch(const CString& text, BOOL isRegex)

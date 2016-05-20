@@ -1,38 +1,38 @@
-
-// stdafx.h : ±ê×¼ÏµÍ³°üº¬ÎÄ¼şµÄ°üº¬ÎÄ¼ş£¬
-// »òÊÇ¾­³£Ê¹ÓÃµ«²»³£¸ü¸ÄµÄ
-// ÌØ¶¨ÓÚÏîÄ¿µÄ°üº¬ÎÄ¼ş
+ï»¿
+// stdafx.h : æ ‡å‡†ç³»ç»ŸåŒ…å«æ–‡ä»¶çš„åŒ…å«æ–‡ä»¶ï¼Œ
+// æˆ–æ˜¯ç»å¸¸ä½¿ç”¨ä½†ä¸å¸¸æ›´æ”¹çš„
+// ç‰¹å®šäºé¡¹ç›®çš„åŒ…å«æ–‡ä»¶
 
 #pragma once
 
 #ifndef VC_EXTRALEAN
-#define VC_EXTRALEAN            // ´Ó Windows Í·ÖĞÅÅ³ı¼«ÉÙÊ¹ÓÃµÄ×ÊÁÏ
+#define VC_EXTRALEAN            // ä» Windows å¤´ä¸­æ’é™¤æå°‘ä½¿ç”¨çš„èµ„æ–™
 #endif
 
 #include "targetver.h"
 
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // Ä³Ğ© CString ¹¹Ôìº¯Êı½«ÊÇÏÔÊ½µÄ
-#define _AFX_NO_MFC_CONTROLS_IN_DIALOGS         // ÒÆ³ı¶Ô»°¿òÖĞµÄ MFC ¿Ø¼şÖ§³Ö
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // æŸäº› CString æ„é€ å‡½æ•°å°†æ˜¯æ˜¾å¼çš„
+#define _AFX_NO_MFC_CONTROLS_IN_DIALOGS         // ç§»é™¤å¯¹è¯æ¡†ä¸­çš„ MFC æ§ä»¶æ”¯æŒ
 
-// ¹Ø±Õ MFC ¶ÔÄ³Ğ©³£¼ûµ«¾­³£¿É·ÅĞÄºöÂÔµÄ¾¯¸æÏûÏ¢µÄÒş²Ø
+// å…³é—­ MFC å¯¹æŸäº›å¸¸è§ä½†ç»å¸¸å¯æ”¾å¿ƒå¿½ç•¥çš„è­¦å‘Šæ¶ˆæ¯çš„éšè—
 #define _AFX_ALL_WARNINGS
 
-#include <afxwin.h>         // MFC ºËĞÄ×é¼şºÍ±ê×¼×é¼ş
-#include <afxext.h>         // MFC À©Õ¹
+#include <afxwin.h>         // MFC æ ¸å¿ƒç»„ä»¶å’Œæ ‡å‡†ç»„ä»¶
+#include <afxext.h>         // MFC æ‰©å±•
 
 
-#include <afxdisp.h>        // MFC ×Ô¶¯»¯Àà
+#include <afxdisp.h>        // MFC è‡ªåŠ¨åŒ–ç±»
 
 
 
 #ifndef _AFX_NO_OLE_SUPPORT
-#include <afxdtctl.h>           // MFC ¶Ô Internet Explorer 4 ¹«¹²¿Ø¼şµÄÖ§³Ö
+#include <afxdtctl.h>           // MFC å¯¹ Internet Explorer 4 å…¬å…±æ§ä»¶çš„æ”¯æŒ
 #endif
 #ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>             // MFC ¶Ô Windows ¹«¹²¿Ø¼şµÄÖ§³Ö
+#include <afxcmn.h>             // MFC å¯¹ Windows å…¬å…±æ§ä»¶çš„æ”¯æŒ
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
-#include <afxcontrolbars.h>     // ¹¦ÄÜÇøºÍ¿Ø¼şÌõµÄ MFC Ö§³Ö
+#include <afxcontrolbars.h>     // åŠŸèƒ½åŒºå’Œæ§ä»¶æ¡çš„ MFC æ”¯æŒ
 
 
 
@@ -64,9 +64,13 @@
 #include <map>
 #include <regex>
 #include <memory>
+#include <thread>
+#include <mutex>
 using std::vector;
 using std::queue;
 using std::set;
 using std::map;
 using std::wregex;
 using std::unique_ptr;
+using std::thread;
+using std::mutex;

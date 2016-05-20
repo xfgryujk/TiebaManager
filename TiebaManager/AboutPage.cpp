@@ -1,12 +1,32 @@
-// AboutPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// AboutPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
 #include "AboutPage.h"
+
 #include "Update.h"
 
 
-// CAboutPage ¶Ô»°¿ò
+// CAboutPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CAboutPage, CNormalDlg)
 
@@ -37,9 +57,9 @@ BEGIN_MESSAGE_MAP(CAboutPage, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CAboutPage ÏûÏ¢´¦Àí³ÌĞò
+// CAboutPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CAboutPage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -49,38 +69,38 @@ BOOL CAboutPage::OnInitDialog()
 	m_resize.AddControl(&m_autoCheckUpdateCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_edit);
 	m_resize.AddControl(&m_authorStatic, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_edit);
 
-	m_edit.SetWindowText(_T("Èí¼ş½éÉÜÌûhttp://tieba.baidu.com/p/3915111330\r\n")
+	m_edit.SetWindowText(_T("è½¯ä»¶ä»‹ç»å¸–http://tieba.baidu.com/p/3915111330\r\n")
 						 _T("\r\n")
-						 _T("html´úÂëÖ»×ª»»ÁË\"'&<>»¹ÓĞ¿Õ¸ñ£¬ÆäËûÒÔÍøÒ³Ô´ÂëÎª×¼£¬Èç»»ĞĞ·ûÎª<br> (²»×¢ÒâµÄ»°»á²»Æ¥Åä»òÆ¥ÅäÌ«¶à)\r\n")
+						 _T("htmlä»£ç åªè½¬æ¢äº†\"'&<>è¿˜æœ‰ç©ºæ ¼ï¼Œå…¶ä»–ä»¥ç½‘é¡µæºç ä¸ºå‡†ï¼Œå¦‚æ¢è¡Œç¬¦ä¸º<br> (ä¸æ³¨æ„çš„è¯ä¼šä¸åŒ¹é…æˆ–åŒ¹é…å¤ªå¤š)\r\n")
 						 _T("\r\n")
-						 _T("ÎÒµÄÓÊÏäºÍÖ§¸¶±¦ÊÇxfgryujk@126.com£¬Ï²»¶´ËÈí¼ş¿ÉÒÔ¾èÖúÅ¶\r\n")
+						 _T("æˆ‘çš„é‚®ç®±å’Œæ”¯ä»˜å®æ˜¯xfgryujk@126.comï¼Œå–œæ¬¢æ­¤è½¯ä»¶å¯ä»¥æåŠ©å“¦\r\n")
 						 _T("\r\n")
-						 _T("´Ë³ÌĞòÍ¨¹ıGPLĞ­Òé¿ªÔ´£¬Äã¿ÉÒÔÔÚhttps://github.com/xfgryujk/TiebaManagerµÃµ½Ô´Âë£¬»¶Ó­ÍêÉÆ³ÌĞò\r\n")
+						 _T("æ­¤ç¨‹åºé€šè¿‡GPLåè®®å¼€æºï¼Œä½ å¯ä»¥åœ¨https://github.com/xfgryujk/TiebaManagerå¾—åˆ°æºç ï¼Œæ¬¢è¿å®Œå–„ç¨‹åº\r\n")
 						 _T("\r\n")
-						 _T("¶Ô¸üĞÂÈÕÖ¾¸ĞĞËÈ¤µÄ»°¿´ÕâÀïhttps://github.com/xfgryujk/TiebaManager/commits/master\r\n")
+						 _T("å¯¹æ›´æ–°æ—¥å¿—æ„Ÿå…´è¶£çš„è¯çœ‹è¿™é‡Œhttps://github.com/xfgryujk/TiebaManager/commits/master\r\n")
 						 _T("\r\n")
-						 _T("ÎÒÖ»ÊÇÌá¹©·½±ã°ÉÎñ¹ÜÀíÌù°ÉµÄ¹¤¾ß£¬±»ÓÃÀ´×ö²ğ°ÉµÈ¶ñÒâĞĞÎªÔì³ÉµÄËğÊ§±¾ÈË²»¸ºÔğ"));
+						 _T("æˆ‘åªæ˜¯æä¾›æ–¹ä¾¿å§åŠ¡ç®¡ç†è´´å§çš„å·¥å…·ï¼Œè¢«ç”¨æ¥åšæ‹†å§ç­‰æ¶æ„è¡Œä¸ºé€ æˆçš„æŸå¤±æœ¬äººä¸è´Ÿè´£"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// ¼ì²é¸üĞÂ
+// æ£€æŸ¥æ›´æ–°
 void CAboutPage::OnStnClickedStatic1()
 {
 	switch (CheckUpdate())
 	{
 	case UPDATE_NO_UPDATE:
-		AfxMessageBox(_T("ÒÑ¾­ÊÇ×îĞÂ°æ±¾"));
+		AfxMessageBox(_T("å·²ç»æ˜¯æœ€æ–°ç‰ˆæœ¬"));
 		break;
 	case UPDATE_FAILED_TO_GET_FILE_INFO:
-		if (AfxMessageBox(_T("»ñÈ¡ÎÄ¼şĞÅÏ¢Ê§°Ü£¬ÊÖ¶¯¸üĞÂ£¿"), MB_ICONQUESTION | MB_YESNO) == IDYES)
+		if (AfxMessageBox(_T("è·å–æ–‡ä»¶ä¿¡æ¯å¤±è´¥ï¼Œæ‰‹åŠ¨æ›´æ–°ï¼Ÿ"), MB_ICONQUESTION | MB_YESNO) == IDYES)
 			ShellExecute(NULL, _T("open"), UPDATE_URL, NULL, NULL, SW_NORMAL);
 		break;
 	}
 }
 
-// ¹ØÓÚ×÷Õß
+// å…³äºä½œè€…
 void CAboutPage::OnStnClickedStatic2()
 {
 	ShellExecute(NULL, _T("open"), _T("http://tieba.baidu.com/i/37897560"), NULL, NULL, SW_NORMAL);

@@ -1,19 +1,40 @@
-// ImageViewDlg.cpp : ÊµÏÖÎÄ¼ş
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// ImageViewDlg.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
 #include "ImageViewDlg.h"
+#include <ImageHelper.h>
+#include "TBMConfigPath.h"
 #include "ScanImage.h"
-#include "NetworkHelper.h"
-#include "MiscHelper.h"
+#include <NetworkHelper.h>
+#include <MiscHelper.h>
 #include "InputDlg.h"
 
 
-// CImageViewDlg ¶Ô»°¿ò
+// CImageViewDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CImageViewDlg, CNormalDlg)
 
-// ¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°
 CImageViewDlg::CImageViewDlg(CImageViewDlg** pThis, CWnd* pParent /*=NULL*/)
 	: CNormalDlg(CImageViewDlg::IDD, pParent)
 {
@@ -46,16 +67,16 @@ BEGIN_MESSAGE_MAP(CImageViewDlg, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CImageViewDlg ÏûÏ¢´¦Àí³ÌĞò
+// CImageViewDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 #pragma region UI
-// Ïú»Ù´°¿Ú
+// é”€æ¯çª—å£
 void CImageViewDlg::OnClose()
 {
 	DestroyWindow();
 }
 
-// ÊÍ·Åthis
+// é‡Šæ”¾this
 void CImageViewDlg::PostNcDestroy()
 {
 	CNormalDlg::PostNcDestroy();
@@ -64,7 +85,7 @@ void CImageViewDlg::PostNcDestroy()
 	delete this;
 }
 
-// ÏŞÖÆ×îĞ¡³ß´ç
+// é™åˆ¶æœ€å°å°ºå¯¸
 void CImageViewDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
 	/*lpMMI->ptMinTrackSize.x = 275;
@@ -73,7 +94,7 @@ void CImageViewDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }
 
-// ¹ö¶¯
+// æ»šåŠ¨
 void CImageViewDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
 	if (nSBCode != SB_ENDSCROLL)
@@ -88,7 +109,7 @@ void CImageViewDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	CNormalDlg::OnVScroll(nSBCode, nPos, pScrollBar);
 }
 
-// ¹öÂÖ¹ö¶¯
+// æ»šè½®æ»šåŠ¨
 BOOL CImageViewDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	m_imageScrollBar.SetScrollPos(m_imageScrollBar.GetScrollPos() - zDelta);
@@ -97,7 +118,7 @@ BOOL CImageViewDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return CNormalDlg::OnMouseWheel(nFlags, zDelta, pt);
 }
 
-// ¸Ä±ä³ß´ç
+// æ”¹å˜å°ºå¯¸
 void CImageViewDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CNormalDlg::OnSize(nType, cx, cy);
@@ -105,13 +126,13 @@ void CImageViewDlg::OnSize(UINT nType, int cx, int cy)
 	UpdateScrollRange();
 }
 
-// ¸üĞÂ¹ö¶¯Ìõ·¶Î§
+// æ›´æ–°æ»šåŠ¨æ¡èŒƒå›´
 void CImageViewDlg::UpdateScrollRange()
 {
 	if (m_imageScrollBar.m_hWnd == NULL)
 		return;
 
-	// ¼ÆËã×Ü¸ß¶È
+	// è®¡ç®—æ€»é«˜åº¦
 	int totalHeight = 0;
 	for (const CImage& i : m_image)
 		totalHeight += GetImageSize(i).cy;
@@ -124,7 +145,7 @@ void CImageViewDlg::UpdateScrollRange()
 }
 #pragma endregion
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CImageViewDlg::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -140,29 +161,29 @@ BOOL CImageViewDlg::OnInitDialog()
 	SetWindowPos(NULL, rect.right, rect.top, 0, 0, SWP_NOSIZE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// ÉèÖÃÍ¼Æ¬
+// è®¾ç½®å›¾ç‰‡
 void CImageViewDlg::SetImages(unique_ptr<vector<CString> > imageURL)
 {
 	m_imageURL = std::move(imageURL);
 	m_image.resize(m_imageURL->size());
 
-	// ¶ÁÈ¡Í¼Æ¬µ½m_image
+	// è¯»å–å›¾ç‰‡åˆ°m_image
 	for (UINT i = 0; i < m_imageURL->size(); i++)
 	{
 		CString imgName = GetImageName((*m_imageURL)[i]);
 		if (PathFileExists(IMG_CACHE_PATH + imgName))
 		{
-			// ¶ÁÈ¡Í¼Æ¬»º´æ
+			// è¯»å–å›¾ç‰‡ç¼“å­˜
 			if (!m_image[i].IsNull())
 				m_image[i].Destroy();
 			m_image[i].Load(IMG_CACHE_PATH + imgName);
 		}
 		else
 		{
-			// ÏÂÔØÍ¼Æ¬
+			// ä¸‹è½½å›¾ç‰‡
 			unique_ptr<BYTE[]> buffer;
 			ULONG size;
 			if (HTTPGetRaw((*m_imageURL)[i], &buffer, &size) == NET_SUCCESS)
@@ -180,7 +201,7 @@ void CImageViewDlg::SetImages(unique_ptr<vector<CString> > imageURL)
 	UpdateScrollRange();
 }
 
-// È¡Í¼Æ¬ÏÔÊ¾µÄ³ß´ç
+// å–å›¾ç‰‡æ˜¾ç¤ºçš„å°ºå¯¸
 SIZE CImageViewDlg::GetImageSize(const CImage& image)
 {
 	CRect rect;
@@ -194,7 +215,7 @@ SIZE CImageViewDlg::GetImageSize(const CImage& image)
 	}
 }
 
-// »­Í¼Æ¬
+// ç”»å›¾ç‰‡
 void CImageViewDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
 	if (nIDCtl == m_imageStatic.GetDlgCtrlID())
@@ -230,11 +251,11 @@ void CImageViewDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CNormalDlg::OnDrawItem(nIDCtl, lpDrawItemStruct);
 }
 
-// ±£´æ
+// ä¿å­˜
 void CImageViewDlg::OnBnClickedButton3()
 {
 	CString content = _T("1");
-	CInputDlg dlg(_T("ÊäÈëÍ¼Æ¬ĞòºÅ£º"), content, NULL, FALSE, CInputDlg::IDD, this);
+	CInputDlg dlg(_T("è¾“å…¥å›¾ç‰‡åºå·ï¼š"), content, NULL, FALSE, CInputDlg::IDD, this);
 	if (dlg.DoModal() != IDOK || content == _T(""))
 		return;
 	int index = _ttoi(content) - 1;
@@ -246,7 +267,7 @@ void CImageViewDlg::OnBnClickedButton3()
 
 	BROWSEINFO bi;
 	ZeroMemory(&bi, sizeof(bi));
-	bi.lpszTitle = _T("±£´æÄ¿Â¼£º");
+	bi.lpszTitle = _T("ä¿å­˜ç›®å½•ï¼š");
 	bi.ulFlags = BIF_STATUSTEXT;
 	LPITEMIDLIST pidlSel = SHBrowseForFolder(&bi);
 
@@ -257,8 +278,6 @@ void CImageViewDlg::OnBnClickedButton3()
 		folder.ReleaseBuffer();
 		
 		CString imgName = GetImageName((*m_imageURL)[index]);
-		if (imgName.Right(4).CompareNoCase(_T(".jpg")) != 0)
-			imgName += _T(".jpg");
 		m_image[index].Save(folder + _T("\\") + imgName);
 	}
 }

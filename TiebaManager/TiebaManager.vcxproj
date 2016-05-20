@@ -29,7 +29,7 @@
     <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Static</UseOfMfc>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -43,27 +43,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(OpenCV)\build\include;$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(OpenCV)\build\x86\vc12\lib;$(SolutionDir)Library\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <IncludePath>$(SolutionDir)TiebaManagerCore\API;$(SolutionDir)TiebaAPI\API;$(SolutionDir)Helper\API;$(ProjectDir)\API;$(OpenCV)\build\include;$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)$(Configuration);$(OpenCV)\build\x86\vc12\lib;$(SolutionDir)Library\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(OpenCV)\build\include;$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);</IncludePath>
-    <LibraryPath>$(OpenCV)\build\x86\vc12\staticlib;$(SolutionDir)Library\lib;$(VC_LibraryPath_x86);$(WindowsSdk_71A_LibraryPath_x86)</LibraryPath>
+    <IncludePath>$(SolutionDir)TiebaManagerCore\API;$(SolutionDir)TiebaAPI\API;$(SolutionDir)Helper\API;$(ProjectDir)\API;$(OpenCV)\build\include;$(SolutionDir)Library\include;$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);</IncludePath>
+    <LibraryPath>$(SolutionDir)$(Configuration);$(OpenCV)\build\x86\vc12\lib;$(SolutionDir)Library\lib;$(VC_LibraryPath_x86);$(WindowsSdk_71A_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>ASMV;ASMINF;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TIEBA_MANAGER_EXPORTS;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>tinyxml2d.lib;opencv_ts300d.lib;opencv_world300d.lib;Dbghelp.lib;oleacc.lib;Winmm.lib;Iepmapi.lib</AdditionalDependencies>
+      <AdditionalDependencies>TiebaManagerCore.lib;TiebaAPI.lib;Helper.lib;tinyxml2d.lib;opencv_ts300d.lib;opencv_world300d.lib;Dbghelp.lib;Winmm.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
@@ -78,6 +79,9 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -86,7 +90,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>ASMV;ASMINF;WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TIEBA_MANAGER_EXPORTS;WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -94,7 +98,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>tinyxml2.lib;ippicvmt.lib;IlmImf.lib;libjasper.lib;libjpeg.lib;libpng.lib;libtiff.lib;libwebp.lib;zlib.lib;opencv_calib3d300.lib;opencv_core300.lib;opencv_features2d300.lib;opencv_flann300.lib;opencv_hal300.lib;opencv_highgui300.lib;opencv_imgcodecs300.lib;opencv_imgproc300.lib;opencv_ml300.lib;opencv_objdetect300.lib;opencv_photo300.lib;opencv_shape300.lib;opencv_stitching300.lib;opencv_superres300.lib;opencv_ts300.lib;opencv_video300.lib;opencv_videoio300.lib;opencv_videostab300.lib;Dbghelp.lib;Wininet.lib;Iepmapi.lib;Winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>TiebaManagerCore.lib;TiebaAPI.lib;Helper.lib;tinyxml2.lib;opencv_ts300.lib;opencv_world300.lib;Dbghelp.lib;Winmm.lib</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Midl>
@@ -118,26 +122,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
+    <ClInclude Include="API\PluginFunctions.h" />
+    <ClInclude Include="API\TBMAPI.h" />
+    <ClInclude Include="API\TBMEvent.h" />
+    <ClInclude Include="API\TiebaManagerCommon.h" />
     <ClInclude Include="BlackListPage.h" />
-    <ClInclude Include="InputDlg.h" />
+    <ClInclude Include="ConfigHelper.h" />
     <ClInclude Include="InputKeywordDlg.h" />
-    <ClInclude Include="LockThreadPage.h" />
-    <ClInclude Include="LogHelper.h" />
-    <ClInclude Include="Md5.h" />
-    <ClInclude Include="MiscHelper.h" />
-    <ClInclude Include="NormalListPage.h" />
-    <ClInclude Include="RegListPage.h" />
-    <ClInclude Include="TiebaCollect.h" />
-    <ClInclude Include="DefriendPage.h" />
+    <ClInclude Include="ExplorerLog.h" />
+    <ClInclude Include="Plugin.h" />
+    <ClInclude Include="PluginDlg.h" />
+    <ClInclude Include="PluginManager.h" />
     <ClInclude Include="ImageViewDlg.h" />
-    <ClInclude Include="ListPage.h" />
-    <ClInclude Include="LoopBanPage.h" />
-    <ClInclude Include="NetworkHelper.h" />
-    <ClInclude Include="NormalDlg.h" />
-    <ClInclude Include="TiebaOperate.h" />
     <ClInclude Include="OperatePage.h" />
-    <ClInclude Include="ResizeControl.h" />
-    <ClInclude Include="TiebaScan.h" />
     <ClInclude Include="ScanImage.h" />
     <ClInclude Include="ConfirmDlg.h" />
     <ClInclude Include="ExploreLzlPage.h" />
@@ -148,22 +145,21 @@
     <ClInclude Include="ExploreThreadPage.h" />
     <ClInclude Include="ImagePage.h" />
     <ClInclude Include="KeywordsPage.h" />
-    <ClInclude Include="ListTestPage.h" />
     <ClInclude Include="LoginDlg.h" />
     <ClInclude Include="OptionsPage.h" />
     <ClInclude Include="ScanPage.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="Setting.h" />
     <ClInclude Include="SettingDlg.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="StringHelper.h" />
-    <ClInclude Include="SuperFunctionDlg.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TBMConfig.h" />
+    <ClInclude Include="TBMConfigPath.h" />
+    <ClInclude Include="TBMListeners.h" />
+    <ClInclude Include="TBMOperateListeners.h" />
+    <ClInclude Include="TBMScanListeners.h" />
     <ClInclude Include="TextButton.h" />
     <ClInclude Include="TiebaManager.h" />
     <ClInclude Include="TiebaManagerDlg.h" />
-    <ClInclude Include="TiebaVariable.h" />
-    <ClInclude Include="TypeHelper.h" />
     <ClInclude Include="Update.h" />
     <ClInclude Include="UsersPage.h" />
     <ClInclude Include="WhiteContentPage.h" />
@@ -171,22 +167,15 @@
   <ItemGroup>
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="BlackListPage.cpp" />
-    <ClCompile Include="DefriendPage.cpp" />
+    <ClCompile Include="ConfigHelper.cpp" />
+    <ClCompile Include="PluginDlg.cpp" />
+    <ClCompile Include="TBMAPI.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />
-    <ClCompile Include="InputDlg.cpp" />
     <ClCompile Include="InputKeywordDlg.cpp" />
-    <ClCompile Include="ListPage.cpp" />
-    <ClCompile Include="LockThreadPage.cpp" />
-    <ClCompile Include="LogHelper.cpp" />
-    <ClCompile Include="LoopBanPage.cpp" />
-    <ClCompile Include="Md5.cpp" />
-    <ClCompile Include="MiscHelper.cpp" />
-    <ClCompile Include="NetworkHelper.cpp" />
-    <ClCompile Include="NormalDlg.cpp" />
-    <ClCompile Include="NormalListPage.cpp" />
+    <ClCompile Include="ExplorerLog.cpp" />
     <ClCompile Include="OperatePage.cpp" />
-    <ClCompile Include="RegListPage.cpp" />
-    <ClCompile Include="ResizeControl.cpp" />
+    <ClCompile Include="Plugin.cpp" />
+    <ClCompile Include="PluginManager.cpp" />
     <ClCompile Include="ScanImage.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
     <ClCompile Include="ExploreLzlPage.cpp" />
@@ -197,25 +186,23 @@
     <ClCompile Include="ExploreThreadPage.cpp" />
     <ClCompile Include="ImagePage.cpp" />
     <ClCompile Include="KeywordsPage.cpp" />
-    <ClCompile Include="ListTestPage.cpp" />
     <ClCompile Include="LoginDlg.cpp" />
     <ClCompile Include="OptionsPage.cpp" />
     <ClCompile Include="ScanPage.cpp" />
-    <ClCompile Include="Setting.cpp" />
     <ClCompile Include="SettingDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="StringHelper.cpp" />
-    <ClCompile Include="SuperFunctionDlg.cpp" />
+    <ClCompile Include="TBMConfig.cpp" />
+    <ClCompile Include="TBMConfigPath.cpp" />
+    <ClCompile Include="TBMEvent.cpp" />
+    <ClCompile Include="TBMListeners.cpp" />
+    <ClCompile Include="TBMOperateListeners.cpp" />
     <ClCompile Include="TextButton.cpp" />
-    <ClCompile Include="TiebaCollect.cpp" />
     <ClCompile Include="TiebaManager.cpp" />
     <ClCompile Include="TiebaManagerDlg.cpp" />
-    <ClCompile Include="TiebaOperate.cpp" />
-    <ClCompile Include="TiebaScan.cpp" />
-    <ClCompile Include="TiebaVariable.cpp" />
+    <ClCompile Include="TBMScanListeners.cpp" />
     <ClCompile Include="Update.cpp" />
     <ClCompile Include="UsersPage.cpp" />
     <ClCompile Include="WhiteContentPage.cpp" />

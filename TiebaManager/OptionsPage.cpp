@@ -1,14 +1,37 @@
-// OptionsPage.cpp : ÊµÏÖÎÄ¼þ
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// OptionsPage.cpp : å®žçŽ°æ–‡ä»¶
 //
 
 #include "stdafx.h"
 #include "OptionsPage.h"
-#include "Setting.h"
 #include "SettingDlg.h"
-#include "MiscHelper.h"
+
+#include <MiscHelper.h>
+
+#include "TBMConfigPath.h"
+#include "TBMConfig.h"
+#include "TiebaManager.h"
 
 
-// COptionsPage ¶Ô»°¿ò
+// COptionsPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(COptionsPage, CNormalDlg)
 
@@ -47,9 +70,9 @@ BEGIN_MESSAGE_MAP(COptionsPage, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// COptionsPage ÏûÏ¢´¦Àí³ÌÐò
+// COptionsPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL COptionsPage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -64,10 +87,10 @@ BOOL COptionsPage::OnInitDialog()
 	m_resize.AddControl(&m_saveOptionsButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôÐÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±žæ€§é¡µåº”è¿”å›ž FALSE
 }
 
-// Ë«»÷ÁÐ±í
+// åŒå‡»åˆ—è¡¨
 void COptionsPage::OnLbnDblclkList1()
 {
 	CString tmp;
@@ -75,21 +98,21 @@ void COptionsPage::OnLbnDblclkList1()
 	m_edit.SetWindowText(tmp);
 }
 
-// ÐÂ½¨
+// æ–°å»º
 void COptionsPage::OnBnClickedButton1()
 {
 	CString name;
 	m_edit.GetWindowText(name);
 	if (name == _T(""))
 	{
-		AfxMessageBox(_T("·½°¸Ãû²»ÄÜÎª¿Õ£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("æ–¹æ¡ˆåä¸èƒ½ä¸ºç©ºï¼"), MB_ICONERROR);
 		return;
 	}
 	
-	CreateDir(OPTIONS_PATH);
-	if (PathFileExists(OPTIONS_PATH + name + _T(".xml")))
+	CreateDir(OPTIONS_DIR_PATH);
+	if (PathFileExists(OPTIONS_DIR_PATH + name + _T(".xml")))
 	{
-		AfxMessageBox(_T("·½°¸ÒÑ´æÔÚ£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("æ–¹æ¡ˆå·²å­˜åœ¨ï¼"), MB_ICONERROR);
 		return;
 	}
 	m_list.SetCurSel(m_list.AddString(name));
@@ -97,7 +120,7 @@ void COptionsPage::OnBnClickedButton1()
 	OnBnClickedButton6();
 }
 
-// É¾³ý
+// åˆ é™¤
 void COptionsPage::OnBnClickedButton2()
 {
 	int index = m_list.GetCurSel();
@@ -105,30 +128,30 @@ void COptionsPage::OnBnClickedButton2()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (!DeleteFile(OPTIONS_PATH + name + _T(".xml")))
+	if (!DeleteFile(OPTIONS_DIR_PATH + name + _T(".xml")))
 	{
-		AfxMessageBox(_T("É¾³ý·½°¸Ê§°Ü£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("åˆ é™¤æ–¹æ¡ˆå¤±è´¥ï¼"), MB_ICONERROR);
 		return;
 	}
 	m_list.DeleteString(index);
 	m_list.SetCurSel(index == 0 ? 0 : index - 1);
 	if (m_list.GetCurSel() == LB_ERR)
 	{
-		g_plan.UseDefault();
-		((CSettingDlg*)GetParent()->GetParent())->ShowPlan(g_plan);
+		theApp.m_plan->UseDefault();
+		((CSettingDlg*)GetParent()->GetParent())->ShowPlan(*theApp.m_plan);
 	}
 	else
 		OnBnClickedButton6();
 }
 
-// ÖØÃüÃû
+// é‡å‘½å
 void COptionsPage::OnBnClickedButton3()
 {
 	CString newName;
 	m_edit.GetWindowText(newName);
 	if (newName == _T(""))
 	{
-		AfxMessageBox(_T("·½°¸Ãû²»ÄÜÎª¿Õ£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("æ–¹æ¡ˆåä¸èƒ½ä¸ºç©ºï¼"), MB_ICONERROR);
 		return;
 	}
 	int index = m_list.GetCurSel();
@@ -136,47 +159,47 @@ void COptionsPage::OnBnClickedButton3()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (!MoveFile(OPTIONS_PATH + name + _T(".xml"), OPTIONS_PATH + newName + _T(".xml")))
+	if (!MoveFile(OPTIONS_DIR_PATH + name + _T(".xml"), OPTIONS_DIR_PATH + newName + _T(".xml")))
 	{
-		AfxMessageBox(_T("ÖØÃüÃû·½°¸Ê§°Ü£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("é‡å‘½åæ–¹æ¡ˆå¤±è´¥ï¼"), MB_ICONERROR);
 		return;
 	}
-	if (g_userConfig.m_plan == name)
+	if (theApp.m_userConfig->m_plan == name)
 	{
-		*g_userConfig.m_plan = newName;
-		m_currentOptionStatic.SetWindowText(_T("µ±Ç°·½°¸£º") + newName);
+		*theApp.m_userConfig->m_plan = newName;
+		m_currentOptionStatic.SetWindowText(_T("å½“å‰æ–¹æ¡ˆï¼š") + newName);
 	}
 	m_list.DeleteString(index);
 	m_list.InsertString(index, newName);
 	m_list.SetCurSel(index);
 }
 
-// ÔØÈë
+// è½½å…¥
 void COptionsPage::OnBnClickedButton6()
 {
 	int index = m_list.GetCurSel();
 	if (index == LB_ERR)
 	{
-		AfxMessageBox(_T("ÇëÑ¡ÔñÒ»¸ö·½°¸£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("è¯·é€‰æ‹©ä¸€ä¸ªæ–¹æ¡ˆï¼"), MB_ICONERROR);
 		return;
 	}
 	CString name;
 	m_list.GetText(index, name);
-	((CSettingDlg*)GetParent()->GetParent())->ShowPlanInFile(OPTIONS_PATH + name + _T(".xml"));
-	m_currentOptionStatic.SetWindowText(_T("µ±Ç°·½°¸£º") + name);
+	((CSettingDlg*)GetParent()->GetParent())->ShowPlanInFile(OPTIONS_DIR_PATH + name + _T(".xml"));
+	m_currentOptionStatic.SetWindowText(_T("å½“å‰æ–¹æ¡ˆï¼š") + name);
 }
 
-// ±£´æ
+// ä¿å­˜
 void COptionsPage::OnBnClickedButton4()
 {
 	int index = m_list.GetCurSel();
 	if (index == LB_ERR)
 	{
-		AfxMessageBox(_T("ÇëÑ¡ÔñÒ»¸ö·½°¸£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("è¯·é€‰æ‹©ä¸€ä¸ªæ–¹æ¡ˆï¼"), MB_ICONERROR);
 		return;
 	}
-	CreateDir(OPTIONS_PATH);
+	CreateDir(OPTIONS_DIR_PATH);
 	CString name;
 	m_list.GetText(index, name);
-	((CSettingDlg*)GetParent()->GetParent())->SavePlanInDlg(OPTIONS_PATH + name + _T(".xml"));
+	((CSettingDlg*)GetParent()->GetParent())->SavePlanInDlg(OPTIONS_DIR_PATH + name + _T(".xml"));
 }

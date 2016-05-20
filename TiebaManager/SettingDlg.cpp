@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 Copyright (C) 2015  xfgryujk
 http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
@@ -19,37 +19,63 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "SettingDlg.h"
-#include "TiebaManagerDlg.h"
-#include "Setting.h"
-#include "TiebaVariable.h"
+#include <TBMCoreConfig.h>
+
+#include "ScanPage.h"
+#include "OperatePage.h"
+#include "KeywordsPage.h"
+#include "ImagePage.h"
+#include "BlackListPage.h"
+#include "NormalListPage.h"
+#include "WhiteContentPage.h"
+#include "OptionsPage.h"
+#include "UsersPage.h"
+#include "AboutPage.h"
+
+#include "TBMConfig.h"
+#include "TBMConfigPath.h"
+#include <MiscHelper.h>
+
+#include "TiebaManager.h"
+#include <TBMScan.h>
+
 #include "ScanImage.h"
-#include "MiscHelper.h"
 
 
-// CSettingDlg ¶Ô»°¿ò
+// CSettingDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CSettingDlg, CNormalDlg)
 
-// ¹¹Ôìº¯Êı
-CSettingDlg::CSettingDlg(CWnd* pParent /*=NULL*/)
-	: CNormalDlg(CSettingDlg::IDD, pParent),
+// æ„é€ å‡½æ•°
+CSettingDlg::CSettingDlg(CSettingDlg*& pThis, ILog& log, CWnd* pParent /*=NULL*/) : CNormalDlg(CSettingDlg::IDD, pParent),
+	m_pThis(pThis),
+	m_log(log),
 	m_pagesResize(&m_tab), 
-	m_whiteListPage(_T("ÓÃ»§Ãû£º")), 
-	m_trustedThreadPage(_T("Ö÷ÌâID£º"))
+	m_scanPage(new CScanPage()),
+	m_operatePage(new COperatePage()),
+	m_keywordsPage(new CKeywordsPage()),
+	m_imagePage(new CImagePage()),
+	m_blackListPage(new CBlackListPage()),
+	m_whiteListPage(new CNormalListPage(_T("ç”¨æˆ·åï¼š"))),
+	m_whiteContentPage(new CWhiteContentPage()),
+	m_trustedThreadPage(new CNormalListPage(_T("ä¸»é¢˜IDï¼š"))),
+	m_optionsPage(new COptionsPage()),
+	m_usersPage(new CUsersPage()),
+	m_aboutPage(new CAboutPage())
 {
-	// ³õÊ¼»¯m_pages
+	// åˆå§‹åŒ–m_pages
 	int i = 0;
-	m_pages[i++] = &m_scanPage;
-	m_pages[i++] = &m_operatePage;
-	m_pages[i++] = &m_keywordsPage;
-	m_pages[i++] = &m_imagePage;
-	m_pages[i++] = &m_blackListPage;
-	m_pages[i++] = &m_whiteListPage;
-	m_pages[i++] = &m_whiteContentPage;
-	m_pages[i++] = &m_trustedThreadPage;
-	m_pages[i++] = &m_optionsPage;
-	m_pages[i++] = &m_usersPage;
-	m_pages[i++] = &m_aboutPage;
+	m_pages[i++] = m_scanPage.get();
+	m_pages[i++] = m_operatePage.get();
+	m_pages[i++] = m_keywordsPage.get();
+	m_pages[i++] = m_imagePage.get();
+	m_pages[i++] = m_blackListPage.get();
+	m_pages[i++] = m_whiteListPage.get();
+	m_pages[i++] = m_whiteContentPage.get();
+	m_pages[i++] = m_trustedThreadPage.get();
+	m_pages[i++] = m_optionsPage.get();
+	m_pages[i++] = m_usersPage.get();
+	m_pages[i++] = m_aboutPage.get();
 }
 
 #pragma region MFC
@@ -74,43 +100,43 @@ BEGIN_MESSAGE_MAP(CSettingDlg, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CSettingDlg ÏûÏ¢´¦Àí³ÌĞò
+// CSettingDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CSettingDlg::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	SetIcon(hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(hIcon, FALSE);			// ÉèÖÃĞ¡Í¼±ê
+	SetIcon(hIcon, TRUE);			// è®¾ç½®å¤§å›¾æ ‡
+	SetIcon(hIcon, FALSE);			// è®¾ç½®å°å›¾æ ‡
 
-	// ³õÊ¼»¯m_tab
+	// åˆå§‹åŒ–m_tab
 	int i = 0;
-	m_tab.InsertItem(i++, _T("É¨Ãè"));
-	m_tab.InsertItem(i++, _T("²Ù×÷"));
-	m_tab.InsertItem(i++, _T("Î¥¹æÄÚÈİ"));
-	m_tab.InsertItem(i++, _T("Î¥¹æÍ¼Æ¬"));
-	m_tab.InsertItem(i++, _T("ÆÁ±ÎÓÃ»§"));
-	m_tab.InsertItem(i++, _T("ĞÅÈÎÓÃ»§"));
-	m_tab.InsertItem(i++, _T("ĞÅÈÎÄÚÈİ"));
-	m_tab.InsertItem(i++, _T("ĞÅÈÎÖ÷Ìâ"));
-	m_tab.InsertItem(i++, _T("·½°¸"));
-	m_tab.InsertItem(i++, _T("ÕËºÅ¹ÜÀí"));
-	m_tab.InsertItem(i++, _T("¹ØÓÚ&&¸üĞÂ"));
+	m_tab.InsertItem(i++, _T("æ‰«æ"));
+	m_tab.InsertItem(i++, _T("æ“ä½œ"));
+	m_tab.InsertItem(i++, _T("è¿è§„å†…å®¹"));
+	m_tab.InsertItem(i++, _T("è¿è§„å›¾ç‰‡"));
+	m_tab.InsertItem(i++, _T("å±è”½ç”¨æˆ·"));
+	m_tab.InsertItem(i++, _T("ä¿¡ä»»ç”¨æˆ·"));
+	m_tab.InsertItem(i++, _T("ä¿¡ä»»å†…å®¹"));
+	m_tab.InsertItem(i++, _T("ä¿¡ä»»ä¸»é¢˜"));
+	m_tab.InsertItem(i++, _T("æ–¹æ¡ˆ"));
+	m_tab.InsertItem(i++, _T("è´¦å·ç®¡ç†"));
+	m_tab.InsertItem(i++, _T("å…³äº&&æ›´æ–°"));
 
-	// ³õÊ¼»¯¸÷Ò³
-#define CREATE_PAGE(page) page.Create(page.IDD, &m_tab)
+	// åˆå§‹åŒ–å„é¡µ
+#define CREATE_PAGE(page) page->Create(page->IDD, &m_tab)
 	CREATE_PAGE(m_scanPage);
 	CREATE_PAGE(m_operatePage);
 	CREATE_PAGE(m_keywordsPage);
 	CREATE_PAGE(m_imagePage);
 	CREATE_PAGE(m_blackListPage);
 	CREATE_PAGE(m_whiteListPage);
-	m_whiteListPage.m_static.SetWindowText(_T("µ±±»²âÎÄ±¾µÈÓÚÎÄ±¾Ê±Æ¥Åä(ÎŞÕıÔò)"));
+	m_whiteListPage->m_static.SetWindowText(_T("å½“è¢«æµ‹æ–‡æœ¬ç­‰äºæ–‡æœ¬æ—¶åŒ¹é…(æ— æ­£åˆ™)"));
 	CREATE_PAGE(m_whiteContentPage);
 	CREATE_PAGE(m_trustedThreadPage);
-	m_trustedThreadPage.m_static.SetWindowText(_T("Ìí¼ÓµÄÖ÷Ìâ²»»áÉ¨Ãè£¬Ö÷ÌâIDÊÇÍøÖ·ÖĞ\"p/\"ºóÃæ¸úµÄÊı×Ö"));
+	m_trustedThreadPage->m_static.SetWindowText(_T("æ·»åŠ çš„ä¸»é¢˜ä¸ä¼šæ‰«æï¼Œä¸»é¢˜IDæ˜¯ç½‘å€ä¸­\"p/\"åé¢è·Ÿçš„æ•°å­—"));
 	CREATE_PAGE(m_optionsPage);
 	CREATE_PAGE(m_usersPage);
 	CREATE_PAGE(m_aboutPage);
@@ -128,24 +154,24 @@ BOOL CSettingDlg::OnInitDialog()
 	for (i = 0; i < _countof(m_pages); i++)
 		m_pagesResize.AddControl(m_pages[i], RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_tab, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
 
-	// ÏÔÊ¾ÅäÖÃ
-	ShowPlan(g_plan);
-	m_clearScanCache = FALSE; // ÔÚm_scanPage.m_scanPageCountEdit.SetWindowTextºó³õÊ¼»¯
+	// æ˜¾ç¤ºé…ç½®
+	ShowPlan(*theApp.m_plan);
+	m_clearScanCache = FALSE; // åœ¨m_scanPage->m_scanPageCountEdit.SetWindowTextååˆå§‹åŒ–
 
-	m_optionsPage.m_currentOptionStatic.SetWindowText(_T("µ±Ç°·½°¸£º") + g_userConfig.m_plan); // µ±Ç°·½°¸
-	// ·½°¸
+	m_optionsPage->m_currentOptionStatic.SetWindowText(_T("å½“å‰æ–¹æ¡ˆï¼š") + theApp.m_userConfig->m_plan); // å½“å‰æ–¹æ¡ˆ
+	// æ–¹æ¡ˆ
 	CFileFind fileFind;
-	BOOL flag = fileFind.FindFile(OPTIONS_PATH + _T("*.xml"));
+	BOOL flag = fileFind.FindFile(OPTIONS_DIR_PATH + _T("*.xml"));
 	while (flag)
 	{
 		flag = fileFind.FindNextFile();
-		m_optionsPage.m_list.AddString(fileFind.GetFileTitle());
+		m_optionsPage->m_list.AddString(fileFind.GetFileTitle());
 	}
 
-	m_usersPage.m_currentUserStatic.SetWindowText(_T("µ±Ç°ÕËºÅ£º") + g_globalConfig.m_currentUser); // µ±Ç°ÕËºÅ
-	// ÕËºÅ
-	m_usersPage.m_list.AddString(_T("[NULL]"));
-	flag = fileFind.FindFile(USERS_PATH + _T("*"));
+	m_usersPage->m_currentUserStatic.SetWindowText(_T("å½“å‰è´¦å·ï¼š") + theApp.m_globalConfig->m_currentUser); // å½“å‰è´¦å·
+	// è´¦å·
+	m_usersPage->m_list.AddString(_T("[NULL]"));
+	flag = fileFind.FindFile(USERS_DIR_PATH + _T("*"));
 	while (flag)
 	{
 		flag = fileFind.FindNextFile();
@@ -154,29 +180,29 @@ BOOL CSettingDlg::OnInitDialog()
 		{
 			CString name = fileFind.GetFileName();
 			if (name != _T("[NULL]"))
-				m_usersPage.m_list.AddString(name);
+				m_usersPage->m_list.AddString(name);
 		}
 	}
 
-	m_aboutPage.m_autoCheckUpdateCheck.SetCheck(g_globalConfig.m_autoUpdate); // ×Ô¶¯¸üĞÂ
+	m_aboutPage->m_autoCheckUpdateCheck.SetCheck(theApp.m_globalConfig->m_autoUpdate); // è‡ªåŠ¨æ›´æ–°
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
 #pragma region UI
-// ´°¿Ú /////////////////////////////////////////////////////////////////////////////////
+// çª—å£ /////////////////////////////////////////////////////////////////////////////////
 
-// È¡Ïû
+// å–æ¶ˆ
 void CSettingDlg::OnCancel()
 {
 	DestroyWindow();
 }
 
-// ÌáÊ¾ÊÇ·ñ±£´æ
+// æç¤ºæ˜¯å¦ä¿å­˜
 void CSettingDlg::OnClose()
 {
-	int result = AfxMessageBox(_T("±£´æÉèÖÃ£¿"), MB_ICONQUESTION | MB_YESNOCANCEL);
+	int result = AfxMessageBox(_T("ä¿å­˜è®¾ç½®ï¼Ÿ"), MB_ICONQUESTION | MB_YESNOCANCEL);
 	if (result == IDYES)
 	{
 		OnOK();
@@ -188,16 +214,16 @@ void CSettingDlg::OnClose()
 	DestroyWindow();
 }
 
-// ÊÍ·Åthis
+// é‡Šæ”¾this
 void CSettingDlg::PostNcDestroy()
 {
 	CNormalDlg::PostNcDestroy();
 
-	((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_settingDlg = NULL;
+	m_pThis = NULL;
 	delete this;
 }
 
-// ÏŞÖÆ×îĞ¡³ß´ç
+// é™åˆ¶æœ€å°å°ºå¯¸
 void CSettingDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
 	/*lpMMI->ptMinTrackSize.x = 666;
@@ -206,14 +232,14 @@ void CSettingDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	CNormalDlg::OnGetMinMaxInfo(lpMMI);
 }
 
-// ¸Ä±ä³ß´ç
+// æ”¹å˜å°ºå¯¸
 void CSettingDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CNormalDlg::OnSize(nType, cx, cy);
 	m_pagesResize.Resize();
 }
 
-// ÇĞ»»±êÇ©
+// åˆ‡æ¢æ ‡ç­¾
 void CSettingDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	*pResult = 0;
@@ -224,112 +250,110 @@ void CSettingDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 }
 #pragma endregion
 
-// ÏÔÊ¾µ±Ç°ÉèÖÃ
+// æ˜¾ç¤ºå½“å‰è®¾ç½®
 void CSettingDlg::ShowPlan(const CPlan& plan)
 {
 	CString tmp;
 	tmp.Format(_T("%d"), *plan.m_scanInterval);
-	m_scanPage.m_scanIntervalEdit.SetWindowText(tmp);				// É¨Ãè¼ä¸ô
-	m_operatePage.m_banIDCheck.SetCheck(plan.m_banID);				// ·âID
-	m_operatePage.OnBnClickedCheck1();
-	m_operatePage.m_banDurationCombo.SetCurSel(plan.m_banDuration == 1 ? 0 : (plan.m_banDuration == 3 ? 1 : 2)); // ·â½ûÊ±³¤
+	m_scanPage->m_scanIntervalEdit.SetWindowText(tmp);				// æ‰«æé—´éš”
+	m_operatePage->m_banIDCheck.SetCheck(plan.m_banID);				// å°ID
+	m_operatePage->OnBnClickedCheck1();
+	m_operatePage->m_banDurationCombo.SetCurSel(plan.m_banDuration == 1 ? 0 : (plan.m_banDuration == 3 ? 1 : 2)); // å°ç¦æ—¶é•¿
 	tmp.Format(_T("%d"), *plan.m_banTrigCount);
-	m_operatePage.m_banTrigCountEdit.SetWindowText(tmp);			// ·â½ûÎ¥¹æ´ÎÊı
-	m_scanPage.m_onlyScanTitleCheck.SetCheck(plan.m_onlyScanTitle);	// Ö»É¨Ãè±êÌâ
+	m_operatePage->m_banTrigCountEdit.SetWindowText(tmp);			// å°ç¦è¿è§„æ¬¡æ•°
+	m_scanPage->m_onlyScanTitleCheck.SetCheck(plan.m_onlyScanTitle);	// åªæ‰«ææ ‡é¢˜
 	tmp.Format(_T("%g"), *plan.m_deleteInterval);
-	m_operatePage.m_deleteIntervalEdit.SetWindowText(tmp);			// É¾Ìû¼ä¸ô
-	m_operatePage.m_confirmCheck.SetCheck(plan.m_confirm);			// ²Ù×÷Ç°ÌáÊ¾
-	m_operatePage.m_wapBanInterfaceCheck.SetCheck(plan.m_wapBanInterface);	// ·â½ûÊ¹ÓÃWAP½Ó¿Ú
-	m_operatePage.m_autoLoopBanCheck.SetCheck(plan.m_autoLoopBan);	// ×Ô¶¯Ñ­»··â
+	m_operatePage->m_deleteIntervalEdit.SetWindowText(tmp);			// åˆ å¸–é—´éš”
+	m_operatePage->m_confirmCheck.SetCheck(plan.m_confirm);			// æ“ä½œå‰æç¤º
+	m_operatePage->m_wapBanInterfaceCheck.SetCheck(plan.m_wapBanInterface);	// å°ç¦ä½¿ç”¨WAPæ¥å£
 	tmp.Format(_T("%d"), *plan.m_scanPageCount);
-	m_scanPage.m_scanPageCountEdit.SetWindowText(tmp);				// É¨Ãè×îºóÒ³Êı
-	m_scanPage.m_briefLogCheck.SetCheck(plan.m_briefLog);			// Ö»Êä³öÉ¾Ìû·âºÅ
-	m_operatePage.m_deleteCheck.SetCheck(plan.m_delete);			// É¾Ìû
+	m_scanPage->m_scanPageCountEdit.SetWindowText(tmp);				// æ‰«ææœ€åé¡µæ•°
+	m_scanPage->m_briefLogCheck.SetCheck(plan.m_briefLog);			// åªè¾“å‡ºåˆ å¸–å°å·
+	m_operatePage->m_deleteCheck.SetCheck(plan.m_delete);			// åˆ å¸–
 	tmp.Format(_T("%d"), *plan.m_threadCount);
-	m_scanPage.m_threadCountEdit.SetWindowText(tmp);				// Ïß³ÌÊı
-	m_operatePage.m_banReasonEdit.SetWindowText(*plan.m_banReason);	// ·â½ûÔ­Òò
-	m_imagePage.m_dirEdit.SetWindowText(*plan.m_imageDir);			// Î¥¹æÍ¼Æ¬Ä¿Â¼
+	m_scanPage->m_threadCountEdit.SetWindowText(tmp);				// çº¿ç¨‹æ•°
+	m_operatePage->m_banReasonEdit.SetWindowText(*plan.m_banReason);	// å°ç¦åŸå› 
+	m_imagePage->m_dirEdit.SetWindowText(*plan.m_imageDir);			// è¿è§„å›¾ç‰‡ç›®å½•
 	tmp.Format(_T("%g"), *plan.m_SSIMThreshold);
-	m_imagePage.m_thresholdEdit.SetWindowText(tmp);					// ãĞÖµ
-	m_operatePage.m_defriendCheck.SetCheck(plan.m_defriend);		// À­ºÚ
-	m_operatePage.OnBnClickedCheck3();
+	m_imagePage->m_thresholdEdit.SetWindowText(tmp);					// é˜ˆå€¼
+	m_operatePage->m_defriendCheck.SetCheck(plan.m_defriend);		// æ‹‰é»‘
+	m_operatePage->OnBnClickedCheck3();
 	tmp.Format(_T("%d"), *plan.m_defriendTrigCount);
-	m_operatePage.m_defriendTrigCountEdit.SetWindowText(tmp);		// À­ºÚÎ¥¹æ´ÎÊı
-	m_scanPage.m_autoSaveLogCheck.SetCheck(plan.m_autoSaveLog);		// ×Ô¶¯±£´æÈÕÖ¾
+	m_operatePage->m_defriendTrigCountEdit.SetWindowText(tmp);		// æ‹‰é»‘è¿è§„æ¬¡æ•°
+	m_scanPage->m_autoSaveLogCheck.SetCheck(plan.m_autoSaveLog);		// è‡ªåŠ¨ä¿å­˜æ—¥å¿—
 	tmp.Format(_T("%d"), *plan.m_illegalLevel);
-	m_scanPage.m_illegalLevelEdit.SetWindowText(tmp);				// Î¥¹æµÈ¼¶
+	m_scanPage->m_illegalLevelEdit.SetWindowText(tmp);				// è¿è§„ç­‰çº§
 
-	// Î¥¹æÄÚÈİ
-	m_keywordsPage.ShowList(plan.m_keywords);
+	// è¿è§„å†…å®¹
+	m_keywordsPage->ShowList(plan.m_keywords);
 
-	// ÆÁ±ÎÓÃ»§
-	m_blackListPage.ShowList(plan.m_blackList);
+	// å±è”½ç”¨æˆ·
+	m_blackListPage->ShowList(plan.m_blackList);
 
-	// ĞÅÈÎÓÃ»§
-	m_whiteListPage.ShowList(plan.m_whiteList);
+	// ä¿¡ä»»ç”¨æˆ·
+	m_whiteListPage->ShowList(plan.m_whiteList);
 
-	// ĞÅÈÎÄÚÈİ
-	m_whiteContentPage.ShowList(plan.m_whiteContent);
+	// ä¿¡ä»»å†…å®¹
+	m_whiteContentPage->ShowList(plan.m_whiteContent);
 
-	// ĞÅÈÎÖ÷Ìâ
-	m_trustedThreadPage.ShowList(plan.m_trustedThread);
+	// ä¿¡ä»»ä¸»é¢˜
+	m_trustedThreadPage->ShowList(plan.m_trustedThread);
 }
 
-// Ó¦ÓÃ¶Ô»°¿òÖĞµÄÉèÖÃ
+// åº”ç”¨å¯¹è¯æ¡†ä¸­çš„è®¾ç½®
 void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 {
 	CString strBuf;
 	int intBuf;
 	plan.OnChange();
 
-	m_scanPage.m_scanIntervalEdit.GetWindowText(strBuf);
-	*plan.m_scanInterval = _ttoi(strBuf);								// É¨Ãè¼ä¸ô
-	*plan.m_banID = m_operatePage.m_banIDCheck.GetCheck();				// ·âID
-	intBuf = m_operatePage.m_banDurationCombo.GetCurSel();
-	*plan.m_banDuration = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);		// ·â½ûÊ±³¤
-	m_operatePage.m_banTrigCountEdit.GetWindowText(strBuf);
-	*plan.m_banTrigCount = _ttoi(strBuf);								// ·â½ûÎ¥¹æ´ÎÊı
-	*plan.m_onlyScanTitle = m_scanPage.m_onlyScanTitleCheck.GetCheck(); // Ö»É¨Ãè±êÌâ
-	m_operatePage.m_deleteIntervalEdit.GetWindowText(strBuf);
-	*plan.m_deleteInterval = (float)_ttof(strBuf);						// É¾Ìû¼ä¸ô
-	*plan.m_confirm = m_operatePage.m_confirmCheck.GetCheck();			// ²Ù×÷Ç°ÌáÊ¾
-	*plan.m_wapBanInterface = m_operatePage.m_wapBanInterfaceCheck.GetCheck();	// ·â½ûÊ¹ÓÃWAP½Ó¿Ú
-	*plan.m_autoLoopBan = m_operatePage.m_autoLoopBanCheck.GetCheck();	// ×Ô¶¯Ñ­»··â
-	m_scanPage.m_scanPageCountEdit.GetWindowText(strBuf);
-	*plan.m_scanPageCount = _ttoi(strBuf);								// É¨Ãè×îºóÒ³Êı
-	*plan.m_briefLog = m_scanPage.m_briefLogCheck.GetCheck();			// Ö»Êä³öÉ¾Ìû·âºÅ
-	*plan.m_delete = m_operatePage.m_deleteCheck.GetCheck();			// É¾Ìû
-	m_scanPage.m_threadCountEdit.GetWindowText(strBuf);
-	*plan.m_threadCount = _ttoi(strBuf);								// Ïß³ÌÊı
-	m_operatePage.m_banReasonEdit.GetWindowText(strBuf);
-	*plan.m_banReason = strBuf;											// ·â½ûÔ­Òò
-	m_imagePage.m_dirEdit.GetWindowText(plan.m_imageDir);				// Î¥¹æÍ¼Æ¬Ä¿Â¼
-	m_imagePage.m_thresholdEdit.GetWindowText(strBuf);
-	*plan.m_SSIMThreshold = _ttof(strBuf);								// ãĞÖµ
-	*plan.m_defriend = m_operatePage.m_defriendCheck.GetCheck();		// À­ºÚ
-	m_operatePage.m_defriendTrigCountEdit.GetWindowText(strBuf);
-	*plan.m_defriendTrigCount = _ttoi(strBuf);							// À­ºÚÎ¥¹æ´ÎÊı
-	*plan.m_autoSaveLog = m_scanPage.m_autoSaveLogCheck.GetCheck();		// ×Ô¶¯±£´æÈÕÖ¾
-	m_scanPage.m_illegalLevelEdit.GetWindowText(strBuf);
-	*plan.m_illegalLevel = _ttoi(strBuf);								// Î¥¹æµÈ¼¶
+	m_scanPage->m_scanIntervalEdit.GetWindowText(strBuf);
+	*plan.m_scanInterval = _ttoi(strBuf);								// æ‰«æé—´éš”
+	*plan.m_banID = m_operatePage->m_banIDCheck.GetCheck();				// å°ID
+	intBuf = m_operatePage->m_banDurationCombo.GetCurSel();
+	*plan.m_banDuration = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);		// å°ç¦æ—¶é•¿
+	m_operatePage->m_banTrigCountEdit.GetWindowText(strBuf);
+	*plan.m_banTrigCount = _ttoi(strBuf);								// å°ç¦è¿è§„æ¬¡æ•°
+	*plan.m_onlyScanTitle = m_scanPage->m_onlyScanTitleCheck.GetCheck(); // åªæ‰«ææ ‡é¢˜
+	m_operatePage->m_deleteIntervalEdit.GetWindowText(strBuf);
+	*plan.m_deleteInterval = (float)_ttof(strBuf);						// åˆ å¸–é—´éš”
+	*plan.m_confirm = m_operatePage->m_confirmCheck.GetCheck();			// æ“ä½œå‰æç¤º
+	*plan.m_wapBanInterface = m_operatePage->m_wapBanInterfaceCheck.GetCheck();	// å°ç¦ä½¿ç”¨WAPæ¥å£
+	m_scanPage->m_scanPageCountEdit.GetWindowText(strBuf);
+	*plan.m_scanPageCount = _ttoi(strBuf);								// æ‰«ææœ€åé¡µæ•°
+	*plan.m_briefLog = m_scanPage->m_briefLogCheck.GetCheck();			// åªè¾“å‡ºåˆ å¸–å°å·
+	*plan.m_delete = m_operatePage->m_deleteCheck.GetCheck();			// åˆ å¸–
+	m_scanPage->m_threadCountEdit.GetWindowText(strBuf);
+	*plan.m_threadCount = _ttoi(strBuf);								// çº¿ç¨‹æ•°
+	m_operatePage->m_banReasonEdit.GetWindowText(strBuf);
+	*plan.m_banReason = strBuf;											// å°ç¦åŸå› 
+	m_imagePage->m_dirEdit.GetWindowText(plan.m_imageDir);				// è¿è§„å›¾ç‰‡ç›®å½•
+	m_imagePage->m_thresholdEdit.GetWindowText(strBuf);
+	*plan.m_SSIMThreshold = _ttof(strBuf);								// é˜ˆå€¼
+	*plan.m_defriend = m_operatePage->m_defriendCheck.GetCheck();		// æ‹‰é»‘
+	m_operatePage->m_defriendTrigCountEdit.GetWindowText(strBuf);
+	*plan.m_defriendTrigCount = _ttoi(strBuf);							// æ‹‰é»‘è¿è§„æ¬¡æ•°
+	*plan.m_autoSaveLog = m_scanPage->m_autoSaveLogCheck.GetCheck();		// è‡ªåŠ¨ä¿å­˜æ—¥å¿—
+	m_scanPage->m_illegalLevelEdit.GetWindowText(strBuf);
+	*plan.m_illegalLevel = _ttoi(strBuf);								// è¿è§„ç­‰çº§
 
-	// Î¥¹æÄÚÈİ
-	m_keywordsPage.ApplyList(plan.m_keywords);
+	// è¿è§„å†…å®¹
+	m_keywordsPage->ApplyList(plan.m_keywords);
 
-	// ÆÁ±ÎÓÃ»§
-	m_blackListPage.ApplyList(plan.m_blackList);
+	// å±è”½ç”¨æˆ·
+	m_blackListPage->ApplyList(plan.m_blackList);
 
-	// ĞÅÈÎÓÃ»§
-	m_whiteListPage.ApplyList(plan.m_whiteList);
+	// ä¿¡ä»»ç”¨æˆ·
+	m_whiteListPage->ApplyList(plan.m_whiteList);
 
-	// ĞÅÈÎÄÚÈİ
-	m_whiteContentPage.ApplyList(plan.m_whiteContent);
+	// ä¿¡ä»»å†…å®¹
+	m_whiteContentPage->ApplyList(plan.m_whiteContent);
 
-	// ĞÅÈÎÖ÷Ìâ
-	m_trustedThreadPage.ApplyList(plan.m_trustedThread);
+	// ä¿¡ä»»ä¸»é¢˜
+	m_trustedThreadPage->ApplyList(plan.m_trustedThread);
 
-	// Î¥¹æÍ¼Æ¬
-	BOOL updateImage = &plan == &g_plan && plan.m_updateImage;
+	// è¿è§„å›¾ç‰‡
+	BOOL updateImage = &plan == theApp.m_plan.get() && plan.m_updateImage;
 	if (updateImage)
 	{
 		g_leagalImage.clear();
@@ -340,28 +364,28 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 
 	if (updateImage)
 	{
-		strBuf.Format(_T("ÔØÈëÁË%dÕÅÍ¼Æ¬"), plan.m_images.size());
+		strBuf.Format(_T("è½½å…¥äº†%då¼ å›¾ç‰‡"), plan.m_images.size());
 		AfxMessageBox(strBuf, MB_ICONINFORMATION);
 	}
 
-	if (&plan == &g_plan && m_clearScanCache)
+	if (&plan == theApp.m_plan.get() && m_clearScanCache)
 	{
 		if (!plan.m_briefLog)
-			((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_log.Log(_T("<font color=green>Çå³ıÀúÊ·»Ø¸´</font>"));
-		g_userCache.m_reply->clear();
+			m_log.Log(_T("<font color=green>æ¸…é™¤å†å²å›å¤</font>"));
+		theApp.m_userCache->m_reply->clear();
 	}
 }
 
-// ÏÔÊ¾ÎÄ¼şÖĞµÄÉèÖÃ
+// æ˜¾ç¤ºæ–‡ä»¶ä¸­çš„è®¾ç½®
 void CSettingDlg::ShowPlanInFile(const CString& path)
 {
 	CPlan tmp;
 	tmp.Load(path);
-	g_plan.m_updateImage = TRUE;
+	theApp.m_plan->m_updateImage = TRUE;
 	ShowPlan(tmp);
 }
 
-// °Ñ¶Ô»°¿òÖĞµÄÉèÖÃĞ´ÈëÎÄ¼ş
+// æŠŠå¯¹è¯æ¡†ä¸­çš„è®¾ç½®å†™å…¥æ–‡ä»¶
 void CSettingDlg::SavePlanInDlg(const CString& path)
 {
 	CPlan tmp;
@@ -369,20 +393,20 @@ void CSettingDlg::SavePlanInDlg(const CString& path)
 	tmp.Save(path);
 }
 
-// È·ÈÏ
+// ç¡®è®¤
 void CSettingDlg::OnOK()
 {
-	*g_globalConfig.m_autoUpdate = m_aboutPage.m_autoCheckUpdateCheck.GetCheck();
-	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
+	*theApp.m_globalConfig->m_autoUpdate = m_aboutPage->m_autoCheckUpdateCheck.GetCheck();
+	theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
 
 	CString tmp;
-	m_optionsPage.m_currentOptionStatic.GetWindowText(tmp);
-	*g_userConfig.m_plan = tmp.Right(tmp.GetLength() - 5); // "µ±Ç°·½°¸£º"
-	g_userConfig.Save(USER_PROFILE_PATH);
+	m_optionsPage->m_currentOptionStatic.GetWindowText(tmp);
+	*theApp.m_userConfig->m_plan = tmp.Right(tmp.GetLength() - 5); // "å½“å‰æ–¹æ¡ˆï¼š"
+	theApp.m_userConfig->Save(USER_CONFIG_PATH);
 
-	CreateDir(OPTIONS_PATH);
-	SavePlanInDlg(OPTIONS_PATH + g_userConfig.m_plan + _T(".xml"));
-	ApplyPlanInDlg(g_plan);
+	CreateDir(OPTIONS_DIR_PATH);
+	SavePlanInDlg(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
+	ApplyPlanInDlg(*theApp.m_plan);
 
 	DestroyWindow();
 }

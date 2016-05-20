@@ -1,37 +1,56 @@
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
-// TiebaManagerDlg.h : Í·ÎÄ¼ş
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+
+// TiebaManagerDlg.h : å¤´æ–‡ä»¶
 //
 
 #pragma once
 #include "explorer1.h"
 #include "afxwin.h"
 #include "TextButton.h"
-#include "NormalDlg.h"
-#include "LogHelper.h"
+#include <NormalDlg.h>
+#include "ExplorerLog.h"
 class CSettingDlg;
 class CExplorerDlg;
-class CSuperFunctionDlg;
+class CPluginDlg;
 
 
-// CTiebaManagerDlg ¶Ô»°¿ò
+// CTiebaManagerDlg å¯¹è¯æ¡†
 class CTiebaManagerDlg : public CNormalDlg
 {
-// ¹¹Ôì
+// æ„é€ 
 public:
-	CTiebaManagerDlg(CWnd* pParent = NULL);	// ±ê×¼¹¹Ôìº¯Êı
+	CTiebaManagerDlg(CWnd* pParent = NULL);	// æ ‡å‡†æ„é€ å‡½æ•°
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_TIEBAMANAGER_DIALOG };
 
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV æ”¯æŒ
 
 
-// ÊµÏÖ
+// å®ç°
 protected:
 	HICON m_hIcon;
 
-	// Éú³ÉµÄÏûÏ¢Ó³Éäº¯Êı
+	// ç”Ÿæˆçš„æ¶ˆæ¯æ˜ å°„å‡½æ•°
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
@@ -62,7 +81,7 @@ public:
 	CButton m_stopButton;
 	CEdit m_pageEdit;
 	CButton m_explorerButton;
-	CButton m_superFunctionButton;
+	CButton m_pluginButton;
 	CButton m_settingButton;
 	CStatic m_logStatic;
 	CExplorer1 m_logExplorer;
@@ -71,11 +90,13 @@ public:
 	CTextButton m_saveLogStatic;
 	CListBox m_stateList;
 
-	CSettingDlg* m_settingDlg;
-	CExplorerDlg* m_explorerDlg;
-	CSuperFunctionDlg* m_superFunctionDlg;
+	CSettingDlg* m_settingDlg = NULL;
+	CExplorerDlg* m_explorerDlg = NULL;
+	CPluginDlg* m_pluginDlg = NULL;
 
-	CLog m_log;
+	CExplorerLog m_log;
+
+	BOOL m_isClosing = FALSE;
 
 protected:
 	NOTIFYICONDATA m_nfData;

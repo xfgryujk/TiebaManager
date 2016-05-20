@@ -1,16 +1,52 @@
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
-// TiebaManager.cpp : ¶¨ÒåÓ¦ÓÃ³ÌĞòµÄÀàĞĞÎª¡£
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+
+// TiebaManager.cpp : å®šä¹‰åº”ç”¨ç¨‹åºçš„ç±»è¡Œä¸ºã€‚
 //
 
 #include "stdafx.h"
 #include "TiebaManager.h"
 #include "TiebaManagerDlg.h"
-#include "MiscHelper.h"
-#include "Setting.h"
+#include <Dbghelp.h>
+#include "TBMConfigPath.h"
+
+#include "TBMConfig.h"
+#include <TBMCoreConfig.h>
+#include <TiebaOperate.h>
+#include <TBMScan.h>
+#include <TBMOperate.h>
+
+#include "TBMScanListeners.h"
+#include "TBMOperateListeners.h"
+#include "TBMListeners.h"
+
+#include <TBMAPI.h>
+#include "PluginManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+
+// å”¯ä¸€çš„ä¸€ä¸ª CTiebaManagerApp å¯¹è±¡
+CTiebaManagerApp theApp;
 
 
 // CTiebaManagerApp
@@ -20,34 +56,26 @@ BEGIN_MESSAGE_MAP(CTiebaManagerApp, CWinApp)
 END_MESSAGE_MAP()
 
 
-// CTiebaManagerApp ¹¹Ôì
-
+// CTiebaManagerApp æ„é€ 
 CTiebaManagerApp::CTiebaManagerApp()
 {
-	// Ö§³ÖÖØĞÂÆô¶¯¹ÜÀíÆ÷
+	// æ”¯æŒé‡æ–°å¯åŠ¨ç®¡ç†å™¨
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 
-	// TODO:  ÔÚ´Ë´¦Ìí¼Ó¹¹Ôì´úÂë£¬
-	// ½«ËùÓĞÖØÒªµÄ³õÊ¼»¯·ÅÖÃÔÚ InitInstance ÖĞ
+	// TODO:  åœ¨æ­¤å¤„æ·»åŠ æ„é€ ä»£ç ï¼Œ
+	// å°†æ‰€æœ‰é‡è¦çš„åˆå§‹åŒ–æ”¾ç½®åœ¨ InitInstance ä¸­
 }
 
-
-// Î¨Ò»µÄÒ»¸ö CTiebaManagerApp ¶ÔÏó
-
-CTiebaManagerApp theApp;
-
-
-// CTiebaManagerApp ³õÊ¼»¯
-
+// CTiebaManagerApp åˆå§‹åŒ–
 BOOL CTiebaManagerApp::InitInstance()
 {
-	// Èç¹ûÒ»¸öÔËĞĞÔÚ Windows XP ÉÏµÄÓ¦ÓÃ³ÌĞòÇåµ¥Ö¸¶¨Òª
-	// Ê¹ÓÃ ComCtl32.dll °æ±¾ 6 »ò¸ü¸ß°æ±¾À´ÆôÓÃ¿ÉÊÓ»¯·½Ê½£¬
-	//ÔòĞèÒª InitCommonControlsEx()¡£  ·ñÔò£¬½«ÎŞ·¨´´½¨´°¿Ú¡£
+	// å¦‚æœä¸€ä¸ªè¿è¡Œåœ¨ Windows XP ä¸Šçš„åº”ç”¨ç¨‹åºæ¸…å•æŒ‡å®šè¦
+	// ä½¿ç”¨ ComCtl32.dll ç‰ˆæœ¬ 6 æˆ–æ›´é«˜ç‰ˆæœ¬æ¥å¯ç”¨å¯è§†åŒ–æ–¹å¼ï¼Œ
+	//åˆ™éœ€è¦ InitCommonControlsEx()ã€‚  å¦åˆ™ï¼Œå°†æ— æ³•åˆ›å»ºçª—å£ã€‚
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof(InitCtrls);
-	// ½«ËüÉèÖÃÎª°üÀ¨ËùÓĞÒªÔÚÓ¦ÓÃ³ÌĞòÖĞÊ¹ÓÃµÄ
-	// ¹«¹²¿Ø¼şÀà¡£
+	// å°†å®ƒè®¾ç½®ä¸ºåŒ…æ‹¬æ‰€æœ‰è¦åœ¨åº”ç”¨ç¨‹åºä¸­ä½¿ç”¨çš„
+	// å…¬å…±æ§ä»¶ç±»ã€‚
 	InitCtrls.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
 
@@ -57,43 +85,110 @@ BOOL CTiebaManagerApp::InitInstance()
 	AfxEnableControlContainer();
 
 
-	// ±ê×¼³õÊ¼»¯
-	// Èç¹ûÎ´Ê¹ÓÃÕâĞ©¹¦ÄÜ²¢Ï£Íû¼õĞ¡
-	// ×îÖÕ¿ÉÖ´ĞĞÎÄ¼şµÄ´óĞ¡£¬ÔòÓ¦ÒÆ³ıÏÂÁĞ
-	// ²»ĞèÒªµÄÌØ¶¨³õÊ¼»¯Àı³Ì
-	// ¸ü¸ÄÓÃÓÚ´æ´¢ÉèÖÃµÄ×¢²á±íÏî
-	// TODO:  Ó¦ÊÊµ±ĞŞ¸Ä¸Ã×Ö·û´®£¬
-	// ÀıÈçĞŞ¸ÄÎª¹«Ë¾»ò×éÖ¯Ãû
-	//SetRegistryKey(_T("Ó¦ÓÃ³ÌĞòÏòµ¼Éú³ÉµÄ±¾µØÓ¦ÓÃ³ÌĞò"));
+	// æ ‡å‡†åˆå§‹åŒ–
+	// å¦‚æœæœªä½¿ç”¨è¿™äº›åŠŸèƒ½å¹¶å¸Œæœ›å‡å°
+	// æœ€ç»ˆå¯æ‰§è¡Œæ–‡ä»¶çš„å¤§å°ï¼Œåˆ™åº”ç§»é™¤ä¸‹åˆ—
+	// ä¸éœ€è¦çš„ç‰¹å®šåˆå§‹åŒ–ä¾‹ç¨‹
+	// æ›´æ”¹ç”¨äºå­˜å‚¨è®¾ç½®çš„æ³¨å†Œè¡¨é¡¹
+	// TODO:  åº”é€‚å½“ä¿®æ”¹è¯¥å­—ç¬¦ä¸²ï¼Œ
+	// ä¾‹å¦‚ä¿®æ”¹ä¸ºå…¬å¸æˆ–ç»„ç»‡å
+	//SetRegistryKey(_T("åº”ç”¨ç¨‹åºå‘å¯¼ç”Ÿæˆçš„æœ¬åœ°åº”ç”¨ç¨‹åº"));
 
 
-	// Ìí¼ÓÒì³£´¦Àí
+	// åˆå§‹åŒ–
+	init();
+
+
+	// è½½å…¥ä¸»çª—å£
+	CTiebaManagerDlg dlg;
+	m_pMainWnd = &dlg;
+	dlg.DoModal();
+	m_pMainWnd = NULL;
+
+
+	// ç”±äºå¯¹è¯æ¡†å·²å…³é—­ï¼Œæ‰€ä»¥å°†è¿”å› FALSE ä»¥ä¾¿é€€å‡ºåº”ç”¨ç¨‹åºï¼Œ
+	//  è€Œä¸æ˜¯å¯åŠ¨åº”ç”¨ç¨‹åºçš„æ¶ˆæ¯æ³µã€‚
+	return FALSE;
+}
+
+// å¼‚å¸¸å¤„ç†
+static LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
+{
+	CFile file;
+	if (file.Open(_T("exception.dmp"), CFile::modeCreate | CFile::modeWrite))
+	{
+		MINIDUMP_EXCEPTION_INFORMATION einfo;
+		einfo.ThreadId = GetCurrentThreadId();
+		einfo.ExceptionPointers = ExceptionInfo;
+		einfo.ClientPointers = FALSE;
+		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), file, MiniDumpWithIndirectlyReferencedMemory,
+			&einfo, NULL, NULL);
+	}
+	AfxMessageBox(_T("ç¨‹åºå´©æºƒäº†ï¼Œè¯·æŠŠexception.dmpæ–‡ä»¶å‘åˆ°xfgryujk@126.comå¸®åŠ©è°ƒè¯•"), MB_ICONERROR);
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+// åˆå§‹åŒ–
+void CTiebaManagerApp::init()
+{
+	// æ·»åŠ å¼‚å¸¸å¤„ç†
 	SetUnhandledExceptionFilter(ExceptionHandler);
 
-	// ±¾µØ»¯Êä³ö
+	// æœ¬åœ°åŒ–è¾“å‡º
 	_tsetlocale(LC_ALL, _T(".936"));
 
-	// ³õÊ¼»¯ÅäÖÃÎÄ¼şÂ·¾¶
+	// åˆå§‹åŒ–é…ç½®æ–‡ä»¶è·¯å¾„
 	TCHAR cd[MAX_PATH] = { _T('\0') };
 	GetCurrentDirectory(_countof(cd), cd);
 #pragma warning(suppress: 6102)
 	GLOBAL_CONFIG_PATH = cd + GLOBAL_CONFIG_PATH;
-	USERS_PATH = cd + USERS_PATH;
+	USERS_DIR_PATH = cd + USERS_DIR_PATH;
 
-	// ÅĞ¶ÏÒ»ÏÂÓĞÃ»ÓĞ½âÑ¹
+	// åˆ¤æ–­ä¸€ä¸‹æœ‰æ²¡æœ‰è§£å‹
 	TCHAR tmpDir[MAX_PATH] = { _T('\0') };
-	if (GetEnvironmentVariable(_T("TMP"), tmpDir, _countof(tmpDir)) != 0 
+	if (GetEnvironmentVariable(_T("TMP"), tmpDir, _countof(tmpDir)) != 0
+#pragma warning(suppress: 6102)
 		&& StrStrI(cd, tmpDir) != NULL)
-		AfxMessageBox(_T("ÇëÏÈ½âÑ¹ÔÙÔËĞĞ£¬·ñÔòÎŞ·¨±£´æÉèÖÃ"), MB_ICONINFORMATION);
+		AfxMessageBox(_T("è¯·å…ˆè§£å‹å†è¿è¡Œï¼Œå¦åˆ™æ— æ³•ä¿å­˜è®¾ç½®"), MB_ICONINFORMATION);
 
-	// ÔØÈëÖ÷´°¿Ú
-	CTiebaManagerDlg dlg;
-	m_pMainWnd = &dlg;
-	dlg.DoModal();
+	// åˆå§‹åŒ–å„æ¨¡å—
+	m_globalConfig.reset(new CGlobalConfig());
+	m_userConfig.reset(new CUserConfig());
+	m_cookieConfig.reset(new CCookieConfig());
+	m_plan.reset(new CPlan());
+	m_userCache.reset(new CUserCache());
 
+	m_tiebaOperate.reset(new CTiebaOperate(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason));
+	m_operate.reset(new CTBMOperate(m_plan.get(), m_userCache.get(), m_tiebaOperate.get())); // æ—¥å¿—åœ¨å¯¹è¯æ¡†åˆå§‹åŒ–æ—¶åˆå§‹åŒ–
+	m_scan.reset(new CTBMScan(m_plan.get(), m_userCache.get(), m_operate.get())); // æ—¥å¿—åœ¨å¯¹è¯æ¡†åˆå§‹åŒ–æ—¶åˆå§‹åŒ–
 
-	// ÓÉÓÚ¶Ô»°¿òÒÑ¹Ø±Õ£¬ËùÒÔ½«·µ»Ø FALSE ÒÔ±ãÍË³öÓ¦ÓÃ³ÌĞò£¬
-	//  ¶ø²»ÊÇÆô¶¯Ó¦ÓÃ³ÌĞòµÄÏûÏ¢±Ã¡£
-	return FALSE;
+	m_scanListeners.reset(new CTBMScanListeners(*m_scan));
+	m_operateListeners.reset(new CTBMOperateListeners(*m_operate));
+	m_tbmListeners.reset(new CTBMListeners());
+
+	m_tbmEventBus.reset(new CEventBus());
+	m_tbmApi.reset(new CTBMAPI(m_tbmEventBus.get(), m_userCache.get(), m_tiebaOperate.get(), 
+		m_scan.get(), m_operate.get())); // æ—¥å¿—åœ¨å¯¹è¯æ¡†åˆå§‹åŒ–æ—¶åˆå§‹åŒ–
+	m_pluginManager.reset(new CPluginManager());
+	m_pluginManager->LoadDir(PLUGIN_PATH);
 }
 
+// é‡Šæ”¾
+int CTiebaManagerApp::ExitInstance()
+{
+	TRACE(_T("é‡Šæ”¾m_pluginManager\n"));
+	m_pluginManager = nullptr;
+	TRACE(_T("é‡Šæ”¾m_tbmApi\n"));
+	m_tbmApi = nullptr;
+	TRACE(_T("é‡Šæ”¾m_tbmEventBus\n"));
+	m_tbmEventBus = nullptr;
+	TRACE(_T("é‡Šæ”¾m_scan\n"));
+	m_scan = nullptr;
+	TRACE(_T("é‡Šæ”¾m_operate\n"));
+	m_operate = nullptr;
+	TRACE(_T("é‡Šæ”¾m_plan\n"));
+	m_plan = nullptr;
+	TRACE(_T("é€€å‡ºç¨‹åº\n"));
+
+	return CWinApp::ExitInstance();
+}

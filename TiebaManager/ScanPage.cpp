@@ -1,4 +1,23 @@
-// ScanPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// ScanPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -6,7 +25,7 @@
 #include "SettingDlg.h"
 
 
-// CScanPage ¶Ô»°¿ò
+// CScanPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CScanPage, CNormalDlg)
 
@@ -43,9 +62,9 @@ BEGIN_MESSAGE_MAP(CScanPage, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CScanPage ÏûÏ¢´¦Àí³ÌĞò
+// CScanPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// É¨Ãè¼ä¸ô
+// æ‰«æé—´éš”
 void CScanPage::OnEnKillfocusEdit1()
 {
 	CString tmp;
@@ -55,7 +74,7 @@ void CScanPage::OnEnKillfocusEdit1()
 		m_scanIntervalEdit.SetWindowText(_T("5"));
 }
 
-// É¨Ãè×îºóÒ³Êı Ê§È¥½¹µã
+// æ‰«ææœ€åé¡µæ•° å¤±å»ç„¦ç‚¹
 void CScanPage::OnEnKillfocusEdit5()
 {
 	CString tmp;
@@ -65,13 +84,13 @@ void CScanPage::OnEnKillfocusEdit5()
 		m_scanPageCountEdit.SetWindowText(_T("1"));
 }
 
-// É¨Ãè×îºóÒ³Êı ÄÚÈİ¸Ä±ä
+// æ‰«ææœ€åé¡µæ•° å†…å®¹æ”¹å˜
 void CScanPage::OnEnChangeEdit5()
 {
 	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
 }
 
-// Ïß³ÌÊı
+// çº¿ç¨‹æ•°
 void CScanPage::OnEnKillfocusEdit2()
 {
 	CString tmp;
@@ -81,7 +100,7 @@ void CScanPage::OnEnKillfocusEdit2()
 		m_threadCountEdit.SetWindowText(_T("2"));
 }
 
-// Î¥¹æµÈ¼¶
+// è¿è§„ç­‰çº§
 void CScanPage::OnEnKillfocusEdit7()
 {
 	CString tmp;

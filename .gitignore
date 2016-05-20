@@ -229,3 +229,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+!Library/bin/
+!Library/bin/Debug/
+!Library/bin/Release/
+发布用/opencv_world300.dll
+历史备份

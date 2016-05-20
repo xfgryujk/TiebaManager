@@ -1,4 +1,23 @@
-// OperatePage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// OperatePage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -6,7 +25,7 @@
 #include "SettingDlg.h"
 
 
-// COperatePage ¶Ô»°¿ò
+// COperatePage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(COperatePage, CNormalDlg)
 
@@ -34,7 +53,6 @@ void COperatePage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK3, m_defriendCheck);
 	DDX_Control(pDX, IDC_EDIT8, m_defriendTrigCountEdit);
 	DDX_Control(pDX, IDC_CHECK5, m_wapBanInterfaceCheck);
-	DDX_Control(pDX, IDC_CHECK6, m_autoLoopBanCheck);
 }
 
 
@@ -47,22 +65,22 @@ BEGIN_MESSAGE_MAP(COperatePage, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// COperatePage ÏûÏ¢´¦Àí³ÌĞò
+// COperatePage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 BOOL COperatePage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
 
-	// ³õÊ¼»¯·â½ûÊ±³¤
+	// åˆå§‹åŒ–å°ç¦æ—¶é•¿
 	m_banDurationCombo.AddString(_T("1"));
 	m_banDurationCombo.AddString(_T("3"));
 	m_banDurationCombo.AddString(_T("10"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// ·âID
+// å°ID
 void COperatePage::OnBnClickedCheck1()
 {
 	BOOL enable = m_banIDCheck.GetCheck();
@@ -71,14 +89,14 @@ void COperatePage::OnBnClickedCheck1()
 	m_banTrigCountEdit.EnableWindow(enable);
 }
 
-// À­ºÚ
+// æ‹‰é»‘
 void COperatePage::OnBnClickedCheck3()
 {
 	BOOL enable = m_defriendCheck.GetCheck();
 	m_defriendTrigCountEdit.EnableWindow(enable);
 }
 
-// ·â½ûÎ¥¹æ´ÎÊı
+// å°ç¦è¿è§„æ¬¡æ•°
 void COperatePage::OnEnKillfocusEdit3()
 {
 	CString tmp;
@@ -88,7 +106,7 @@ void COperatePage::OnEnKillfocusEdit3()
 		m_banTrigCountEdit.SetWindowText(_T("1"));
 }
 
-// À­ºÚÎ¥¹æ´ÎÊı
+// æ‹‰é»‘è¿è§„æ¬¡æ•°
 void COperatePage::OnEnKillfocusEdit8()
 {
 	CString tmp;
@@ -98,7 +116,7 @@ void COperatePage::OnEnKillfocusEdit8()
 		m_defriendTrigCountEdit.SetWindowText(_T("1"));
 }
 
-// É¾Ìû¼ä¸ô
+// åˆ å¸–é—´éš”
 void COperatePage::OnEnKillfocusEdit4()
 {
 	CString tmp;

@@ -1,16 +1,34 @@
-// LoginDlg.cpp : ÊµÏÖÎÄ¼ş
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// LoginDlg.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
 #include "LoginDlg.h"
-#include "StringHelper.h"
-#include "NetworkHelper.h"
+#include <StringHelper.h>
+#include <NetworkHelper.h>
 #include <WinInet.h>
-#include <Iepmapi.h>
-#include "TiebaCollect.h"
+#include <TiebaClawer.h>
 
 
-// CLoginDlg ¶Ô»°¿ò
+// CLoginDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CLoginDlg, CNormalDlg)
 
@@ -46,67 +64,67 @@ BEGIN_EVENTSINK_MAP(CLoginDlg, CNormalDlg)
 END_EVENTSINK_MAP()
 #pragma endregion
 
-// CLoginDlg ÏûÏ¢´¦Àí³ÌĞò
+// CLoginDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 #pragma region UI
-// Ïú»Ù´°¿Ú
+// é”€æ¯çª—å£
 void CLoginDlg::OnClose()
 {
 	EndDialog(IDCANCEL);
 }
 #pragma endregion
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CLoginDlg::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	SetIcon(hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(hIcon, FALSE);			// ÉèÖÃĞ¡Í¼±ê
+	SetIcon(hIcon, TRUE);			// è®¾ç½®å¤§å›¾æ ‡
+	SetIcon(hIcon, FALSE);			// è®¾ç½®å°å›¾æ ‡
 
 	m_resize.AddControl(&m_explorer, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
 	m_resize.AddControl(&m_loginButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_explorer);
 	m_resize.AddControl(&m_cancelButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_explorer);
 
-	// É¾³ıCookie
+	// åˆ é™¤Cookie
 	InternetSetCookieEx(_T("http://tieba.baidu.com/"), NULL,
 		_T("BDUSS=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=baidu.com;"), INTERNET_COOKIE_HTTPONLY, NULL);
 	m_explorer.Navigate(_T("https://passport.baidu.com/v2/?login"), NULL, NULL, NULL, NULL);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// ¹Ø±Õ
+// å…³é—­
 void CLoginDlg::OnDestroy()
 {
 	CNormalDlg::OnDestroy();
 
-	// É¾³ıCookie
+	// åˆ é™¤Cookie
 	InternetSetCookieEx(_T("http://tieba.baidu.com/"), NULL,
 		_T("BDUSS=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=baidu.com;"), INTERNET_COOKIE_HTTPONLY, NULL);
 }
 
-// ä¯ÀÀÆ÷µ¼º½Íê±Ï
+// æµè§ˆå™¨å¯¼èˆªå®Œæ¯•
 void CLoginDlg::NavigateComplete2Explorer1(LPDISPATCH pDisp, VARIANT* URL)
 {
 	Login(FALSE);
 }
 
-// µÇÂ¼
+// ç™»å½•
 void CLoginDlg::OnBnClickedButton1()
 {
 	Login(TRUE);
 }
 
-// È¡Ïû
+// å–æ¶ˆ
 void CLoginDlg::OnBnClickedCancel()
 {
 	EndDialog(IDCANCEL);
 }
 
-// ÕæµÇÂ¼
+// çœŸç™»å½•
 void CLoginDlg::Login(BOOL prompt)
 {
 	HRESULT result = GetCookie(m_cookie);
@@ -118,9 +136,9 @@ void CLoginDlg::Login(BOOL prompt)
 		{
 			CString tmp;
 			if (result == ERROR_INVALID_DATA)
-				tmp.Format(_T("ÎŞĞ§µÄCookie£º\r\n%s"), (LPCTSTR)m_cookie);
+				tmp.Format(_T("æ— æ•ˆçš„Cookieï¼š\r\n%s"), (LPCTSTR)m_cookie);
 			else
-				tmp.Format(_T("»ñÈ¡CookieÊ§°Ü£¡\r\n´íÎó´úÂë0x%08X\r\n"), result);
+				tmp.Format(_T("è·å–Cookieå¤±è´¥ï¼\r\né”™è¯¯ä»£ç 0x%08X\r\n"), result);
 			AfxMessageBox(tmp, MB_ICONERROR);
 		}
 		return;
@@ -129,7 +147,7 @@ void CLoginDlg::Login(BOOL prompt)
 	GetLoginUserName();
 	if (m_userName == _T(""))
 	{
-		AfxMessageBox(_T("»ñÈ¡ÓÃ»§ÃûÊ§°Ü£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("è·å–ç”¨æˆ·åå¤±è´¥ï¼"), MB_ICONERROR);
 		return;
 	}
 
@@ -138,29 +156,29 @@ void CLoginDlg::Login(BOOL prompt)
 
 HRESULT CLoginDlg::GetCookie(CString& cookie)
 {
-	DWORD size;
+	DWORD size = 0;
 	InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), NULL,
-		&size, INTERNET_COOKIE_HTTPONLY, NULL); // sizeÎª×Ö½ÚÊı
+		&size, INTERNET_COOKIE_HTTPONLY, NULL); // sizeä¸ºå­—èŠ‚æ•°
 	BOOL result = InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), cookie.GetBuffer(size),
-		&size, INTERNET_COOKIE_HTTPONLY, NULL); // BUG£ºsizeÔÚXPÏÂµ¥Î»ÊÇ×Ö½Ú£¬ÔÚwin10ÊÇ×Ö·ûÊı£¬XPÏÂ´«×Ö·ûÊı»á·µ»Ø»º³å²»¹»
+		&size, INTERNET_COOKIE_HTTPONLY, NULL); // BUGï¼šsizeåœ¨XPä¸‹å•ä½æ˜¯å­—èŠ‚ï¼Œåœ¨win10æ˜¯å­—ç¬¦æ•°ï¼ŒXPä¸‹ä¼ å­—ç¬¦æ•°ä¼šè¿”å›ç¼“å†²ä¸å¤Ÿ
 	HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
 	cookie.ReleaseBuffer();
 
 	if (result)
 	{
 		if (cookie.GetLength() < 100 || !StringIncludes(cookie, _T("BDUSS=")))
-			return HRESULT_FROM_WIN32(ERROR_INVALID_DATA); // ÎŞĞ§µÄCookie
+			return HRESULT_FROM_WIN32(ERROR_INVALID_DATA); // æ— æ•ˆçš„Cookie
 		cookie += _T(";");
-		return S_OK; // ³É¹¦
+		return S_OK; // æˆåŠŸ
 	}
 	return hr;
 }
 
-// È¡ÓÃ»§Ãû
+// å–ç”¨æˆ·å
 void CLoginDlg::GetLoginUserName()
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0")
-						  _T("xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD"), TRUE, NULL, &m_cookie);
+						  _T("xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD"), &m_cookie);
 	CString tmp;
 	std::wcmatch res;
 	if (std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData.user"), _T("}"))), res, USER_NAME_REG))

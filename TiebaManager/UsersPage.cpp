@@ -1,17 +1,41 @@
-// UsersPage.cpp : ÊµÏÖÎÄ¼þ
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// UsersPage.cpp : å®žçŽ°æ–‡ä»¶
 //
 
 #include "stdafx.h"
 #include "UsersPage.h"
-#include "LoginDlg.h"
-#include "Setting.h"
-#include "TiebaVariable.h"
 #include "SettingDlg.h"
-#include "TiebaManagerDlg.h"
-#include "MiscHelper.h"
+
+#include <MiscHelper.h>
+
+#include "TBMConfig.h"
+#include "TBMConfigPath.h"
+#include <TiebaOperate.h>
+#include "TiebaManager.h"
+
+#include "ConfigHelper.h"
+#include "LoginDlg.h"
 
 
-// CUsersPage ¶Ô»°¿ò
+// CUsersPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CUsersPage, CNormalDlg)
 
@@ -44,9 +68,9 @@ BEGIN_MESSAGE_MAP(CUsersPage, CNormalDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CUsersPage ÏûÏ¢´¦Àí³ÌÐò
+// CUsersPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CUsersPage::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
@@ -57,42 +81,44 @@ BOOL CUsersPage::OnInitDialog()
 	m_resize.AddControl(&m_deleteButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 	m_resize.AddControl(&m_switchButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 
-	// ÒÑÈ·ÈÏÌù°É
-	if (!((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_confirmButton.IsWindowEnabled())
+	// å·²ç¡®è®¤è´´å§
+	if (theApp.m_tiebaOperate->HasSetTieba())
 		m_switchButton.EnableWindow(FALSE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôÐÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±žæ€§é¡µåº”è¿”å›ž FALSE
 }
 
-// µÇÂ¼
+// ç™»å½•
 void CUsersPage::OnBnClickedButton1()
 {
 	CLoginDlg loginDlg(this);
 	if (loginDlg.DoModal() != IDOK)
 		return;
-	// ´´½¨Ä¿Â¼
-	CreateDir(USERS_PATH + loginDlg.m_userName);
-	
-	// ±£´æCookie
-	CUserTiebaInfo ck;
+	// åˆ›å»ºç›®å½•
+	CreateDir(USERS_DIR_PATH + loginDlg.m_userName);
+
+	// ä¿å­˜Cookie
+	CCookieConfig ck;
 	*ck.m_cookie = loginDlg.m_cookie;
 	TRACE(_T("%s\n"), (LPCTSTR)*ck.m_cookie);
-	if (!ck.Save(USERS_PATH + loginDlg.m_userName + _T("\\ck.xml")))
+	if (!ck.Save(USERS_DIR_PATH + loginDlg.m_userName + _T("\\ck.xml")))
 	{
-		AfxMessageBox(_T("±£´æÕËºÅÊ§°Ü£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("ä¿å­˜è´¦å·å¤±è´¥ï¼"), MB_ICONERROR);
 		return;
 	}
+	if (theApp.m_globalConfig->m_currentUser == loginDlg.m_userName)
+		*theApp.m_cookieConfig->m_cookie = loginDlg.m_cookie;
 
 	int index = m_list.FindStringExact(-1, loginDlg.m_userName);
 	if (index == LB_ERR)
 		index = m_list.AddString(loginDlg.m_userName);
 	m_list.SetCurSel(index);
-	if (g_globalConfig.m_currentUser == _T("[NULL]"))
+	if (theApp.m_globalConfig->m_currentUser == _T("[NULL]"))
 		OnBnClickedButton3();
 }
 
-// É¾³ý
+// åˆ é™¤
 void CUsersPage::OnBnClickedButton2()
 {
 	int index = m_list.GetCurSel();
@@ -100,33 +126,33 @@ void CUsersPage::OnBnClickedButton2()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (name == g_globalConfig.m_currentUser)
+	if (name == theApp.m_globalConfig->m_currentUser)
 	{
-		AfxMessageBox(_T("²»ÄÜÉ¾³ýµ±Ç°ÕËºÅ£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("ä¸èƒ½åˆ é™¤å½“å‰è´¦å·ï¼"), MB_ICONERROR);
 		return;
 	}
-	CString path = USERS_PATH + name + _T("\\");
+	CString path = USERS_DIR_PATH + name + _T("\\");
 	if (!DeleteFile(path + _T("ck.xml")))
 	{
-		AfxMessageBox(_T("É¾³ýÕËºÅÊ§°Ü£¡"), MB_ICONERROR);
+		AfxMessageBox(_T("åˆ é™¤è´¦å·å¤±è´¥ï¼"), MB_ICONERROR);
 		return;
 	}
 	m_list.DeleteString(index);
 	m_list.SetCurSel(index == 0 ? 0 : index - 1);
 }
 
-// ÇÐ»»
+// åˆ‡æ¢
 void CUsersPage::OnBnClickedButton3()
 {
 	int index = m_list.GetCurSel();
 	if (index == LB_ERR)
 		return;
-	// ÒÑÈ·ÈÏÌù°É
-	if (!((CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd)->m_confirmButton.IsWindowEnabled())
+	// å·²ç¡®è®¤è´´å§
+	if (theApp.m_tiebaOperate->HasSetTieba())
 		return;
 	CString name;
 	m_list.GetText(index, name);
 	SetCurrentUser(name, TRUE);
-	((CSettingDlg*)GetParent()->GetParent())->ShowPlan(g_plan);
-	m_currentUserStatic.SetWindowText(_T("µ±Ç°ÕËºÅ£º") + g_globalConfig.m_currentUser);
+	((CSettingDlg*)GetParent()->GetParent())->ShowPlan(*theApp.m_plan);
+	m_currentUserStatic.SetWindowText(_T("å½“å‰è´¦å·ï¼š") + theApp.m_globalConfig->m_currentUser);
 }

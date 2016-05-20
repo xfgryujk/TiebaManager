@@ -1,13 +1,32 @@
-// ConfirmDlg.cpp : ÊµÏÖÎÄ¼þ
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// ConfirmDlg.cpp : å®žçŽ°æ–‡ä»¶
 //
 
 #include "stdafx.h"
-#include "ImageViewDlg.h"
 #include "ConfirmDlg.h"
+#include "ImageViewDlg.h"
 #include "ScanImage.h"
 
 
-// CConfirmDlg ¶Ô»°¿ò
+// CConfirmDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CConfirmDlg, CDialog)
 
@@ -18,7 +37,7 @@ CConfirmDlg::CConfirmDlg(CWnd* pParent /*=NULL*/)
 	m_operation = NULL;
 }
 
-CConfirmDlg::CConfirmDlg(Operation* operation, CWnd* pParent)
+CConfirmDlg::CConfirmDlg(const Operation* operation, CWnd* pParent)
 	: CDialog(CConfirmDlg::IDD, pParent),
 	m_resize(this)
 {
@@ -48,10 +67,10 @@ BEGIN_MESSAGE_MAP(CConfirmDlg, CDialog)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CConfirmDlg ÏûÏ¢´¦Àí³ÌÐò
+// CConfirmDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 #pragma region UI
-// ÏÞÖÆ×îÐ¡³ß´ç
+// é™åˆ¶æœ€å°å°ºå¯¸
 void CConfirmDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 {
 	/*lpMMI->ptMinTrackSize.x = 455;
@@ -60,7 +79,7 @@ void CConfirmDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	CDialog::OnGetMinMaxInfo(lpMMI);
 }
 
-// ¸Ä±ä³ß´ç
+// æ”¹å˜å°ºå¯¸
 void CConfirmDlg::OnSize(UINT nType, int cx, int cy)
 {
 	CDialog::OnSize(nType, cx, cy);
@@ -68,7 +87,7 @@ void CConfirmDlg::OnSize(UINT nType, int cx, int cy)
 }
 #pragma endregion
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CConfirmDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
@@ -82,13 +101,13 @@ BOOL CConfirmDlg::OnInitDialog()
 	if (m_operation != NULL)
 	{
 		SetWindowText(m_operation->title);
-		m_contentEdit.SetWindowText(m_operation->msg + _T("\r\n\r\n×÷Õß£º") + m_operation->author);
+		m_contentEdit.SetWindowText(m_operation->msg + _T("\r\n\r\nä½œè€…ï¼š") + m_operation->author);
 		m_contentEdit.SetSel(m_operation->pos, m_operation->pos + m_operation->length);
 
-		if (m_operation->object != TBOBJ_LZL)
+		if (m_operation->object != Operation::TBOBJ_LZL)
 		{
 			unique_ptr<vector<CString> > img(new vector<CString>());
-			if (m_operation->object == TBOBJ_THREAD)
+			if (m_operation->object == Operation::TBOBJ_THREAD)
 				GetThreadImage(m_operation->msg).GetImage(*img);
 			else //if (m_operation->object == TBOBJ_POST)
 				GetPostImage(m_operation->msg, m_operation->authorPortrait).GetImage(*img);
@@ -103,21 +122,21 @@ BOOL CConfirmDlg::OnInitDialog()
 	MessageBeep(MB_ICONQUESTION);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôÐÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±žæ€§é¡µåº”è¿”å›ž FALSE
 }
 
-// ä¯ÀÀÆ÷
+// æµè§ˆå™¨
 void CConfirmDlg::OnBnClickedButton1()
 {
 	if (m_operation == NULL)
 		return;
 
 	CString url;
-	if (m_operation->object == TBOBJ_THREAD) // Ö÷Ìâ
+	if (m_operation->object == Operation::TBOBJ_THREAD) // ä¸»é¢˜
 		url = _T("http://tieba.baidu.com/p/") + m_operation->tid;
-	else if (m_operation->object == TBOBJ_POST) // Ìû×Ó
+	else if (m_operation->object == Operation::TBOBJ_POST) // å¸–å­
 		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s#%s"), (LPCTSTR)m_operation->tid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid);
-	else /*if (op.object == TBOBJ_POST)*/ // Â¥ÖÐÂ¥
+	else /*if (op.object == TBOBJ_POST)*/ // æ¥¼ä¸­æ¥¼
 		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), (LPCTSTR)m_operation->tid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid);
 
 	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);

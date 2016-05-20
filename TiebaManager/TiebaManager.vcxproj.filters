@@ -16,14 +16,8 @@
     <Filter Include="头文件\Helper">
       <UniqueIdentifier>{f6b833c5-6084-445f-bf59-bbd2b3d45d17}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\Tieba">
-      <UniqueIdentifier>{92a52f04-0870-498e-88cc-9addc737d7c9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\Helper">
       <UniqueIdentifier>{2d735068-f5a1-4836-ad11-184c413fb3b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Tieba">
-      <UniqueIdentifier>{d83135bf-1ff5-4b8f-a0ed-8472441e5fb3}</UniqueIdentifier>
     </Filter>
     <Filter Include="头文件\GUI">
       <UniqueIdentifier>{a59bd095-6dcc-4d3a-94ba-2500a67bdbeb}</UniqueIdentifier>
@@ -37,9 +31,6 @@
     <Filter Include="头文件\GUI\UIHelper">
       <UniqueIdentifier>{4a72c8b2-5332-4604-95f9-9f761d9e9a3c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\GUI\SuperFunction">
-      <UniqueIdentifier>{628fdca5-b0af-4b2d-ad95-2780a193694c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\GUI">
       <UniqueIdentifier>{e81938cd-2fd1-4f21-9f11-91c8386c5d8a}</UniqueIdentifier>
     </Filter>
@@ -52,20 +43,35 @@
     <Filter Include="源文件\GUI\UIHelper">
       <UniqueIdentifier>{5f92a814-ed20-4ebc-8d4f-560e1a02d9a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\GUI\SuperFunction">
-      <UniqueIdentifier>{cfc04151-1699-4135-a7c2-5267823e2d3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\GUI\UIHelper\ListPage">
-      <UniqueIdentifier>{693bc208-62e8-4918-a984-60a6036004d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\GUI\UIHelper\ListPage">
-      <UniqueIdentifier>{2e9391c3-017f-451e-b8fd-2dbb2acb7953}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\GUI\UIHelper\InputDlg">
       <UniqueIdentifier>{7f818a4a-d7ae-4cd1-9295-6ecfd60ba343}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\GUI\UIHelper\InputDlg">
       <UniqueIdentifier>{d67ed370-7061-4e2d-989a-1cca03ca8262}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\API">
+      <UniqueIdentifier>{bbcc7758-dc62-4f83-b404-c9842ebbd3dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\API">
+      <UniqueIdentifier>{221d2e54-0bbb-47de-aa55-4398bc1a30a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Event">
+      <UniqueIdentifier>{61b96252-7cbb-47ee-91f4-5244d84edb41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Event">
+      <UniqueIdentifier>{0b3266a7-e269-4104-9b92-22c84540524a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Config">
+      <UniqueIdentifier>{58b6d463-cd2f-4ec9-9d8d-7f899f83826f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Config">
+      <UniqueIdentifier>{e4de78a8-bc57-4e5c-9116-7216938abea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Plugin">
+      <UniqueIdentifier>{6e324abd-5f81-43ef-a975-44719f412e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Plugin">
+      <UniqueIdentifier>{87cce4d1-a426-4a61-bd2b-60df129c4bd8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,86 +144,62 @@
     <ClInclude Include="TextButton.h">
       <Filter>头文件\GUI\UIHelper</Filter>
     </ClInclude>
-    <ClInclude Include="SuperFunctionDlg.h">
-      <Filter>头文件\GUI\SuperFunction</Filter>
-    </ClInclude>
-    <ClInclude Include="ResizeControl.h">
-      <Filter>头文件\GUI\UIHelper</Filter>
-    </ClInclude>
-    <ClInclude Include="NormalDlg.h">
-      <Filter>头文件\GUI\UIHelper</Filter>
-    </ClInclude>
-    <ClInclude Include="LoopBanPage.h">
-      <Filter>头文件\GUI\SuperFunction</Filter>
-    </ClInclude>
     <ClInclude Include="ScanPage.h">
       <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="OperatePage.h">
       <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
-    <ClInclude Include="DefriendPage.h">
-      <Filter>头文件\GUI\SuperFunction</Filter>
-    </ClInclude>
-    <ClInclude Include="StringHelper.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkHelper.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="TiebaCollect.h">
-      <Filter>头文件\Tieba</Filter>
-    </ClInclude>
-    <ClInclude Include="TiebaOperate.h">
-      <Filter>头文件\Tieba</Filter>
-    </ClInclude>
-    <ClInclude Include="TiebaScan.h">
-      <Filter>头文件\Tieba</Filter>
-    </ClInclude>
-    <ClInclude Include="MiscHelper.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="Update.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="Setting.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
     <ClInclude Include="ScanImage.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="TypeHelper.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="TiebaVariable.h">
-      <Filter>头文件\Tieba</Filter>
-    </ClInclude>
-    <ClInclude Include="LockThreadPage.h">
-      <Filter>头文件\GUI\SuperFunction</Filter>
-    </ClInclude>
-    <ClInclude Include="LogHelper.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
-    <ClInclude Include="NormalListPage.h">
-      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
-    </ClInclude>
-    <ClInclude Include="ListTestPage.h">
-      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
-    </ClInclude>
-    <ClInclude Include="ListPage.h">
-      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
-    </ClInclude>
-    <ClInclude Include="RegListPage.h">
-      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
-    </ClInclude>
-    <ClInclude Include="InputDlg.h">
-      <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
-    </ClInclude>
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
     </ClInclude>
-    <ClInclude Include="Md5.h">
+    <ClInclude Include="API\TiebaManagerCommon.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMOperateListeners.h">
+      <Filter>头文件\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMScanListeners.h">
+      <Filter>头文件\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMConfig.h">
+      <Filter>头文件\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMConfigPath.h">
+      <Filter>头文件\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigHelper.h">
+      <Filter>头文件\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplorerLog.h">
       <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="PluginManager.h">
+      <Filter>头文件\Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="Plugin.h">
+      <Filter>头文件\Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="API\PluginFunctions.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\TBMEvent.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="API\TBMAPI.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="PluginDlg.h">
+      <Filter>头文件\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMListeners.h">
+      <Filter>头文件\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,83 +266,56 @@
     <ClCompile Include="TextButton.cpp">
       <Filter>源文件\GUI\UIHelper</Filter>
     </ClCompile>
-    <ClCompile Include="SuperFunctionDlg.cpp">
-      <Filter>源文件\GUI\SuperFunction</Filter>
-    </ClCompile>
-    <ClCompile Include="ResizeControl.cpp">
-      <Filter>源文件\GUI\UIHelper</Filter>
-    </ClCompile>
-    <ClCompile Include="NormalDlg.cpp">
-      <Filter>源文件\GUI\UIHelper</Filter>
-    </ClCompile>
-    <ClCompile Include="LoopBanPage.cpp">
-      <Filter>源文件\GUI\SuperFunction</Filter>
-    </ClCompile>
     <ClCompile Include="ScanPage.cpp">
       <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="OperatePage.cpp">
       <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
-    <ClCompile Include="DefriendPage.cpp">
-      <Filter>源文件\GUI\SuperFunction</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkHelper.cpp">
-      <Filter>源文件\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="StringHelper.cpp">
-      <Filter>源文件\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="TiebaCollect.cpp">
-      <Filter>源文件\Tieba</Filter>
-    </ClCompile>
-    <ClCompile Include="TiebaScan.cpp">
-      <Filter>源文件\Tieba</Filter>
-    </ClCompile>
-    <ClCompile Include="TiebaOperate.cpp">
-      <Filter>源文件\Tieba</Filter>
-    </ClCompile>
-    <ClCompile Include="MiscHelper.cpp">
-      <Filter>源文件\Helper</Filter>
-    </ClCompile>
     <ClCompile Include="Update.cpp">
-      <Filter>源文件\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="Setting.cpp">
       <Filter>源文件\Helper</Filter>
     </ClCompile>
     <ClCompile Include="ScanImage.cpp">
       <Filter>源文件\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="TiebaVariable.cpp">
-      <Filter>源文件\Tieba</Filter>
-    </ClCompile>
-    <ClCompile Include="LockThreadPage.cpp">
-      <Filter>源文件\GUI\SuperFunction</Filter>
-    </ClCompile>
-    <ClCompile Include="LogHelper.cpp">
-      <Filter>源文件\Helper</Filter>
-    </ClCompile>
-    <ClCompile Include="ListPage.cpp">
-      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
-    </ClCompile>
-    <ClCompile Include="ListTestPage.cpp">
-      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
-    </ClCompile>
-    <ClCompile Include="NormalListPage.cpp">
-      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
-    </ClCompile>
-    <ClCompile Include="RegListPage.cpp">
-      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
-    </ClCompile>
-    <ClCompile Include="InputDlg.cpp">
-      <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
-    </ClCompile>
     <ClCompile Include="InputKeywordDlg.cpp">
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
     </ClCompile>
-    <ClCompile Include="Md5.cpp">
+    <ClCompile Include="TBMScanListeners.cpp">
+      <Filter>源文件\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMOperateListeners.cpp">
+      <Filter>源文件\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMConfig.cpp">
+      <Filter>源文件\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMConfigPath.cpp">
+      <Filter>源文件\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigHelper.cpp">
+      <Filter>源文件\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplorerLog.cpp">
       <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="PluginManager.cpp">
+      <Filter>源文件\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="Plugin.cpp">
+      <Filter>源文件\Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMEvent.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMAPI.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="PluginDlg.cpp">
+      <Filter>源文件\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMListeners.cpp">
+      <Filter>源文件\Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

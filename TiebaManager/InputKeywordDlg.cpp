@@ -1,4 +1,23 @@
-// InputKeywordDlg.cpp : ÊµÏÖÎÄ¼ş
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// InputKeywordDlg.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -6,7 +25,7 @@
 #include "InputKeywordDlg.h"
 
 
-// CInputKeywordDlg ¶Ô»°¿ò
+// CInputKeywordDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CInputKeywordDlg, CInputDlg)
 
@@ -32,9 +51,9 @@ BEGIN_MESSAGE_MAP(CInputKeywordDlg, CInputDlg)
 END_MESSAGE_MAP()
 
 
-// CInputKeywordDlg ÏûÏ¢´¦Àí³ÌĞò
+// CInputKeywordDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CInputKeywordDlg::OnInitDialog()
 {
 	CInputDlg::OnInitDialog();
@@ -43,10 +62,10 @@ BOOL CInputKeywordDlg::OnInitDialog()
 		m_forceToConfirmCheck.SetCheck(*m_forceToConfirm);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// È·¶¨
+// ç¡®å®š
 void CInputKeywordDlg::OnOK()
 {
 	if (m_forceToConfirm != NULL)

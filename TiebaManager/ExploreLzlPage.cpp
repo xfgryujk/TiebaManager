@@ -1,14 +1,33 @@
-// ExploreThreadPage.cpp : ÊµÏÖÎÄ¼ş
+ï»¿/*
+Copyright (C) 2015  xfgryujk
+http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+// ExploreThreadPage.cpp : å®ç°æ–‡ä»¶
 //
 
 #include "stdafx.h"
 #include "ExploreLzlPage.h"
-#include "TiebaCollect.h"
 #include "ExplorerDlg.h"
+
 #include "ScanImage.h"
 
 
-// CExploreLzlPage ¶Ô»°¿ò
+// CExploreLzlPage å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CExploreLzlPage, CExplorerPage)
 
@@ -34,9 +53,9 @@ BEGIN_MESSAGE_MAP(CExploreLzlPage, CExplorerPage)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CExploreLzlPage ÏûÏ¢´¦Àí³ÌĞò
+// CExploreLzlPage æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CExploreLzlPage::OnInitDialog()
 {
 	CExplorerPage::OnInitDialog();
@@ -48,16 +67,16 @@ BOOL CExploreLzlPage::OnInitDialog()
 	m_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	int i = 0;
 	m_list.InsertColumn(i++, _T(""), LVCFMT_LEFT, 0);
-	m_list.InsertColumn(i++, _T("Â¥²ã"), LVCFMT_RIGHT, 50);
-	m_list.InsertColumn(i++, _T("ÄÚÈİ"), LVCFMT_LEFT, 540);
-	m_list.InsertColumn(i++, _T("×÷Õß"), LVCFMT_CENTER, 130);
-	m_list.DeleteColumn(0); // ½â¾öµÚÒ»ÁĞÎÄ×Ö²»ÄÜÓÒ¶ÔÆëµÄÎÊÌâ
+	m_list.InsertColumn(i++, _T("æ¥¼å±‚"), LVCFMT_RIGHT, 50);
+	m_list.InsertColumn(i++, _T("å†…å®¹"), LVCFMT_LEFT, 540);
+	m_list.InsertColumn(i++, _T("ä½œè€…"), LVCFMT_CENTER, 130);
+	m_list.DeleteColumn(0); // è§£å†³ç¬¬ä¸€åˆ—æ–‡å­—ä¸èƒ½å³å¯¹é½çš„é—®é¢˜
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôĞÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±æ€§é¡µåº”è¿”å› FALSE
 }
 
-// Ñ¡ÖĞÏî¸Ä±ä
+// é€‰ä¸­é¡¹æ”¹å˜
 void CExploreLzlPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
