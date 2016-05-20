@@ -146,7 +146,8 @@ void CTiebaManagerApp::init()
 	m_operateListeners.reset(new CTBMOperateListeners(*m_operate));
 
 	m_tbmEventBus.reset(new CEventBus());
-	m_tbmApi.reset(new CTBMAPI(m_tbmEventBus.get(), m_tiebaOperate.get(), m_scan.get(), m_operate.get())); // 日志在对话框初始化时初始化
+	m_tbmApi.reset(new CTBMAPI(m_tbmEventBus.get(), m_userCache.get(), m_tiebaOperate.get(), 
+		m_scan.get(), m_operate.get())); // 日志在对话框初始化时初始化
 	m_pluginManager.reset(new CPluginManager());
 	m_pluginManager->LoadDir(PLUGIN_PATH);
 }

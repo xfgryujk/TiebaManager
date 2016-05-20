@@ -20,7 +20,7 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 	if (forumName == _T(""))
 		return SET_TIEBA_NOT_FOUND;
 
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=") + EncodeURI(forumName), &m_cookie);
+	CString src = this->HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=") + EncodeURI(forumName));
 	if (src == NET_TIMEOUT_TEXT)
 		return SET_TIEBA_TIMEOUT;
 
@@ -53,8 +53,8 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 
 	// 验证用户权限
 	// 旧接口
-	//CString src2 = HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(m_forumName));
-	CString src2 = HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/listBawuTeamInfo?word=") + m_encodedForumName + _T("&ie=utf-8"));
+	//CString src2 = ::HTTPGet(_T("http://tieba.baidu.com/f/bawu/admin_group?kw=") + EncodeURI_GBK(m_forumName));
+	CString src2 = ::HTTPGet(_T("http://tieba.baidu.com/bawu2/platform/listBawuTeamInfo?word=") + m_encodedForumName + _T("&ie=utf-8"));
 	if (src2 == NET_TIMEOUT_TEXT)
 		return SET_TIEBA_TIMEOUT;
 	CStringArray bawuList;
@@ -96,6 +96,20 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 	return hasPower ? SET_TIEBA_OK : SET_TIEBA_NO_POWER;
 }
 
+
+// 带Cookie
+CString CTiebaOperate::HTTPGet(const CString& URL)
+{
+	return ::HTTPGet(URL, &m_cookie);
+}
+
+// 带Cookie
+CString CTiebaOperate::HTTPPost(const CString& URL, const CString& data)
+{
+	return ::HTTPPost(URL, data, &m_cookie);
+}
+
+
 // 取错误代码
 static inline CString GetOperationErrorCode(const CString& src)
 {
@@ -116,7 +130,7 @@ CString CTiebaOperate::BanID(const CString& userName, const CString& pid)
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&pid%%5B%%5D=%s&reason=%s"),
 		m_banDuration, (LPCTSTR)m_forumID, (LPCTSTR)m_tbs, (LPCTSTR)EncodeURI(userName), (LPCTSTR)pid,
 		m_banReason != _T("") ? (LPCTSTR)m_banReason : _T("%20"));
-	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data, &m_cookie);
+	CString src = this->HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
 	return GetOperationErrorCode(src);
 }
 
@@ -127,7 +141,7 @@ CString CTiebaOperate::BanID(const CString& userName)
 	data.Format(_T("day=%d&fid=%s&tbs=%s&ie=gbk&user_name%%5B%%5D=%s&reason=%s"),
 		m_banDuration, (LPCTSTR)m_forumID, (LPCTSTR)m_tbs, (LPCTSTR)EncodeURI(userName),
 		m_banReason != _T("") ? (LPCTSTR)m_banReason : _T("%20"));
-	CString src = HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data, &m_cookie);
+	CString src = this->HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
 	return GetOperationErrorCode(src);
 }
 
@@ -139,7 +153,7 @@ CString CTiebaOperate::BanIDWap(const CString& userName)
 			   _T("&word=%s&fid=%s&z=%s&$el=%%5Bobject%%20Array%%5D&reason=%s"),
 		(LPCTSTR)EncodeURI(userName), (LPCTSTR)m_tbs, (LPCTSTR)m_encodedForumName,
 		(LPCTSTR)m_forumID, (LPCTSTR)m_randomTid, m_banReason != _T("") ? (LPCTSTR)m_banReason : _T("%20"));
-	CString src = HTTPGet(url, &m_cookie);
+	CString src = this->HTTPGet(url);
 	return GetOperationErrorCode(src);
 }
 
@@ -157,23 +171,23 @@ CString CTiebaOperate::BanIDClient(const CString& userName)
 	signData += _T("tiebaclient!!!");
 	data += _T("&sign=") + GetMD5_UTF8(signData);
 
-	CString src = HTTPPost(_T("http://c.tieba.baidu.com/c/c/bawu/commitprison"), data, &m_cookie);
+	CString src = this->HTTPPost(_T("http://c.tieba.baidu.com/c/c/bawu/commitprison"), data);
 	return GetOperationErrorCode(src);
 }
 
 // 拉黑，返回错误代码
 CString CTiebaOperate::Defriend(const CString& userID)
 {
-	CString src = HTTPPost(_T("http://tieba.baidu.com/bawu2/platform/addBlack"), _T("ie=utf-8&tbs=") + m_tbs
-		+ _T("&user_id=") + userID + _T("&word=") + m_encodedForumName, &m_cookie);
+	CString src = this->HTTPPost(_T("http://tieba.baidu.com/bawu2/platform/addBlack"), _T("ie=utf-8&tbs=") + m_tbs
+		+ _T("&user_id=") + userID + _T("&word=") + m_encodedForumName);
 	return GetOperationErrorCode(src);
 }
 
 // 删主题，返回错误代码
 CString CTiebaOperate::DeleteThread(const CString& tid)
 {
-	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/thread/delete"), _T("kw=") + m_encodedForumName
-		+ _T("&fid=") + m_forumID + _T("&tid=") + tid + _T("&ie=utf-8&tbs=") + m_tbs, &m_cookie);
+	CString src = this->HTTPPost(_T("http://tieba.baidu.com/f/commit/thread/delete"), _T("kw=") + m_encodedForumName
+		+ _T("&fid=") + m_forumID + _T("&tid=") + tid + _T("&ie=utf-8&tbs=") + m_tbs);
 	return GetOperationErrorCode(src);
 }
 
@@ -183,7 +197,7 @@ CString CTiebaOperate::DeletePost(const CString& tid, const CString& pid)
 	CString data;
 	data.Format(_T("commit_fr=pb&ie=utf-8&tbs=%s&kw=%s&fid=%s&tid=%s&is_vipdel=0&pid=%s&is_finf=false"),
 		(LPCTSTR)m_tbs, (LPCTSTR)m_encodedForumName, (LPCTSTR)m_forumID, tid, pid);
-	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data, &m_cookie);
+	CString src = this->HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data);
 	return GetOperationErrorCode(src);
 }
 
@@ -193,7 +207,7 @@ CString CTiebaOperate::DeleteLZL(const CString& tid, const CString& lzlid)
 	CString data;
 	data.Format(_T("ie=utf-8&tbs=%s&kw=%s&fid=%s&tid=%s&pid=%s&is_finf=1"),
 		(LPCTSTR)m_tbs, (LPCTSTR)m_encodedForumName, (LPCTSTR)m_forumID, tid, lzlid);
-	CString src = HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data, &m_cookie);
+	CString src = this->HTTPPost(_T("http://tieba.baidu.com/f/commit/post/delete"), data);
 	return GetOperationErrorCode(src);
 }
 

@@ -1,34 +1,43 @@
-﻿// DefriendPage.cpp : 实现文件
+﻿// DefriendDlg.cpp : 实现文件
 //
 
 #include "stdafx.h"
-#include "DefriendPage.h"
+#include "resource.h"
+#include "DefriendDlg.h"
 
 #include <StringHelper.h>
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
-#include "TiebaManagerDlg.h"
 
-#include "TBMConfig.h"
-#include "TiebaManager.h"
+#include <TBMAPI.h>
+#include <TBMCoreConfig.h>
 #include <TiebaOperate.h>
 
 
-// CDefriendPage 对话框
+// CDefriendDlg 对话框
 
-IMPLEMENT_DYNAMIC(CDefriendPage, CNormalDlg)
+CDefriendDlg* CDefriendDlg::s_instance = NULL;
+mutex CDefriendDlg::s_instanceLock;
+volatile BOOL CDefriendDlg::s_stopFlag = TRUE;
+CString CDefriendDlg::s_startPage;
+CString CDefriendDlg::s_endPage;
+BOOL CDefriendDlg::s_defriendNewUsers = FALSE;
 
-CDefriendPage::CDefriendPage(CWnd* pParent /*=NULL*/)
-	: CNormalDlg(CDefriendPage::IDD, pParent)
+
+IMPLEMENT_DYNAMIC(CDefriendDlg, CNormalDlg)
+
+CDefriendDlg::CDefriendDlg(CDefriendDlg*& pThis, CWnd* pParent /*=NULL*/) : CNormalDlg(CDefriendDlg::IDD, pParent),
+	m_pThis(pThis)
 {
 
 }
 
-CDefriendPage::~CDefriendPage()
+#pragma region MFC
+CDefriendDlg::~CDefriendDlg()
 {
 }
 
-void CDefriendPage::DoDataExchange(CDataExchange* pDX)
+void CDefriendDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CNormalDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_startPageEdit);
@@ -40,31 +49,25 @@ void CDefriendPage::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CDefriendPage, CNormalDlg)
+BEGIN_MESSAGE_MAP(CDefriendDlg, CNormalDlg)
+	ON_WM_CLOSE()
 	ON_WM_DESTROY()
-	ON_BN_CLICKED(IDC_BUTTON1, &CDefriendPage::OnBnClickedButton1)
-	ON_BN_CLICKED(IDC_BUTTON2, &CDefriendPage::OnBnClickedButton2)
-	ON_BN_CLICKED(IDC_CHECK1, &CDefriendPage::OnBnClickedCheck1)
+	ON_BN_CLICKED(IDC_BUTTON1, &CDefriendDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, &CDefriendDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_CHECK1, &CDefriendDlg::OnBnClickedCheck1)
 END_MESSAGE_MAP()
+#pragma endregion
 
-
-// CDefriendPage 消息处理程序
-
-CDefriendPage* CDefriendPage::s_instance = NULL;
-CCriticalSection CDefriendPage::s_instanceLock;
-volatile BOOL CDefriendPage::s_stopFlag = TRUE;
-CString CDefriendPage::s_startPage;
-CString CDefriendPage::s_endPage;
-BOOL CDefriendPage::s_defriendNewUsers = FALSE;
+// CDefriendDlg 消息处理程序
 
 // 初始化
-BOOL CDefriendPage::OnInitDialog()
+BOOL CDefriendDlg::OnInitDialog()
 {
 	CNormalDlg::OnInitDialog();
 
-	s_instanceLock.Lock();
+	s_instanceLock.lock();
 	s_instance = this;
-	s_instanceLock.Unlock();
+	s_instanceLock.unlock();
 
 	if (!s_stopFlag)
 	{
@@ -80,18 +83,41 @@ BOOL CDefriendPage::OnInitDialog()
 	// 异常:  OCX 属性页应返回 FALSE
 }
 
-// 销毁
-void CDefriendPage::OnDestroy()
+#pragma region UI
+// 取消
+void CDefriendDlg::OnCancel()
 {
-	s_instanceLock.Lock();
+	DestroyWindow();
+}
+
+// 关闭窗口
+void CDefriendDlg::OnClose()
+{
+	DestroyWindow();
+}
+
+// 释放this
+void CDefriendDlg::PostNcDestroy()
+{
+	CNormalDlg::PostNcDestroy();
+
+	m_pThis = NULL;
+	delete this;
+}
+
+// 销毁
+void CDefriendDlg::OnDestroy()
+{
+	s_instanceLock.lock();
 	s_instance = NULL;
-	s_instanceLock.Unlock();
+	s_instanceLock.unlock();
 
 	CNormalDlg::OnDestroy();
 }
+#pragma endregion
 
 // 拉黑新关注的
-void CDefriendPage::OnBnClickedCheck1()
+void CDefriendDlg::OnBnClickedCheck1()
 {
 	if (m_defriendNewUsersCheck.GetCheck())
 	{
@@ -103,7 +129,7 @@ void CDefriendPage::OnBnClickedCheck1()
 }
 
 // 开始
-void CDefriendPage::OnBnClickedButton1()
+void CDefriendDlg::OnBnClickedButton1()
 {
 	m_startPageEdit.GetWindowText(s_startPage);
 	m_endPageEdit.GetWindowText(s_endPage);
@@ -132,21 +158,23 @@ void CDefriendPage::OnBnClickedButton1()
 	m_startButton.EnableWindow(FALSE);
 	m_stopButton.EnableWindow(TRUE);
 	s_stopFlag = FALSE;
-	AfxBeginThread(DefriendThread, NULL);
+	thread(DefriendThread).detach();
 }
 
 // 停止
-void CDefriendPage::OnBnClickedButton2()
+void CDefriendDlg::OnBnClickedButton2()
 {
 	s_stopFlag = TRUE;
 }
 
-UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
+void CDefriendDlg::DefriendThread()
 {
 	// 初始化
-	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
 	if (!CoInitializeHelper())
-		return 0;
+		return;
+
+	CTiebaOperate& tiebaOperate = *CTBMAPI::GetInstance().GetTiebaOperate();
+	
 
 	int iStartPage = _ttoi(s_startPage), iEndPage = _ttoi(s_endPage);
 	int iPrevTotalPage = 0;
@@ -155,8 +183,8 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 		if (s_defriendNewUsers)
 		{
 			CString url;
-			url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s"), (LPCTSTR)theApp.m_tiebaOperate->GetEncodedForumName());
-			CString src = HTTPGet(url, &*theApp.m_cookieConfig->m_cookie);
+			url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s"), (LPCTSTR)tiebaOperate.GetEncodedForumName());
+			CString src = tiebaOperate.HTTPGet(url);
 			CString totalPage = GetStringBetween(src, _T(R"(class="tbui_total_page">共)"), _T("页"));
 			if (totalPage == _T(""))
 			{
@@ -182,7 +210,7 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 	// 结束
 	s_stopFlag = TRUE;
 	CoUninitialize();
-	s_instanceLock.Lock();
+	s_instanceLock.lock();
 	if (s_instance != NULL)
 	{
 		s_instance->m_startPageEdit.EnableWindow(TRUE);
@@ -192,13 +220,15 @@ UINT AFX_CDECL CDefriendPage::DefriendThread(LPVOID)
 		s_instance->m_stopButton.EnableWindow(FALSE);
 		s_instance->m_stateStatic.SetWindowText(_T(""));
 	}
-	s_instanceLock.Unlock();
-	return 0;
+	s_instanceLock.unlock();
 }
 
-void CDefriendPage::DoDefriend(int startPage, int endPage)
+void CDefriendDlg::DoDefriend(int startPage, int endPage)
 {
-	CTiebaManagerDlg* mainDlg = (CTiebaManagerDlg*)AfxGetApp()->m_pMainWnd;
+	ILog& log = *CTBMAPI::GetInstance().GetLog();
+	CTiebaOperate& tiebaOperate = *CTBMAPI::GetInstance().GetTiebaOperate();
+	CUserCache& userCache = *CTBMAPI::GetInstance().GetUserCache();
+
 
 	// 获取拉黑列表
 	int index = 0;
@@ -209,13 +239,13 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 			break;
 		CString state;
 		state.Format(_T("采集第%d页"), page);
-		s_instanceLock.Lock();
+		s_instanceLock.lock();
 		if (s_instance != NULL)
 			s_instance->m_stateStatic.SetWindowText(state);
-		s_instanceLock.Unlock();
+		s_instanceLock.unlock();
 		CString url;
-		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), (LPCTSTR)theApp.m_tiebaOperate->GetEncodedForumName(), page);
-		CString src = HTTPGet(url, &*theApp.m_cookieConfig->m_cookie);
+		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), (LPCTSTR)tiebaOperate.GetEncodedForumName(), page);
+		CString src = tiebaOperate.HTTPGet(url);
 		if (s_stopFlag)
 			break;
 
@@ -250,32 +280,32 @@ void CDefriendPage::DoDefriend(int startPage, int endPage)
 
 		CString state;
 		state.Format(_T("拉黑中，剩余%u"), userName.size() - i - 1);
-		s_instanceLock.Lock();
+		s_instanceLock.lock();
 		if (s_instance != NULL)
 			s_instance->m_stateStatic.SetWindowText(state);
-		s_instanceLock.Unlock();
+		s_instanceLock.unlock();
 
-		CString code = theApp.m_tiebaOperate->Defriend(userID[i]);
+		CString code = tiebaOperate.Defriend(userID[i]);
 		if (code != _T("0"))
 		{
 			CString content;
 			content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
 				_T("\"df:%s\">重试</a>"), (LPCTSTR)userName[i], (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)userID[i]);
-			mainDlg->m_log.Log(content);
+			log.Log(content);
 		}
 		else
 		{
-			theApp.m_userCache->m_defriendedUser->insert(userName[i]);
-			mainDlg->m_log.Log(_T("<font color=red>拉黑 </font>") + userName[i]);
+			userCache.m_defriendedUser->insert(userName[i]);
+			log.Log(_T("<font color=red>拉黑 </font>") + userName[i]);
 		}
 
 		// 每分钟最多拉黑20个
 		if (i % 20 == 19 && i < userName.size() - 1)
 		{
-			s_instanceLock.Lock();
+			s_instanceLock.lock();
 			if (s_instance != NULL)
 				s_instance->m_stateStatic.SetWindowText(_T("延迟中"));
-			s_instanceLock.Unlock();
+			s_instanceLock.unlock();
 			for (int i = 0; i < 400; i++)
 			{
 				if (s_stopFlag)

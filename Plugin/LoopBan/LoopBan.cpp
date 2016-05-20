@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "LoopBan.h"
+#include "resource.h"
 #include "LoopBanDlg.h"
 
 #include <TBMAPI.h>

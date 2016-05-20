@@ -134,7 +134,6 @@
     <ClInclude Include="Plugin.h" />
     <ClInclude Include="PluginDlg.h" />
     <ClInclude Include="PluginManager.h" />
-    <ClInclude Include="DefriendPage.h" />
     <ClInclude Include="ImageViewDlg.h" />
     <ClInclude Include="OperatePage.h" />
     <ClInclude Include="ScanImage.h" />
@@ -172,7 +171,6 @@
     <ClCompile Include="ConfigHelper.cpp" />
     <ClCompile Include="PluginDlg.cpp" />
     <ClCompile Include="TBMAPI.cpp" />
-    <ClCompile Include="DefriendPage.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />
     <ClCompile Include="InputKeywordDlg.cpp" />
     <ClCompile Include="LockThreadPage.cpp" />

@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "SuperFunctionDlg.h"
 
-#include "DefriendPage.h"
 #include "LockThreadPage.h"
 
 #include "TBMConfigPath.h"
@@ -18,12 +17,10 @@ IMPLEMENT_DYNAMIC(CSuperFunctionDlg, CNormalDlg)
 CSuperFunctionDlg::CSuperFunctionDlg(CSuperFunctionDlg*& pThis, CWnd* pParent /*=NULL*/) : CNormalDlg(CSuperFunctionDlg::IDD, pParent),
 	m_pThis(pThis),
 	m_pagesResize(&m_tab),
-	m_defriendPage(new CDefriendPage()),
 	m_lockThreadPage(new CLockThreadPage())
 {
 	// 初始化m_pages
 	int i = 0;
-	m_pages[i++] = m_defriendPage.get();
 	m_pages[i++] = m_lockThreadPage.get();
 }
 
@@ -69,7 +66,6 @@ BOOL CSuperFunctionDlg::OnInitDialog()
 
 	// 初始化各页
 #define CREATE_PAGE(page) page->Create(page->IDD, &m_tab)
-	CREATE_PAGE(m_defriendPage);
 	CREATE_PAGE(m_lockThreadPage);
 
 	CRect rect;

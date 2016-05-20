@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <NormalDlg.h>
-class CDefriendPage;
 class CLockThreadPage;
 
 
@@ -34,7 +33,6 @@ public:
 
 public:
 	CTabCtrl m_tab;
-	unique_ptr<CDefriendPage> m_defriendPage;
 	unique_ptr<CLockThreadPage> m_lockThreadPage;
 	CButton m_okButton;
 	CButton m_cancelButton;
@@ -44,6 +42,6 @@ public:
 protected:
 	CSuperFunctionDlg*& m_pThis;
 
-	CWnd* m_pages[2];
+	CWnd* m_pages[1];
 	CResizeControl m_pagesResize;
 };

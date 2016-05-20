@@ -2,8 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "LoopBanDlg.h"
 #include "resource.h"
+#include "LoopBanDlg.h"
 #include "LoopBan.h"
 
 #include <TBMAPI.h>
@@ -77,8 +77,6 @@ BOOL CLoopBanDlg::OnInitDialog()
 }
 
 #pragma region UI
-// 窗口 /////////////////////////////////////////////////////////////////////////////////
-
 // 取消
 void CLoopBanDlg::OnCancel()
 {

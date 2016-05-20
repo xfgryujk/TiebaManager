@@ -159,9 +159,6 @@
     <ClInclude Include="OperatePage.h">
       <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
-    <ClInclude Include="DefriendPage.h">
-      <Filter>头文件\GUI\SuperFunction</Filter>
-    </ClInclude>
     <ClInclude Include="Update.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
@@ -286,9 +283,6 @@
     </ClCompile>
     <ClCompile Include="OperatePage.cpp">
       <Filter>源文件\GUI\Setting</Filter>
-    </ClCompile>
-    <ClCompile Include="DefriendPage.cpp">
-      <Filter>源文件\GUI\SuperFunction</Filter>
     </ClCompile>
     <ClCompile Include="Update.cpp">
       <Filter>源文件\Helper</Filter>

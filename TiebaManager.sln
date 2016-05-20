@@ -33,6 +33,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoopBan", "Plugin\LoopBan\L
 		{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1} = {99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Defriend", "Plugin\Defriend\Defriend.vcxproj", "{8E9CAC94-7CA2-432A-9C81-205D29145943}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A4141D90-1EA4-4E10-84C3-79E11E265BA4} = {A4141D90-1EA4-4E10-84C3-79E11E265BA4}
+		{FBE318AB-E302-49E5-9027-9291B2F92743} = {FBE318AB-E302-49E5-9027-9291B2F92743}
+		{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1} = {99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -59,11 +66,16 @@ Global
 		{587B69EB-0980-4E20-B5D1-9AC09A28DD09}.Debug|Win32.Build.0 = Debug|Win32
 		{587B69EB-0980-4E20-B5D1-9AC09A28DD09}.Release|Win32.ActiveCfg = Release|Win32
 		{587B69EB-0980-4E20-B5D1-9AC09A28DD09}.Release|Win32.Build.0 = Release|Win32
+		{8E9CAC94-7CA2-432A-9C81-205D29145943}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8E9CAC94-7CA2-432A-9C81-205D29145943}.Debug|Win32.Build.0 = Debug|Win32
+		{8E9CAC94-7CA2-432A-9C81-205D29145943}.Release|Win32.ActiveCfg = Release|Win32
+		{8E9CAC94-7CA2-432A-9C81-205D29145943}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{587B69EB-0980-4E20-B5D1-9AC09A28DD09} = {2CFA8D7C-8575-4F84-A921-4CB5990E826C}
+		{8E9CAC94-7CA2-432A-9C81-205D29145943} = {2CFA8D7C-8575-4F84-A921-4CB5990E826C}
 	EndGlobalSection
 EndGlobal

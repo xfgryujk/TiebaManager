@@ -33,6 +33,11 @@ public:
 	// 设置要操作的贴吧
 	SetTiebaResult SetTieba(const CString& forumName);
 
+	// 带Cookie
+	CString HTTPGet(const CString& URL);
+	// 带Cookie
+	CString HTTPPost(const CString& URL, const CString& data);
+
 	// 封ID，返回错误代码
 	CString BanID(const CString& userName, const CString& pid);
 	// 封ID，返回错误代码，不用PID（用户必须为本吧会员）
