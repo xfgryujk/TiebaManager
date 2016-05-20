@@ -154,6 +154,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TBMConfig.h" />
     <ClInclude Include="TBMConfigPath.h" />
+    <ClInclude Include="TBMListeners.h" />
     <ClInclude Include="TBMOperateListeners.h" />
     <ClInclude Include="TBMScanListeners.h" />
     <ClInclude Include="TextButton.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="TBMConfig.cpp" />
     <ClCompile Include="TBMConfigPath.cpp" />
     <ClCompile Include="TBMEvent.cpp" />
+    <ClCompile Include="TBMListeners.cpp" />
     <ClCompile Include="TBMOperateListeners.cpp" />
     <ClCompile Include="TextButton.cpp" />
     <ClCompile Include="TiebaManager.cpp" />

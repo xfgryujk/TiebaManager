@@ -27,15 +27,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ExplorerDlg.h"
 #include "PluginDlg.h"
 
-#include "TBMConfigPath.h"
-#include "TBMConfig.h"
-#include "ConfigHelper.h"
-#include <StringHelper.h>
-#include <NetworkHelper.h>
 #include <MiscHelper.h>
 #include "Update.h"
 
-#include <TiebaClawer.h>
+#include "TBMConfig.h"
+#include "TBMConfigPath.h"
+#include "ConfigHelper.h"
+
 #include <TiebaOperate.h>
 #include <TBMScan.h>
 #include <TBMOperate.h>
@@ -333,56 +331,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 		return;
 	*Cancel = TRUE;
 
-	CString prefix = url.Left(3);
-	CTiebaOperate& tiebaOperate = *theApp.m_tiebaOperate;
-	if (prefix == _T("dt:")) // 删主题
-	{
-		CString code = tiebaOperate.DeleteThread(url.Right(url.GetLength() - 3));
-		if (code == _T("0"))
-			m_log.Log(_T("<font color=green>删除成功！</font>"));
-		else
-			m_log.Log(_T("<font color=red>删除失败！</font>"));
-	}
-	else if (prefix == _T("dp:")) // 删帖子
-	{
-		CStringArray args;
-		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = tiebaOperate.DeletePost(args[0], args[1]);
-		if (code == _T("0"))
-			m_log.Log(_T("<font color=green>删除成功！</font>"));
-		else
-			m_log.Log(_T("<font color=red>删除失败！</font>"));
-	}
-	else if (prefix == _T("dl:")) // 删楼中楼
-	{
-		CStringArray args;
-		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = tiebaOperate.DeleteLZL(args[0], args[1]);
-		if (code == _T("0"))
-			m_log.Log(_T("<font color=green>删除成功！</font>"));
-		else
-			m_log.Log(_T("<font color=red>删除失败！</font>"));
-	}
-	else if (prefix == _T("bd:")) // 封ID
-	{
-		CStringArray args;
-		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = (theApp.m_plan->m_wapBanInterface /*|| theApp.m_plan->m_banDuration == 1*/ || args[1] == _T("")) ? 
-			tiebaOperate.BanIDClient(args[0]) : tiebaOperate.BanID(args[0], args[1]);
-		if (code == _T("0"))
-			m_log.Log(_T("<font color=green>封禁成功！</font>"));
-		else
-			m_log.Log(_T("<font color=red>封禁失败！</font>"));
-	}
-	else if (prefix == _T("df:")) // 拉黑
-	{
-		CString code = tiebaOperate.Defriend(url.Right(url.GetLength() - 3));
-		if (code == _T("0"))
-			m_log.Log(_T("<font color=green>拉黑成功！</font>"));
-		else
-			m_log.Log(_T("<font color=red>拉黑失败！</font>"));
-	}
-	else
+	if (theApp.m_tbmEventBus->Post(OpenLinkInLogEvent, COpenLinkEvent(url)))
 		ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }
 

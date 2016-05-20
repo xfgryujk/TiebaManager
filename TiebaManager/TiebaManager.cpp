@@ -35,6 +35,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "TBMScanListeners.h"
 #include "TBMOperateListeners.h"
+#include "TBMListeners.h"
 
 #include <TBMAPI.h>
 #include "PluginManager.h"
@@ -163,6 +164,7 @@ void CTiebaManagerApp::init()
 
 	m_scanListeners.reset(new CTBMScanListeners(*m_scan));
 	m_operateListeners.reset(new CTBMOperateListeners(*m_operate));
+	m_tbmListeners.reset(new CTBMListeners());
 
 	m_tbmEventBus.reset(new CEventBus());
 	m_tbmApi.reset(new CTBMAPI(m_tbmEventBus.get(), m_userCache.get(), m_tiebaOperate.get(), 

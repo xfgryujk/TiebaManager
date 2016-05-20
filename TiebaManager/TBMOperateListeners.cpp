@@ -23,11 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMOperate.h>
 #include <TBMOperateEvent.h>
 
-#include "TBMConfig.h"
-#include "TBMConfigPath.h"
-
 #include "ConfirmDlg.h"
-#include "TiebaManager.h"
 
 
 CTBMOperateListeners::CTBMOperateListeners(CTBMOperate& operate) :

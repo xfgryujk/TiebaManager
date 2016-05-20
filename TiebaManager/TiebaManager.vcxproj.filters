@@ -198,6 +198,9 @@
     <ClInclude Include="PluginDlg.h">
       <Filter>头文件\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="TBMListeners.h">
+      <Filter>头文件\Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -310,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="PluginDlg.cpp">
       <Filter>源文件\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMListeners.cpp">
+      <Filter>源文件\Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

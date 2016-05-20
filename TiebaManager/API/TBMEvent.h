@@ -29,7 +29,9 @@ enum TIEBA_MANAGER_API TBMEventID
 	MainDialogDestroyEvent,			// CEventBase，主对话框销毁
 
 	PreSetTiebaEvent,				// CSetTiebaEvent，准备确认贴吧
-	PostSetTiebaEvent				// CSetTiebaEvent，确认贴吧成功后
+	PostSetTiebaEvent,				// CSetTiebaEvent，确认贴吧成功后
+
+	OpenLinkInLogEvent				// COpenLinkEvent，打开日志中的链接
 };
 
 class TIEBA_MANAGER_API CSetTiebaEvent : public CEventBase
@@ -38,4 +40,12 @@ public:
 	const CString& m_forumName;
 
 	CSetTiebaEvent(const CString& forumName);
+};
+
+class TIEBA_MANAGER_API COpenLinkEvent : public CEventBase
+{
+public:
+	const CString& m_url;
+
+	COpenLinkEvent(const CString& url);
 };

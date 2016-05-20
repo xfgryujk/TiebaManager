@@ -19,18 +19,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "Update.h"
+
 #import <msscript.ocx> no_namespace
 #include <StringHelper.h>
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
+
 #include "TiebaManagerDlg.h"
 
 
 // 当前版本日期，每次更新后修改
-const char UPDATE_CURRENT_VERSION_A[] = "16-05-07";
+const char UPDATE_CURRENT_VERSION_A[] = "16-05-20";
 const CString UPDATE_CURRENT_VERSION(UPDATE_CURRENT_VERSION_A);
 // 更新日志
-const TCHAR UPDATE_LOG[] = _T("1. 兼容XP和Win7登录");
+const TCHAR UPDATE_LOG[] = _T("1. 支持插件开发\r\n")
+						   _T("2. 修复一堆BUG");
 
 
 // 字符串转时间戳

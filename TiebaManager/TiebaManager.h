@@ -45,6 +45,7 @@ class CTBMOperate;
 
 class CTBMScanListeners;
 class CTBMOperateListeners;
+class CTBMListeners;
 
 class CEventBus;
 class CTBMAPI;
@@ -73,6 +74,7 @@ public:
 
 	unique_ptr<CTBMScanListeners> m_scanListeners;
 	unique_ptr<CTBMOperateListeners> m_operateListeners;
+	unique_ptr<CTBMListeners> m_tbmListeners;
 
 	unique_ptr<CEventBus> m_tbmEventBus;
 	unique_ptr<CTBMAPI> m_tbmApi;

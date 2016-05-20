@@ -17,18 +17,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "stdafx.h"
-#include <TBMEvent.h>
+#pragma once
+class CEventBase;
 
 
-CSetTiebaEvent::CSetTiebaEvent(const CString& forumName) :
-	m_forumName(forumName)
+class CTBMListeners
 {
+public:
+	CTBMListeners();
 
-}
-
-COpenLinkEvent::COpenLinkEvent(const CString& url) :
-	m_url(url)
-{
-
-}
+	void OnOpenLinkInLog(CEventBase* event__);
+};
