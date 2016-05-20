@@ -161,12 +161,12 @@ void CTiebaManagerApp::init()
 	m_tiebaOperate.reset(new CTiebaOperate(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason));
 	m_operate.reset(new CTBMOperate(m_plan.get(), m_userCache.get(), m_tiebaOperate.get())); // 日志在对话框初始化时初始化
 	m_scan.reset(new CTBMScan(m_plan.get(), m_userCache.get(), m_operate.get())); // 日志在对话框初始化时初始化
+	m_tbmEventBus.reset(new CEventBus());
 
 	m_scanListeners.reset(new CTBMScanListeners(*m_scan));
 	m_operateListeners.reset(new CTBMOperateListeners(*m_operate));
 	m_tbmListeners.reset(new CTBMListeners());
 
-	m_tbmEventBus.reset(new CEventBus());
 	m_tbmApi.reset(new CTBMAPI(m_tbmEventBus.get(), m_userCache.get(), m_tiebaOperate.get(), 
 		m_scan.get(), m_operate.get())); // 日志在对话框初始化时初始化
 	m_pluginManager.reset(new CPluginManager());
