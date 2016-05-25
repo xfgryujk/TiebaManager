@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "ConfirmDlg.h"
 #include "ImageViewDlg.h"
-#include "ScanImage.h"
+#include <GetImages.h>
 
 
 // CConfirmDlg 对话框
@@ -108,9 +108,9 @@ BOOL CConfirmDlg::OnInitDialog()
 		{
 			unique_ptr<vector<CString> > img(new vector<CString>());
 			if (m_operation->object == Operation::TBOBJ_THREAD)
-				GetThreadImage(m_operation->msg).GetImage(*img);
+				CGetThreadImages(m_operation->msg)(*img);
 			else //if (m_operation->object == TBOBJ_POST)
-				GetPostImage(m_operation->msg, m_operation->authorPortrait).GetImage(*img);
+				CGetPostImages(m_operation->msg, m_operation->authorPortrait)(*img);
 			if (!img->empty())
 			{
 				m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);

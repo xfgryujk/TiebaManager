@@ -79,7 +79,7 @@ BOOL CLoopBanDlg::OnInitDialog()
 	m_resize.AddControl(&m_okButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
 	m_resize.AddControl(&m_cancelButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
 
-	CString currentUserDir = CTBMAPI::GetCurrentUserDir();
+	CString currentUserDir = CTBMAPI::GetInstance().GetCurrentUserDir();
 
 	// 显示配置
 	CString tmp;
@@ -157,7 +157,7 @@ void CLoopBanDlg::OnDelete(int index)
 // 确认
 void CLoopBanDlg::OnOK()
 {
-	CString currentUserDir = CTBMAPI::GetCurrentUserDir();
+	CString currentUserDir = CTBMAPI::GetInstance().GetCurrentUserDir();
 
 	CString strBuf;
 	// 循环封

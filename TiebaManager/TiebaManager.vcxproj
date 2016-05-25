@@ -122,6 +122,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
+    <ClInclude Include="API\GetImages.h" />
     <ClInclude Include="API\PluginFunctions.h" />
     <ClInclude Include="API\TBMAPI.h" />
     <ClInclude Include="API\TBMEvent.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="BlackListPage.cpp" />
     <ClCompile Include="ConfigHelper.cpp" />
+    <ClCompile Include="GetImages.cpp" />
     <ClCompile Include="PluginDlg.cpp" />
     <ClCompile Include="TBMAPI.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />

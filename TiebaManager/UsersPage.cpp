@@ -152,7 +152,7 @@ void CUsersPage::OnBnClickedButton3()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	SetCurrentUser(name, TRUE);
+	theApp.m_configHelper->SetCurrentUser(name, TRUE);
 	((CSettingDlg*)GetParent()->GetParent())->ShowPlan(*theApp.m_plan);
 	m_currentUserStatic.SetWindowText(_T("当前账号：") + theApp.m_globalConfig->m_currentUser);
 }

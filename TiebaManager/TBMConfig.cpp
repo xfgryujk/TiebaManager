@@ -20,9 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "TBMConfig.h"
 using tinyxml2::XMLElement;
-#include "Update.h"
 #include "TBMConfigPath.h"
-#include "ScanImage.h"
+#include "Update.h"
+#include "ConfigHelper.h"
 
 
 // 全局配置
@@ -152,7 +152,7 @@ void CPlan::PostChange()
 	if (m_updateImage)
 	{
 		m_updateImage = FALSE;
-		ReadImages(m_imageDir, m_images); 
+		CConfigHelper::ReadImages(m_imageDir, m_images); 
 	}
 	m_optionsLock.Unlock();
 }

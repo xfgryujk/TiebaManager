@@ -17,39 +17,35 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "stdafx.h"
-#include <TBMEvent.h>
-#include <GetImages.h>
+#pragma once
+#include "TiebaManagerCommon.h"
+struct ThreadInfo;
+struct PostInfo;
 
 
-CSetCurrentUserEvent::CSetCurrentUserEvent(const CString& userName) : 
-	m_userName(userName)
+class TIEBA_MANAGER_API CGetImagesBase
 {
+public:
+	virtual ~CGetImagesBase() = default;
+	virtual void operator () (vector<CString>& img) = 0;
+};
 
-}
-
-CSetTiebaEvent::CSetTiebaEvent(const CString& forumName) :
-	m_forumName(forumName)
+class TIEBA_MANAGER_API CGetThreadImages : public CGetImagesBase
 {
+private:
+	const CString& m_preview;
+public:
+	CGetThreadImages(const ThreadInfo& thread);
+	CGetThreadImages(const CString& preview);
+	void operator () (vector<CString>& img);
+};
 
-}
-
-CGetThreadImagesEvent::CGetThreadImagesEvent(const CGetThreadImages& getThreadImages, vector<CString>& img) : 
-	m_getThreadImages(getThreadImages),
-	m_img(img)
+class TIEBA_MANAGER_API CGetPostImages : public CGetImagesBase
 {
-
-}
-
-CGetPostImagesEvent::CGetPostImagesEvent(const CGetPostImages& getPostImages, vector<CString>& img) :
-	m_getPostImages(getPostImages),
-	m_img(img)
-{
-
-}
-
-COpenLinkEvent::COpenLinkEvent(const CString& url) :
-	m_url(url)
-{
-
-}
+private:
+	const CString& m_content, m_portrait;
+public:
+	CGetPostImages(const PostInfo& post);
+	CGetPostImages(const CString& content, const CString& portrait);
+	void operator () (vector<CString>& img);
+};

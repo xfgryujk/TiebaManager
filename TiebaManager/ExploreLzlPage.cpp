@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ExploreLzlPage.h"
 #include "ExplorerDlg.h"
 
-#include "ScanImage.h"
+#include <GetImages.h>
 
 
 // CExploreLzlPage 对话框
@@ -87,7 +87,7 @@ void CExploreLzlPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 		explorerDlg->m_edit.SetWindowText(m_lzls[pNMLV->iItem].content +
 			_T("\r\n\r\n") + m_lzls[pNMLV->iItem].author);
 		unique_ptr<vector<CString> > img(new vector<CString>());
-		GetPostImage(m_lzls[pNMLV->iItem]).GetImage(*img);
+		CGetPostImages(m_lzls[pNMLV->iItem]).operator()(*img);
 		explorerDlg->ViewImages(std::move(img));
 	}
 

@@ -355,10 +355,7 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 	// 违规图片
 	BOOL updateImage = &plan == theApp.m_plan.get() && plan.m_updateImage;
 	if (updateImage)
-	{
-		g_leagalImage.clear();
-		g_illegalImage.clear();
-	}
+		theApp.m_scanImage->ClearCache();
 
 	plan.PostChange();
 

@@ -29,10 +29,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "TBMConfig.h"
 #include <TBMCoreConfig.h>
+#include "ConfigHelper.h"
+
 #include <TiebaOperate.h>
 #include <TBMScan.h>
 #include <TBMOperate.h>
 
+#include "ScanImage.h"
 #include "TBMScanListeners.h"
 #include "TBMOperateListeners.h"
 #include "TBMListeners.h"
@@ -95,13 +98,13 @@ BOOL CTiebaManagerApp::InitInstance()
 	//SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
 
 
-	// 初始化
-	init();
-
-
-	// 载入主窗口
 	CTiebaManagerDlg dlg;
 	m_pMainWnd = &dlg;
+
+	// 初始化
+	Init(dlg);
+
+	// 载入主窗口
 	dlg.DoModal();
 	m_pMainWnd = NULL;
 
@@ -112,7 +115,7 @@ BOOL CTiebaManagerApp::InitInstance()
 }
 
 // 异常处理
-static LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
+LONG WINAPI CTiebaManagerApp::ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 {
 	CFile file;
 	if (file.Open(_T("exception.dmp"), CFile::modeCreate | CFile::modeWrite))
@@ -129,7 +132,7 @@ static LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 }
 
 // 初始化
-void CTiebaManagerApp::init()
+void CTiebaManagerApp::Init(CTiebaManagerDlg& mainDlg)
 {
 	// 添加异常处理
 	SetUnhandledExceptionFilter(ExceptionHandler);
@@ -151,24 +154,32 @@ void CTiebaManagerApp::init()
 		&& StrStrI(cd, tmpDir) != NULL)
 		AfxMessageBox(_T("请先解压再运行，否则无法保存设置"), MB_ICONINFORMATION);
 
-	// 初始化各模块
+	// 初始化各模块 ////////////////////////////////////////////////////////////////
+
+	// 各种设置
 	m_globalConfig.reset(new CGlobalConfig());
 	m_userConfig.reset(new CUserConfig());
 	m_cookieConfig.reset(new CCookieConfig());
 	m_plan.reset(new CPlan());
 	m_userCache.reset(new CUserCache());
 
+	// 外部模块
 	m_tiebaOperate.reset(new CTiebaOperate(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason));
-	m_operate.reset(new CTBMOperate(m_plan.get(), m_userCache.get(), m_tiebaOperate.get())); // 日志在对话框初始化时初始化
-	m_scan.reset(new CTBMScan(m_plan.get(), m_userCache.get(), m_operate.get())); // 日志在对话框初始化时初始化
-	m_tbmEventBus.reset(new CEventBus());
+	m_operate.reset(new CTBMOperate(m_plan.get(), m_userCache.get(), m_tiebaOperate.get(), &mainDlg.m_log));
+	m_scan.reset(new CTBMScan(m_plan.get(), m_userCache.get(), m_operate.get(), &mainDlg.m_log));
 
+	// 内部模块
+	m_tbmEventBus.reset(new CEventBus());
+	m_configHelper.reset(new CConfigHelper(m_globalConfig.get(), m_userConfig.get(), m_cookieConfig.get(),
+		m_userCache.get(), m_plan.get(), m_tbmEventBus.get()));
+	m_scanImage.reset(new CScanImage());
 	m_scanListeners.reset(new CTBMScanListeners(*m_scan));
 	m_operateListeners.reset(new CTBMOperateListeners(*m_operate));
 	m_tbmListeners.reset(new CTBMListeners());
 
+	// API、插件
 	m_tbmApi.reset(new CTBMAPI(m_tbmEventBus.get(), m_userCache.get(), m_tiebaOperate.get(), 
-		m_scan.get(), m_operate.get())); // 日志在对话框初始化时初始化
+		m_scan.get(), m_operate.get(), &mainDlg.m_log));
 	m_pluginManager.reset(new CPluginManager());
 	m_pluginManager->LoadDir(PLUGIN_PATH);
 }
@@ -178,10 +189,6 @@ int CTiebaManagerApp::ExitInstance()
 {
 	TRACE(_T("释放m_pluginManager\n"));
 	m_pluginManager = nullptr;
-	TRACE(_T("释放m_tbmApi\n"));
-	m_tbmApi = nullptr;
-	TRACE(_T("释放m_tbmEventBus\n"));
-	m_tbmEventBus = nullptr;
 	TRACE(_T("释放m_scan\n"));
 	m_scan = nullptr;
 	TRACE(_T("释放m_operate\n"));

@@ -36,7 +36,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <TiebaOperate.h>
 #include <TBMScan.h>
-#include <TBMOperate.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -177,13 +176,13 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 
 	// 初始化日志
 	m_log.Init();
-	theApp.m_scan->m_log = &m_log;
-	theApp.m_operate->m_log = &m_log;
-	theApp.m_tbmApi->m_log = &m_log;
 
 	// 读取设置
+	theApp.m_tbmEventBus->AddListener(PostSetCurrentUserEvent, [this](CEventBase* event__) {
+		m_forumNameEdit.SetWindowText(*theApp.m_userConfig->m_forumName); // 显示贴吧名
+	});
 	theApp.m_globalConfig->Load(GLOBAL_CONFIG_PATH);
-	SetCurrentUser(theApp.m_globalConfig->m_currentUser, FALSE);
+	theApp.m_configHelper->SetCurrentUser(theApp.m_globalConfig->m_currentUser, FALSE);
 	
 	// 自动更新
 	if (theApp.m_globalConfig->m_autoUpdate)
@@ -252,7 +251,7 @@ void CTiebaManagerDlg::OnClose()
 	while (theApp.m_scan->IsScanning())
 		Delay(100);
 
-	theApp.m_tbmApi->m_log = NULL;
+	//theApp.m_tbmApi->m_log = NULL;
 	if (theApp.m_plan->m_autoSaveLog)
 		m_log.Save(_T("Log"));
 	m_log.Release();
@@ -265,7 +264,7 @@ void CTiebaManagerDlg::OnDestroy()
 {
 	CNormalDlg::OnDestroy();
 
-	SaveCurrentUserConfig();
+	theApp.m_configHelper->SaveCurrentUserConfig();
 	theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
 	theApp.m_plan->Save(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
 

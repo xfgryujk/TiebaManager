@@ -102,7 +102,7 @@ bool CLoopBan::Uninit()
 	// 保存配置
 	if (CTBMAPI::GetInstance().GetTiebaOperate()->HasSetTieba())
 	{
-		CString currentUserDir = CTBMAPI::GetCurrentUserDir();
+		CString currentUserDir = CTBMAPI::GetInstance().GetCurrentUserDir();
 		m_config.Save(currentUserDir + _T("options2.xml"));
 	}
 	return true;
@@ -127,7 +127,7 @@ void CLoopBan::OnConfig()
 void CLoopBan::OnPostSetTieba(CEventBase* event__)
 {
 	// 载入配置
-	CString currentUserDir = CTBMAPI::GetCurrentUserDir();
+	CString currentUserDir = CTBMAPI::GetInstance().GetCurrentUserDir();
 	m_config.Load(currentUserDir + _T("options2.xml"));
 
 	// 开始循环封
@@ -145,7 +145,7 @@ void CLoopBan::OnPostBan(CEventBase* event__)
 		{
 			m_config.m_userList->push_back(event_->m_op.author);
 			m_config.m_pidList->push_back(_T(""));
-			CString currentUserDir = CTBMAPI::GetCurrentUserDir();
+			CString currentUserDir = CTBMAPI::GetInstance().GetCurrentUserDir();
 			DeleteFile(currentUserDir + _T("LoopBanDate.xml"));
 		}
 	}
@@ -167,7 +167,7 @@ static CString GetPIDFromUser(const CString& userName)
 void CLoopBan::LoopBanThread()
 {
 	ILog& log = *CTBMAPI::GetInstance().GetLog();
-	CString currentUserDir = CTBMAPI::GetCurrentUserDir();
+	CString currentUserDir = CTBMAPI::GetInstance().GetCurrentUserDir();
 	CTiebaOperate& tiebaOperate = *CTBMAPI::GetInstance().GetTiebaOperate();
 	CTBMOperate& operate = *CTBMAPI::GetInstance().GetOperate();
 

@@ -30,6 +30,8 @@ protected:
 public:
 	CTBMScanListeners(CTBMScan& scan);
 
+	BOOL CheckIllegal(const CString& content, const CString& author, const CString& authorLevel, 
+		CString& msg, BOOL& forceToConfirm, int& pos, int& length);
 	void OnCheckThreadIllegal(CEventBase* event__);
 	void OnCheckPostIllegal(CEventBase* event__);
 	void OnCheckLzlIllegal(CEventBase* event__);

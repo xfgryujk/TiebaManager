@@ -24,6 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMScanEvent.h>
 
 #include "TBMConfig.h"
+#include <GetImages.h>
 #include "ScanImage.h"
 
 #include "TiebaManager.h"
@@ -56,7 +57,8 @@ CTBMScanListeners::CTBMScanListeners(CTBMScan& scan) :
 
 
 // 检查违规
-static BOOL CheckIllegal(const CString& content, const CString& author, const CString& authorLevel, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
+BOOL CTBMScanListeners::CheckIllegal(const CString& content, const CString& author, const CString& authorLevel, 
+	CString& msg, BOOL& forceToConfirm, int& pos, int& length)
 {
 	theApp.m_plan->m_optionsLock.Lock();
 
@@ -136,19 +138,19 @@ void CTBMScanListeners::OnCheckLzlIllegal(CEventBase* event__)
 void CTBMScanListeners::OnCheckThreadImageIllegal(CEventBase* event__)
 {
 	CCheckThreadIllegalEvent* event_ = (CCheckThreadIllegalEvent*)event__;
-	event_->result = CheckImageIllegal(event_->m_thread.author, GetThreadImage(event_->m_thread), event_->m_msg);
+	event_->result = theApp.m_scanImage->CheckImageIllegal(event_->m_thread.author, CGetThreadImages(event_->m_thread), event_->m_msg);
 }
 
 void CTBMScanListeners::OnCheckPostImageIllegal(CEventBase* event__)
 {
 	CCheckPostIllegalEvent* event_ = (CCheckPostIllegalEvent*)event__;
-	event_->result = CheckImageIllegal(event_->m_post.author, GetPostImage(event_->m_post), event_->m_msg);
+	event_->result = theApp.m_scanImage->CheckImageIllegal(event_->m_post.author, CGetPostImages(event_->m_post), event_->m_msg);
 }
 
 void CTBMScanListeners::OnCheckLzlImageIllegal(CEventBase* event__)
 {
 	CCheckPostIllegalEvent* event_ = (CCheckPostIllegalEvent*)event__;
-	event_->result = CheckImageIllegal(event_->m_post.author, GetPostImage(event_->m_post), event_->m_msg);
+	event_->result = theApp.m_scanImage->CheckImageIllegal(event_->m_post.author, CGetPostImages(event_->m_post), event_->m_msg);
 }
 
 
@@ -210,9 +212,14 @@ void CTBMScanListeners::OnScanPostThreadEnd(CEventBase* event__)
 void CTBMScanListeners::OnPreScanThread(CEventBase* event__)
 {
 	CPreScanThreadEvent* event_ = (CPreScanThreadEvent*)event__;
+	// 检查信任主题
 	theApp.m_plan->m_optionsLock.Lock();
-	if (theApp.m_plan->m_trustedThread->find(event_->m_thread.tid) != theApp.m_plan->m_trustedThread->end()) // 信任
+	if (theApp.m_plan->m_trustedThread->find(event_->m_thread.tid) != theApp.m_plan->m_trustedThread->end())
+	{
 		event_->canceled = TRUE;
+		theApp.m_plan->m_optionsLock.Unlock();
+		return;
+	}
 	theApp.m_plan->m_optionsLock.Unlock();
 
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)theApp.m_pMainWnd;

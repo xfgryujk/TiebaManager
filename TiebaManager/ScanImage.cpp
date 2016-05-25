@@ -19,86 +19,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "ScanImage.h"
-#include <ImageHelper.h>
-#include "TBMConfig.h"
-#include "TBMConfigPath.h"
 #include <opencv2\imgproc\imgproc.hpp>
-#include "TiebaManager.h"
+
+#include <ImageHelper.h>
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
 
-
-set<CString> g_leagalImage; // 已检查不违规的图片
-set<CString> g_illegalImage; // 已检查违规的图片
-
-
-// 1是图片地址
-static const wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
-// 2是图片地址
-static const wregex POST_IMG_REG(_T("<img .*?class=\"(BDE_Image|j_user_sign)\".*?src=\"(.*?)\".*?>"));
-
-
-// 从目录读取图片到images
-void ReadImages(const CString& dir, vector<CPlan::NameImage>& images)
-{
-	vector<CString> imagePath;
-
-	if (dir == _T(""))
-	{
-		images.clear();
-		return;
-	}
-	CFileFind fileFind;
-	static const TCHAR* IMG_EXT[] = { _T("\\*.jpg"), _T("\\*.png"), _T("\\*.gif"), _T("\\*.jpeg"), _T("\\*.bmp") };
-	for (int i = 0; i < _countof(IMG_EXT); i++)
-	{
-		BOOL flag = fileFind.FindFile(dir + IMG_EXT[i]);
-		while (flag)
-		{
-			flag = fileFind.FindNextFile();
-			imagePath.push_back(fileFind.GetFilePath());
-		}
-	}
-
-	images.resize(imagePath.size());
-	UINT imgCount = 0;
-	for (CString& i : imagePath)
-	{
-		images[imgCount].name = GetImageName(i);
-		if (ReadImage(i, images[imgCount].img))
-			imgCount++;
-	}
-	if (imagePath.size() != imgCount)
-	{
-		images.resize(imgCount);
-		CString msg;
-		msg.Format(_T("%u张图片加载失败！"), imagePath.size() - imgCount);
-		AfxMessageBox(msg, MB_ICONINFORMATION);
-	}
-}
-
-
-// 从主题预览取图片地址
-void GetThreadImage::GetImage(vector<CString>& img)
-{
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_preview, (LPCTSTR)m_preview + m_preview.GetLength(), THREAD_IMG_REG), 
-		end; it != end; ++it)
-		img.push_back((*it)[1].str().c_str());
-}
-
-// 从帖子取图片地址
-void GetPostImage::GetImage(vector<CString>& img)
-{
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_content, (LPCTSTR)m_content + m_content.GetLength(), POST_IMG_REG), 
-		end; it != end; ++it)
-		img.push_back((*it)[2].str().c_str());
-	if (m_portrait != _T(""))
-		img.push_back(_T("http://tb.himg.baidu.com/sys/portrait/item/") + m_portrait);
-}
+#include "TBMConfig.h"
+#include "TBMConfigPath.h"
+#include "TiebaManager.h"
 
 
 // 检查图片违规1，检测信任用户、获取图片地址
-BOOL CheckImageIllegal(const CString& author, GetImagesBase& getImage, CString& msg)
+BOOL CScanImage::CheckImageIllegal(const CString& author, std::function<void(vector<CString>&)> getImages, CString& msg)
 {
 	if (theApp.m_plan->m_images.empty())
 		return FALSE;
@@ -113,12 +46,73 @@ BOOL CheckImageIllegal(const CString& author, GetImagesBase& getImage, CString& 
 	theApp.m_plan->m_optionsLock.Unlock();
 
 	vector<CString> imgs;
-	getImage.GetImage(imgs);
+	getImages(imgs);
 	return DoCheckImageIllegal(imgs, msg);
 }
 
+// 检查图片违规2，下载图片、比较图片
+BOOL CScanImage::DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
+{
+	for (const CString& img : imgs)
+	{
+		CString imgName = GetImageName(img);
+
+		// 检查缓存结果
+		if (m_leagalImage.find(imgName) != m_leagalImage.end())
+			continue;
+		if (m_illegalImage.find(imgName) != m_illegalImage.end())
+			return TRUE;
+
+		// 读取图片
+		Mat image;
+		if (PathFileExists(IMG_CACHE_PATH + imgName))
+		{
+			// 读取图片缓存
+			ReadImage(IMG_CACHE_PATH + imgName, image);
+		}
+		else
+		{
+			// 下载图片
+			unique_ptr<BYTE[]> buffer;
+			ULONG size;
+			if (HTTPGetRaw(img, &buffer, &size) == NET_SUCCESS)
+			{
+				ReadImage(buffer.get(), size, image);
+
+				CreateDir(IMG_CACHE_PATH);
+				CFile file;
+				if (file.Open(IMG_CACHE_PATH + imgName, CFile::modeCreate | CFile::modeWrite))
+					file.Write(buffer.get(), size);
+			}
+		}
+
+		if (image.data == NULL || image.cols < 30 || image.rows < 30) // 尺寸太小不比较
+			continue;
+		// 判断和违规图片比较大于阈值
+		theApp.m_plan->m_optionsLock.Lock();
+		for (const auto& i : theApp.m_plan->m_images)
+		{
+			if (i.img.cols < 30 || i.img.rows < 30) // 尺寸太小不比较
+				continue;
+			double mssim = GetMSSIM(image, i.img);
+			if (mssim > theApp.m_plan->m_SSIMThreshold)
+			{
+				msg.Format(_T("<font color=red> 触发违规图片 </font>%s<font color=red> 相似度%.3lf</font>"),
+					(LPCTSTR)i.name, mssim);
+				m_illegalImage.insert(imgName);
+				theApp.m_plan->m_optionsLock.Unlock();
+				return TRUE;
+			}
+		}
+		m_leagalImage.insert(imgName);
+		theApp.m_plan->m_optionsLock.Unlock();
+	}
+
+	return FALSE;
+}
+
 // SSIM算法比较图片
-static double getMSSIM(const Mat& i1, const Mat& i2)
+double CScanImage::GetMSSIM(const cv::Mat& i1, const cv::Mat& i2)
 {
 	static const double C1 = 6.5025, C2 = 58.5225;
 	static const int d = CV_32F;
@@ -191,63 +185,8 @@ static double getMSSIM(const Mat& i1, const Mat& i2)
 	}
 }
 
-// 检查图片违规2，下载图片、比较图片
-BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
+void CScanImage::ClearCache()
 {
-	for (const CString& img : imgs)
-	{
-		CString imgName = GetImageName(img);
-
-		// 检查缓存结果
-		if (g_leagalImage.find(imgName) != g_leagalImage.end())
-			continue;
-		if (g_illegalImage.find(imgName) != g_illegalImage.end())
-			return TRUE;
-
-		// 读取图片
-		Mat image;
-		if (PathFileExists(IMG_CACHE_PATH + imgName))
-		{
-			// 读取图片缓存
-			ReadImage(IMG_CACHE_PATH + imgName, image);
-		}
-		else
-		{
-			// 下载图片
-			unique_ptr<BYTE[]> buffer;
-			ULONG size;
-			if (HTTPGetRaw(img, &buffer, &size) == NET_SUCCESS)
-			{
-				ReadImage(buffer.get(), size, image);
-
-				CreateDir(IMG_CACHE_PATH);
-				CFile file;
-				if (file.Open(IMG_CACHE_PATH + imgName, CFile::modeCreate | CFile::modeWrite))
-					file.Write(buffer.get(), size);
-			}
-		}
-
-		if (image.data == NULL || image.cols < 30 || image.rows < 30) // 尺寸太小不比较
-			continue;
-		// 判断和违规图片比较大于阈值
-		theApp.m_plan->m_optionsLock.Lock();
-		for (const auto& i : theApp.m_plan->m_images)
-		{
-			if (i.img.cols < 30 || i.img.rows < 30) // 尺寸太小不比较
-				continue;
-			double mssim = getMSSIM(image, i.img);
-			if (mssim > theApp.m_plan->m_SSIMThreshold)
-			{
-				msg.Format(_T("<font color=red> 触发违规图片 </font>%s<font color=red> 相似度%.3lf</font>"),
-					(LPCTSTR)i.name, mssim);
-				g_illegalImage.insert(imgName);
-				theApp.m_plan->m_optionsLock.Unlock();
-				return TRUE;
-			}
-		}
-		g_leagalImage.insert(imgName);
-		theApp.m_plan->m_optionsLock.Unlock();
-	}
-
-	return FALSE;
+	m_leagalImage.clear();
+	m_illegalImage.clear();
 }

@@ -30,7 +30,6 @@ class CTBMOperate;
 class TIEBA_MANAGER_API CTBMAPI
 {
 	friend class CTiebaManagerApp;
-	friend class CTiebaManagerDlg;
 
 protected:
 	// 可以注册事件监听，见TBMEvent.h
@@ -47,8 +46,8 @@ protected:
 public:
 	static CTBMAPI& GetInstance();
 
-	static CString GetCurrentUserDir();
-	static CString GetImgCacheDir();
+	CString GetCurrentUserDir();
+	CString GetImgCacheDir();
 
 	CEventBus* GetEventBus() { return m_eventBus; }
 	ILog* GetLog() { return m_log; }

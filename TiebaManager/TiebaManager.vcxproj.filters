@@ -201,6 +201,9 @@
     <ClInclude Include="TBMListeners.h">
       <Filter>头文件\Event</Filter>
     </ClInclude>
+    <ClInclude Include="API\GetImages.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -316,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="TBMListeners.cpp">
       <Filter>源文件\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="GetImages.cpp">
+      <Filter>源文件\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

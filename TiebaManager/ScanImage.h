@@ -18,42 +18,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include <TiebaClawer.h>
-#include "TBMConfig.h"
+#include <functional>
+namespace cv { class Mat; }
 
 
-extern set<CString> g_leagalImage; // 已检查不违规的图片
-extern set<CString> g_illegalImage; // 已检查违规的图片
-
-
-void ReadImages(const CString& dir, vector<CPlan::NameImage>& images);
-
-class GetImagesBase
+class CScanImage
 {
-public:
-	virtual ~GetImagesBase() {}
-	virtual void GetImage(vector<CString>& img) = 0;
-};
+protected:
+	set<CString> m_leagalImage; // 已检查不违规的图片
+	set<CString> m_illegalImage; // 已检查违规的图片
 
-class GetThreadImage : public GetImagesBase
-{
-private:
-	const CString& m_preview;
 public:
-	GetThreadImage(const ThreadInfo& thread) : m_preview(thread.preview) {}
-	GetThreadImage(const CString& preview) : m_preview(preview) {}
-	void GetImage(vector<CString>& img);
-};
-
-class GetPostImage : public GetImagesBase
-{
-private:
-	const CString& m_content, m_portrait;
+	// 检查图片违规1，检测信任用户、获取图片地址
+	BOOL CheckImageIllegal(const CString& author, std::function<void(vector<CString>&)> getImages, CString& msg);
+	// 检查图片违规2，下载图片、比较图片
+	BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg);
+protected:
+	double GetMSSIM(const cv::Mat& i1, const cv::Mat& i2);
 public:
-	GetPostImage(const PostInfo& post) : m_content(post.content), m_portrait(post.authorPortrait) {}
-	GetPostImage(const CString& content, const CString& portrait) : m_content(content), m_portrait(portrait) {}
-	void GetImage(vector<CString>& img);
+	void ClearCache();
 };
-
-BOOL CheckImageIllegal(const CString& author, GetImagesBase& getImage, CString& msg);
-BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg);

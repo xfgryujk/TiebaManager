@@ -38,11 +38,13 @@ class CUserConfig;
 class CCookieConfig;
 class CPlan;
 class CUserCache;
+class CConfigHelper;
 
 class CTiebaOperate;
 class CTBMScan;
 class CTBMOperate;
 
+class CScanImage;
 class CTBMScanListeners;
 class CTBMOperateListeners;
 class CTBMListeners;
@@ -50,6 +52,8 @@ class CTBMListeners;
 class CEventBus;
 class CTBMAPI;
 class CPluginManager;
+
+class CTiebaManagerDlg;
 
 class CTiebaManagerApp : public CWinApp
 {
@@ -67,12 +71,14 @@ public:
 	unique_ptr<CCookieConfig> m_cookieConfig;
 	unique_ptr<CPlan> m_plan;
 	unique_ptr<CUserCache> m_userCache;
+	unique_ptr<CConfigHelper> m_configHelper;
 
 	unique_ptr<CTiebaOperate> m_tiebaOperate;
 	unique_ptr<CTBMScan> m_scan;
 	unique_ptr<CTBMOperate> m_operate;
 	unique_ptr<CEventBus> m_tbmEventBus;
 
+	unique_ptr<CScanImage> m_scanImage;
 	unique_ptr<CTBMScanListeners> m_scanListeners;
 	unique_ptr<CTBMOperateListeners> m_operateListeners;
 	unique_ptr<CTBMListeners> m_tbmListeners;
@@ -80,7 +86,9 @@ public:
 	unique_ptr<CTBMAPI> m_tbmApi;
 	unique_ptr<CPluginManager> m_pluginManager;
 
-	void init();
+private:
+	static LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo);
+	void Init(CTiebaManagerDlg& mainDlg);
 
 	DECLARE_MESSAGE_MAP()
 };

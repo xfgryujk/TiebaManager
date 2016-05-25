@@ -20,6 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "TiebaManagerCommon.h"
 #include <EventHelper.h>
+class CGetThreadImages;
+class CGetPostImages;
 
 
 enum TIEBA_MANAGER_API TBMEventID
@@ -28,10 +30,23 @@ enum TIEBA_MANAGER_API TBMEventID
 	MainDialogCloseEvent,			// CEventBase，主对话框关闭
 	MainDialogDestroyEvent,			// CEventBase，主对话框销毁
 
+	PreSetCurrentUserEvent,			// CSetCurrentUserEvent，准备设置当前用户
+	PostSetCurrentUserEvent,		// CSetCurrentUserEvent，设置当前用户后
 	PreSetTiebaEvent,				// CSetTiebaEvent，准备确认贴吧
 	PostSetTiebaEvent,				// CSetTiebaEvent，确认贴吧成功后
 
+	GetThreadImagesEvent,			// CGetThreadImagesEvent，取主题中的图片，可以自己设置m_img然后取消事件
+	GetPostImagesEvent,				// CGetPostImagesEvent，取帖子或楼中楼中的图片，可以自己设置m_img然后取消事件
+
 	OpenLinkInLogEvent				// COpenLinkEvent，打开日志中的链接
+};
+
+class TIEBA_MANAGER_API CSetCurrentUserEvent : public CEventBase
+{
+public:
+	const CString& m_userName;
+
+	CSetCurrentUserEvent(const CString& userName);
 };
 
 class TIEBA_MANAGER_API CSetTiebaEvent : public CEventBase
@@ -40,6 +55,24 @@ public:
 	const CString& m_forumName;
 
 	CSetTiebaEvent(const CString& forumName);
+};
+
+class TIEBA_MANAGER_API CGetThreadImagesEvent : public CEventBase
+{
+public:
+	const CGetThreadImages& m_getThreadImages;
+	vector<CString>& m_img;
+
+	CGetThreadImagesEvent(const CGetThreadImages& getThreadImages, vector<CString>& img);
+};
+
+class TIEBA_MANAGER_API CGetPostImagesEvent : public CEventBase
+{
+public:
+	const CGetPostImages& m_getPostImages;
+	vector<CString>& m_img;
+
+	CGetPostImagesEvent(const CGetPostImages& getPostImages, vector<CString>& img);
 };
 
 class TIEBA_MANAGER_API COpenLinkEvent : public CEventBase
