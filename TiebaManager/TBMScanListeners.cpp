@@ -58,9 +58,6 @@ CTBMScanListeners::CTBMScanListeners(CTBMScan& scan) :
 // 检查违规
 static BOOL CheckIllegal(const CString& content, const CString& author, const CString& authorLevel, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
 {
-	msg = _T("");
-	forceToConfirm = FALSE;
-	pos = length = 0;
 	theApp.m_plan->m_optionsLock.Lock();
 
 	// 信任用户

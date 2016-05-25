@@ -81,6 +81,9 @@ void CTBMScan::ScanThreadImage()
 		__int64 tid = _ttoi64(thread.tid);
 		if (m_userCache->m_ignoredTID.find(tid) == m_userCache->m_ignoredTID.end())
 		{
+			msg = _T("");
+			forceToConfirm = FALSE;
+			pos = length = 0;
 			CCheckThreadIllegalEvent event_(thread, msg, forceToConfirm, pos, length);
 			event_.result = FALSE;
 			if (m_eventBus.Post(CheckThreadImageIllegalEvent, event_) && event_.result)
@@ -143,6 +146,9 @@ void CTBMScan::ScanThread(CString sPage)
 				__int64 tid = _ttoi64(thread.tid);
 				if (m_userCache->m_ignoredTID.find(tid) == m_userCache->m_ignoredTID.end())
 				{
+					msg = _T("");
+					forceToConfirm = FALSE;
+					pos = length = 0;
 					CCheckThreadIllegalEvent event_(thread, msg, forceToConfirm, pos, length);
 					event_.result = FALSE;
 					if (m_eventBus.Post(CheckThreadIllegalEvent, event_) && event_.result)
@@ -346,6 +352,9 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		__int64 pid = _ttoi64(post.pid);
 		if (m_userCache->m_ignoredPID.find(pid) == m_userCache->m_ignoredPID.end())
 		{
+			msg = _T("");
+			forceToConfirm = FALSE;
+			pos = length = 0;
 			CCheckPostIllegalEvent event_(post, msg, forceToConfirm, pos, length);
 			event_.result = FALSE;
 			if (m_eventBus.Post(CheckPostIllegalEvent, event_) && event_.result)
@@ -364,6 +373,9 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 	{
 		if (m_stopScanFlag)
 			return FALSE;
+		msg = _T("");
+		forceToConfirm = FALSE;
+		pos = length = 0;
 		CCheckPostIllegalEvent event_(lzl, msg, forceToConfirm, pos, length);
 		event_.result = FALSE;
 		if (m_eventBus.Post(CheckLzlIllegalEvent, event_) && event_.result)
@@ -388,6 +400,9 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		__int64 pid = _ttoi64(post.pid);
 		if (m_userCache->m_ignoredPID.find(pid) == m_userCache->m_ignoredPID.end())
 		{
+			msg = _T("");
+			forceToConfirm = FALSE;
+			pos = length = 0;
 			CCheckPostIllegalEvent event_(post, msg, forceToConfirm, pos, length);
 			event_.result = FALSE;
 			if (m_eventBus.Post(CheckPostImageIllegalEvent, event_) && event_.result)
@@ -409,6 +424,9 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		__int64 pid = _ttoi64(lzl.pid);
 		if (m_userCache->m_ignoredLZLID.find(pid) == m_userCache->m_ignoredLZLID.end())
 		{
+			msg = _T("");
+			forceToConfirm = FALSE;
+			pos = length = 0;
 			CCheckPostIllegalEvent event_(lzl, msg, forceToConfirm, pos, length);
 			event_.result = FALSE;
 			if (m_eventBus.Post(CheckLzlImageIllegalEvent, event_) && event_.result)
