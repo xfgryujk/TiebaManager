@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include <TBMOperateEvent.h>
+#include <TiebaClawer.h>
 
 
 COperateEvent::COperateEvent(const Operation& op) :

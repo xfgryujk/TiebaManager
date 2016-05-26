@@ -19,33 +19,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TiebaManagerCommon.h"
-struct ThreadInfo;
-struct PostInfo;
+#include <TiebaClawer.h>
 
 
-class TIEBA_MANAGER_API CGetImagesBase
+class TIEBA_MANAGER_API CGetImages
 {
 public:
-	virtual ~CGetImagesBase() = default;
-	virtual void operator () (vector<CString>& img) = 0;
-};
+	const TBObject& m_object;
 
-class TIEBA_MANAGER_API CGetThreadImages : public CGetImagesBase
-{
-private:
-	const CString& m_preview;
-public:
-	CGetThreadImages(const ThreadInfo& thread);
-	CGetThreadImages(const CString& preview);
-	void operator () (vector<CString>& img);
-};
-
-class TIEBA_MANAGER_API CGetPostImages : public CGetImagesBase
-{
-private:
-	const CString& m_content, m_portrait;
-public:
-	CGetPostImages(const PostInfo& post);
-	CGetPostImages(const CString& content, const CString& portrait);
-	void operator () (vector<CString>& img);
+	CGetImages(const TBObject& object);
+	virtual ~CGetImages() = default;
+	virtual void operator () (vector<CString>& img);
 };

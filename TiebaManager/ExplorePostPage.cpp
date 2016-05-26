@@ -106,7 +106,7 @@ void CExplorePostPage::OnBnClickedButton1()
 		m_list.SetItemText(index, 2, i.author);
 	}
 	exploreLzlPage.m_list.DeleteAllItems();
-	for (const PostInfo& i : exploreLzlPage.m_lzls)
+	for (const LzlInfo& i : exploreLzlPage.m_lzls)
 	{
 		int index = exploreLzlPage.m_list.GetItemCount();
 		exploreLzlPage.m_list.InsertItem(index, i.floor);
@@ -128,7 +128,7 @@ void CExplorePostPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 		explorerDlg->m_edit.SetWindowText(m_posts[pNMLV->iItem].content + 
 			_T("\r\n\r\n") + m_posts[pNMLV->iItem].author);
 		unique_ptr<vector<CString> > img(new vector<CString>());
-		CGetPostImages(m_posts[pNMLV->iItem]).operator()(*img);
+		CGetImages(m_posts[pNMLV->iItem]).operator()(*img);
 		explorerDlg->ViewImages(std::move(img));
 	}
 

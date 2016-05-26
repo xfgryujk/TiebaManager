@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "TBMOperateListeners.h"
 
+#include <TiebaClawer.h>
 #include <TBMOperate.h>
 #include <TBMOperateEvent.h>
 

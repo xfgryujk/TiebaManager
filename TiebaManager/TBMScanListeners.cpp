@@ -117,40 +117,40 @@ BOOL CTBMScanListeners::CheckIllegal(const CString& content, const CString& auth
 void CTBMScanListeners::OnCheckThreadIllegal(CEventBase* event__)
 {
 	CCheckThreadIllegalEvent* event_ = (CCheckThreadIllegalEvent*)event__;
-	event_->result = CheckIllegal(event_->m_thread.title + _T("\r\n") + event_->m_thread.preview, event_->m_thread.author, 
+	event_->result = CheckIllegal(event_->m_thread.GetContent(), event_->m_thread.author, 
 		_T(""), event_->m_msg, event_->m_forceToConfirm, event_->m_pos, event_->m_length);
 }
 
 void CTBMScanListeners::OnCheckPostIllegal(CEventBase* event__)
 {
 	CCheckPostIllegalEvent* event_ = (CCheckPostIllegalEvent*)event__;
-	event_->result = CheckIllegal(event_->m_post.content, event_->m_post.author, event_->m_post.authorLevel, 
+	event_->result = CheckIllegal(event_->m_post.GetContent(), event_->m_post.author, event_->m_post.authorLevel,
 		event_->m_msg, event_->m_forceToConfirm, event_->m_pos, event_->m_length);
 }
 
 void CTBMScanListeners::OnCheckLzlIllegal(CEventBase* event__)
 {
-	CCheckPostIllegalEvent* event_ = (CCheckPostIllegalEvent*)event__;
-	event_->result = CheckIllegal(event_->m_post.content, event_->m_post.author, _T(""),
+	CCheckLzlIllegalEvent* event_ = (CCheckLzlIllegalEvent*)event__;
+	event_->result = CheckIllegal(event_->m_lzl.GetContent(), event_->m_lzl.author, _T(""),
 		event_->m_msg, event_->m_forceToConfirm, event_->m_pos, event_->m_length);
 }
 
 void CTBMScanListeners::OnCheckThreadImageIllegal(CEventBase* event__)
 {
 	CCheckThreadIllegalEvent* event_ = (CCheckThreadIllegalEvent*)event__;
-	event_->result = theApp.m_scanImage->CheckImageIllegal(event_->m_thread.author, CGetThreadImages(event_->m_thread), event_->m_msg);
+	event_->result = theApp.m_scanImage->CheckImageIllegal(event_->m_thread.author, CGetImages(event_->m_thread), event_->m_msg);
 }
 
 void CTBMScanListeners::OnCheckPostImageIllegal(CEventBase* event__)
 {
 	CCheckPostIllegalEvent* event_ = (CCheckPostIllegalEvent*)event__;
-	event_->result = theApp.m_scanImage->CheckImageIllegal(event_->m_post.author, CGetPostImages(event_->m_post), event_->m_msg);
+	event_->result = theApp.m_scanImage->CheckImageIllegal(event_->m_post.author, CGetImages(event_->m_post), event_->m_msg);
 }
 
 void CTBMScanListeners::OnCheckLzlImageIllegal(CEventBase* event__)
 {
-	CCheckPostIllegalEvent* event_ = (CCheckPostIllegalEvent*)event__;
-	event_->result = theApp.m_scanImage->CheckImageIllegal(event_->m_post.author, CGetPostImages(event_->m_post), event_->m_msg);
+	CCheckLzlIllegalEvent* event_ = (CCheckLzlIllegalEvent*)event__;
+	event_->result = theApp.m_scanImage->CheckImageIllegal(event_->m_lzl.author, CGetImages(event_->m_lzl), event_->m_msg);
 }
 
 

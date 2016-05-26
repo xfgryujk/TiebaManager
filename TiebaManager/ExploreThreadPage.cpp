@@ -120,7 +120,7 @@ void CExploreThreadPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 		explorerDlg->m_edit.SetWindowText(m_threads[pNMLV->iItem].title + _T("\r\n") 
 			+ m_threads[pNMLV->iItem].preview + _T("\r\n\r\n") + m_threads[pNMLV->iItem].author);
 		unique_ptr<vector<CString> > img(new vector<CString>());
-		CGetThreadImages(m_threads[pNMLV->iItem]).operator()(*img);
+		CGetImages(m_threads[pNMLV->iItem]).operator()(*img);
 		explorerDlg->ViewImages(std::move(img));
 	}
 

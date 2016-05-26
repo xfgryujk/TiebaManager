@@ -35,32 +35,79 @@ const wregex TBS_REG(_T("tbs('|\")?:\\s*('|\")(.*?)('|\")"));
 #pragma endregion
 
 
-// 主题信息
-struct ThreadInfo
+class TIEBA_API_API TBObject
 {
+public:
+	enum TBObjectType { THREAD, POST, LZL };
+	TBObjectType m_type;
+	
+	CString rawData;
 	CString tid;		// 主题ID
+	CString author;		// 作者
+	CString authorID;	// 作者ID
+
+	
+	TBObject(TBObjectType type);
+	virtual ~TBObject() = default;
+
+	// 返回标题+预览或内容什么的
+	virtual CString GetContent() const = 0;
+};
+
+// 主题信息
+class TIEBA_API_API ThreadInfo : public TBObject
+{
+public:
 	CString reply;		// 回复数
 	CString title;		// 标题
 	CString preview;	// 预览
-	CString author;		// 作者
-	CString authorID;	// 作者ID
 	CString lastAuthor; // 最后回复
+
+
+	ThreadInfo();
+	virtual ~ThreadInfo() = default;
+
+	// 返回标题+预览
+	virtual CString GetContent() const;
 };
 
 // 帖子信息
-struct PostInfo
+class TIEBA_API_API PostInfo : public TBObject
 {
+public:
 	CString pid;			// 帖子ID
 	CString floor;			// 楼层
-	CString author;			// 作者
-	CString authorID;		// 作者ID
 	CString authorLevel;	// 作者等级
 	CString authorPortrait;	// 作者头像哈希
 	CString content;		// 内容
+
+
+	PostInfo();
+	virtual ~PostInfo() = default;
+
+	// 返回内容
+	virtual CString GetContent() const;
+};
+
+// 楼中楼信息
+class TIEBA_API_API LzlInfo : public TBObject
+{
+public:
+	CString cid;			// 楼中楼ID
+	CString floor;			// 楼层
+	CString authorPortrait;	// 作者头像哈希
+	CString content;		// 内容
+
+
+	LzlInfo();
+	virtual ~LzlInfo() = default;
+
+	// 返回内容
+	virtual CString GetContent() const;
 };
 
 
-TIEBA_API_API BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& threads);
+TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThread, vector<ThreadInfo>& threads);
 enum GetPostsResult { GET_POSTS_SUCCESS, GET_POSTS_TIMEOUT, GET_POSTS_DELETED };
 TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, vector<PostInfo>& posts);
-TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const vector<PostInfo>& posts, vector<PostInfo>& lzls);
+TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const vector<PostInfo>& posts, vector<LzlInfo>& lzls);

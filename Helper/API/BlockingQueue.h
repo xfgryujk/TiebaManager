@@ -46,7 +46,7 @@ public:
 	void push(T&& value)
 	{
 		std::lock_guard<decltype(m_lock)> lock(m_lock);
-		queue::push(value);
+		queue::push(std::move(value));
 		m_cond.notify_one();
 	}
 
@@ -62,7 +62,7 @@ public:
 		if (empty()) // 意外唤醒？
 			return POP_UNEXPECTED;
 
-		out = front();
+		out = std::move(front());
 		queue::pop();
 		return POP_OK;
 	}

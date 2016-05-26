@@ -27,21 +27,31 @@ CCheckIllegalEventBase::CCheckIllegalEventBase(CString& msg, BOOL& forceToConfir
 	m_pos(pos),
 	m_length(length)
 {
-
+	result = FALSE;
+	m_msg = _T("");
+	m_forceToConfirm = FALSE;
+	m_pos = m_length = 0;
 }
 
 CCheckThreadIllegalEvent::CCheckThreadIllegalEvent(const ThreadInfo& thread, CString& msg, BOOL& forceToConfirm, int& pos, int& length) :
 	CCheckIllegalEventBase(msg, forceToConfirm, pos, length),
 	m_thread(thread)
 {
-
+	
 }
 
 CCheckPostIllegalEvent::CCheckPostIllegalEvent(const PostInfo& post, CString& msg, BOOL& forceToConfirm, int& pos, int& length) :
 	CCheckIllegalEventBase(msg, forceToConfirm, pos, length),
 	m_post(post)
 {
+	
+}
 
+CCheckLzlIllegalEvent::CCheckLzlIllegalEvent(const LzlInfo& lzl, CString& msg, BOOL& forceToConfirm, int& pos, int& length) :
+	CCheckIllegalEventBase(msg, forceToConfirm, pos, length),
+	m_lzl(lzl)
+{
+	
 }
 
 CScanPostThreadEvent::CScanPostThreadEvent(int threadID) :

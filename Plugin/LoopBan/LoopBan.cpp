@@ -33,6 +33,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
 
+#include <TiebaClawer.h>
 #include <TiebaOperate.h>
 #include <TBMCoreConfig.h>
 #include <TBMOperate.h>
@@ -140,10 +141,10 @@ void CLoopBan::OnPostBan(CEventBase* event__)
 	// 自动循环封
 	if (m_config.m_autoLoopBan)
 	{
-		auto it = std::find(m_config.m_userList->cbegin(), m_config.m_userList->cend(), event_->m_op.author);
+		auto it = std::find(m_config.m_userList->cbegin(), m_config.m_userList->cend(), event_->m_op.object->author);
 		if (it == m_config.m_userList->cend())
 		{
-			m_config.m_userList->push_back(event_->m_op.author);
+			m_config.m_userList->push_back(event_->m_op.object->author);
 			m_config.m_pidList->push_back(_T(""));
 			CString currentUserDir = CTBMAPI::GetInstance().GetCurrentUserDir();
 			DeleteFile(currentUserDir + _T("LoopBanDate.xml"));

@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include <TBMEvent.h>
-#include <GetImages.h>
+#include <TiebaClawer.h>
 
 
 CSetCurrentUserEvent::CSetCurrentUserEvent(const CString& userName) : 
@@ -34,18 +34,25 @@ CSetTiebaEvent::CSetTiebaEvent(const CString& forumName) :
 
 }
 
-CGetThreadImagesEvent::CGetThreadImagesEvent(const CGetThreadImages& getThreadImages, vector<CString>& img) : 
-	m_getThreadImages(getThreadImages),
+CGetThreadImagesEvent::CGetThreadImagesEvent(const ThreadInfo& thread, vector<CString>& img) :
+	m_thread(thread),
 	m_img(img)
 {
-
+	result = FALSE;
 }
 
-CGetPostImagesEvent::CGetPostImagesEvent(const CGetPostImages& getPostImages, vector<CString>& img) :
-	m_getPostImages(getPostImages),
+CGetPostImagesEvent::CGetPostImagesEvent(const PostInfo& post, vector<CString>& img) :
+	m_post(post),
 	m_img(img)
 {
+	result = FALSE;
+}
 
+CGetLzlImagesEvent::CGetLzlImagesEvent(const LzlInfo& lzl, vector<CString>& img) :
+	m_lzl(lzl),
+	m_img(img)
+{
+	result = FALSE;
 }
 
 COpenLinkEvent::COpenLinkEvent(const CString& url) :

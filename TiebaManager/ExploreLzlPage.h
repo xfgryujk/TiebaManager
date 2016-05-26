@@ -45,5 +45,5 @@ public:
 
 
 public:
-	vector<PostInfo> m_lzls;
+	vector<LzlInfo> m_lzls;
 };

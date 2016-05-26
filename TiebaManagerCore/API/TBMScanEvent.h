@@ -29,8 +29,8 @@ enum TIEBA_MANAGER_CORE_API TBMScanEventID
 	CheckThreadImageIllegalEvent,	// CCheckThreadIllegalEvent，使用result
 	CheckPostIllegalEvent,			// CCheckPostIllegalEvent，使用result
 	CheckPostImageIllegalEvent,		// CCheckPostIllegalEvent，使用result
-	CheckLzlIllegalEvent,			// CCheckPostIllegalEvent，使用result
-	CheckLzlImageIllegalEvent,		// CCheckPostIllegalEvent，使用result
+	CheckLzlIllegalEvent,			// CCheckLzlIllegalEvent，使用result
+	CheckLzlImageIllegalEvent,		// CCheckLzlIllegalEvent，使用result
 
 	ScanThreadStartEvent,			// CEventBase，总扫描线程开始
 	ScanThreadEndEvent,				// CEventBase，总扫描线程结束
@@ -69,7 +69,15 @@ class TIEBA_MANAGER_CORE_API CCheckPostIllegalEvent : public CCheckIllegalEventB
 public:
 	const PostInfo& m_post;
 
-	CCheckPostIllegalEvent(const PostInfo& m_post, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
+	CCheckPostIllegalEvent(const PostInfo& post, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
+};
+
+class TIEBA_MANAGER_CORE_API CCheckLzlIllegalEvent : public CCheckIllegalEventBase
+{
+public:
+	const LzlInfo& m_lzl;
+
+	CCheckLzlIllegalEvent(const LzlInfo& lzl, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
 };
 
 class TIEBA_MANAGER_CORE_API CScanPostThreadEvent : public CEventBase

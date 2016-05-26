@@ -101,22 +101,16 @@ BOOL CConfirmDlg::OnInitDialog()
 	if (m_operation != NULL)
 	{
 		SetWindowText(m_operation->title);
-		m_contentEdit.SetWindowText(m_operation->msg + _T("\r\n\r\n作者：") + m_operation->author);
+		m_contentEdit.SetWindowText(m_operation->object->GetContent() + _T("\r\n\r\n作者：") + m_operation->object->author);
 		m_contentEdit.SetSel(m_operation->pos, m_operation->pos + m_operation->length);
 
-		if (m_operation->object != Operation::TBOBJ_LZL)
+		unique_ptr<vector<CString> > img(new vector<CString>());
+		CGetImages(*m_operation->object)(*img);
+		if (!img->empty())
 		{
-			unique_ptr<vector<CString> > img(new vector<CString>());
-			if (m_operation->object == Operation::TBOBJ_THREAD)
-				CGetThreadImages(m_operation->msg)(*img);
-			else //if (m_operation->object == TBOBJ_POST)
-				CGetPostImages(m_operation->msg, m_operation->authorPortrait)(*img);
-			if (!img->empty())
-			{
-				m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);
-				m_imageViewDlg->Create(m_imageViewDlg->IDD, this);
-				m_imageViewDlg->SetImages(std::move(img));
-			}
+			m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);
+			m_imageViewDlg->Create(m_imageViewDlg->IDD, this);
+			m_imageViewDlg->SetImages(std::move(img));
 		}
 	}
 	MessageBeep(MB_ICONQUESTION);
@@ -132,12 +126,21 @@ void CConfirmDlg::OnBnClickedButton1()
 		return;
 
 	CString url;
-	if (m_operation->object == Operation::TBOBJ_THREAD) // 主题
-		url = _T("http://tieba.baidu.com/p/") + m_operation->tid;
-	else if (m_operation->object == Operation::TBOBJ_POST) // 帖子
-		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s#%s"), (LPCTSTR)m_operation->tid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid);
-	else /*if (op.object == TBOBJ_POST)*/ // 楼中楼
-		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), (LPCTSTR)m_operation->tid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid, (LPCTSTR)m_operation->pid);
+	if (m_operation->object->m_type == TBObject::THREAD) // 主题
+		url = _T("http://tieba.baidu.com/p/") + m_operation->object->tid;
+	else if (m_operation->object->m_type == TBObject::POST) // 帖子
+	{
+		PostInfo* post = (PostInfo*)m_operation->object.get();
+		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s#%s"), (LPCTSTR)post->tid,
+			(LPCTSTR)post->pid, (LPCTSTR)post->pid);
+	}
+	else /*if (m_operation->object->m_type == TBObject::LZL)*/ // 楼中楼
+	{
+		assert(m_operation->object->m_type == TBObject::LZL);
+		LzlInfo* lzl = (LzlInfo*)m_operation->object.get();
+		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), (LPCTSTR)lzl->tid, 
+			(LPCTSTR)lzl->cid, (LPCTSTR)lzl->cid, (LPCTSTR)lzl->cid);
+	}
 
 	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }

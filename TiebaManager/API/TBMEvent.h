@@ -20,8 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "TiebaManagerCommon.h"
 #include <EventHelper.h>
-class CGetThreadImages;
-class CGetPostImages;
+class ThreadInfo;
+class PostInfo;
+class LzlInfo;
 
 
 enum TIEBA_MANAGER_API TBMEventID
@@ -35,8 +36,9 @@ enum TIEBA_MANAGER_API TBMEventID
 	PreSetTiebaEvent,				// CSetTiebaEvent，准备确认贴吧
 	PostSetTiebaEvent,				// CSetTiebaEvent，确认贴吧成功后
 
-	GetThreadImagesEvent,			// CGetThreadImagesEvent，取主题中的图片，可以自己设置m_img然后取消事件
-	GetPostImagesEvent,				// CGetPostImagesEvent，取帖子或楼中楼中的图片，可以自己设置m_img然后取消事件
+	GetThreadImagesEvent,			// CGetThreadImagesEvent，取主题中的图片，把result设为TRUE不使用默认的取图片
+	GetPostImagesEvent,				// CGetPostImagesEvent，取帖子中的图片，把result设为TRUE不使用默认的取图片
+	GetLzlImagesEvent,				// CGetLzlImagesEvent，取楼中楼中的图片，把result设为TRUE不使用默认的取图片
 
 	OpenLinkInLogEvent				// COpenLinkEvent，打开日志中的链接
 };
@@ -60,19 +62,28 @@ public:
 class TIEBA_MANAGER_API CGetThreadImagesEvent : public CEventBase
 {
 public:
-	const CGetThreadImages& m_getThreadImages;
+	const ThreadInfo& m_thread;
 	vector<CString>& m_img;
 
-	CGetThreadImagesEvent(const CGetThreadImages& getThreadImages, vector<CString>& img);
+	CGetThreadImagesEvent(const ThreadInfo& thread, vector<CString>& img);
 };
 
 class TIEBA_MANAGER_API CGetPostImagesEvent : public CEventBase
 {
 public:
-	const CGetPostImages& m_getPostImages;
+	const PostInfo& m_post;
 	vector<CString>& m_img;
 
-	CGetPostImagesEvent(const CGetPostImages& getPostImages, vector<CString>& img);
+	CGetPostImagesEvent(const PostInfo& post, vector<CString>& img);
+};
+
+class TIEBA_MANAGER_API CGetLzlImagesEvent : public CEventBase
+{
+public:
+	const LzlInfo& m_lzl;
+	vector<CString>& m_img;
+
+	CGetLzlImagesEvent(const LzlInfo& lzl, vector<CString>& img);
 };
 
 class TIEBA_MANAGER_API COpenLinkEvent : public CEventBase

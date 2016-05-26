@@ -88,8 +88,49 @@ const TCHAR LZL_DURING_TIME_RIGHT[] = _T("}");
 #pragma endregion
 
 
+#pragma region TBObject
+TBObject::TBObject(TBObjectType type) : m_type(type)
+{
+
+}
+
+
+ThreadInfo::ThreadInfo() : TBObject(THREAD)
+{
+
+}
+
+CString ThreadInfo::GetContent() const
+{
+	return title + _T("\r\n") + preview;
+}
+
+
+PostInfo::PostInfo() : TBObject(POST)
+{
+
+}
+
+CString PostInfo::GetContent() const
+{
+	return content;
+}
+
+
+LzlInfo::LzlInfo() : TBObject(LZL)
+{
+
+}
+
+CString LzlInfo::GetContent() const
+{
+	return content;
+}
+#pragma endregion
+
+
 // 取主题列表
-TIEBA_API_API BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<ThreadInfo>& threads)
+TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThread, vector<ThreadInfo>& threads)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=UTF-8&kw=") + EncodeURI(forumName)
 		+ _T("&pn=") + ignoreThread);
@@ -107,15 +148,17 @@ TIEBA_API_API BOOL GetThreads(LPCTSTR forumName, LPCTSTR ignoreThread, vector<Th
 	threads.resize(rawThreads.GetSize() - 1);
 	for (int iRawThreads = 1, iThreads = 0; iRawThreads < rawThreads.GetSize(); iRawThreads++, iThreads++)
 	{
+		threads[iThreads].rawData = rawThreads[iRawThreads];
 		//threads[iThreads].tid = GetStringBetween(rawThreads[iRawThreads], THREAD_TID_LEFT, THREAD_TID_RIGHT);
 		threads[iThreads].tid = GetStringBefore(rawThreads[iRawThreads], THREAD_TID_RIGHT);
+		//threads[iThreads].author = JSUnescape(GetStringBefore(rawThreads[iRawThreads], THREAD_AUTHOR_RIGHT));
+		threads[iThreads].author = JSUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_LEFT, THREAD_AUTHOR_RIGHT));
+		threads[iThreads].authorID = GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
+
 		threads[iThreads].reply = GetStringBetween(rawThreads[iRawThreads], THREAD_REPLY_LEFT, THREAD_REPLY_RIGHT);
 		threads[iThreads].title = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
 		threads[iThreads].preview = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT).Trim())
 			+ _T("\r\n") + GetStringBetween2(rawThreads[iRawThreads], THREAD_MEDIA_LEFT, THREAD_MEDIA_RIGHT);
-		threads[iThreads].authorID = GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
-		//threads[iThreads].author = JSUnescape(GetStringBefore(rawThreads[iRawThreads], THREAD_AUTHOR_RIGHT));
-		threads[iThreads].author = JSUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_LEFT, THREAD_AUTHOR_RIGHT));
 		threads[iThreads].lastAuthor = GetStringBetween(rawThreads[iRawThreads], THREAD_LAST_AUTHOR_LEFT, THREAD_LAST_AUTHOR_RIGHT);
 
 		//OutputDebugString(_T("\n"));
@@ -141,10 +184,13 @@ TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, c
 	posts.resize(rawPosts.GetSize() - 1);
 	for (int iRawPosts = 1, iPosts = 0; iRawPosts < rawPosts.GetSize(); iRawPosts++, iPosts++)
 	{
-		posts[iPosts].pid = GetStringBetween(rawPosts[iRawPosts], POST_PID_LEFT, POST_PID_RIGHT);
-		posts[iPosts].floor = GetStringBetween(rawPosts[iRawPosts], POST_FLOOR_LEFT, POST_FLOOR_RIGHT);
+		posts[iPosts].rawData = rawPosts[iRawPosts];
+		posts[iPosts].tid = tid;
 		posts[iPosts].author = JSUnescape(GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_LEFT, POST_AUTHOR_RIGHT));
 		posts[iPosts].authorID = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_ID_LEFT, POST_AUTHOR_ID_RIGHT);
+
+		posts[iPosts].pid = GetStringBetween(rawPosts[iRawPosts], POST_PID_LEFT, POST_PID_RIGHT);
+		posts[iPosts].floor = GetStringBetween(rawPosts[iRawPosts], POST_FLOOR_LEFT, POST_FLOOR_RIGHT);
 		posts[iPosts].authorLevel = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_LEVEL_LEFT, POST_AUTHOR_LEVEL_RIGHT);
 		posts[iPosts].authorPortrait = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_PORTRAIT_LEFT, POST_AUTHOR_PORTRAIT_RIGHT);
 
@@ -177,7 +223,7 @@ TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, c
 }
 
 // 取楼中楼列表
-TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const vector<PostInfo>& posts, vector<PostInfo>& lzls)
+TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const vector<PostInfo>& posts, vector<LzlInfo>& lzls)
 {
 	time_t timestamp;
 	time(&timestamp);
@@ -209,7 +255,7 @@ TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString
 		// 查找该层楼层
 		CString pid = (*it)[1].str().c_str(); // 该层PID
 		CString floor;
-		for (PostInfo post : posts)
+		for (const PostInfo& post : posts)
 		if (post.pid == pid)
 		{
 			floor = post.floor;
@@ -222,14 +268,18 @@ TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString
 		lzls.resize(lzls.size() + rawLzls.GetSize() - 1);
 		for (int iRawLzls = 1; iRawLzls < rawLzls.GetSize(); iRawLzls++, iLzls++)
 		{
-			lzls[iLzls].pid = GetStringBetween(rawLzls[iRawLzls], LZL_PID_LEFT, LZL_PID_RIGHT);
-			lzls[iLzls].floor = floor;
+			lzls[iLzls].rawData = rawLzls[iRawLzls];
+			lzls[iLzls].tid = tid;
 			lzls[iLzls].author = JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_AUTHOR_LEFT, LZL_AUTHOR_RIGHT));
 			lzls[iLzls].authorID = GetStringBetween(rawLzls[iRawLzls], LZL_AUTHOR_ID_LEFT, LZL_AUTHOR_ID_RIGHT);
-			lzls[iLzls].authorPortrait = portrait[lzls[iLzls].author];
-			lzls[iLzls].content = HTMLUnescape(JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_CONTENT_LEFT, LZL_CONTENT_RIGHT)));
 
-			if (GetStringBetween(rawLzls[iRawLzls], LZL_PTYPE_LEFT, LZL_PTYPE_RIGHT) == _T("1")) // 语音贴
+			lzls[iLzls].cid = GetStringBetween(rawLzls[iRawLzls], LZL_PID_LEFT, LZL_PID_RIGHT);
+			lzls[iLzls].floor = floor;
+			lzls[iLzls].authorPortrait = portrait[lzls[iLzls].author];
+
+			lzls[iLzls].content = HTMLUnescape(JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_CONTENT_LEFT, LZL_CONTENT_RIGHT)));
+			// 语音贴
+			if (GetStringBetween(rawLzls[iRawLzls], LZL_PTYPE_LEFT, LZL_PTYPE_RIGHT) == _T("1"))
 			{
 				lzls[iLzls].content += _T(R"(<div class="voice_player voice_player_mini voice_player_lzl"><a class="voice_player_inner" href="#"><span class="before">&nbsp;</span><span class="middle"><span class="speaker speaker_animate">&nbsp;</span><span class="time" style="width: 65px;"><span class="second">)");
 				lzls[iLzls].content += GetStringBetween(rawLzls[iRawLzls], LZL_DURING_TIME_LEFT, LZL_DURING_TIME_RIGHT);

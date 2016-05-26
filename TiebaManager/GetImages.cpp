@@ -32,51 +32,53 @@ static const wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
 static const wregex POST_IMG_REG(_T("<img .*?class=\"(BDE_Image|j_user_sign)\".*?src=\"(.*?)\".*?>"));
 
 
-CGetThreadImages::CGetThreadImages(const ThreadInfo& thread) : 
-	m_preview(thread.preview)
+CGetImages::CGetImages(const TBObject& object) :
+	m_object(object)
 {
 
 }
 
-CGetThreadImages::CGetThreadImages(const CString& preview) : 
-	m_preview(preview)
+void CGetImages::operator () (vector<CString>& img)
 {
-
-}
-
-// 从主题预览取图片地址
-void CGetThreadImages::operator () (vector<CString>& img)
-{
-	if (!theApp.m_tbmEventBus->Post(GetThreadImagesEvent, CGetThreadImagesEvent(*this, img)))
-		return;
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_preview, (LPCTSTR)m_preview + m_preview.GetLength(), THREAD_IMG_REG),
-		end; it != end; ++it)
-		img.push_back((*it)[1].str().c_str());
-}
-
-
-CGetPostImages::CGetPostImages(const PostInfo& post) : 
-	m_content(post.content), 
-	m_portrait(post.authorPortrait)
-{
-
-}
-
-CGetPostImages::CGetPostImages(const CString& content, const CString& portrait) : 
-	m_content(content), 
-	m_portrait(portrait)
-{
-
-}
-
-// 从帖子取图片地址
-void CGetPostImages::operator () (vector<CString>& img)
-{
-	if (!theApp.m_tbmEventBus->Post(GetPostImagesEvent, CGetPostImagesEvent(*this, img)))
-		return;
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)m_content, (LPCTSTR)m_content + m_content.GetLength(), POST_IMG_REG),
-		end; it != end; ++it)
-		img.push_back((*it)[2].str().c_str());
-	if (m_portrait != _T(""))
-		img.push_back(_T("http://tb.himg.baidu.com/sys/portrait/item/") + m_portrait);
+	if (m_object.m_type == TBObject::THREAD)
+	{
+		// 从主题预览取图片地址
+		ThreadInfo& thread = (ThreadInfo&)m_object;
+		CGetThreadImagesEvent event_(thread, img);
+		if (!theApp.m_tbmEventBus->Post(GetThreadImagesEvent, event_) || event_.result)
+			return;
+		for (std::regex_iterator<LPCTSTR> it((LPCTSTR)thread.preview, (LPCTSTR)thread.preview + thread.preview.GetLength(), THREAD_IMG_REG),
+			end; it != end; ++it)
+			img.push_back((*it)[1].str().c_str());
+	}
+	else
+	{
+		// 从帖子或楼中楼获取图片
+		CString content, portrait;
+		if (m_object.m_type == TBObject::POST)
+		{
+			PostInfo& post = (PostInfo&)m_object;
+			CGetPostImagesEvent event_(post, img);
+			if (!theApp.m_tbmEventBus->Post(GetPostImagesEvent, event_) || event_.result)
+				return;
+			content = post.GetContent();
+			portrait = post.authorPortrait;
+		}
+		else
+		{
+			assert(m_object.m_type == TBObject::LZL);
+			LzlInfo& lzl = (LzlInfo&)m_object;
+			CGetLzlImagesEvent event_(lzl, img);
+			if (!theApp.m_tbmEventBus->Post(GetLzlImagesEvent, event_) || event_.result)
+				return;
+			content = lzl.GetContent();
+			portrait = lzl.authorPortrait;
+		}
+		
+		for (std::regex_iterator<LPCTSTR> it((LPCTSTR)content, (LPCTSTR)content + content.GetLength(), POST_IMG_REG),
+			end; it != end; ++it)
+			img.push_back((*it)[2].str().c_str());
+		if (portrait != _T(""))
+			img.push_back(_T("http://tb.himg.baidu.com/sys/portrait/item/") + portrait);
+	}
 }
