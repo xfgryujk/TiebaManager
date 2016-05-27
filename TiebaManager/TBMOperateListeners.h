@@ -18,17 +18,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-class CTBMOperate;
 class CEventBase;
 
 
 class CTBMOperateListeners
 {
-protected:
-	CTBMOperate& m_operate;
-
 public:
-	CTBMOperateListeners(CTBMOperate& operate);
+	CTBMOperateListeners();
 
 	void OnComfirm(CEventBase* event__);
 };

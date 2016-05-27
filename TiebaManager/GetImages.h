@@ -18,11 +18,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include "TiebaManagerCommon.h"
 #include <TiebaClawer.h>
 
 
-class TIEBA_MANAGER_API CGetImages
+class CGetImages
 {
 public:
 	const TBObject& m_object;

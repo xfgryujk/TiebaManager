@@ -85,7 +85,7 @@ bool CDefriend::Uninit()
 
 void CDefriend::OnConfig()
 {
-	if (!CTBMAPI::GetInstance().GetTiebaOperate()->HasSetTieba())
+	if (!CTBMAPI::GetTiebaOperate()->HasSetTieba())
 	{
 		AfxMessageBox(_T("请先确认贴吧！"), MB_ICONERROR);
 		return;
@@ -116,7 +116,7 @@ void CDefriend::DefriendThread(CString startPage, CString endPage, BOOL defriend
 	if (!CoInitializeHelper())
 		return;
 
-	CTiebaOperate& tiebaOperate = *CTBMAPI::GetInstance().GetTiebaOperate();
+	CTiebaOperate& tiebaOperate = *CTBMAPI::GetTiebaOperate();
 
 
 	int iStartPage = _ttoi(startPage), iEndPage = _ttoi(endPage);
@@ -166,9 +166,9 @@ void CDefriend::DefriendThread(CString startPage, CString endPage, BOOL defriend
 
 void CDefriend::DoDefriend(int startPage, int endPage)
 {
-	ILog& log = *CTBMAPI::GetInstance().GetLog();
-	CTiebaOperate& tiebaOperate = *CTBMAPI::GetInstance().GetTiebaOperate();
-	CUserCache& userCache = *CTBMAPI::GetInstance().GetUserCache();
+	ILog& log = *CTBMAPI::GetLog();
+	CTiebaOperate& tiebaOperate = *CTBMAPI::GetTiebaOperate();
+	CUserCache& userCache = *CTBMAPI::GetUserCache();
 
 
 	// 获取拉黑列表

@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "ConfirmDlg.h"
 #include "ImageViewDlg.h"
-#include <GetImages.h>
+#include "GetImages.h"
 
 
 // CConfirmDlg 对话框

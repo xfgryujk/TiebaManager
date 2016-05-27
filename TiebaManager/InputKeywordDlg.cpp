@@ -21,7 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //
 
 #include "stdafx.h"
-#include "TiebaManager.h"
 #include "InputKeywordDlg.h"
 
 

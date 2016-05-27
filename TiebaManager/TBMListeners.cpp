@@ -32,8 +32,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 CTBMListeners::CTBMListeners()
 {
+	CEventBus& eventBus = *theApp.m_tbmEventBus;
 #define ADD_LISTENER(event_, listener) \
-	theApp.m_tbmEventBus->AddListener(event_, std::bind(&CTBMListeners::listener, this, std::placeholders::_1))
+	eventBus.AddListener(event_, std::bind(&CTBMListeners::listener, this, std::placeholders::_1))
 	ADD_LISTENER(OpenLinkInLogEvent, OnOpenLinkInLog);
 }
 

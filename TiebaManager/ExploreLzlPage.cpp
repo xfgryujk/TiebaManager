@@ -24,7 +24,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ExploreLzlPage.h"
 #include "ExplorerDlg.h"
 
-#include <GetImages.h>
+#include "GetImages.h"
 
 
 // CExploreLzlPage 对话框

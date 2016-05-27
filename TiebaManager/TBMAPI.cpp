@@ -19,25 +19,41 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include <TBMAPI.h>
+
 #include "TiebaManager.h"
 #include "TBMConfigPath.h"
 
 
-CTBMAPI::CTBMAPI(CEventBus* eventBus, CUserCache* userCache, CTiebaOperate* tiebaOperate, CTBMScan* scan, CTBMOperate* operate, ILog* log) :
-	m_eventBus(eventBus),
-	m_userCache(userCache),
-	m_tiebaOperate(tiebaOperate),
-	m_scan(scan),
-	m_operate(operate),
-	m_log(log)
+CEventBus* CTBMAPI::GetEventBus()
 {
-
+	return theApp.m_tbmEventBus.get();
 }
 
-CTBMAPI& CTBMAPI::GetInstance()
+ILog* CTBMAPI::GetLog()
 {
-	return *theApp.m_tbmApi;
+	return theApp.m_log;
 }
+
+CUserCache* CTBMAPI::GetUserCache()
+{
+	return theApp.m_userCache.get();
+}
+
+CTiebaOperate* CTBMAPI::GetTiebaOperate()
+{
+	return theApp.m_tiebaOperate.get();
+}
+
+CTBMScan* CTBMAPI::GetScan()
+{
+	return theApp.m_scan.get();
+}
+
+CTBMOperate* CTBMAPI::GetOperate()
+{
+	return theApp.m_operate.get();
+}
+
 
 CString CTBMAPI::GetCurrentUserDir()
 {

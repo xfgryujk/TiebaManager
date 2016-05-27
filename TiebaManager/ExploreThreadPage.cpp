@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ExplorerDlg.h"
 #include "ExplorePostPage.h"
 
-#include <GetImages.h>
+#include "GetImages.h"
 
 
 // CExploreThreadPage 对话框

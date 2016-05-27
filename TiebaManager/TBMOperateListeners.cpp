@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "TBMOperateListeners.h"
 
+#include "TiebaManager.h"
 #include <TiebaClawer.h>
 #include <TBMOperate.h>
 #include <TBMOperateEvent.h>
@@ -27,11 +28,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ConfirmDlg.h"
 
 
-CTBMOperateListeners::CTBMOperateListeners(CTBMOperate& operate) :
-	m_operate(operate)
+CTBMOperateListeners::CTBMOperateListeners()
 {
+	CEventBus& eventBus = theApp.m_operate->m_eventBus;
 #define ADD_LISTENER(event_, listener) \
-	m_operate.m_eventBus.AddListener(event_, std::bind(&CTBMOperateListeners::listener, this, std::placeholders::_1))
+	eventBus.AddListener(event_, std::bind(&CTBMOperateListeners::listener, this, std::placeholders::_1))
 	ADD_LISTENER(ComfirmEvent, OnComfirm);
 }
 

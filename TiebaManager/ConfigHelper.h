@@ -19,27 +19,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TBMConfig.h"
-class CEventBus;
 
 
 class CConfigHelper
 {
 public:
-	CGlobalConfig* m_globalConfig = NULL;
-	CUserConfig* m_userConfig = NULL;
-	CCookieConfig* m_cookieConfig = NULL;
-	CUserCache* m_userCache = NULL;
-	CPlan* m_plan = NULL;
-	CEventBus* m_tbmEventBus = NULL;
-
-
-	CConfigHelper(CGlobalConfig* globalConfig = NULL, CUserConfig* userConfig = NULL, CCookieConfig* cookieConfig = NULL, 
-		CUserCache* userCache = NULL, CPlan* plan = NULL, CEventBus* tbmEventBus = NULL);
-
 	// 保存当前账号配置
-	void SaveCurrentUserConfig();
+	static void SaveCurrentUserConfig();
 	// 设置当前账号
-	void SetCurrentUser(const CString& userName, BOOL save);
+	static void SetCurrentUser(const CString& userName, BOOL save);
 
 	// 从目录读取图片到images
 	static void ReadImages(const CString& dir, vector<CPlan::NameImage>& images);

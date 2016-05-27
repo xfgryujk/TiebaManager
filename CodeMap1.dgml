@@ -1,384 +1,242 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DirectedGraph DataVirtualized="True" GraphDirection="LeftToRight" Layout="Sugiyama" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
   <Nodes>
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'CACHE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.397885703926,-333.793183076747,296.396666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'CACHE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'COOKIE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398269818509,-223.313263643153,301.35,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'COOKIE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'CURRENT_USER_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398417930488,439.566954862706,373.486666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'CURRENT_USER_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'GLOBAL_CONFIG_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398876507962,384.326918851964,354.78,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'GLOBAL_CONFIG_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'IMG_CACHE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398257611477,108.126540433995,325.95,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'IMG_CACHE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'OPTIONS_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.397885703926,218.606887113683,335.896666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'OPTIONS_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'PLUGIN_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.397825482571,-278.553009736903,300.69,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'PLUGIN_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'POST_IMG_REG''&quot;)" Category="CodeSchema_Method" Bounds="196.420008913561,-168.073395479091,307.913333333333,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'POST_IMG_REG''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'THREAD_IMG_REG''&quot;)" Category="CodeSchema_Method" Bounds="195.398226280097,52.8866570111438,325.156666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'THREAD_IMG_REG''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'UPDATE_CURRENT_VERSION''&quot;)" Category="CodeSchema_Method" Bounds="195.39825842528,494.806945097081,385.243333333333,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'UPDATE_CURRENT_VERSION''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'USERS_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398557090644,-2.35333322323118,319.146666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'USERS_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic atexit destructor for 'USER_CONFIG_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.397805137519,273.846946012609,338.106666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'USER_CONFIG_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'CACHE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398305625801,-720.473236787684,253.756666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'CACHE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'COOKIE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.397804730618,-665.233185518153,258.71,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'COOKIE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'CURRENT_USER_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398593711738,163.36653066837,330.846666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'CURRENT_USER_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'GLOBAL_CONFIG_PATH''&quot;)" Category="CodeSchema_Method" Bounds="196.420262006009,-112.833435762294,312.14,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'GLOBAL_CONFIG_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'IMG_CACHE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398364728177,-499.513214815028,283.31,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'IMG_CACHE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'OPTIONS_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398275108222,-444.273224580653,293.256666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'OPTIONS_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'PLUGIN_PATH''&quot;)" Category="CodeSchema_Method" Bounds="479.154959271634,-720.473236787684,258.05,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'PLUGIN_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'POST_IMG_REG''&quot;)" Category="CodeSchema_Method" Bounds="484.108081423327,-665.233185518153,265.273333333333,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'POST_IMG_REG''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'THREAD_IMG_REG''&quot;)" Category="CodeSchema_Method" Bounds="195.39827236164,-554.753266084559,282.516666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'THREAD_IMG_REG''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'UPDATE_CURRENT_VERSION''&quot;)" Category="CodeSchema_Method" Bounds="195.398800417467,329.086928617589,342.603333333333,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'UPDATE_CURRENT_VERSION''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'USERS_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398442954902,-609.993256318934,276.506666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'USERS_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'USER_CONFIG_PATH''&quot;)" Category="CodeSchema_Method" Bounds="195.398041953925,-389.033173311122,295.466666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'USER_CONFIG_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Member=&quot;`dynamic initializer for 'WM_TASKBARCREATED''&quot;)" Category="CodeSchema_Method" Bounds="195.398112958157,-57.5933234576062,312.56,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'WM_TASKBARCREATED''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Type=&lt;lambda_3606be436a7c301c3e0189f8aefd85d0&gt;)" Category="CodeSchema_Class" Bounds="195.398327842388,660.046836696869,345.023333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_3606be436a7c301c3e0189f8aefd85d0‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Type=&lt;lambda_5e3c6c7a3c470142d16210afc950b98b&gt;)" Category="CodeSchema_Class" Bounds="195.398327842386,715.046837205442,346.3,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_5e3c6c7a3c470142d16210afc950b98b‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Type=&lt;lambda_75c4908c617d3397713bcc5f430ade55&gt;)" Category="CodeSchema_Class" Bounds="195.398327842383,770.046837714014,346.716666666667,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_75c4908c617d3397713bcc5f430ade55‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Type=&lt;lambda_b117207bb75151ff594b963dfeacdcac&gt;)" Category="CodeSchema_Class" Bounds="195.398327842387,605.046836188296,343.46,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_b117207bb75151ff594b963dfeacdcac‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@1 @7 Type=&lt;lambda_ed0b1d907c369ca9f4af26b8d3ad3c7f&gt;)" Category="CodeSchema_Class" Bounds="195.398327842383,550.046835679724,343.083333333334,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_ed0b1d907c369ca9f4af26b8d3ad3c7f‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@3 @7 Member=DllMain)" Category="CodeSchema_Method" Bounds="-306.715288020581,998.645815803276,80.46943392,25.2399923200002" DelayedCrossGroupLinksState="Fetched" Label="DllMain" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@3 @7 Type=&lt;lambda_02e71e20e8e964f15e08b6e0de0fca1c&gt;)" Category="CodeSchema_Class" Bounds="-1175.14445516131,1675.51236940849,343.8710048,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_02e71e20e8e964f15e08b6e0de0fca1c‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@3 @7 Type=&lt;lambda_48cbfcd08b82be74f50ed18258c0240a&gt;)" Category="CodeSchema_Class" Bounds="-801.272840334644,1675.51236940849,345.877607253334,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_48cbfcd08b82be74f50ed18258c0240a‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@3 @7 Type=&lt;lambda_8346b251c8f103cfe85ed56587b9abd8&gt;)" Category="CodeSchema_Class" Bounds="-425.399469027968,1674.62774659929,346.897574613333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_8346b251c8f103cfe85ed56587b9abd8‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@3 @7 Type=&lt;lambda_8c2c64fe59fc63ae72bfa7fc02070408&gt;)" Category="CodeSchema_Class" Bounds="-306.627685361979,1109.12584323929,336.167917973334,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_8c2c64fe59fc63ae72bfa7fc02070408‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@3 @7 Type=&lt;lambda_a1a5606fd0ab2f0f5be8221f54d9961e&gt;)" Category="CodeSchema_Class" Bounds="-805.807137895302,1620.51226940849,341.75107264,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_a1a5606fd0ab2f0f5be8221f54d9961e‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@3 @7 Type=&lt;lambda_b7fcd3ec334ccdc1c9f78cf5725d2b3e&gt;)" Category="CodeSchema_Class" Bounds="-1175.15011314864,1619.6313070365,339.337816533334,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_b7fcd3ec334ccdc1c9f78cf5725d2b3e‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@3 @7 Type=&lt;lambda_d3c6849f56711056b415c42553ea5187&gt;)" Category="CodeSchema_Class" Bounds="-1175.1409324553,1730.51246940849,348.107535893333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_d3c6849f56711056b415c42553ea5187‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@3 @7 Type=TBMOperateEventID)" Category="CodeSchema_Enum" Bounds="-306.727464112768,1053.88580603765,154.11707712,25.2399923199998" DelayedCrossGroupLinksState="Fetched" Label="TBMOperateEventID" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="(@3 @7 Type=TBMScanEventID)" Category="CodeSchema_Enum" Bounds="-196.245129225581,998.645815803276,134.33771008,25.2399923200002" DelayedCrossGroupLinksState="Fetched" Label="TBMScanEventID" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@11" Category="CodeSchema_Class" Bounds="-210.177420281378,-63.7456843273801,146.77,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CBlackListPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CBlackListPage))" Group="Collapsed" IsStronglyConnected="True" Label="CBlackListPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@12" Category="CodeSchema_Class" Bounds="-769.417282055305,1181.5927809483,196.122399573333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CCheckIllegalEventBase" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@13" Category="CodeSchema_Class" Bounds="-1010.71917704198,1238.6434990365,184.84609376,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CCheckLzlIllegalEvent" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@14" Category="CodeSchema_Class" Bounds="-1015.58876765531,1128.6432990365,194.592448533333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CCheckPostIllegalEvent" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@15" Category="CodeSchema_Class" Bounds="-1023.07134994864,1183.6433990365,209.568635946667,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CCheckThreadIllegalEvent" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@16" Category="CodeSchema_Class" Bounds="-213.952505490947,449.0268301929,145.446666666667,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CConfigHelper ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CConfigHelper))" Group="Collapsed" IsStronglyConnected="True" Label="CConfigHelper" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@17" Category="CodeSchema_Class" Bounds="-1408.63226060197,-628.597410159544,135.266666666666,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CConfirmDlg" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@18" Category="CodeSchema_Class" Bounds="-365.260179608214,-294.180578341387,155.3,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CExploreLzlPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CExploreLzlPage))" Group="Collapsed" IsStronglyConnected="True" Label="CExploreLzlPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@19" Category="CodeSchema_Class" Bounds="-620.492665454711,-411.98780154296,165.046666666667,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CExplorePostPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CExplorePostPage))" Group="Collapsed" IsStronglyConnected="True" Label="CExplorePostPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@2" Category="CodeSchema_Assembly" Bounds="-1811.40035172376,-800.474827217273,2600.78176648042,1635.52344208984" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="1" Group="Expanded" IsHubContainer="True" Label="TiebaManager.exe" />
-    <Node Id="@20" Category="CodeSchema_Class" Bounds="-894.159340551619,-320.354728906575,136.18,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CExplorerDlg ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CExplorerDlg))" Group="Collapsed" Hub="10" IsStronglyConnected="True" Label="CExplorerDlg" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@21" Category="CodeSchema_Class" Bounds="-809.385005490948,-497.973169807099,180.023333333334,25.0000000000001" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CExploreThreadPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CExploreThreadPage))" Group="Collapsed" IsStronglyConnected="True" Label="CExploreThreadPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@22" Category="CodeSchema_Class" Bounds="-206.565838824285,-593.973169807099,130.673333333334,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CGetImages" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@23" Category="CodeSchema_Class" Bounds="-245.759868378112,-120.939992492226,133.38,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CImagePage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CImagePage))" Group="Collapsed" IsStronglyConnected="True" Label="CImagePage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@24" Category="CodeSchema_Class" Bounds="-1164.13144677213,-518.003326930398,152.52,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CImageViewDlg" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@25" Category="CodeSchema_Class" Bounds="-320.632986120387,264.623399664048,158.11,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CKeywordListFile" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@26" Category="CodeSchema_Class" Bounds="-449.565540411383,149.500080228781,153.183333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CKeywordsPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CKeywordsPage))" Group="Collapsed" IsStronglyConnected="True" Label="CKeywordsPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@27" Category="CodeSchema_Class" Bounds="-745.046794055305,1424.51482140849,147.343960533333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="COperateEvent" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@28" Category="CodeSchema_Class" Bounds="-348.775839840139,74.4696151013765,143.173333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   COptionsPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=COptionsPage))" Group="Collapsed" IsStronglyConnected="True" Label="COptionsPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@29" Category="CodeSchema_Class" Bounds="-370.085005490948,527.0268301929,93.5900000000001,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CPlan ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CPlan))" Group="Collapsed" Hub="11" IsStronglyConnected="True" Label="CPlan" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@30" Category="CodeSchema_Class" Bounds="-764.513373861347,1039.5973249483,186.272714773334,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CPreScanThreadEvent" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@31" Category="CodeSchema_Class" Bounds="-400.219868378111,-147.451844217916,124.46,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CScanPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CScanPage))" Group="Collapsed" IsStronglyConnected="True" Label="CScanPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@32" Category="CodeSchema_Class" Bounds="-1008.81102623033,1073.6431990365,181.022882773333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CScanPostPageEvent" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@33" Category="CodeSchema_Class" Bounds="-529.212138070335,998.645599036499,192.532514453334,25.0000000000001" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CScanPostThreadEvent" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@34" Category="CodeSchema_Class" Bounds="-655.573494191685,21.8352256731966,129.976666666666,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CSettingDlg ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CSettingDlg))" Group="Collapsed" Hub="18" IsStronglyConnected="True" Label="CSettingDlg" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@35" Category="CodeSchema_Class" Bounds="-1430.30367179319,280.528861357488,114.473333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="节点“CTBMAPI”具有中心值 13。" Group="Collapsed" Hub="13" Label="CTBMAPI" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@36" Category="CodeSchema_Class" Bounds="-751.513283388639,1510.51206940849,160.28687968,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CTBMCoreConfig" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@37" Category="CodeSchema_Class" Bounds="-1386.80607189105,-11.7802026955767,145.683333333332,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CTBMListeners" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@38" Category="CodeSchema_Class" Bounds="-989.265666001976,1465.6362350365,141.90746784,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="节点“CTBMOperate”具有中心值 11。" Group="Collapsed" Hub="11" Label="CTBMOperate" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@39" Category="CodeSchema_Class" Bounds="-1659.08972771316,-249.117000754611,192.433333333332,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CTBMOperateListeners" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@4" Category="CodeSchema_Assembly" Bounds="-1215.2277113353,918.645342888641,1284.77231829332,876.867326519844" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="1" Group="Expanded" IsHubContainer="True" Label="TiebaManagerCore.dll" UseManualLocation="True" />
-    <Node Id="@40" Category="CodeSchema_Class" Bounds="-1175.2286609353,1281.6365430365,122.1281008,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="节点“CTBMScan”具有中心值 18。" Group="Collapsed" Hub="18" Label="CTBMScan" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@41" Category="CodeSchema_Class" Bounds="-1473.98803932657,612.870169402339,172.653333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="节点“CTBMScanListeners”具有中心值 15。" Group="Collapsed" Hub="15" Label="CTBMScanListeners" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@42" Category="CodeSchema_Class" Bounds="-1771.40035172376,312.0268301929,175.43,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="节点“CTiebaManagerApp”具有中心值 12。" Group="Collapsed" Hub="12" Label="CTiebaManagerApp" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@43" Category="CodeSchema_Class" Bounds="-1209.11239094747,154.126694781928,171.67,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="节点“CTiebaManagerDlg”具有中心值 10。" Group="Collapsed" Hub="10" Label="CTiebaManagerDlg" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@44" Category="CodeSchema_Class" Bounds="-663.407929376373,1308.43963257413,129.80785504,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CUserCache" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@45" Category="CodeSchema_Class" Bounds="-192.082585980024,-7.10316687912271,128.95,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CUsersPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CUsersPage))" Group="Collapsed" IsStronglyConnected="True" Label="CUsersPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@46" Category="CodeSchema_Class" Bounds="-701.487604615634,1253.43953257413,85.9892572799999,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="ILog" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
-    <Node Id="@47" Category="CodeSchema_Struct" Bounds="-491.549036295308,1368.6337590365,117.154926613333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="Operation" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@8" Category="CodeSchema_Namespace" Bounds="-1791.40035172376,-760.474727217273,2560.78176648043,1575.52324208984" DelayedChildNodesState="Incomplete" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="86" Group="Expanded" IsHubContainer="True" Label="‎::" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
-    <Node Id="@9" Category="CodeSchema_Namespace" Bounds="-1195.2277113353,958.645442888641,1244.77231829332,816.867126519845" DelayedChildNodesState="Incomplete" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="25" Group="Expanded" IsHubContainer="True" Label="‎::" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'CACHE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,356.2,296.396666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'CACHE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'COOKIE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,411.44,301.35,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'COOKIE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'CURRENT_USER_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,1129.56,373.486666666667,25.2399999999998" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'CURRENT_USER_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'GLOBAL_CONFIG_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,853.36,354.78,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'GLOBAL_CONFIG_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'IMG_CACHE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,963.84,325.95,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'IMG_CACHE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'OPTIONS_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,1019.08,335.896666666667,25.2399999999998" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'OPTIONS_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'PLUGIN_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1954.52583333333,356.2,300.69,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'PLUGIN_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'POST_IMG_REG''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,466.68,307.913333333333,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'POST_IMG_REG''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'THREAD_IMG_REG''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,687.64,325.156666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'THREAD_IMG_REG''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'UPDATE_CURRENT_VERSION''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,908.6,385.243333333333,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'UPDATE_CURRENT_VERSION''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'USERS_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,632.4,319.146666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'USERS_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic atexit destructor for 'USER_CONFIG_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,798.12,338.106666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic atexit destructor for 'USER_CONFIG_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'CACHE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1765.49916666667,80,253.756666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'CACHE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'COOKIE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1916.17916666667,135.24,258.71,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'COOKIE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'CURRENT_USER_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,742.88,330.846666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'CURRENT_USER_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'GLOBAL_CONFIG_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,521.92,312.14,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'GLOBAL_CONFIG_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'IMG_CACHE_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1940.64583333333,245.72,283.31,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'IMG_CACHE_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'OPTIONS_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,300.96,293.256666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'OPTIONS_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'PLUGIN_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,135.24,258.05,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'PLUGIN_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'POST_IMG_REG''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,190.48,265.273333333334,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'POST_IMG_REG''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'THREAD_IMG_REG''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,245.72,282.516666666666,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'THREAD_IMG_REG''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'UPDATE_CURRENT_VERSION''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,1074.32,342.603333333333,25.2399999999998" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'UPDATE_CURRENT_VERSION''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'USERS_DIR_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1923.4025,190.48,276.506666666666,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'USERS_DIR_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'USER_CONFIG_PATH''&quot;)" Category="CodeSchema_Method" Bounds="1951.38583333333,300.96,295.466666666667,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'USER_CONFIG_PATH''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Member=&quot;`dynamic initializer for 'WM_TASKBARCREATED''&quot;)" Category="CodeSchema_Method" Bounds="1628.12916666667,577.16,312.56,25.24" DelayedCrossGroupLinksState="Fetched" Label="`dynamic initializer for 'WM_TASKBARCREATED''" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Type=&lt;lambda_3606be436a7c301c3e0189f8aefd85d0&gt;)" Category="CodeSchema_Class" Bounds="1628.12916666667,1294.8,345.023333333334,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_3606be436a7c301c3e0189f8aefd85d0‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Type=&lt;lambda_5e3c6c7a3c470142d16210afc950b98b&gt;)" Category="CodeSchema_Class" Bounds="1628.12916666667,1349.8,346.3,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_5e3c6c7a3c470142d16210afc950b98b‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Type=&lt;lambda_75c4908c617d3397713bcc5f430ade55&gt;)" Category="CodeSchema_Class" Bounds="40,1411,346.716666666667,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_75c4908c617d3397713bcc5f430ade55‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Type=&lt;lambda_b117207bb75151ff594b963dfeacdcac&gt;)" Category="CodeSchema_Class" Bounds="1628.12916666667,1239.8,343.46,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_b117207bb75151ff594b963dfeacdcac‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Type=&lt;lambda_ed0b1d907c369ca9f4af26b8d3ad3c7f&gt;)" Category="CodeSchema_Class" Bounds="1628.12916666667,1184.8,343.083333333334,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="‎&lt;lambda_ed0b1d907c369ca9f4af26b8d3ad3c7f‎&gt;" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="(@1 @3 Type=TBMEventID)" Category="CodeSchema_Enum" Bounds="1628.12916666667,80,107.37,25.24" DelayedCrossGroupLinksState="Fetched" Label="TBMEventID" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@10" Category="CodeSchema_Class" Bounds="682.480833333334,270.5,136.18,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CExplorerDlg ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CExplorerDlg))" Group="Collapsed" Hub="14" IsStronglyConnected="True" Label="CExplorerDlg" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@11" Category="CodeSchema_Class" Bounds="857.25,270.5,180.023333333334,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CExploreThreadPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CExploreThreadPage))" Group="Collapsed" IsStronglyConnected="True" Label="CExploreThreadPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@12" Category="CodeSchema_Class" Bounds="1460.06916666667,258.5,130.673333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CGetImages" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@13" Category="CodeSchema_Class" Bounds="1091.22156184486,860.099733579676,133.38,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CImagePage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CImagePage))" Group="Collapsed" IsStronglyConnected="True" Label="CImagePage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@14" Category="CodeSchema_Class" Bounds="871.001666666667,112.5,152.52,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CImageViewDlg" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@15" Category="CodeSchema_Class" Bounds="1092.55495283019,1166.95517949163,158.11,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CKeywordListFile" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@16" Category="CodeSchema_Class" Bounds="968.615492662474,1071.82095758387,153.183333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CKeywordsPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CKeywordsPage))" Group="Collapsed" IsStronglyConnected="True" Label="CKeywordsPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@17" Category="CodeSchema_Class" Bounds="1140.18216981132,742.298845005252,143.173333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   COptionsPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=COptionsPage))" Group="Collapsed" IsStronglyConnected="True" Label="COptionsPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@18" Category="CodeSchema_Class" Bounds="1355.585639413,1060.84171907757,93.5900000000001,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CPlan ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CPlan))" Group="Collapsed" Hub="12" IsStronglyConnected="True" Label="CPlan" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@19" Category="CodeSchema_Class" Bounds="437.645738408577,1094.27532206606,131.886666666666,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CScanImage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@2" Category="CodeSchema_Assembly" Bounds="0,0,2295.21583333333,1476" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="1" Group="Expanded" IsHubContainer="True" Label="TiebaManager.exe" />
+    <Node Id="@20" Category="CodeSchema_Class" Bounds="1101.04843815514,797.298945005252,124.46,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CScanPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CScanPage))" Group="Collapsed" IsStronglyConnected="True" Label="CScanPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@21" Category="CodeSchema_Class" Bounds="685.582500000001,829.5,129.976666666666,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CSettingDlg ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CSettingDlg))" Group="Collapsed" Hub="27" IsStronglyConnected="True" Label="CSettingDlg" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@22" Category="CodeSchema_Class" Bounds="307.125927299497,654.780026847575,145.683333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CTBMListeners" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@23" Category="CodeSchema_Class" Bounds="451.458333333334,96.2283164308212,192.433333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CTBMOperateListeners" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@24" Category="CodeSchema_Class" Bounds="447.526109905523,848.157500353769,172.653333333333,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CTBMScanListeners" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@25" Category="CodeSchema_Class" Bounds="40,841.5,175.43,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="节点“CTiebaManagerApp”具有中心值 12。" Group="Collapsed" Hub="12" Label="CTiebaManagerApp" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@26" Category="CodeSchema_Class" Bounds="461.840000000001,741.5,171.67,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="节点“CTiebaManagerDlg”具有中心值 10。" Group="Collapsed" Hub="10" Label="CTiebaManagerDlg" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@27" Category="CodeSchema_Class" Bounds="1261.15144654088,593.414316703366,128.95,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CUsersPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CUsersPage))" Group="Collapsed" IsStronglyConnected="True" Label="CUsersPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@4" Category="CodeSchema_Namespace" Bounds="20,40,2255.21583333333,1416" DelayedChildNodesState="Incomplete" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="86" Group="Expanded" IsHubContainer="True" Label="‎::" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@5" Category="CodeSchema_Class" Bounds="1077.81796645702,915.099833579676,146.77,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CBlackListPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CBlackListPage))" Group="Collapsed" IsStronglyConnected="True" Label="CBlackListPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" UseManualLocation="True" />
+    <Node Id="@6" Category="CodeSchema_Class" Bounds="1452.6825,981.5,145.446666666667,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CConfigHelper ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CConfigHelper))" Group="Collapsed" IsStronglyConnected="True" Label="CConfigHelper" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@7" Category="CodeSchema_Class" Bounds="682.9375,100.5,135.266666666666,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="CConfirmDlg" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@8" Category="CodeSchema_Class" Bounds="1265.695,257.936329281982,155.3,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CExploreLzlPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CExploreLzlPage))" Group="Collapsed" IsStronglyConnected="True" Label="CExploreLzlPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
+    <Node Id="@9" Category="CodeSchema_Class" Bounds="1068.96083333333,198.69728557129,165.046666666667,25" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" ErrorMessage="找到的循环引用涉及:   CExplorePostPage ((Assembly=file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe Namespace=:: Type=CExplorePostPage))" Group="Collapsed" IsStronglyConnected="True" Label="CExplorePostPage" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" />
   </Nodes>
   <Links>
-    <Link Source="@11" Target="@34" Category="References" Bounds="-547.485046386719,-42.0889587402344,337.590072631836,59.1819591522217" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@13" Target="@12" Category="CodeSchema_Calls" Bounds="-864.1892281806,1208.61870808372,129.959182325887,30.0247909527779" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
-      <Category Ref="CodeSchema_BasedOn" />
-    </Link>
-    <Link Source="@14" Target="@12" Category="CodeSchema_Calls" Bounds="-859.995635407643,1153.6432990365,121.544787959718,26.0625283523002" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
-      <Category Ref="CodeSchema_BasedOn" />
-    </Link>
-    <Link Source="@15" Target="@12" Category="CodeSchema_Calls" Bounds="-813.500365308642,1194.98186789719,35.0833935783825,0.291349973927481" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
-      <Category Ref="CodeSchema_BasedOn" />
-    </Link>
-    <Link Source="@16" Target="@29" Category="References" Bounds="-280.926055908203,474.026824951172,118.252807617188,49.8805236816406" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3" />
-    <Link Source="@16" Target="@44" Category="References" Bounds="-587.615334679196,474.0268301929,439.728388938887,825.592038158565" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@17" Target="@22" Category="References" Bounds="-1273.3655939353,-614.145575001845,1057.8035005785,30.5272261562372" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@10" Target="@11" Category="References" Bounds="779.684753417969,253.75,125.203796386719,16.75" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@17" Target="@24" Category="References" Bounds="-1312.38895633872,-603.597410159544,187.660338691878,81.9907940275396" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="5">
+    <Link Source="@10" Target="@14" Category="References" Bounds="758.798706054688,140.471008300781,116.826293945313,130.028991699219" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="5">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@17" Target="@47" Category="References" Bounds="-2493.7480136961,-11.9487556239825,2844.04439506746,790.663201555884" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@18" Target="@20" Category="References" Bounds="-749.151794433594,-298.257354736328,417.565307617188,39.4908752441406" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2">
+    <Link Source="@10" Target="@8" Category="References" Bounds="798.889343261719,285.721496582031,487.793640136719,20.636474609375" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@18" Target="@22" Category="References" Bounds="-281.506751287365,-560.885750211467,130.225271944692,266.705171870079" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@10" Target="@9" Category="References" Bounds="757.062194824219,221.402465820313,303.367126464844,49.0975341796875" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@19" Target="@18" Category="References" Bounds="-511.404836996492,-386.98780154296,189.086683059189,88.9752855127902" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@19" Target="@20" Category="References" Bounds="-841.025756835938,-386.98779296875,280.969665527344,65.8822326660156" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
+    <Link Source="@11" Target="@10" Category="References" Bounds="787.954711914063,295.5,125.37890625,16.75" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="5">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@19" Target="@22" Category="References" Bounds="-510.718503953978,-565.220787613685,334.058061839268,153.232986070724" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@11" Target="@12" Category="References" Bounds="1037.27331542969,285.009002685547,438.564453125,5.3970947265625" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@2" Target="@8" Category="Contains" FetchingParent="@2" />
-    <Link Source="@20" Target="@18" Category="References" Bounds="-766.198669433594,-295.354736328125,450.967254638672,42.5361022949219" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@11" Target="@9" Category="References" Bounds="982.814378988352,226.682467706361,124.62656962255,43.817532293639" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@20" Target="@19" Category="References" Bounds="-778.156982421875,-383.991394042969,227.651733398438,63.6366577148438" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@13" Target="@21" Category="References" Bounds="810.684020996094,856.93994140625,280.537536621094,12.8970336914063" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
+    <Link Source="@15" Target="@18" Category="References" Bounds="1198.79437949038,1089.60166884366,168.224866969447,77.353510647969" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@16" Target="@15" Category="References" Bounds="1061.81564034762,1096.82095758387,85.9949109016488,64.7221371463388" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@20" Target="@21" Category="References" Bounds="-818.56054802518,-465.25812867326,87.0439652179026,144.903399766685" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@16" Target="@18" Category="References" Bounds="1121.79882599581,1075.05668392065,224.791062457995,6.90990464418473" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@16" Target="@21" Category="References" Bounds="764.517761230469,860.158081054688,259.838317871094,211.662841796875" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@17" Target="@21" Category="References" Bounds="823.15087890625,767.298828125,339.088745117188,63.6715087890625" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@20" Target="@24" Category="References" Bounds="-1064.13126785049,-487.580579293123,221.504631368227,167.225850386548" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="5">
+    <Link Source="@18" Target="@6" Category="CodeSchema_Calls" Bounds="1435.92163085938,1012.80718994141,78.779052734375,48.0344848632813" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@2" Target="@4" Category="Contains" FetchingParent="@2" />
+    <Link Source="@20" Target="@21" Category="References" Bounds="824.403930664063,811.164489746094,276.64453125,37.9949340820313" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@21" Target="@13" Category="References" Bounds="814.655517578125,852.367004394531,267.730834960938,11.298095703125" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@21" Target="@19" Category="References" Bounds="-693.001990656991,-472.973169807099,120.528661398455,57.1304985214749" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2">
+    <Link Source="@21" Target="@16" Category="References" Bounds="767.049682617188,854.5,259.956176757813,211.776245117188" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="5">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@21" Target="@20" Category="References" Bounds="-817.11083984375,-472.973175048828,86.7927856445313,144.968475341797" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="5">
+    <Link Source="@21" Target="@17" Category="References" Bounds="815.559143066406,768.327575683594,390.207458496094,70.3009643554688" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@21" Target="@22" Category="References" Bounds="-644.094150456227,-569.336956773883,429.776636938421,71.3637869667837" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@21" Target="@18" Category="References" Bounds="785.789827159795,854.5,572.890191703789,203.331402128728" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="11">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@23" Target="@34" Category="References" Bounds="-565.539794921875,-95.9399948120117,344.21110534668,112.805130004883" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@25" Target="@29" Category="References" Bounds="-316.721674941128,289.623399664048,71.2512082991507,228.810420193328" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@26" Target="@25" Category="References" Bounds="-358.707011015592,174.500080228781,96.092852015939,84.1923464888436" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
+    <Link Source="@21" Target="@19" Category="CodeSchema_Calls" Bounds="521.388019995415,854.5,217.522844441262,233.194065920296" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@21" Target="@20" Category="References" Bounds="815.559143066406,819.440185546875,276.757995605469,36.4425659179688" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@26" Target="@29" Category="References" Bounds="-371.328829113492,174.500080228781,45.2194724040251,343.603689724546" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@26" Target="@34" Category="References" Bounds="-555.069580078125,51.3267402648926,167.999694824219,98.1733360290527" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@27" Target="@47" Category="References" Bounds="-618.046346883413,1395.68765859169,122.984671859742,28.8271628167909" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@28" Target="@34" Category="References" Bounds="-518.452697753906,47.0966415405273,169.676849365234,32.8668823242188" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
+    <Link Source="@21" Target="@27" Category="References" Bounds="758.824829101563,621.440856933594,532.24072265625,208.059143066406" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@29" Target="@16" Category="CodeSchema_Calls" Bounds="-306.690185546875,477.586212158203,120.57958984375,49.4406433105469" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@29" Target="@36" Category="CodeSchema_BasedOn" Bounds="-663.936650561309,552.0268301929,336.218635131814,949.124549735064" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2">
+    <Link Source="@21" Target="@5" Category="References" Bounds="766.220092773438,854.5,327.908569335938,57.8361206054688" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@30" Target="@33" Category="CodeSchema_Calls" Bounds="-598.602983320481,1025.16911234003,83.9999378167995,14.428212608269" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
-      <Category Ref="CodeSchema_BasedOn" />
-    </Link>
-    <Link Source="@31" Target="@34" Category="References" Bounds="-575.182250976563,-122.451843261719,221.469329833984,139.139276504517" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@32" Target="@30" Category="CodeSchema_Calls" Bounds="-830.771819875104,1065.65648398688,61.0498024204603,8.41714344444995" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
-      <Category Ref="CodeSchema_BasedOn" />
-    </Link>
-    <Link Source="@34" Target="@11" Category="References" Bounds="-546.065307617188,-38.1074295043945,364.584213256836,59.9426555633545" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
+    <Link Source="@22" Target="@26" Category="References" Bounds="404.141293509846,679.780026847575,111.365557302252,57.5861160085414" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@23" Target="@7" Category="References" Bounds="643.891666666667,110.754021677345,30.0478273099353,0.632614322830932" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@34" Target="@23" Category="References" Bounds="-564.109558105469,-92.8055725097656,351.572387695313,114.640798568726" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@24" Target="@12" Category="References" Bounds="554.872458679308,288.100170819792,941.77816228527,560.057329533977" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="9">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@34" Target="@26" Category="References" Bounds="-574.891357421875,46.8352241516113,169.026184082031,97.8419761657715" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="5">
+    <Link Source="@24" Target="@18" Category="References" Bounds="584.898398812779,873.157500353769,763.462799532577,186.955992997351" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@24" Target="@19" Category="CodeSchema_Calls" Bounds="506.224531206402,873.157500353769,26.09119165815,212.185100693853" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3" />
+    <Link Source="@24" Target="@26" Category="References" Bounds="535.472707587585,775.425362548964,9.42568366768273,72.7321378048049" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="8" />
+    <Link Source="@25" Target="@18" Category="References" Bounds="200.356541060539,866.5,1146.38949345535,197.26823603934" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
+    <Link Source="@25" Target="@19" Category="References" Bounds="146.302359946261,866.5,331.231066939626,222.75290028901" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@34" Target="@28" Category="References" Bounds="-525.596801757813,39.8237915039063,170.851745605469,31.4899139404297" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@25" Target="@22" Category="References" Bounds="144.602092319808,685.134596929671,211.244559781808,156.365403070328" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@34" Target="@29" Category="References" Bounds="-583.971453480397,46.8352256731967,249.858709623383,472.236476730591" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="11">
+    <Link Source="@25" Target="@23" Category="References" Bounds="134.758740042369,129.069146291877,401.454218534645,712.430853708123" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@34" Target="@31" Category="References" Bounds="-592.692626953125,-117.96605682373,219.139282226563,139.80128288269" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@25" Target="@24" Category="References" Bounds="215.43,855.437843700381,223.097318834046,3.65706064478513" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@34" Target="@45" Category="References" Bounds="-536.704223632813,0.59209668636322,335.621643066406,21.2431293725967" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@25" Target="@26" Category="References" Bounds="180.21,768.584772643238,306.214788807458,72.9152273567619" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@34" Target="@46" Category="References" Bounds="-657.308268273214,46.8352256731966,66.0338863036587,1197.61795652729" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
+    <Link Source="@25" Target="@6" Category="References" Bounds="215.266131952711,862.769577778619,1228.46117994167,123.049075725617" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
+    <Link Source="@26" Target="@10" Category="References" Bounds="553.059708952584,303.765691061078,188.565748175697,437.734308938922" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@35" Target="@16" Category="References" Bounds="-1315.8410884112,300.856556264403,1093.56689291939,149.584462589907" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@35" Target="@29" Category="References" Bounds="-1320.07610219381,305.471646772108,942.398693417935,221.284485982555" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@35" Target="@37" Category="References" Bounds="-1370.53960317554,22.0412849358865,52.2641603961533,258.487576421602" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@35" Target="@38" Category="References" Bounds="-1146.94439567799,765.84286847754,397.108419028716,1133.59765237108" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4" />
-    <Link Source="@35" Target="@39" Category="References" Bounds="-1555.35730786008,-215.644605766746,177.81075164344,496.173467124234" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@35" Target="@40" Category="References" Bounds="-1148.61502590971,765.84286847754,205.673427590451,949.301421341806" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4" />
-    <Link Source="@35" Target="@41" Category="References" Bounds="-1386.71760663125,305.528861357488,13.1016790874723,298.349973409629" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@35" Target="@43" Category="References" Bounds="-1348.36513282616,183.190337972828,192.355501964265,97.3385233846599" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@35" Target="@44" Category="References" Bounds="-1363.6398177281,305.528861357488,750.289447855193,994.847954307557" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4" />
-    <Link Source="@35" Target="@46" Category="References" Bounds="-1363.88612590642,305.528861357488,690.884635933122,940.656961291583" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3" />
-    <Link Source="@37" Target="@43" Category="References" Bounds="-1299.59738543978,13.2197973044233,155.163149133337,134.99942181783" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@38" Target="@27" Category="References" Bounds="-849.338065012405,1450.34030401418,97.9431567504053,16.3101510965985" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
+    <Link Source="@26" Target="@21" Category="References" Bounds="576.495430871213,766.5,136.998136447492,59.4188446816107" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@38" Target="@36" Category="References" Bounds="-850.833828304032,1490.39860365743,101.824548128232,18.5042777107794" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@38" Target="@44" Category="References" Bounds="-892.880197154681,1337.40977334561,260.86872315433,128.226461690891" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@38" Target="@46" Category="References" Bounds="-903.005427571585,1284.13254095956,222.236585107534,181.503694076935" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
+    <Link Source="@26" Target="@6" Category="CodeSchema_Calls" Bounds="594.885009765625,766.5,881.104858398438,212.3642578125" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
+    <Link Source="@27" Target="@21" Category="References" Bounds="753.620910644531,618.414306640625,528.078430175781,206.999145507813" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@38" Target="@47" Category="References" Bounds="-886.723083496094,1387.96984863281,386.220672607422,77.6663818359375" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="9">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@39" Target="@17" Category="References" Bounds="-1555.56457659384,-595.827953545092,202.714528642765,346.710952790481" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@39" Target="@27" Category="References" Bounds="-1556.21115844264,-224.117000754611,873.941504826607,1639.8121467595" IsSourceVirtualized="True" Weight="1" />
-    <Link Source="@39" Target="@38" Category="References" Bounds="-1336.71901752101,236.19700636544,586.832604043547,1663.25019518447" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
+    <Link Source="@27" Target="@6" Category="CodeSchema_Calls" Bounds="1332.06121711446,618.414316703366,182.790575481529,355.083707708197" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'CACHE_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'COOKIE_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'CURRENT_USER_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'GLOBAL_CONFIG_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'IMG_CACHE_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'OPTIONS_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'PLUGIN_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'POST_IMG_REG''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'THREAD_IMG_REG''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'UPDATE_CURRENT_VERSION''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'USERS_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic atexit destructor for 'USER_CONFIG_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'CACHE_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'COOKIE_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'CURRENT_USER_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'GLOBAL_CONFIG_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'IMG_CACHE_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'OPTIONS_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'PLUGIN_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'POST_IMG_REG''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'THREAD_IMG_REG''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'UPDATE_CURRENT_VERSION''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'USERS_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'USER_CONFIG_PATH''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Member=&quot;`dynamic initializer for 'WM_TASKBARCREATED''&quot;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Type=&lt;lambda_3606be436a7c301c3e0189f8aefd85d0&gt;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Type=&lt;lambda_5e3c6c7a3c470142d16210afc950b98b&gt;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Type=&lt;lambda_75c4908c617d3397713bcc5f430ade55&gt;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Type=&lt;lambda_b117207bb75151ff594b963dfeacdcac&gt;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Type=&lt;lambda_ed0b1d907c369ca9f4af26b8d3ad3c7f&gt;)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="(@1 @3 Type=TBMEventID)" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@10" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@11" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@12" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@13" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@14" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@15" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@16" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@17" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@18" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@19" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@20" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@21" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@22" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@23" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@24" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@25" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@26" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@27" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@5" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@6" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@7" Category="Contains" FetchingParent="@4" />
+    <Link Source="@4" Target="@8" Category="Contains" FetchingParent="@4" />
     <Link Source="@4" Target="@9" Category="Contains" FetchingParent="@4" />
-    <Link Source="@40" Target="@13" Category="References" Bounds="-1057.42434191585,1265.57304923866,73.3914246509295,16.1093024115919" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
+    <Link Source="@5" Target="@21" Category="References" Bounds="792.096862792969,857.069641113281,330.136047363281,58.0302124023438" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@6" Target="@18" Category="References" Bounds="1430.23779296875,1006.5,82.3321533203125,50.434326171875" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
+    <Link Source="@7" Target="@12" Category="References" Bounds="786.053405761719,81,729.723205566406,169.342712402344" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@40" Target="@14" Category="References" Bounds="-1105.77416992188,1156.08325195313,134.4404296875,125.553344726563" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
+    <Link Source="@7" Target="@14" Category="References" Bounds="818.204162597656,113.345069885254,43.9088745117188,2.50110626220703" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="5">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@40" Target="@15" Category="References" Bounds="-1092.07055664063,1211.92114257813,125.791748046875,69.7154541015625" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
+    <Link Source="@8" Target="@10" Category="References" Bounds="776.796508789063,282.936340332031,537.833129882813,29.4215698242188" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@40" Target="@30" Category="References" Bounds="-1105.77416992188,1070.22241210938,411.759765625,211.414184570313" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
+    <Link Source="@8" Target="@12" Category="References" Bounds="1420.995,270.676738108267,30.0742098014168,0.0931114678660947" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@40" Target="@32" Category="References" Bounds="-1107.86889648438,1101.23986816406,139.456848144531,180.396728515625" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
+    <Link Source="@9" Target="@10" Category="References" Bounds="805.8466796875,223.697280883789,306.607666015625,45.4492645263672" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@40" Target="@33" Category="References" Bounds="-1096.39050292969,1027.40759277344,628.089294433594,254.22900390625" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
+    <Link Source="@9" Target="@12" Category="References" Bounds="1229.49348037118,223.673611834592,222.553744907148,35.5938669464338" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
       <Category Ref="CodeSchema_Calls" />
     </Link>
-    <Link Source="@40" Target="@36" Category="References" Bounds="-1089.98054793467,1306.6365430365,386.432485262878,199.742939035987" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@40" Target="@38" Category="References" Bounds="-1100.85840802941,1306.6365430365,162.683133505375,152.83731795255" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="5">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@40" Target="@44" Category="References" Bounds="-1053.0996105353,1297.31054585325,380.703814404537,19.7883201548636" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@40" Target="@46" Category="References" Bounds="-1053.0996105353,1269.15590935161,342.629187828508,21.2019757092103" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="6">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@40" Target="@47" Category="References" Bounds="-1053.10847158086,1301.93408620546,552.632817252252,70.5784110191366" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="9">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@41" Target="@13" Category="References" Bounds="-1378.28562961145,637.870169402339,445.215435615363,593.573535071544" IsSourceVirtualized="True" Weight="2" />
-    <Link Source="@41" Target="@14" Category="References" Bounds="-1376.28595119623,637.870169402339,440.56260508273,484.116793485204" IsSourceVirtualized="True" Weight="2" />
-    <Link Source="@41" Target="@15" Category="References" Bounds="-1377.38196866441,637.870169402339,443.101393231038,538.8218439332" IsSourceVirtualized="True" Weight="2" />
-    <Link Source="@41" Target="@22" Category="References" Bounds="-1374.75132708888,-562.71272001438,1214.14629399071,1175.58288941672" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="9">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@41" Target="@29" Category="References" Bounds="-1301.33470599324,544.024441384283,922.278829593111,74.3833372979856" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@41" Target="@30" Category="References" Bounds="-1366.77961832699,637.870169402339,666.798675324031,399.15149410668" IsSourceVirtualized="True" Weight="1" />
-    <Link Source="@41" Target="@32" Category="References" Bounds="-1374.92873246977,637.870169402339,437.460932679294,429.468011098694" IsSourceVirtualized="True" Weight="1" />
-    <Link Source="@41" Target="@33" Category="References" Bounds="-1356.72684474306,637.870169402339,884.488906896435,357.403590121928" IsSourceVirtualized="True" Weight="1" />
-    <Link Source="@41" Target="@40" Category="References" Bounds="-1161.54596940899,1098.18417652239,215.875529241051,617.260601976741" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@41" Target="@43" Category="References" Bounds="-1380.45734698054,186.924392866142,245.481944974616,425.945776536198" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="8" />
-    <Link Source="@42" Target="@16" Category="References" Bounds="-1595.97877136508,332.316874194358,1373.06155717357,121.954474833566" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@42" Target="@29" Category="References" Bounds="-1604.59259903581,337.026830192901,1225.61792902563,193.699467930563" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@42" Target="@35" Category="References" Bounds="-1596.16316134905,299.740873506393,156.905408275327,15.910849162983" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@42" Target="@37" Category="References" Bounds="-1669.41292598299,19.1494621169497,334.405638961465,292.877368075951" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@42" Target="@38" Category="References" Bounds="-1454.02216730891,797.340837312952,698.804434178913,1102.99097950664" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@42" Target="@39" Category="References" Bounds="-1680.9941457438,-215.318605137002,113.535615125324,527.345435329903" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@42" Target="@40" Category="References" Bounds="-1455.06351607182,797.340837312952,505.519006805369,918.71425379519" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@42" Target="@41" Category="References" Bounds="-1671.38559548511,337.0268301929,265.11209664758,269.42820197369" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@42" Target="@43" Category="References" Bounds="-1639.32123834621,181.567492935517,463.017026339779,130.459337257384" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="7">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@42" Target="@44" Category="References" Bounds="-1670.05975418788,337.0268301929,1051.29816073764,964.451428615623" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@43" Target="@16" Category="CodeSchema_Calls" Bounds="-1081.65108678262,179.126694781928,890.175864313895,267.311704153622" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2" />
-    <Link Source="@43" Target="@20" Category="References" Bounds="-1115.44757834687,-287.727495717048,276.770840671841,441.854190498976" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="3">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@43" Target="@34" Category="References" Bounds="-1072.94419167941,49.0044383763313,423.29115833367,105.122256405597" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="4">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@43" Target="@40" Category="CodeSchema_Calls" Bounds="-937.614838189929,639.44070190198,35.6666714572483,1075.50445744039" IsSourceVirtualized="True" IsTargetVirtualized="True" Weight="4" />
-    <Link Source="@45" Target="@16" Category="CodeSchema_Calls" Bounds="-140.587229125781,17.8968331208773,12.6063508205146,422.134007587933" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
-    <Link Source="@45" Target="@34" Category="References" Bounds="-519.197631835938,6.68898582458496,327.115051269531,13.5605602264404" IsCircularLink="True" IsSourceVirtualized="True" IsTargetVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="2">
-      <Category Ref="CodeSchema_Calls" />
-    </Link>
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'CACHE_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'COOKIE_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'CURRENT_USER_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'GLOBAL_CONFIG_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'IMG_CACHE_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'OPTIONS_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'PLUGIN_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'POST_IMG_REG''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'THREAD_IMG_REG''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'UPDATE_CURRENT_VERSION''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'USERS_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic atexit destructor for 'USER_CONFIG_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'CACHE_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'COOKIE_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'CURRENT_USER_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'GLOBAL_CONFIG_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'IMG_CACHE_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'OPTIONS_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'PLUGIN_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'POST_IMG_REG''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'THREAD_IMG_REG''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'UPDATE_CURRENT_VERSION''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'USERS_DIR_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'USER_CONFIG_PATH''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Member=&quot;`dynamic initializer for 'WM_TASKBARCREATED''&quot;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Type=&lt;lambda_3606be436a7c301c3e0189f8aefd85d0&gt;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Type=&lt;lambda_5e3c6c7a3c470142d16210afc950b98b&gt;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Type=&lt;lambda_75c4908c617d3397713bcc5f430ade55&gt;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Type=&lt;lambda_b117207bb75151ff594b963dfeacdcac&gt;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="(@1 @7 Type=&lt;lambda_ed0b1d907c369ca9f4af26b8d3ad3c7f&gt;)" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@11" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@16" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@17" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@18" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@19" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@20" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@21" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@22" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@23" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@24" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@25" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@26" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@28" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@29" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@31" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@34" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@35" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@37" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@39" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@41" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@42" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@43" Category="Contains" FetchingParent="@8" />
-    <Link Source="@8" Target="@45" Category="Contains" FetchingParent="@8" />
-    <Link Source="@9" Target="(@3 @7 Member=DllMain)" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="(@3 @7 Type=&lt;lambda_02e71e20e8e964f15e08b6e0de0fca1c&gt;)" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="(@3 @7 Type=&lt;lambda_48cbfcd08b82be74f50ed18258c0240a&gt;)" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="(@3 @7 Type=&lt;lambda_8346b251c8f103cfe85ed56587b9abd8&gt;)" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="(@3 @7 Type=&lt;lambda_8c2c64fe59fc63ae72bfa7fc02070408&gt;)" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="(@3 @7 Type=&lt;lambda_a1a5606fd0ab2f0f5be8221f54d9961e&gt;)" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="(@3 @7 Type=&lt;lambda_b7fcd3ec334ccdc1c9f78cf5725d2b3e&gt;)" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="(@3 @7 Type=&lt;lambda_d3c6849f56711056b415c42553ea5187&gt;)" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="(@3 @7 Type=TBMOperateEventID)" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="(@3 @7 Type=TBMScanEventID)" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@12" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@13" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@14" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@15" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@27" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@30" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@32" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@33" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@36" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@38" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@40" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@44" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@46" Category="Contains" FetchingParent="@9" />
-    <Link Source="@9" Target="@47" Category="Contains" FetchingParent="@9" />
+    <Link Source="@9" Target="@8" Category="References" Bounds="1191.96862195901,223.69728557129,102.292497689437,31.5838810695275" IsCircularLink="True" IsSourceVirtualized="True" Language="{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}" Weight="1" />
   </Links>
   <Categories>
     <Category Id="CodeSchema_Assembly" Label="程序集" BasedOn="File" CanBeDataDriven="True" DefaultAction="Microsoft.Contains" Icon="CodeSchema_Assembly" NavigationActionLabel="程序集" />
-    <Category Id="CodeSchema_BasedOn" Label="基于" CanBeDataDriven="True" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="基于源" OutgoingActionLabel="基于" />
     <Category Id="CodeSchema_Calls" Label="调用" CanBeDataDriven="True" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="调用者" OutgoingActionLabel="调用" />
     <Category Id="CodeSchema_Class" Label="类" BasedOn="CodeSchema_Type" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Member" Icon="CodeSchema_Class" NavigationActionLabel="类" />
     <Category Id="CodeSchema_Enum" Label="枚举" BasedOn="CodeSchema_Type" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Member" Icon="CodeSchema_Enum" NavigationActionLabel="枚举" />
     <Category Id="CodeSchema_Member" Label="编号" CanBeDataDriven="True" DefaultAction="Microsoft.Contains" Icon="CodeSchema_Field" NavigationActionLabel="成员" />
     <Category Id="CodeSchema_Method" Label="方法" BasedOn="CodeSchema_Member" CanBeDataDriven="True" DefaultAction="Link:Forward:CodeSchema_Calls" Icon="CodeSchema_Method" NavigationActionLabel="方法" />
     <Category Id="CodeSchema_Namespace" Label="命名空间" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Type" Icon="CodeSchema_Namespace" NavigationActionLabel="命名空间" />
-    <Category Id="CodeSchema_Struct" Label="结构" BasedOn="CodeSchema_Type" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Member" Icon="CodeSchema_Struct" NavigationActionLabel="结构" />
     <Category Id="CodeSchema_Type" Label="类型" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Member" Icon="CodeSchema_Class" NavigationActionLabel="类型" />
     <Category Id="Contains" Label="包含" Description="链接的源是否包含目标对象" CanBeDataDriven="False" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="包含者" IsContainment="True" OutgoingActionLabel="包含" />
     <Category Id="File" Label="文件" CanBeDataDriven="True" DefaultAction="Microsoft.Contains" Icon="File" NavigationActionLabel="文件" />
@@ -419,7 +277,7 @@
     <Property Id="UseManualLocation" DataType="System.Boolean" />
     <Property Id="Value" DataType="System.String" />
     <Property Id="ValueLabel" DataType="System.String" />
-    <Property Id="Visibility" Label="可见性" Description="定义关系图中的节点是否可见" DataType="System.Windows.Visibility" />
+    <Property Id="Visibility" Label="Visibility" Description="Defines whether a node in the graph is visible or not" DataType="System.Windows.Visibility" />
     <Property Id="Weight" Label="粗细" Description="粗细" DataType="System.Double" />
   </Properties>
   <QualifiedNames>
@@ -431,48 +289,31 @@
   <IdentifierAliases>
     <Alias n="1" Uri="Assembly=$(a4141d90-1ea4-4e10-84c3-79e11e265ba4.OutputPathUri)" />
     <Alias n="2" Id="(@1)" />
-    <Alias n="3" Uri="Assembly=$(e044698a-11b2-4679-a29c-cac352086fc7.OutputPathUri)" />
-    <Alias n="4" Id="(@3)" />
-    <Alias n="7" Id="Namespace=::" />
-    <Alias n="8" Id="(@1 @7)" />
-    <Alias n="9" Id="(@3 @7)" />
-    <Alias n="11" Id="(@1 @7 Type=CBlackListPage)" />
-    <Alias n="12" Id="(@3 @7 Type=CCheckIllegalEventBase)" />
-    <Alias n="13" Id="(@3 @7 Type=CCheckLzlIllegalEvent)" />
-    <Alias n="14" Id="(@3 @7 Type=CCheckPostIllegalEvent)" />
-    <Alias n="15" Id="(@3 @7 Type=CCheckThreadIllegalEvent)" />
-    <Alias n="16" Id="(@1 @7 Type=CConfigHelper)" />
-    <Alias n="17" Id="(@1 @7 Type=CConfirmDlg)" />
-    <Alias n="18" Id="(@1 @7 Type=CExploreLzlPage)" />
-    <Alias n="19" Id="(@1 @7 Type=CExplorePostPage)" />
-    <Alias n="20" Id="(@1 @7 Type=CExplorerDlg)" />
-    <Alias n="21" Id="(@1 @7 Type=CExploreThreadPage)" />
-    <Alias n="22" Id="(@1 @7 Type=CGetImages)" />
-    <Alias n="23" Id="(@1 @7 Type=CImagePage)" />
-    <Alias n="24" Id="(@1 @7 Type=CImageViewDlg)" />
-    <Alias n="25" Id="(@1 @7 Type=CKeywordListFile)" />
-    <Alias n="26" Id="(@1 @7 Type=CKeywordsPage)" />
-    <Alias n="27" Id="(@3 @7 Type=COperateEvent)" />
-    <Alias n="28" Id="(@1 @7 Type=COptionsPage)" />
-    <Alias n="29" Id="(@1 @7 Type=CPlan)" />
-    <Alias n="30" Id="(@3 @7 Type=CPreScanThreadEvent)" />
-    <Alias n="31" Id="(@1 @7 Type=CScanPage)" />
-    <Alias n="32" Id="(@3 @7 Type=CScanPostPageEvent)" />
-    <Alias n="33" Id="(@3 @7 Type=CScanPostThreadEvent)" />
-    <Alias n="34" Id="(@1 @7 Type=CSettingDlg)" />
-    <Alias n="35" Id="(@1 @7 Type=CTBMAPI)" />
-    <Alias n="36" Id="(@3 @7 Type=CTBMCoreConfig)" />
-    <Alias n="37" Id="(@1 @7 Type=CTBMListeners)" />
-    <Alias n="38" Id="(@3 @7 Type=CTBMOperate)" />
-    <Alias n="39" Id="(@1 @7 Type=CTBMOperateListeners)" />
-    <Alias n="40" Id="(@3 @7 Type=CTBMScan)" />
-    <Alias n="41" Id="(@1 @7 Type=CTBMScanListeners)" />
-    <Alias n="42" Id="(@1 @7 Type=CTiebaManagerApp)" />
-    <Alias n="43" Id="(@1 @7 Type=CTiebaManagerDlg)" />
-    <Alias n="44" Id="(@3 @7 Type=CUserCache)" />
-    <Alias n="45" Id="(@1 @7 Type=CUsersPage)" />
-    <Alias n="46" Id="(@3 @7 Type=ILog)" />
-    <Alias n="47" Id="(@3 @7 Type=Operation)" />
+    <Alias n="3" Id="Namespace=::" />
+    <Alias n="4" Id="(@1 @3)" />
+    <Alias n="5" Id="(@1 @3 Type=CBlackListPage)" />
+    <Alias n="6" Id="(@1 @3 Type=CConfigHelper)" />
+    <Alias n="7" Id="(@1 @3 Type=CConfirmDlg)" />
+    <Alias n="8" Id="(@1 @3 Type=CExploreLzlPage)" />
+    <Alias n="9" Id="(@1 @3 Type=CExplorePostPage)" />
+    <Alias n="10" Id="(@1 @3 Type=CExplorerDlg)" />
+    <Alias n="11" Id="(@1 @3 Type=CExploreThreadPage)" />
+    <Alias n="12" Id="(@1 @3 Type=CGetImages)" />
+    <Alias n="13" Id="(@1 @3 Type=CImagePage)" />
+    <Alias n="14" Id="(@1 @3 Type=CImageViewDlg)" />
+    <Alias n="15" Id="(@1 @3 Type=CKeywordListFile)" />
+    <Alias n="16" Id="(@1 @3 Type=CKeywordsPage)" />
+    <Alias n="17" Id="(@1 @3 Type=COptionsPage)" />
+    <Alias n="18" Id="(@1 @3 Type=CPlan)" />
+    <Alias n="19" Id="(@1 @3 Type=CScanImage)" />
+    <Alias n="20" Id="(@1 @3 Type=CScanPage)" />
+    <Alias n="21" Id="(@1 @3 Type=CSettingDlg)" />
+    <Alias n="22" Id="(@1 @3 Type=CTBMListeners)" />
+    <Alias n="23" Id="(@1 @3 Type=CTBMOperateListeners)" />
+    <Alias n="24" Id="(@1 @3 Type=CTBMScanListeners)" />
+    <Alias n="25" Id="(@1 @3 Type=CTiebaManagerApp)" />
+    <Alias n="26" Id="(@1 @3 Type=CTiebaManagerDlg)" />
+    <Alias n="27" Id="(@1 @3 Type=CUsersPage)" />
   </IdentifierAliases>
   <Styles>
     <Style TargetType="Node" GroupLabel="中心" ToolTip="节点位于连接数目在前 10% 的节点当中" ValueLabel="中心">
@@ -622,6 +463,5 @@
   </Styles>
   <Paths>
     <Path Id="a4141d90-1ea4-4e10-84c3-79e11e265ba4.OutputPathUri" Value="file:///F:/CProjects/TiebaManager/Debug/TiebaManager.exe" />
-    <Path Id="e044698a-11b2-4679-a29c-cac352086fc7.OutputPathUri" Value="file:///F:/CProjects/TiebaManager/Debug/TiebaManagerCore.dll" />
   </Paths>
 </DirectedGraph>

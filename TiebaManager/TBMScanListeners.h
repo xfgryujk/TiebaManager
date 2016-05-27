@@ -18,17 +18,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-class CTBMScan;
 class CEventBase;
 
 
 class CTBMScanListeners
 {
-protected:
-	CTBMScan& m_scan;
-
 public:
-	CTBMScanListeners(CTBMScan& scan);
+	CTBMScanListeners();
 
 	BOOL CheckIllegal(const CString& content, const CString& author, const CString& authorLevel, 
 		CString& msg, BOOL& forceToConfirm, int& pos, int& length);

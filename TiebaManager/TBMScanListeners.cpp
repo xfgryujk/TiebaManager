@@ -20,22 +20,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "TBMScanListeners.h"
 
+#include "TiebaManager.h"
 #include <TBMScan.h>
 #include <TBMScanEvent.h>
 
 #include "TBMConfig.h"
-#include <GetImages.h>
+#include "GetImages.h"
 #include "ScanImage.h"
 
-#include "TiebaManager.h"
 #include "TiebaManagerDlg.h"
 
 
-CTBMScanListeners::CTBMScanListeners(CTBMScan& scan) :
-	m_scan(scan)
+CTBMScanListeners::CTBMScanListeners()
 {
+	CEventBus& eventBus = theApp.m_scan->m_eventBus;
 #define ADD_LISTENER(event_, listener) \
-	m_scan.m_eventBus.AddListener(event_, std::bind(&CTBMScanListeners::listener, this, std::placeholders::_1))
+	eventBus.AddListener(event_, std::bind(&CTBMScanListeners::listener, this, std::placeholders::_1))
 	ADD_LISTENER(CheckThreadIllegalEvent, OnCheckThreadIllegal);
 	ADD_LISTENER(CheckPostIllegalEvent, OnCheckPostIllegal);
 	ADD_LISTENER(CheckLzlIllegalEvent, OnCheckLzlIllegal);

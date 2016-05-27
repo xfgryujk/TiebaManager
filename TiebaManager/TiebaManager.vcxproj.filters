@@ -201,8 +201,8 @@
     <ClInclude Include="TBMListeners.h">
       <Filter>头文件\Event</Filter>
     </ClInclude>
-    <ClInclude Include="API\GetImages.h">
-      <Filter>头文件\API</Filter>
+    <ClInclude Include="GetImages.h">
+      <Filter>头文件\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -321,7 +321,7 @@
       <Filter>源文件\Event</Filter>
     </ClCompile>
     <ClCompile Include="GetImages.cpp">
-      <Filter>源文件\API</Filter>
+      <Filter>源文件\Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

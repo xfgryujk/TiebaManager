@@ -100,13 +100,15 @@ BOOL CTiebaManagerApp::InitInstance()
 
 	CTiebaManagerDlg dlg;
 	m_pMainWnd = &dlg;
+	m_log = &dlg.m_log;
 
 	// 初始化
-	Init(dlg);
+	Init();
 
 	// 载入主窗口
 	dlg.DoModal();
 	m_pMainWnd = NULL;
+	m_log = NULL;
 
 
 	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
@@ -132,7 +134,7 @@ LONG WINAPI CTiebaManagerApp::ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInf
 }
 
 // 初始化
-void CTiebaManagerApp::Init(CTiebaManagerDlg& mainDlg)
+void CTiebaManagerApp::Init()
 {
 	// 添加异常处理
 	SetUnhandledExceptionFilter(ExceptionHandler);
@@ -165,21 +167,23 @@ void CTiebaManagerApp::Init(CTiebaManagerDlg& mainDlg)
 
 	// 外部模块
 	m_tiebaOperate.reset(new CTiebaOperate(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason));
-	m_operate.reset(new CTBMOperate(m_plan.get(), m_userCache.get(), m_tiebaOperate.get(), &mainDlg.m_log));
-	m_scan.reset(new CTBMScan(m_plan.get(), m_userCache.get(), m_operate.get(), &mainDlg.m_log));
+	m_operate.reset(new CTBMOperate(m_plan.get(), m_userCache.get(), m_tiebaOperate.get(), m_log));
+	m_scan.reset(new CTBMScan(m_plan.get(), m_userCache.get(), m_operate.get(), m_log));
 
 	// 内部模块
 	m_tbmEventBus.reset(new CEventBus());
-	m_configHelper.reset(new CConfigHelper(m_globalConfig.get(), m_userConfig.get(), m_cookieConfig.get(),
-		m_userCache.get(), m_plan.get(), m_tbmEventBus.get()));
+	m_configHelper.reset(new CConfigHelper());
 	m_scanImage.reset(new CScanImage());
-	m_scanListeners.reset(new CTBMScanListeners(*m_scan));
-	m_operateListeners.reset(new CTBMOperateListeners(*m_operate));
+
+	// API
+	m_tbmApi.reset(new CTBMAPI());
+
+	// 内部Listeners
+	m_scanListeners.reset(new CTBMScanListeners());
+	m_operateListeners.reset(new CTBMOperateListeners());
 	m_tbmListeners.reset(new CTBMListeners());
 
-	// API、插件
-	m_tbmApi.reset(new CTBMAPI(m_tbmEventBus.get(), m_userCache.get(), m_tiebaOperate.get(), 
-		m_scan.get(), m_operate.get(), &mainDlg.m_log));
+	// 插件
 	m_pluginManager.reset(new CPluginManager());
 	m_pluginManager->LoadDir(PLUGIN_PATH);
 }

@@ -87,7 +87,7 @@ bool CLockThread::Uninit()
 
 void CLockThread::OnConfig()
 {
-	if (!CTBMAPI::GetInstance().GetTiebaOperate()->HasSetTieba())
+	if (!CTBMAPI::GetTiebaOperate()->HasSetTieba())
 	{
 		AfxMessageBox(_T("请先确认贴吧！"), MB_ICONERROR);
 		return;
@@ -118,9 +118,9 @@ void CLockThread::LockThreadThread()
 	if (!CoInitializeHelper())
 		return;
 
-	ILog& log = *CTBMAPI::GetInstance().GetLog();
-	CTiebaOperate& tiebaOperate = *CTBMAPI::GetInstance().GetTiebaOperate();
-	CTBMOperate& operate = *CTBMAPI::GetInstance().GetOperate();
+	ILog& log = *CTBMAPI::GetLog();
+	CTiebaOperate& tiebaOperate = *CTBMAPI::GetTiebaOperate();
+	CTBMOperate& operate = *CTBMAPI::GetOperate();
 
 
 	CString tid, page, floor;

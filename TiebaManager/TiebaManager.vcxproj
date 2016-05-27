@@ -60,6 +60,7 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BrowseInformation>true</BrowseInformation>
+      <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -122,13 +123,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AboutPage.h" />
-    <ClInclude Include="API\GetImages.h" />
     <ClInclude Include="API\PluginFunctions.h" />
     <ClInclude Include="API\TBMAPI.h" />
     <ClInclude Include="API\TBMEvent.h" />
     <ClInclude Include="API\TiebaManagerCommon.h" />
     <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="ConfigHelper.h" />
+    <ClInclude Include="GetImages.h" />
     <ClInclude Include="InputKeywordDlg.h" />
     <ClInclude Include="ExplorerLog.h" />
     <ClInclude Include="Plugin.h" />
