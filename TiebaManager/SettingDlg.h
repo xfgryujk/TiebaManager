@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "afxcmn.h"
 #include "afxwin.h"
-#include <NormalDlg.h>
+#include <ModeLessDlg.h>
 class ILog;
 class CPlan;
 
@@ -41,7 +41,7 @@ class CAboutPage;
 
 const int SETTING_DLG_PAGE_COUNT = 11;
 
-class CSettingDlg : public CNormalDlg
+class CSettingDlg : public CModelessDlg
 {
 	DECLARE_DYNAMIC(CSettingDlg)
 
@@ -59,9 +59,7 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	virtual void OnCancel();
-	virtual void PostNcDestroy();
 	virtual void OnOK();
-	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnClose();
@@ -90,7 +88,6 @@ public:
 
 	BOOL m_clearScanCache;
 protected:
-	CSettingDlg*& m_pThis;
 	ILog& m_log;
 
 	CWnd* m_pages[SETTING_DLG_PAGE_COUNT];

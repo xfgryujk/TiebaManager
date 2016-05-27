@@ -28,10 +28,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // CPluginDlg 对话框
 
-IMPLEMENT_DYNAMIC(CPluginDlg, CNormalDlg)
+IMPLEMENT_DYNAMIC(CPluginDlg, CModelessDlg)
 
-CPluginDlg::CPluginDlg(CPluginDlg*& pThis, CPluginManager& pluginManager, CWnd* pParent /*=NULL*/) : CNormalDlg(CPluginDlg::IDD, pParent),
-	m_pThis(pThis),
+CPluginDlg::CPluginDlg(CPluginDlg*& pThis, CPluginManager& pluginManager, CWnd* pParent /*=NULL*/) : CModelessDlg(CPluginDlg::IDD, (CModelessDlg**)&pThis, pParent),
 	m_pluginManager(pluginManager),
 	m_plugins(pluginManager.GetPlugins())
 {
@@ -45,15 +44,14 @@ CPluginDlg::~CPluginDlg()
 
 void CPluginDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CNormalDlg::DoDataExchange(pDX);
+	CModelessDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_list);
 	DDX_Control(pDX, IDC_BUTTON1, m_configButton);
 	DDX_Control(pDX, IDC_EDIT1, m_edit);
 }
 
 
-BEGIN_MESSAGE_MAP(CPluginDlg, CNormalDlg)
-	ON_WM_CLOSE()
+BEGIN_MESSAGE_MAP(CPluginDlg, CModelessDlg)
 	ON_LBN_SELCHANGE(IDC_LIST1, &CPluginDlg::OnLbnSelchangeList1)
 	ON_BN_CLICKED(IDC_BUTTON1, &CPluginDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
@@ -64,7 +62,7 @@ END_MESSAGE_MAP()
 // 初始化
 BOOL CPluginDlg::OnInitDialog()
 {
-	CNormalDlg::OnInitDialog();
+	CModelessDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	SetIcon(hIcon, TRUE);			// 设置大图标
@@ -81,31 +79,6 @@ BOOL CPluginDlg::OnInitDialog()
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
-
-#pragma region UI
-// 窗口 /////////////////////////////////////////////////////////////////////////////////
-
-// 取消
-void CPluginDlg::OnCancel()
-{
-	DestroyWindow();
-}
-
-// 关闭窗口
-void CPluginDlg::OnClose()
-{
-	DestroyWindow();
-}
-
-// 释放this
-void CPluginDlg::PostNcDestroy()
-{
-	CNormalDlg::PostNcDestroy();
-
-	m_pThis = NULL;
-	delete this;
-}
-#pragma endregion
 
 // 选中
 void CPluginDlg::OnLbnSelchangeList1()

@@ -37,6 +37,12 @@
     <Filter Include="源文件\API\UI\ListPage">
       <UniqueIdentifier>{2020d277-a4ca-48df-9228-27aae820e179}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\API\UI\DlgBase">
+      <UniqueIdentifier>{d33dc701-0b1a-4f05-99b9-e6e1d283ab2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\API\UI\DlgBase">
+      <UniqueIdentifier>{87ec2e7f-cfcb-4973-8fb6-be2377cbbabc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Helper.cpp">
@@ -72,9 +78,6 @@
     <ClCompile Include="ResizeControl.cpp">
       <Filter>源文件\API\UI</Filter>
     </ClCompile>
-    <ClCompile Include="NormalDlg.cpp">
-      <Filter>源文件\API\UI</Filter>
-    </ClCompile>
     <ClCompile Include="InputDlg.cpp">
       <Filter>源文件\API\UI\InputDlg</Filter>
     </ClCompile>
@@ -89,6 +92,12 @@
     </ClCompile>
     <ClCompile Include="RegListPage.cpp">
       <Filter>源文件\API\UI\ListPage</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalDlg.cpp">
+      <Filter>源文件\API\UI\DlgBase</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelessDlg.cpp">
+      <Filter>源文件\API\UI\DlgBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,9 +145,6 @@
     <ClInclude Include="API\BlockingQueue.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\NormalDlg.h">
-      <Filter>头文件\API\UI</Filter>
-    </ClInclude>
     <ClInclude Include="API\ResizeControl.h">
       <Filter>头文件\API\UI</Filter>
     </ClInclude>
@@ -156,6 +162,12 @@
     </ClInclude>
     <ClInclude Include="API\NormalListPage.h">
       <Filter>头文件\API\UI\ListPage</Filter>
+    </ClInclude>
+    <ClInclude Include="API\NormalDlg.h">
+      <Filter>头文件\API\UI\DlgBase</Filter>
+    </ClInclude>
+    <ClInclude Include="API\ModelessDlg.h">
+      <Filter>头文件\API\UI\DlgBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

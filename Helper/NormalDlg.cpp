@@ -21,15 +21,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //
 
 #include "stdafx.h"
-#include "NormalDlg.h"
+#include <NormalDlg.h>
 
 
 // CNormalDlg 对话框
 
 IMPLEMENT_DYNAMIC(CNormalDlg, CDialog)
 
-CNormalDlg::CNormalDlg(UINT nIDTemplate, CWnd* pParentWnd)
-	: CDialog(nIDTemplate, pParentWnd),
+CNormalDlg::CNormalDlg(UINT nIDTemplate, CWnd* pParentWnd) : CDialog(nIDTemplate, pParentWnd),
 	m_resize(this)
 {
 
@@ -68,8 +67,6 @@ void CNormalDlg::OnOK()
 void CNormalDlg::OnClose()
 {
 	DestroyWindow();
-
-	CDialog::OnClose();
 }
 
 // 改变尺寸

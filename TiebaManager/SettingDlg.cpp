@@ -44,11 +44,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // CSettingDlg 对话框
 
-IMPLEMENT_DYNAMIC(CSettingDlg, CNormalDlg)
+IMPLEMENT_DYNAMIC(CSettingDlg, CModelessDlg)
 
 // 构造函数
-CSettingDlg::CSettingDlg(CSettingDlg*& pThis, ILog& log, CWnd* pParent /*=NULL*/) : CNormalDlg(CSettingDlg::IDD, pParent),
-	m_pThis(pThis),
+CSettingDlg::CSettingDlg(CSettingDlg*& pThis, ILog& log, CWnd* pParent /*=NULL*/) : CModelessDlg(CSettingDlg::IDD, (CModelessDlg**)&pThis, pParent),
 	m_log(log),
 	m_pagesResize(&m_tab), 
 	m_scanPage(new CScanPage()),
@@ -85,15 +84,14 @@ CSettingDlg::~CSettingDlg()
 
 void CSettingDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CNormalDlg::DoDataExchange(pDX);
+	CModelessDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TAB1, m_tab);
 	DDX_Control(pDX, IDOK, m_okButton);
 	DDX_Control(pDX, IDCANCEL, m_cancelButton);
 }
 
 
-BEGIN_MESSAGE_MAP(CSettingDlg, CNormalDlg)
-	ON_WM_GETMINMAXINFO()
+BEGIN_MESSAGE_MAP(CSettingDlg, CModelessDlg)
 	ON_WM_SIZE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CSettingDlg::OnTcnSelchangeTab1)
 	ON_WM_CLOSE()
@@ -105,7 +103,7 @@ END_MESSAGE_MAP()
 // 初始化
 BOOL CSettingDlg::OnInitDialog()
 {
-	CNormalDlg::OnInitDialog();
+	CModelessDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	SetIcon(hIcon, TRUE);			// 设置大图标
@@ -211,31 +209,13 @@ void CSettingDlg::OnClose()
 	else if (result == IDCANCEL)
 		return;
 
-	DestroyWindow();
-}
-
-// 释放this
-void CSettingDlg::PostNcDestroy()
-{
-	CNormalDlg::PostNcDestroy();
-
-	m_pThis = NULL;
-	delete this;
-}
-
-// 限制最小尺寸
-void CSettingDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
-{
-	/*lpMMI->ptMinTrackSize.x = 666;
-	lpMMI->ptMinTrackSize.y = 576;*/
-
-	CNormalDlg::OnGetMinMaxInfo(lpMMI);
+	CModelessDlg::OnClose();
 }
 
 // 改变尺寸
 void CSettingDlg::OnSize(UINT nType, int cx, int cy)
 {
-	CNormalDlg::OnSize(nType, cx, cy);
+	CModelessDlg::OnSize(nType, cx, cy);
 	m_pagesResize.Resize();
 }
 

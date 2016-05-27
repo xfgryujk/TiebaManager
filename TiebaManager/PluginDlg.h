@@ -18,14 +18,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include <NormalDlg.h>
+#include <ModelessDlg.h>
 class CPluginManager;
 class CPlugin;
 
 
 // CPluginDlg ¶Ô»°¿ò
 
-class CPluginDlg : public CNormalDlg
+class CPluginDlg : public CModelessDlg
 {
 	DECLARE_DYNAMIC(CPluginDlg)
 
@@ -42,9 +42,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
-	virtual void OnCancel();
-	virtual void PostNcDestroy();
-	afx_msg void OnClose();
 	afx_msg void OnLbnSelchangeList1();
 	afx_msg void OnBnClickedButton1();
 
@@ -55,8 +52,6 @@ public:
 	CEdit m_edit;
 
 protected:
-	CPluginDlg*& m_pThis;
-
 	CPluginManager& m_pluginManager;
 	const vector<unique_ptr<CPlugin> >& m_plugins;
 };

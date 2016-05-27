@@ -18,13 +18,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include <NormalDlg.h>
+#include <ModelessDlg.h>
 #include "afxwin.h"
 
 
 // CLockThreadDlg 对话框
 
-class CLockThreadDlg : public CNormalDlg
+class CLockThreadDlg : public CModelessDlg
 {
 	DECLARE_DYNAMIC(CLockThreadDlg)
 
@@ -41,9 +41,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
-	virtual void OnCancel();
-	virtual void PostNcDestroy();
-	afx_msg void OnClose();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
 
@@ -54,7 +51,4 @@ public:
 	CEdit m_floorEdit;
 	CButton m_startButton;
 	CButton m_stopButton;
-
-protected:
-	CLockThreadDlg*& m_pThis;
 };

@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "afxcmn.h"
 #include "afxwin.h"
-#include <NormalDlg.h>
+#include <ModelessDlg.h>
 class CExploreThreadPage;
 class CExplorePostPage;
 class CExploreLzlPage;
@@ -30,7 +30,7 @@ class CImageViewDlg;
 
 // CExplorerDlg 对话框
 
-class CExplorerDlg : public CNormalDlg
+class CExplorerDlg : public CModelessDlg
 {
 	DECLARE_DYNAMIC(CExplorerDlg)
 
@@ -46,10 +46,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnClose();
-	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	virtual void PostNcDestroy();
 	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedButton1();
@@ -72,8 +69,6 @@ public:
 	CImageViewDlg* m_imageViewDlg;
 
 protected:
-	CExplorerDlg*& m_pThis;
-
 	CExplorerPage* m_pages[3];
 	CResizeControl m_pagesResize;
 };

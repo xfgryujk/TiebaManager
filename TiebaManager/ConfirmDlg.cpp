@@ -62,7 +62,6 @@ void CConfirmDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CConfirmDlg, CDialog)
 	ON_WM_SIZE()
-	ON_WM_GETMINMAXINFO()
 	ON_BN_CLICKED(IDC_BUTTON1, &CConfirmDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
 #pragma endregion
@@ -70,15 +69,6 @@ END_MESSAGE_MAP()
 // CConfirmDlg 消息处理程序
 
 #pragma region UI
-// 限制最小尺寸
-void CConfirmDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
-{
-	/*lpMMI->ptMinTrackSize.x = 455;
-	lpMMI->ptMinTrackSize.y = 362;*/
-
-	CDialog::OnGetMinMaxInfo(lpMMI);
-}
-
 // 改变尺寸
 void CConfirmDlg::OnSize(UINT nType, int cx, int cy)
 {
@@ -108,7 +98,7 @@ BOOL CConfirmDlg::OnInitDialog()
 		CGetImages(*m_operation->object)(*img);
 		if (!img->empty())
 		{
-			m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);
+			m_imageViewDlg = new CImageViewDlg(m_imageViewDlg, this);
 			m_imageViewDlg->Create(m_imageViewDlg->IDD, this);
 			m_imageViewDlg->SetImages(std::move(img));
 		}

@@ -42,9 +42,9 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 	virtual void OnCancel();
+	afx_msg void OnClose();
 	virtual void PostNcDestroy();
 	virtual void OnOK();
-	afx_msg void OnClose();
 
 	virtual void OnAdd(int index);
 	virtual void OnDelete(int index);
@@ -64,6 +64,7 @@ public:
 	std::vector<CString> m_pid;
 
 	BOOL m_clearCache = FALSE;
+
 protected:
 	CLoopBanDlg*& m_pThis;
 };

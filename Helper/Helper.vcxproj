@@ -125,6 +125,7 @@
     <ClCompile Include="ListTestPage.cpp" />
     <ClCompile Include="Md5.cpp" />
     <ClCompile Include="MiscHelper.cpp" />
+    <ClCompile Include="ModelessDlg.cpp" />
     <ClCompile Include="NetworkHelper.cpp" />
     <ClCompile Include="NormalDlg.cpp" />
     <ClCompile Include="NormalListPage.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="API\ListTestPage.h" />
     <ClInclude Include="API\Md5.h" />
     <ClInclude Include="API\MiscHelper.h" />
+    <ClInclude Include="API\ModelessDlg.h" />
     <ClInclude Include="API\NetworkHelper.h" />
     <ClInclude Include="API\NormalDlg.h" />
     <ClInclude Include="API\NormalListPage.h" />

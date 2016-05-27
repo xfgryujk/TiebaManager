@@ -114,7 +114,7 @@ void CLoopBanDlg::OnClose()
 	else if (result == IDCANCEL)
 		return;
 
-	DestroyWindow();
+	CNormalListPage::OnClose();
 }
 
 // 释放this

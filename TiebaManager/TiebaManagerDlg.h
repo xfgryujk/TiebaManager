@@ -57,7 +57,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnDestroy();
-	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	LRESULT OnTray(WPARAM wParam, LPARAM lParam);
 	LRESULT OnTaskBarCreated(WPARAM wParam, LPARAM lParam);

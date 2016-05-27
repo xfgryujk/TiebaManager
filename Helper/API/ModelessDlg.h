@@ -18,44 +18,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include <ModelessDlg.h>
-#include "afxwin.h"
+#include "HelperCommon.h"
+#include "NormalDlg.h"
 
 
-// CDefriendDlg 对话框
+// CModelessDlg 对话框
 
-class CDefriendDlg : public CModelessDlg
+class HELPER_API CModelessDlg : public CNormalDlg
 {
-	DECLARE_DYNAMIC(CDefriendDlg)
+	DECLARE_DYNAMIC(CModelessDlg)
 
 public:
-	CDefriendDlg(CDefriendDlg*& pThis, CWnd* pParent = NULL);   // 标准构造函数
-	virtual ~CDefriendDlg();
-
-// 对话框数据
-	enum { IDD = IDD_DEFRIEND_DLG };
+	CModelessDlg(UINT nIDTemplate, CModelessDlg** pThis = NULL, CWnd* pParentWnd = NULL);
+	virtual ~CModelessDlg();
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
 public:
-	virtual BOOL OnInitDialog();
-	afx_msg void OnBnClickedCheck1();
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnBnClickedButton2();
+	virtual void PostNcDestroy();
 
-
-public:
-	static CString s_startPage;
-	static CString s_endPage;
-	static BOOL s_defriendNewUsers;
-
-public:
-	CEdit m_startPageEdit;
-	CEdit m_endPageEdit;
-	CButton m_startButton;
-	CButton m_stopButton;
-	CButton m_defriendNewUsersCheck;
-	CStatic m_stateStatic;
+private:
+	CModelessDlg** m_pThis = NULL;
 };

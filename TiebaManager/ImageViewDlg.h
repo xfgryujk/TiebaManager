@@ -19,17 +19,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "afxwin.h"
-#include <NormalDlg.h>
+#include <ModelessDlg.h>
 
 
 // CImageViewDlg 对话框
 
-class CImageViewDlg : public CNormalDlg
+class CImageViewDlg : public CModelessDlg
 {
 	DECLARE_DYNAMIC(CImageViewDlg)
 
 public:
-	CImageViewDlg(CImageViewDlg** pThis, CWnd* pParent = NULL);   // 构造函数
+	CImageViewDlg(CImageViewDlg*& pThis, CWnd* pParent = NULL);   // 构造函数
 	virtual ~CImageViewDlg();
 
 // 对话框数据
@@ -40,9 +40,6 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnClose();
-	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
-	virtual void PostNcDestroy();
 	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
@@ -62,8 +59,6 @@ public:
 	CButton m_saveButton;
 
 protected:
-	CImageViewDlg** m_pThis;
-
 	unique_ptr<vector<CString> > m_imageURL;
 	vector<CImage> m_image;
 };

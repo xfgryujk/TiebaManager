@@ -32,14 +32,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // CImageViewDlg 对话框
 
-IMPLEMENT_DYNAMIC(CImageViewDlg, CNormalDlg)
+IMPLEMENT_DYNAMIC(CImageViewDlg, CModelessDlg)
 
 // 构造函数
-CImageViewDlg::CImageViewDlg(CImageViewDlg** pThis, CWnd* pParent /*=NULL*/)
-	: CNormalDlg(CImageViewDlg::IDD, pParent)
+CImageViewDlg::CImageViewDlg(CImageViewDlg*& pThis, CWnd* pParent /*=NULL*/) : CModelessDlg(CImageViewDlg::IDD, (CModelessDlg**)&pThis, pParent)
 {
-	m_pThis = pThis;
-	m_imageURL = NULL;
+	
 }
 
 #pragma region MFC
@@ -49,16 +47,14 @@ CImageViewDlg::~CImageViewDlg()
 
 void CImageViewDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CNormalDlg::DoDataExchange(pDX);
+	CModelessDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_STATIC1, m_imageStatic);
 	DDX_Control(pDX, IDC_BUTTON3, m_saveButton);
 	DDX_Control(pDX, IDC_SCROLLBAR1, m_imageScrollBar);
 }
 
 
-BEGIN_MESSAGE_MAP(CImageViewDlg, CNormalDlg)
-	ON_WM_CLOSE()
-	ON_WM_GETMINMAXINFO()
+BEGIN_MESSAGE_MAP(CImageViewDlg, CModelessDlg)
 	ON_WM_DRAWITEM()
 	ON_BN_CLICKED(IDC_BUTTON3, &CImageViewDlg::OnBnClickedButton3)
 	ON_WM_VSCROLL()
@@ -70,30 +66,6 @@ END_MESSAGE_MAP()
 // CImageViewDlg 消息处理程序
 
 #pragma region UI
-// 销毁窗口
-void CImageViewDlg::OnClose()
-{
-	DestroyWindow();
-}
-
-// 释放this
-void CImageViewDlg::PostNcDestroy()
-{
-	CNormalDlg::PostNcDestroy();
-
-	*m_pThis = NULL;
-	delete this;
-}
-
-// 限制最小尺寸
-void CImageViewDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
-{
-	/*lpMMI->ptMinTrackSize.x = 275;
-	lpMMI->ptMinTrackSize.y = 275;*/
-
-	CNormalDlg::OnGetMinMaxInfo(lpMMI);
-}
-
 // 滚动
 void CImageViewDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
@@ -106,7 +78,7 @@ void CImageViewDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 		}
 	}
 
-	CNormalDlg::OnVScroll(nSBCode, nPos, pScrollBar);
+	CModelessDlg::OnVScroll(nSBCode, nPos, pScrollBar);
 }
 
 // 滚轮滚动
@@ -115,13 +87,13 @@ BOOL CImageViewDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	m_imageScrollBar.SetScrollPos(m_imageScrollBar.GetScrollPos() - zDelta);
 	m_imageStatic.Invalidate();
 
-	return CNormalDlg::OnMouseWheel(nFlags, zDelta, pt);
+	return CModelessDlg::OnMouseWheel(nFlags, zDelta, pt);
 }
 
 // 改变尺寸
 void CImageViewDlg::OnSize(UINT nType, int cx, int cy)
 {
-	CNormalDlg::OnSize(nType, cx, cy);
+	CModelessDlg::OnSize(nType, cx, cy);
 
 	UpdateScrollRange();
 }
@@ -148,7 +120,7 @@ void CImageViewDlg::UpdateScrollRange()
 // 初始化
 BOOL CImageViewDlg::OnInitDialog()
 {
-	CNormalDlg::OnInitDialog();
+	CModelessDlg::OnInitDialog();
 
 	SetClassLong(m_imageStatic.m_hWnd, GCL_HCURSOR, (LONG)LoadCursor(NULL, IDC_ARROW));
 
@@ -248,7 +220,7 @@ void CImageViewDlg::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
 		return;
 	}
 
-	CNormalDlg::OnDrawItem(nIDCtl, lpDrawItemStruct);
+	CModelessDlg::OnDrawItem(nIDCtl, lpDrawItemStruct);
 }
 
 // 保存

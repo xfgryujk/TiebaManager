@@ -37,11 +37,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // CExplorerDlg 对话框
 
-IMPLEMENT_DYNAMIC(CExplorerDlg, CNormalDlg)
+IMPLEMENT_DYNAMIC(CExplorerDlg, CModelessDlg)
 
 // 构造函数
-CExplorerDlg::CExplorerDlg(CExplorerDlg*& pThis, CWnd* pParent /*=NULL*/) : CNormalDlg(CExplorerDlg::IDD, pParent),
-	m_pThis(pThis),
+CExplorerDlg::CExplorerDlg(CExplorerDlg*& pThis, CWnd* pParent /*=NULL*/) : CModelessDlg(CExplorerDlg::IDD, (CModelessDlg**)&pThis, pParent),
 	m_pagesResize(&m_tab),
 	m_exploreThreadPage(new CExploreThreadPage(theApp.m_tiebaOperate->GetForumName())),
 	m_explorePostPage(new CExplorePostPage(theApp.m_tiebaOperate->GetForumID())),
@@ -63,7 +62,7 @@ CExplorerDlg::~CExplorerDlg()
 
 void CExplorerDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CNormalDlg::DoDataExchange(pDX);
+	CModelessDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TAB1, m_tab);
 	DDX_Control(pDX, IDC_EDIT1, m_edit);
 	DDX_Control(pDX, IDC_BUTTON1, m_deleteButton);
@@ -72,9 +71,7 @@ void CExplorerDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CExplorerDlg, CNormalDlg)
-	ON_WM_CLOSE()
-	ON_WM_GETMINMAXINFO()
+BEGIN_MESSAGE_MAP(CExplorerDlg, CModelessDlg)
 	ON_WM_SIZE()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CExplorerDlg::OnTcnSelchangeTab1)
 	ON_BN_CLICKED(IDC_BUTTON1, &CExplorerDlg::OnBnClickedButton1)
@@ -88,34 +85,10 @@ END_MESSAGE_MAP()
 #pragma region UI
 // 窗口 /////////////////////////////////////////////////////////////////////////////////
 
-// 销毁窗口
-void CExplorerDlg::OnClose()
-{
-	DestroyWindow();
-}
-
-// 释放this
-void CExplorerDlg::PostNcDestroy()
-{
-	CNormalDlg::PostNcDestroy();
-
-	m_pThis = NULL;
-	delete this;
-}
-
-// 限制最小尺寸
-void CExplorerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
-{
-	/*lpMMI->ptMinTrackSize.x = 829;
-	lpMMI->ptMinTrackSize.y = 588;*/
-
-	CNormalDlg::OnGetMinMaxInfo(lpMMI);
-}
-
 // 改变尺寸
 void CExplorerDlg::OnSize(UINT nType, int cx, int cy)
 {
-	CNormalDlg::OnSize(nType, cx, cy);
+	CModelessDlg::OnSize(nType, cx, cy);
 	m_pagesResize.Resize();
 }
 
@@ -133,7 +106,7 @@ void CExplorerDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 // 初始化
 BOOL CExplorerDlg::OnInitDialog()
 {
-	CNormalDlg::OnInitDialog();
+	CModelessDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	SetIcon(hIcon, TRUE);			// 设置大图标
@@ -278,7 +251,7 @@ void CExplorerDlg::ViewImages(unique_ptr<vector<CString> > img)
 {
 	if (m_imageViewDlg == NULL)
 	{
-		m_imageViewDlg = new CImageViewDlg(&m_imageViewDlg, this);
+		m_imageViewDlg = new CImageViewDlg(m_imageViewDlg, this);
 		m_imageViewDlg->Create(m_imageViewDlg->IDD, this);
 	}
 	m_imageViewDlg->SetImages(std::move(img));

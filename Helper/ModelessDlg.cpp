@@ -17,45 +17,49 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#pragma once
+// ModelessDlg.cpp : 实现文件
+//
+
+#include "stdafx.h"
 #include <ModelessDlg.h>
-#include "afxwin.h"
 
 
-// CDefriendDlg 对话框
+// CModelessDlg 对话框
 
-class CDefriendDlg : public CModelessDlg
+IMPLEMENT_DYNAMIC(CModelessDlg, CNormalDlg)
+
+CModelessDlg::CModelessDlg(UINT nIDTemplate, CModelessDlg** pThis, CWnd* pParentWnd) : CNormalDlg(nIDTemplate, pParentWnd),
+	m_pThis(pThis)
 {
-	DECLARE_DYNAMIC(CDefriendDlg)
 
-public:
-	CDefriendDlg(CDefriendDlg*& pThis, CWnd* pParent = NULL);   // 标准构造函数
-	virtual ~CDefriendDlg();
+}
 
-// 对话框数据
-	enum { IDD = IDD_DEFRIEND_DLG };
+#pragma region MFC
+CModelessDlg::~CModelessDlg()
+{
+}
 
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-
-	DECLARE_MESSAGE_MAP()
-public:
-	virtual BOOL OnInitDialog();
-	afx_msg void OnBnClickedCheck1();
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnBnClickedButton2();
+void CModelessDlg::DoDataExchange(CDataExchange* pDX)
+{
+	CNormalDlg::DoDataExchange(pDX);
+}
 
 
-public:
-	static CString s_startPage;
-	static CString s_endPage;
-	static BOOL s_defriendNewUsers;
+BEGIN_MESSAGE_MAP(CModelessDlg, CNormalDlg)
+END_MESSAGE_MAP()
+#pragma endregion
 
-public:
-	CEdit m_startPageEdit;
-	CEdit m_endPageEdit;
-	CButton m_startButton;
-	CButton m_stopButton;
-	CButton m_defriendNewUsersCheck;
-	CStatic m_stateStatic;
-};
+// CModelessDlg 消息处理程序
+
+// 释放this
+void CModelessDlg::PostNcDestroy()
+{
+	CNormalDlg::PostNcDestroy();
+
+	if (m_pThis != NULL)
+	{
+		*m_pThis = NULL;
+		m_pThis = NULL;
+		delete this;
+	}
+}

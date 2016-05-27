@@ -28,10 +28,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // CLockThreadDlg 对话框
 
-IMPLEMENT_DYNAMIC(CLockThreadDlg, CNormalDlg)
+IMPLEMENT_DYNAMIC(CLockThreadDlg, CModelessDlg)
 
-CLockThreadDlg::CLockThreadDlg(CLockThreadDlg*& pThis, CWnd* pParent /*=NULL*/) : CNormalDlg(CLockThreadDlg::IDD, pParent),
-	m_pThis(pThis)
+CLockThreadDlg::CLockThreadDlg(CLockThreadDlg*& pThis, CWnd* pParent /*=NULL*/) : CModelessDlg(CLockThreadDlg::IDD, (CModelessDlg**)&pThis, pParent)
 {
 
 }
@@ -43,7 +42,7 @@ CLockThreadDlg::~CLockThreadDlg()
 
 void CLockThreadDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CNormalDlg::DoDataExchange(pDX);
+	CModelessDlg::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_tidEdit);
 	DDX_Control(pDX, IDC_EDIT2, m_pageEdit);
 	DDX_Control(pDX, IDC_EDIT7, m_floorEdit);
@@ -52,8 +51,7 @@ void CLockThreadDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 
-BEGIN_MESSAGE_MAP(CLockThreadDlg, CNormalDlg)
-	ON_WM_CLOSE()
+BEGIN_MESSAGE_MAP(CLockThreadDlg, CModelessDlg)
 	ON_BN_CLICKED(IDC_BUTTON1, &CLockThreadDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CLockThreadDlg::OnBnClickedButton2)
 END_MESSAGE_MAP()
@@ -64,7 +62,7 @@ END_MESSAGE_MAP()
 // 初始化
 BOOL CLockThreadDlg::OnInitDialog()
 {
-	CNormalDlg::OnInitDialog();
+	CModelessDlg::OnInitDialog();
 
 	if (!g_lockThread.m_stopFlag)
 	{
@@ -78,29 +76,6 @@ BOOL CLockThreadDlg::OnInitDialog()
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
-
-#pragma region UI
-// 取消
-void CLockThreadDlg::OnCancel()
-{
-	DestroyWindow();
-}
-
-// 关闭窗口
-void CLockThreadDlg::OnClose()
-{
-	DestroyWindow();
-}
-
-// 释放this
-void CLockThreadDlg::PostNcDestroy()
-{
-	CNormalDlg::PostNcDestroy();
-
-	m_pThis = NULL;
-	delete this;
-}
-#pragma endregion
 
 // 开始
 void CLockThreadDlg::OnBnClickedButton1()

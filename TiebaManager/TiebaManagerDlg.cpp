@@ -89,7 +89,6 @@ BEGIN_MESSAGE_MAP(CTiebaManagerDlg, CNormalDlg)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DESTROY()
-	ON_WM_GETMINMAXINFO()
 	ON_WM_SYSCOMMAND()
 	ON_MESSAGE(WM_TRAY, OnTray)
 	ON_REGISTERED_MESSAGE(WM_TASKBARCREATED, OnTaskBarCreated)
@@ -227,14 +226,6 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	theApp.m_tbmEventBus->Post(MainDialogPostInitEvent);
 
 
-	// 测试
-	/*vector<ThreadInfo> threads;
-	GetThreads(_T("一个极其隐秘只有xfgryujk知道的地方"), _T("0"), threads);
-	g_userTiebaInfo.m_forumID = _T("309740");
-	vector<PostInfo> posts, lzls;
-	GetPosts(_T("3033489261"), _T(""), _T("1"), posts, lzls);*/
-
-
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -274,17 +265,6 @@ void CTiebaManagerDlg::OnDestroy()
 }
 
 #pragma region UI
-// 窗口 /////////////////////////////////////////////////////////////////////////////////
-
-// 限制最小尺寸
-void CTiebaManagerDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
-{
-	/*lpMMI->ptMinTrackSize.x = 705;
-	lpMMI->ptMinTrackSize.y = 293;*/
-
-	CNormalDlg::OnGetMinMaxInfo(lpMMI);
-}
-
 // 托盘 /////////////////////////////////////////////////////////////////////////////////
 
 // 最小化
