@@ -6,7 +6,7 @@
 
 class HELPER_API CMD5
 {
-private:
+public:
 #define uint8  unsigned char
 #define uint32 unsigned long int
 
@@ -22,7 +22,7 @@ private:
 	void md5_update(struct md5_context *ctx, uint8 *input, uint32 length);
 	void md5_finish(struct md5_context *ctx, uint8 digest[16]);
 
-public:
+
 	//! construct a CMD5 from any buffer
 	void GenerateMD5(unsigned char* buffer, int bufferlen);
 
@@ -53,3 +53,6 @@ public:
 
 // 转成UTF-8编码取MD5
 HELPER_API CString GetMD5_UTF8(const CString& data);
+
+// 取文件MD5
+HELPER_API CString GetMD5_File(CFile& f);

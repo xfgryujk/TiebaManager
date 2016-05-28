@@ -18,13 +18,34 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include "HelperCommon.h"
+#include "UpdateCommon.h"
+#include <ConfigFile.h>
 
 
-enum HTTPRequestResult { NET_SUCCESS, NET_FAILED_TO_CREATE_INSTANCE, NET_TIMEOUT };
-const TCHAR NET_FAILED_TO_CREATE_INSTANCE_TEXT[] = _T("failed to create instance");
-const TCHAR NET_TIMEOUT_TEXT[] = _T("timeout");
+extern UPDATE_API const CString UPDATE_CURRENT_VERSION;
 
-HELPER_API CString HTTPGet(const CString& URL, CString* cookie = NULL);
-HELPER_API CString HTTPPost(const CString& URL, const CString& data, CString* cookie = NULL);
-HELPER_API HTTPRequestResult HTTPGetRaw(const CString& URL, unique_ptr<BYTE[]>* buffer = NULL, ULONG* size = NULL, CString* cookie = NULL);
+
+class UPDATE_API CUpdateInfo : public CConfigBase
+{
+public:
+	struct FileInfo
+	{
+		CString dir;		// 所在文件夹
+		CString name;		// 文件名
+		CString url;		// 下载地址
+		CString md5;		// 比较MD5确定是否下载这个文件
+	};
+
+	COption<CString> m_version;				// 最新版本
+	COption<CString> m_updateLog;			// 更新日志
+	COption<vector<FileInfo> > m_files;		// 只储存必须的文件，如正则表达式手册不储存
+
+	CUpdateInfo();
+};
+
+
+enum CheckUpdateResult { UPDATE_NO_UPDATE, UPDATE_HAS_UPDATE, UPDATE_FAILED_TO_GET_INFO };
+// 检查更新，如果需要更新则开一个线程自动更新
+UPDATE_API CheckUpdateResult CheckUpdate();
+// 手动更新，打开一个URL
+UPDATE_API void ManuallyUpdate();

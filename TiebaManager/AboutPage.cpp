@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "AboutPage.h"
 
-#include "Update.h"
+#include <Update.h>
 
 
 // CAboutPage 对话框
@@ -93,9 +93,9 @@ void CAboutPage::OnStnClickedStatic1()
 	case UPDATE_NO_UPDATE:
 		AfxMessageBox(_T("已经是最新版本"));
 		break;
-	case UPDATE_FAILED_TO_GET_FILE_INFO:
+	case UPDATE_FAILED_TO_GET_INFO:
 		if (AfxMessageBox(_T("获取文件信息失败，手动更新？"), MB_ICONQUESTION | MB_YESNO) == IDYES)
-			ShellExecute(NULL, _T("open"), UPDATE_URL, NULL, NULL, SW_NORMAL);
+			ManuallyUpdate();
 		break;
 	}
 }

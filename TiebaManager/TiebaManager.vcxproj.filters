@@ -150,9 +150,6 @@
     <ClInclude Include="OperatePage.h">
       <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
-    <ClInclude Include="Update.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="ScanImage.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
@@ -274,9 +271,6 @@
     </ClCompile>
     <ClCompile Include="OperatePage.cpp">
       <Filter>源文件\GUI\Setting</Filter>
-    </ClCompile>
-    <ClCompile Include="Update.cpp">
-      <Filter>源文件\Helper</Filter>
     </ClCompile>
     <ClCompile Include="ScanImage.cpp">
       <Filter>源文件\Helper</Filter>

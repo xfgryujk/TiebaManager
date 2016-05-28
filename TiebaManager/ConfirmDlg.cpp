@@ -124,9 +124,8 @@ void CConfirmDlg::OnBnClickedButton1()
 		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s#%s"), (LPCTSTR)post->tid,
 			(LPCTSTR)post->pid, (LPCTSTR)post->pid);
 	}
-	else /*if (m_operation->object->m_type == TBObject::LZL)*/ // 楼中楼
+	else if (m_operation->object->m_type == TBObject::LZL) // 楼中楼
 	{
-		assert(m_operation->object->m_type == TBObject::LZL);
 		LzlInfo* lzl = (LzlInfo*)m_operation->object.get();
 		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), (LPCTSTR)lzl->tid, 
 			(LPCTSTR)lzl->cid, (LPCTSTR)lzl->cid, (LPCTSTR)lzl->cid);

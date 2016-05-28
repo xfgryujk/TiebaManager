@@ -28,7 +28,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "PluginDlg.h"
 
 #include <MiscHelper.h>
-#include "Update.h"
+#include <Update.h>
 
 #include "TBMConfig.h"
 #include "TBMConfigPath.h"
@@ -185,24 +185,17 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	
 	// 自动更新
 	if (theApp.m_globalConfig->m_autoUpdate)
-		AfxBeginThread(AutoUpdateThread, this);
+		thread(&CTiebaManagerDlg::AutoUpdateThread, this).detach();
 
 	// 初次运行先看关于
 	if (theApp.m_globalConfig->m_firstRun)
 	{
 		*theApp.m_globalConfig->m_firstRun = FALSE;
-		*theApp.m_globalConfig->m_firstRunAfterUpdate = FALSE;
 		theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
 		OnBnClickedButton5();
 		m_settingDlg->m_tab.SetCurSel(SETTING_DLG_PAGE_COUNT - 1);
 		LRESULT tmp;
 		m_settingDlg->OnTcnSelchangeTab1(NULL, &tmp);
-	}
-	else if (theApp.m_globalConfig->m_firstRunAfterUpdate) // 弹出更新日志
-	{
-		*theApp.m_globalConfig->m_firstRunAfterUpdate = FALSE;
-		theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
-		AfxMessageBox(UPDATE_LOG, MB_ICONINFORMATION);
 	}
 
 
@@ -374,6 +367,30 @@ void CTiebaManagerDlg::OnBnClickedButton5()
 	}
 }
 #pragma endregion
+
+// 更新 /////////////////////////////////////////////////////////////////////////////////
+
+// 自动更新线程
+void CTiebaManagerDlg::AutoUpdateThread()
+{
+	if (!CoInitializeHelper())
+		return;
+
+	CheckUpdateResult res = CheckUpdate();
+	CoUninitialize();
+	switch (res)
+	{
+	case UPDATE_FAILED_TO_GET_INFO:
+		m_stateStatic.SetWindowText(_T("检查更新失败：获取文件信息失败，在设置里手动检查更新"));
+		break;
+	case UPDATE_NO_UPDATE:
+	case UPDATE_HAS_UPDATE:
+		m_stateStatic.SetWindowText(_T("待机中"));
+		break;
+	}
+
+	CoUninitialize();
+}
 
 // 扫描 /////////////////////////////////////////////////////////////////////////////////
 

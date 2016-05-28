@@ -72,6 +72,9 @@ public:
 	DECLARE_EVENTSINK_MAP()
 	void BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers, BOOL* Cancel);
 
+protected:
+	void AutoUpdateThread();
+
 
 public:
 	CEdit m_forumNameEdit;

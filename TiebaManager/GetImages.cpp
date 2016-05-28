@@ -64,9 +64,8 @@ void CGetImages::operator () (vector<CString>& img)
 			content = post.GetContent();
 			portrait = post.authorPortrait;
 		}
-		else
+		else if (m_object.m_type == TBObject::LZL)
 		{
-			assert(m_object.m_type == TBObject::LZL);
 			LzlInfo& lzl = (LzlInfo&)m_object;
 			CGetLzlImagesEvent event_(lzl, img);
 			if (!theApp.m_tbmEventBus->Post(GetLzlImagesEvent, event_) || event_.result)

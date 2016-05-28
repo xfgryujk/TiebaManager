@@ -21,19 +21,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TBMConfig.h"
 using tinyxml2::XMLElement;
 #include "TBMConfigPath.h"
-#include "Update.h"
 #include "ConfigHelper.h"
 
 
 // 全局配置
 CGlobalConfig::CGlobalConfig() : CConfigBase("Global"),
 	m_firstRun("FirstRun", TRUE),
-	m_firstRunAfterUpdate("FirstRunAfter" + CStringA(UPDATE_CURRENT_VERSION_A), TRUE),
 	m_currentUser("UserName", _T("[NULL]"), [](const CString& value)->BOOL{ return value != _T("") && PathFileExists(USERS_DIR_PATH + value + _T("\\ck.xml")); }),
 	m_autoUpdate("AutoUpdate", TRUE)
 {
 	m_options.push_back(&m_firstRun);
-	m_options.push_back(&m_firstRunAfterUpdate);
 	m_options.push_back(&m_currentUser);
 	m_options.push_back(&m_autoUpdate);
 }

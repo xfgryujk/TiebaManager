@@ -340,6 +340,7 @@ CString CMD5::ToString()
 	return CString(output);
 }
 
+
 // 转成UTF-8编码取MD5
 HELPER_API CString GetMD5_UTF8(const CString& data)
 {
@@ -352,5 +353,22 @@ HELPER_API CString GetMD5_UTF8(const CString& data)
 
 	CMD5 iMD5;
 	iMD5.GenerateMD5((unsigned char*)(LPCSTR)utf8Data, dstLen);
+	return iMD5.ToString();
+}
+
+// 取文件MD5
+HELPER_API CString GetMD5_File(CFile& f)
+{
+	CMD5 iMD5;
+	CMD5::md5_context context;
+	iMD5.md5_starts(&context);
+
+	static const int SIZE = 1024;
+	BYTE buffer[SIZE];
+	uint32 length;
+	while ((length = f.Read(buffer, SIZE)) > 0)
+		iMD5.md5_update(&context, buffer, length);
+	
+	iMD5.md5_finish(&context, (unsigned char*)iMD5.m_data);
 	return iMD5.ToString();
 }

@@ -213,6 +213,22 @@ HELPER_API DEFINE_WRITE_MAP(__int64, CString)
 
 // 配置读写实现 ///////////////////////////////////////////////////////////////////////////
 
+HELPER_API BOOL CConfigBase::Load(const tinyxml2::XMLDocument& doc)
+{
+	const XMLElement* root = doc.FirstChildElement(m_name);
+	if (root == NULL)
+	{
+		UseDefault();
+		return FALSE;
+	}
+
+	OnChange();
+	for (COptionBase* i : m_options)
+		i->Read(*root);
+	PostChange();
+	return TRUE;
+}
+
 HELPER_API BOOL CConfigBase::Load(const CString& path)
 {
 	FILE* f = NULL;
@@ -231,18 +247,19 @@ HELPER_API BOOL CConfigBase::Load(const CString& path)
 	}
 	fclose(f);
 
-	XMLElement* root = doc.FirstChildElement(m_name);
-	if (root == NULL)
+	return Load(doc);
+}
+
+HELPER_API BOOL CConfigBase::LoadFromString(LPCSTR str, size_t length)
+{
+	tinyxml2::XMLDocument doc;
+	if (doc.Parse(str, length) != XML_NO_ERROR)
 	{
 		UseDefault();
 		return FALSE;
 	}
 
-	OnChange();
-	for (COptionBase* i : m_options)
-		i->Read(*root);
-	PostChange();
-	return TRUE;
+	return Load(doc);
 }
 
 HELPER_API BOOL CConfigBase::Save(const CString& path) const

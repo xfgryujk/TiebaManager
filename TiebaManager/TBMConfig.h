@@ -28,7 +28,6 @@ class CGlobalConfig : public CConfigBase
 {
 public:
 	COption<BOOL> m_firstRun;				// 第一次运行
-	COption<BOOL> m_firstRunAfterUpdate;	// 更新后第一次运行
 	COption<CString> m_currentUser;			// 当前账号
 	COption<BOOL> m_autoUpdate;				// 自动更新
 

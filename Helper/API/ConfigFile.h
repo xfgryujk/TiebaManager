@@ -195,7 +195,9 @@ public:
 	CConfigBase(CStringA name) : m_name(name) { }
 	virtual ~CConfigBase() { }
 
+	HELPER_API virtual BOOL Load(const tinyxml2::XMLDocument& doc);
 	HELPER_API virtual BOOL Load(const CString& path);
+	HELPER_API virtual BOOL LoadFromString(LPCSTR str, size_t length = (size_t)-1);
 	HELPER_API virtual BOOL Save(const CString& path) const;
 	HELPER_API virtual void UseDefault();
 	virtual void OnChange() { }
