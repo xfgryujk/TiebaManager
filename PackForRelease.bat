@@ -25,6 +25,7 @@ move /y 贴吧管理器\Update.dll %BACKUPDIR%
 move /y 贴吧管理器\plugin\*.dll %BACKUPDIR%\plugin
 copy /y Release\*.pdb %BACKUPDIR%
 copy /y Release\plugin\*.pdb %BACKUPDIR%\plugin
+ping 127.0.0.1 -n 3 >nul
 
 ren 贴吧管理器 发布用
 

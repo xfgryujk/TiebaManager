@@ -54,6 +54,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Update", "Update\Update.vcx
 		{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1} = {99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UpdateUploader", "UpdateUploader\UpdateUploader.vcxproj", "{B2DBF22A-47B1-4E59-84AC-BB8139F05703}"
+	ProjectSection(ProjectDependencies) = postProject
+		{12C61D83-0213-443A-A612-4334C5C9D73B} = {12C61D83-0213-443A-A612-4334C5C9D73B}
+		{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1} = {99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -92,6 +98,10 @@ Global
 		{12C61D83-0213-443A-A612-4334C5C9D73B}.Debug|Win32.Build.0 = Debug|Win32
 		{12C61D83-0213-443A-A612-4334C5C9D73B}.Release|Win32.ActiveCfg = Release|Win32
 		{12C61D83-0213-443A-A612-4334C5C9D73B}.Release|Win32.Build.0 = Release|Win32
+		{B2DBF22A-47B1-4E59-84AC-BB8139F05703}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B2DBF22A-47B1-4E59-84AC-BB8139F05703}.Debug|Win32.Build.0 = Debug|Win32
+		{B2DBF22A-47B1-4E59-84AC-BB8139F05703}.Release|Win32.ActiveCfg = Release|Win32
+		{B2DBF22A-47B1-4E59-84AC-BB8139F05703}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

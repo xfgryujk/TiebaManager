@@ -23,6 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 extern UPDATE_API const CString UPDATE_CURRENT_VERSION;
+extern UPDATE_API const CString UPDATE_INFO_URL;
 
 
 class UPDATE_API CUpdateInfo : public CConfigBase

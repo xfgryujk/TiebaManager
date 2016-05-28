@@ -21,7 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <Update.h>
 using tinyxml2::XMLElement;
 
-#import <msscript.ocx> no_namespace
 #include <StringHelper.h>
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
@@ -29,10 +28,10 @@ using tinyxml2::XMLElement;
 
 
 // 当前版本，每次更新后修改，也可以不是日期
-const CString UPDATE_CURRENT_VERSION = _T("16-05-20");
+UPDATE_API const CString UPDATE_CURRENT_VERSION = _T("16-05-29");
 
 static const CString MANUALLY_UPDATE_URL = _T("http://sinacloud.net/xfgryujk/TiebaManager/贴吧管理器.zip");
-static const CString UPDATE_INFO_URL = _T("http://sinacloud.net/xfgryujk/TiebaManager/UpdateInfo.xml");
+UPDATE_API const CString UPDATE_INFO_URL = _T("http://sinacloud.net/xfgryujk/TiebaManager/UpdateInfo.xml");
 
 static const CString UPDATE_DIR_PATH = _T("Update\\"); // 只能是一级目录
 static const CString UPDATE_BAT_NAME = _T("Update.bat");
