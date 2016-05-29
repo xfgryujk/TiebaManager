@@ -101,7 +101,9 @@ void CDefriend::OnConfig()
 
 void CDefriend::StartDefriend(const CString& startPage, const CString& endPage, BOOL defriendNewUsers)
 {
-	m_stopFlag = FALSE;
+	StopDefriend();
+	if (m_defriendThread != nullptr && m_defriendThread->joinable())
+		m_defriendThread->join();
 	m_defriendThread.reset(new thread(&CDefriend::DefriendThread, this, startPage, endPage, defriendNewUsers));
 }
 
@@ -112,6 +114,8 @@ void CDefriend::StopDefriend()
 
 void CDefriend::DefriendThread(CString startPage, CString endPage, BOOL defriendNewUsers)
 {
+	m_stopFlag = FALSE;
+
 	// 初始化
 	if (!CoInitializeHelper())
 		return;
@@ -162,6 +166,8 @@ void CDefriend::DefriendThread(CString startPage, CString endPage, BOOL defriend
 		m_defriendDlg->m_stopButton.EnableWindow(FALSE);
 		m_defriendDlg->m_stateStatic.SetWindowText(_T(""));
 	}
+
+	TRACE(_T("拉黑线程结束\n"));
 }
 
 void CDefriend::DoDefriend(int startPage, int endPage)

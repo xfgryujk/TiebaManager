@@ -73,3 +73,15 @@ HELPER_API BOOL CoInitializeHelper()
 	}
 	return TRUE;
 }
+
+// 判断线程是否在运行
+HELPER_API BOOL IsThreadRunning(thread& thread_)
+{
+	DWORD exitCode = 0;
+	if (!GetExitCodeThread(thread_.native_handle(), &exitCode))
+	{
+		TRACE(_T("GetExitCodeThread失败！错误代码0x%08X\n"), GetLastError());
+		return WaitForSingleObject(thread_.native_handle(), 0) == WAIT_TIMEOUT;
+	}
+	return exitCode == STILL_ACTIVE;
+}

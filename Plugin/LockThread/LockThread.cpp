@@ -103,7 +103,9 @@ void CLockThread::OnConfig()
 
 void CLockThread::StartLockThread()
 {
-	m_stopFlag = FALSE;
+	StopLockThread();
+	if (m_lockThreadThread != nullptr && m_lockThreadThread->joinable())
+		m_lockThreadThread->join();
 	m_lockThreadThread.reset(new thread(&CLockThread::LockThreadThread, this));
 }
 
@@ -114,6 +116,8 @@ void CLockThread::StopLockThread()
 
 void CLockThread::LockThreadThread()
 {
+	m_stopFlag = FALSE;
+
 	// 初始化
 	if (!CoInitializeHelper())
 		return;
@@ -192,4 +196,6 @@ void CLockThread::LockThreadThread()
 		m_lockThreadDlg->m_startButton.EnableWindow(TRUE);
 		m_lockThreadDlg->m_stopButton.EnableWindow(FALSE);
 	}
+
+	TRACE(_T("锁帖线程结束\n"));
 }

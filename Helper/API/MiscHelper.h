@@ -29,3 +29,5 @@ HELPER_API void DoEvents();
 HELPER_API BOOL CreateDir(const CString& path);
 // 初始化COM库
 HELPER_API BOOL CoInitializeHelper();
+// 判断线程是否在运行
+HELPER_API BOOL IsThreadRunning(thread& thread_);

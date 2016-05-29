@@ -45,14 +45,17 @@ CTBMScan::CTBMScan(CTBMCoreConfig* config, CUserCache* userCache, CTBMOperate* o
 
 CTBMScan::~CTBMScan()
 {
-	m_stopScanFlag = TRUE;
-	if (IsScanning())
+	StopScan();
+	if (m_scanThread != nullptr && m_scanThread->joinable())
 		m_scanThread->join();
 }
 
 // 开始扫描
 void CTBMScan::StartScan(const CString& sPage)
 {
+	StopScan();
+	if (m_scanThread != nullptr && m_scanThread->joinable())
+		m_scanThread->join();
 	m_scanThread.reset(new thread(&CTBMScan::ScanThread, this, sPage));
 }
 
@@ -65,7 +68,7 @@ void CTBMScan::StopScan()
 // 正在扫描
 BOOL CTBMScan::IsScanning()
 {
-	return m_scanThread != nullptr && m_scanThread->joinable();
+	return m_scanThread != nullptr && IsThreadRunning(*m_scanThread);
 }
 
 // 扫描主题图片
@@ -212,7 +215,6 @@ void CTBMScan::ScanThread(CString sPage)
 ScanThreadEnd:
 	m_eventBus.Post(ScanThreadEndEvent);
 
-	m_scanThread->detach();
 	TRACE(_T("总扫描线程结束\n"));
 }
 
