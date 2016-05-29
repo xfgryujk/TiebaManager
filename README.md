@@ -1,33 +1,36 @@
 TiebaManager
 =========
 
-[°Ù¶ÈÌù°É](http://tieba.baidu.com/)°ÉÎñ¹ÜÀí¹¤¾ß  
+[ç™¾åº¦è´´å§](http://tieba.baidu.com/)å§åŠ¡ç®¡ç†å·¥å…·  
 
-* ×Ô¶¯É¨ÃèÌû×Ó²¢´¦ÀíÎ¥¹æÌû
-* Î¥¹æ¹æÔòÖ§³Ö¹Ø¼ü´Ê¡¢ÕıÔò±í´ïÊ½¡¢Í¼Æ¬£¨°üÀ¨Í·ÏñºÍÇ©Ãû£©¡¢µÈ¼¶
-* Ö§³Ö²å¼ş¿ª·¢
-* Í¨¹ıGPLv2Ğ­Òé¿ªÔ´
+* è‡ªåŠ¨æ‰«æå¸–å­å¹¶å¤„ç†è¿è§„å¸–
+* è¿è§„è§„åˆ™æ”¯æŒå…³é”®è¯ã€æ­£åˆ™è¡¨è¾¾å¼ã€å›¾ç‰‡ï¼ˆåŒ…æ‹¬å¤´åƒå’Œç­¾åï¼‰ã€ç­‰çº§
+* æ”¯æŒæ’ä»¶å¼€å‘
+* é€šè¿‡GPLv2åè®®å¼€æº
+
+![æˆªå›¾](https://github.com/xfgryujk/TiebaManager/blob/master/.wiki/image/snapshot.png)
 
 
-ÒÀÀµ
+ä¾èµ–
 =========
 
 * [OpenCV](http://opencv.org/) 3.0.0
 * [TinyXML2](http://www.grinninglizard.com/tinyxml2/index.html)
 
 
-Á´½Ó
+é“¾æ¥
 =========
 
-* [×÷ÕßµÄ¸öÈËÌù°É](http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD)
-* [×îĞÂ°æÏÂÔØµØÖ·](http://sinacloud.net/xfgryujk/TiebaManager/%e8%b4%b4%e5%90%a7%e7%ae%a1%e7%90%86%e5%99%a8.zip)
+* [ä½œè€…çš„ä¸ªäººè´´å§](http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD)
+* [æœ€æ–°ç‰ˆä¸‹è½½åœ°å€](https://github.com/xfgryujk/TiebaManager/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98#%E5%9C%A8%E5%93%AA%E9%87%8C%E5%8F%AF%E4%BB%A5%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%89%88)
+* [ä½¿ç”¨æ–¹æ³•](https://github.com/xfgryujk/TiebaManager/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8)
 
 
-´î½¨¿ª·¢»·¾³
+æ­å»ºå¼€å‘ç¯å¢ƒ
 =========
 
-1. ±¾ÏîÄ¿Ê¹ÓÃVS2013±àĞ´£¬Î´ÔÚÆäËû¿ª·¢»·¾³ÖĞ²âÊÔ
-2. ´î½¨OpenCV 3.0.0£¬²¢°Ñ»·¾³±äÁ¿`OpenCV`ÉèÖÃÎªÄãµÄOpenCVÄ¿Â¼
-3. ÏÂÔØ±¾ÏîÄ¿Ô´Âë
-4. ĞÂ½¨DebugÄ¿Â¼£¬°Ñ`%OpenCV%\build\x86\vc12\bin\opencv_world300d.dll`ºÍ`Library\bin\Debug\tinyxml2.dll`·Å½øÈ¥
-5. ĞÂ½¨ReleaseÄ¿Â¼£¬°Ñ`%OpenCV%\build\x86\vc12\bin\opencv_world300.dll`ºÍ`Library\bin\Release\tinyxml2.dll`·Å½øÈ¥
+1. æœ¬é¡¹ç›®ä½¿ç”¨VS2013ç¼–å†™ï¼Œæœªåœ¨å…¶ä»–å¼€å‘ç¯å¢ƒä¸­æµ‹è¯•
+2. æ­å»ºOpenCV 3.0.0ï¼Œå¹¶æŠŠç¯å¢ƒå˜é‡`OpenCV`è®¾ç½®ä¸ºä½ çš„OpenCVç›®å½•
+3. ä¸‹è½½æœ¬é¡¹ç›®æºç 
+4. æ–°å»ºDebugç›®å½•ï¼ŒæŠŠ`%OpenCV%\build\x86\vc12\bin\opencv_world300d.dll`å’Œ`Library\bin\Debug\tinyxml2.dll`æ”¾è¿›å»
+5. æ–°å»ºReleaseç›®å½•ï¼ŒæŠŠ`%OpenCV%\build\x86\vc12\bin\opencv_world300.dll`å’Œ`Library\bin\Release\tinyxml2.dll`æ”¾è¿›å»
