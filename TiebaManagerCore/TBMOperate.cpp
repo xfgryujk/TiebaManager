@@ -302,7 +302,7 @@ void CTBMOperate::OperateThread()
 					Sleep((DWORD)(m_config->m_deleteInterval * 1000));
 				}
 			}
-			else if (op.object->m_type == TBObject::POST) // 楼中楼
+			else if (op.object->m_type == TBObject::LZL) // 楼中楼
 			{
 				LzlInfo* lzl = (LzlInfo*)op.object.get();
 				CString code = m_tiebaOperate->DeleteLZL(op.object->tid, lzl->cid);

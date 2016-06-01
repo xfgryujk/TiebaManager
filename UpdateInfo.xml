@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="GBK"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 修改更新方式
-2. 修改API</UpdateLog>
+    <UpdateLog>1. 修复楼中楼不删除的BUG</UpdateLog>
     <Files>
         <item>
             <value>
