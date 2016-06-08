@@ -377,7 +377,6 @@ void CTiebaManagerDlg::AutoUpdateThread()
 		return;
 
 	CheckUpdateResult res = CheckUpdate();
-	CoUninitialize();
 	switch (res)
 	{
 	case UPDATE_FAILED_TO_GET_INFO:
