@@ -181,9 +181,9 @@ CString CTiebaOperate::BanIDClient(const CString& userName)
 {
 	// 客户端POST要带数字签名，参数按字典序排列，去掉&，加上"tiebaclient!!!"，转成UTF-8，取MD5
 	CString data;
-	data.Format(_T("BDUSS=%s&day=%d&fid=%s&from=tieba&net_type=1&ntn=banid&tbs=%s&un=%s&word=%s&z=%s"),
+	data.Format(_T("BDUSS=%s&day=%d&fid=%s&ntn=banid&tbs=%s&un=%s&word=%s&z=1111111111"),
 		(LPCTSTR)m_bduss, m_banDuration, (LPCTSTR)m_forumID,
-		(LPCTSTR)m_tbs, userName, (LPCTSTR)m_forumName, (LPCTSTR)m_randomTid);
+		(LPCTSTR)m_tbs, userName, (LPCTSTR)m_forumName);
 	
 	CString signData = data;
 	signData.Replace(_T("&"), _T(""));

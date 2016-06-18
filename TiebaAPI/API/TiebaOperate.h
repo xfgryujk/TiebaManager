@@ -36,7 +36,7 @@ protected:
 	const int& m_banDuration;	// 封禁时长
 	const CString& m_banReason; // 封禁原因
 
-	CString m_randomTid;		// 某个tid，确认贴吧时初始化，用于WAP接口和客户端接口封禁
+	CString m_randomTid;		// 某个tid，确认贴吧时初始化，用于WAP接口封禁
 
 public:
 	CString GetForumID() { return m_forumID; }

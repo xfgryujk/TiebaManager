@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="GBK"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 修复楼中楼不删除的BUG</UpdateLog>
+    <UpdateLog>1. 修复有时使用客户端接口封禁失败</UpdateLog>
     <Files>
         <item>
             <value>
