@@ -78,7 +78,6 @@ public:
 	CString pid;			// 帖子ID
 	CString floor;			// 楼层
 	CString authorLevel;	// 作者等级
-	CString authorPortrait;	// 作者头像哈希
 	CString content;		// 内容
 
 

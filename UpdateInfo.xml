@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="GBK"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 修复有时使用客户端接口封禁失败</UpdateLog>
+    <UpdateLog>1. 修复部分头像获取失败</UpdateLog>
     <Files>
         <item>
             <value>

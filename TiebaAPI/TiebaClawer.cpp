@@ -55,8 +55,6 @@ const TCHAR POST_AUTHOR_LEFT[] = _T("&quot;user_name&quot;:&quot;");
 const TCHAR POST_AUTHOR_RIGHT[] = _T("&quot;");
 const TCHAR POST_AUTHOR_ID_LEFT[] = _T("&quot;user_id&quot;:");
 const TCHAR POST_AUTHOR_ID_RIGHT[] = _T(",");
-const TCHAR POST_AUTHOR_PORTRAIT_LEFT[] = _T("=\"http://tb.himg.baidu.com/sys/portrait/item/");
-const TCHAR POST_AUTHOR_PORTRAIT_RIGHT[] = _T("\"");
 const TCHAR POST_AUTHOR_LEVEL_LEFT[] = _T("<div class=\"d_badge_lv\">");
 const TCHAR POST_AUTHOR_LEVEL_RIGHT[] = _T("</div>");
 const TCHAR POST_CONTENT_LEFT[] = _T("<cc>");
@@ -192,7 +190,6 @@ TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, c
 		posts[iPosts].pid = GetStringBetween(rawPosts[iRawPosts], POST_PID_LEFT, POST_PID_RIGHT);
 		posts[iPosts].floor = GetStringBetween(rawPosts[iRawPosts], POST_FLOOR_LEFT, POST_FLOOR_RIGHT);
 		posts[iPosts].authorLevel = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_LEVEL_LEFT, POST_AUTHOR_LEVEL_RIGHT);
-		posts[iPosts].authorPortrait = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_PORTRAIT_LEFT, POST_AUTHOR_PORTRAIT_RIGHT);
 
 		int left = rawPosts[iRawPosts].Find(POST_CONTENT_LEFT) + _tcslen(POST_CONTENT_LEFT);
 		left = rawPosts[iRawPosts].Find(_T(">"), left) + 1;

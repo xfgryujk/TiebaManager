@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "GetImages.h"
 
+#include <StringHelper.h>
 #include <TiebaClawer.h>
 
 #include "TiebaManager.h"
@@ -54,7 +55,7 @@ void CGetImages::operator () (vector<CString>& img)
 	else
 	{
 		// 从帖子或楼中楼获取图片
-		CString content, portrait;
+		CString content, portraitUrl;
 		if (m_object.m_type == TBObject::POST)
 		{
 			PostInfo& post = (PostInfo&)m_object;
@@ -62,7 +63,10 @@ void CGetImages::operator () (vector<CString>& img)
 			if (!theApp.m_tbmEventBus->Post(GetPostImagesEvent, event_) || event_.result)
 				return;
 			content = post.GetContent();
-			portrait = post.authorPortrait;
+			CString tmp = GetStringBetween(post.rawData, _T("class=\"p_author_face"), _T("</a>"));
+			portraitUrl = GetStringBetween(post.rawData, _T("data-tb-lazyload=\""), _T("\""));
+			if (portraitUrl == _T(""))
+				portraitUrl = GetStringBetween(post.rawData, _T("src=\""), _T("\""));
 		}
 		else if (m_object.m_type == TBObject::LZL)
 		{
@@ -71,13 +75,13 @@ void CGetImages::operator () (vector<CString>& img)
 			if (!theApp.m_tbmEventBus->Post(GetLzlImagesEvent, event_) || event_.result)
 				return;
 			content = lzl.GetContent();
-			portrait = lzl.authorPortrait;
+			portraitUrl = _T("http://tb.himg.baidu.com/sys/portrait/item/") + lzl.authorPortrait;
 		}
 		
 		for (std::regex_iterator<LPCTSTR> it((LPCTSTR)content, (LPCTSTR)content + content.GetLength(), POST_IMG_REG),
 			end; it != end; ++it)
 			img.push_back((*it)[2].str().c_str());
-		if (portrait != _T(""))
-			img.push_back(_T("http://tb.himg.baidu.com/sys/portrait/item/") + portrait);
+		if (portraitUrl != _T(""))
+			img.push_back(portraitUrl);
 	}
 }
