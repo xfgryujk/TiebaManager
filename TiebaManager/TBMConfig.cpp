@@ -98,10 +98,6 @@ DECLEAR_WRITE(CPlan::Keyword)
 	trigCount.Write(*optionNode);
 }
 
-DEFINE_READ_VECTOR(CPlan::Keyword)
-
-DEFINE_WRITE_VECTOR(CPlan::Keyword)
-
 CPlan::CPlan() : CTBMCoreConfig("Plan"),
 	m_autoSaveLog		("AutoSaveLog",			FALSE),
 	m_illegalLevel		("IllegalLevel",		0,		[](const int& value)->BOOL{ return 0 <= value && value <= 6; }),

@@ -123,21 +123,6 @@ HELPER_API DECLEAR_READ(CString)
 		UseDefault();
 }
 
-// 读vector
-
-HELPER_API DEFINE_READ_VECTOR(CString)
-
-// 读set
-
-HELPER_API DEFINE_READ_SET(__int64)
-HELPER_API DEFINE_READ_SET(CString)
-
-// 读map
-
-HELPER_API DEFINE_READ_MAP(__int64, int)
-HELPER_API DEFINE_READ_MAP(CString, int)
-HELPER_API DEFINE_READ_MAP(__int64, CString)
-
 
 // 写基本类型
 
@@ -193,22 +178,6 @@ HELPER_API DECLEAR_WRITE(CString)
 
 	optionNode->LinkEndChild(doc->NewText(W2GBK(m_value)));
 }
-
-// 写vector
-
-HELPER_API DEFINE_WRITE_VECTOR(CString)
-
-// 写set
-
-HELPER_API DEFINE_WRITE_SET(__int64)
-HELPER_API DEFINE_WRITE_SET(CString)
-
-// 写map
-
-HELPER_API DEFINE_WRITE_MAP(__int64, int)
-HELPER_API DEFINE_WRITE_MAP(CString, int)
-HELPER_API DEFINE_WRITE_MAP(__int64, CString)
-
 #pragma endregion
 
 // 配置读写实现 ///////////////////////////////////////////////////////////////////////////

@@ -58,10 +58,6 @@ HELPER_API DECLEAR_WRITE(RegexText)
 	text.Write(*optionNode);
 }
 
-HELPER_API DEFINE_READ_VECTOR(RegexText)
-
-HELPER_API DEFINE_WRITE_VECTOR(RegexText)
-
 
 // 分割字符串
 HELPER_API void SplitString(CStringArray& dst, const CString& src, const CString& slipt)

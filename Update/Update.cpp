@@ -87,10 +87,6 @@ UPDATE_API DECLEAR_WRITE(CUpdateInfo::FileInfo)
 	md5.Write(*optionNode);
 }
 
-UPDATE_API DEFINE_READ_VECTOR(CUpdateInfo::FileInfo)
-
-UPDATE_API DEFINE_WRITE_VECTOR(CUpdateInfo::FileInfo)
-
 CUpdateInfo::CUpdateInfo() : CConfigBase("UpdateInfo"),
 	m_version("Version", _T("")),
 	m_updateLog("UpdateLog", _T("")),
