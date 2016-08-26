@@ -269,6 +269,10 @@ void CTBMScan::ScanPostThread(int threadID)
 				goto Next;
 			}
 
+			// 判断贴吧ID，避免百度乱插其他吧的帖子
+			if (GetStringBetween(src, _T("fid:'"), _T("'")) != m_operate->m_tiebaOperate->GetForumID())
+				goto Next;
+
 			// 获取帖子页数
 			pageCount = GetStringBetween(src, PAGE_COUNT_LEFT, PAGE_COUNT_RIGHT);
 			if (pageCount == _T(""))

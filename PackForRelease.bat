@@ -6,7 +6,9 @@ copy /y Release\Helper.dll 贴吧管理器
 copy /y Release\TiebaAPI.dll 贴吧管理器
 copy /y Release\TiebaManagerCore.dll 贴吧管理器
 copy /y Release\Update.dll 贴吧管理器
-copy /y Release\plugin\*.dll 贴吧管理器\plugin
+copy /y Release\plugin\Defriend.dll 贴吧管理器\plugin
+copy /y Release\plugin\LockThread.dll 贴吧管理器\plugin
+copy /y Release\plugin\LoopBan.dll 贴吧管理器\plugin
 del 贴吧管理器.zip >nul 2>nul
 "F:\Program Files\7-Zip\7z.exe" a -tzip 贴吧管理器 贴吧管理器
 ping 127.0.0.1 -n 3 >nul
