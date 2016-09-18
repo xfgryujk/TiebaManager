@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="GBK"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 防止扫描百度插入的其他贴吧的帖子</UpdateLog>
+    <UpdateLog>1. 修复部分贴吧还扫描其他贴吧的帖子</UpdateLog>
     <Files>
         <item>
             <value>

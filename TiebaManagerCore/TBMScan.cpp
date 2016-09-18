@@ -270,8 +270,14 @@ void CTBMScan::ScanPostThread(int threadID)
 			}
 
 			// 判断贴吧ID，避免百度乱插其他吧的帖子
-			if (GetStringBetween(src, _T("fid:'"), _T("'")) != m_operate->m_tiebaOperate->GetForumID())
-				goto Next;
+			{
+				CString tmp = GetStringBetween(src, _T("PageData.forum"), _T("}"));
+				tmp.Replace(_T("\r\n"), _T(""));
+				std::wcmatch res;
+				if (std::regex_search((LPCTSTR)tmp, res, FORUM_ID_NAME_REG)
+					&& res[3].str().c_str() != m_operate->m_tiebaOperate->GetForumID())
+					goto Next;
+			}
 
 			// 获取帖子页数
 			pageCount = GetStringBetween(src, PAGE_COUNT_LEFT, PAGE_COUNT_RIGHT);
