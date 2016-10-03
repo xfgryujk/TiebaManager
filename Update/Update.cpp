@@ -33,9 +33,9 @@ UPDATE_API const CString UPDATE_CURRENT_VERSION = _T("16-09-18");
 static const CString MANUALLY_UPDATE_URL = _T("http://sinacloud.net/xfgryujk/TiebaManager/贴吧管理器.zip");
 UPDATE_API const CString UPDATE_INFO_URL = _T("http://sinacloud.net/xfgryujk/TiebaManager/UpdateInfo.xml");
 
-static const CString UPDATE_DIR_PATH = _T("Update\\"); // 只能是一级目录
+static const CString UPDATE_DIR_PATH = _T("Update\\"); // 只能是一级目录，因为批处理里用了相对路径
 static const CString UPDATE_BAT_NAME = _T("Update.bat");
-static const CString BACKUP_DIR_PATH = _T("Backup\\"); // 只能是一级目录
+static const CString BACKUP_DIR_PATH = _T("Backup\\"); // 只能是一级目录，因为批处理里用了相对路径
 static const CString RESTORE_BAT_NAME = _T("Restore.bat");
 
 
@@ -99,10 +99,32 @@ CUpdateInfo::CUpdateInfo() : CConfigBase("UpdateInfo"),
 #pragma endregion
 
 
+// 用新版文件替换旧版的
+static BOOL ReplaceFiles(const vector<CUpdateInfo::FileInfo>& files, const CString& relativeDir, const CString& updateDir)
+{
+	// 原理：可移动正在运行的程序、DLL文件（但是不能删除），貌似可以用ReplaceFile这个API，但是没试过
+	for (const auto& fileInfo : files)
+	{
+		if ((PathFileExists(updateDir + fileInfo.dir + fileInfo.name + _T(".bak"))
+			&& !DeleteFile(updateDir + fileInfo.dir + fileInfo.name + _T(".bak")))
+			|| (PathFileExists(relativeDir + fileInfo.dir + fileInfo.name)
+			&& !MoveFile(relativeDir + fileInfo.dir + fileInfo.name, updateDir + fileInfo.dir + fileInfo.name + _T(".bak"))))
+		{
+			AfxMessageBox(_T("移动文件\"") + relativeDir + fileInfo.dir + fileInfo.name + _T("\"失败！"), MB_ICONERROR);
+			return FALSE;
+		}
+		if (!MoveFile(updateDir + fileInfo.dir + fileInfo.name, relativeDir + fileInfo.dir + fileInfo.name))
+		{
+			AfxMessageBox(_T("移动文件\"") + updateDir + fileInfo.dir + fileInfo.name + _T("\"失败！"), MB_ICONERROR);
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
 // 备份、写还原批处理
 static BOOL Backup(const vector<CUpdateInfo::FileInfo>& updateFiles, const CString& relativeDir)
 {
-	BOOL res = TRUE;
 	CString backupDir = relativeDir + BACKUP_DIR_PATH;
 	CreateDir(backupDir);
 
@@ -118,7 +140,7 @@ ping 127.0.0.1 -n 1 >nul
 			// 原来存在的文件，复制一份，在批处理中复制回去
 			CreateDir(backupDir + fileInfo.dir);
 			if (!CopyFile(relativeDir + fileInfo.dir + fileInfo.name, backupDir + fileInfo.dir + fileInfo.name, FALSE))
-				res = FALSE;
+				return FALSE;
 			bat += _T(R"(if exist ".\)") + fileInfo.dir + fileInfo.name
 				+ _T(R"(" copy /y ".\)") + fileInfo.dir + fileInfo.name + _T(R"(" "..\)") + fileInfo.dir + fileInfo.name
 				+ _T(R"(" || goto Restore
@@ -137,34 +159,34 @@ ping 127.0.0.1 -n 1 >nul
 	bat += _T(R"(pause
 )");
 
-	return res && WriteString(bat, backupDir + RESTORE_BAT_NAME);
+	return WriteString(bat, backupDir + RESTORE_BAT_NAME);
 }
 
 // 写更新批处理
-static BOOL WriteUpdateBat(const vector<CUpdateInfo::FileInfo>& files, const CString& updateDir)
-{
-	CString bat = _T(R"(@echo off
-:MoveFile
-ping 127.0.0.1 -n 1 >nul
-)");
-
-	// 移动文件
-	for (const auto& fileInfo : files)
-	{
-		bat += _T(R"(if exist ".\)") + fileInfo.dir + fileInfo.name 
-			+ _T(R"(" move /y ".\)") + fileInfo.dir + fileInfo.name + _T(R"(" "..\)") + fileInfo.dir + fileInfo.name 
-			+ _T(R"(" || goto MoveFile
-)");
-	}
-
-	// 删除更新目录
-	bat += _T(R"(cd ..
-rd /s /q )") + UPDATE_DIR_PATH + _T(R"(
-pause
-)");
-
-	return WriteString(bat, updateDir + UPDATE_BAT_NAME);
-}
+//static BOOL WriteUpdateBat(const vector<CUpdateInfo::FileInfo>& files, const CString& updateDir)
+//{
+//	CString bat = _T(R"(@echo off
+//:MoveFile
+//ping 127.0.0.1 -n 1 >nul
+//)");
+//
+//	// 移动文件
+//	for (const auto& fileInfo : files)
+//	{
+//		bat += _T(R"(if exist ".\)") + fileInfo.dir + fileInfo.name 
+//			+ _T(R"(" move /y ".\)") + fileInfo.dir + fileInfo.name + _T(R"(" "..\)") + fileInfo.dir + fileInfo.name 
+//			+ _T(R"(" || goto MoveFile
+//)");
+//	}
+//
+//	// 删除更新目录
+//	bat += _T(R"(cd ..
+//rd /s /q )") + UPDATE_DIR_PATH + _T(R"(
+//pause
+//)");
+//
+//	return WriteString(bat, updateDir + UPDATE_BAT_NAME);
+//}
 
 // 下载需要更新的文件
 static BOOL DownloadFiles(const vector<CUpdateInfo::FileInfo>& files, const CString& relativeDir, 
@@ -180,14 +202,14 @@ static BOOL DownloadFiles(const vector<CUpdateInfo::FileInfo>& files, const CStr
 		if (f.m_hFile != CFile::hFileNull)
 			f.Close();
 
+		updateFiles.push_back(fileInfo);
+
 		// 已下载此文件
 		if (f.Open(updateDir + fileInfo.dir + fileInfo.name, CFile::modeRead)
 			&& GetMD5_File(f) == fileInfo.md5)
 			continue;
 		if (f.m_hFile != CFile::hFileNull)
 			f.Close();
-
-		updateFiles.push_back(fileInfo);
 
 		// 下载
 		unique_ptr<BYTE[]> buffer;
@@ -232,19 +254,26 @@ static void UpdateThread(CUpdateInfo* updateInfo_)
 		goto End;
 
 	// 写更新批处理
-	if (!WriteUpdateBat(updateInfo->m_files, updateDir))
+	/*if (!WriteUpdateBat(updateFiles, updateDir))
 	{
 		AfxMessageBox(_T("写更新批处理失败，你可以手动把\"") + updateDir + _T("\"下的所有文件移动到程序目录下完成更新"), MB_ICONERROR);
 		goto End;
-	}
+	}*/
 
 	// 备份
-	Backup(updateFiles, relativeDir);
+	if (!Backup(updateFiles, relativeDir))
+		AfxMessageBox(_T("创建备份失败，请手动备份！"), MB_ICONERROR);
 
-	AfxMessageBox(_T("更新文件下载完毕，关闭本程序以完成更新，不要关闭cmd窗口"));
+	//AfxMessageBox(_T("更新文件下载完毕，关闭本程序以完成更新，不要关闭cmd窗口"));
 
-	// 执行批处理
-	ShellExecute(NULL, _T("open"), updateDir + UPDATE_BAT_NAME, NULL, updateDir, SW_NORMAL);
+	//// 执行批处理
+	//ShellExecute(NULL, _T("open"), updateDir + UPDATE_BAT_NAME, NULL, updateDir, SW_NORMAL);
+
+	// 替换旧文件
+	if (!ReplaceFiles(updateFiles, relativeDir, updateDir))
+		goto End;
+
+	AfxMessageBox(_T("更新完毕，重启本程序后生效"));
 
 
 End:
