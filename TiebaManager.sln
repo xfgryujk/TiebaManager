@@ -76,6 +76,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginSample", "Plugin\Plug
 		{99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1} = {99E3B2B6-C3F7-473A-9505-C7BB8D81C7D1}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Property", "Property", "{C30F44C9-9D19-4F88-8C02-94985ED1502A}"
+	ProjectSection(SolutionItems) = preProject
+		CommonProperty.props = CommonProperty.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
