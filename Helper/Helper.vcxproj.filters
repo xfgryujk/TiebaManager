@@ -118,56 +118,56 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="API\ConfigFile.h">
+    <ClInclude Include="..\Include\BlockingQueue.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\StringHelper.h">
+    <ClInclude Include="..\Include\ConfigFile.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\HelperCommon.h">
+    <ClInclude Include="..\Include\EventHelper.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\Md5.h">
+    <ClInclude Include="..\Include\HelperCommon.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\MiscHelper.h">
+    <ClInclude Include="..\Include\ImageHelper.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\ImageHelper.h">
+    <ClInclude Include="..\Include\Md5.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\NetworkHelper.h">
+    <ClInclude Include="..\Include\MiscHelper.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\EventHelper.h">
+    <ClInclude Include="..\Include\NetworkHelper.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\BlockingQueue.h">
+    <ClInclude Include="..\Include\StringHelper.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\ResizeControl.h">
+    <ClInclude Include="..\Include\ResizeControl.h">
       <Filter>头文件\API\UI</Filter>
     </ClInclude>
-    <ClInclude Include="API\InputDlg.h">
+    <ClInclude Include="..\Include\ModelessDlg.h">
+      <Filter>头文件\API\UI\DlgBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\NormalDlg.h">
+      <Filter>头文件\API\UI\DlgBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\InputDlg.h">
       <Filter>头文件\API\UI\InputDlg</Filter>
     </ClInclude>
-    <ClInclude Include="API\RegListPage.h">
+    <ClInclude Include="..\Include\ListPage.h">
       <Filter>头文件\API\UI\ListPage</Filter>
     </ClInclude>
-    <ClInclude Include="API\ListPage.h">
+    <ClInclude Include="..\Include\ListTestPage.h">
       <Filter>头文件\API\UI\ListPage</Filter>
     </ClInclude>
-    <ClInclude Include="API\ListTestPage.h">
+    <ClInclude Include="..\Include\NormalListPage.h">
       <Filter>头文件\API\UI\ListPage</Filter>
     </ClInclude>
-    <ClInclude Include="API\NormalListPage.h">
+    <ClInclude Include="..\Include\RegListPage.h">
       <Filter>头文件\API\UI\ListPage</Filter>
-    </ClInclude>
-    <ClInclude Include="API\NormalDlg.h">
-      <Filter>头文件\API\UI\DlgBase</Filter>
-    </ClInclude>
-    <ClInclude Include="API\ModelessDlg.h">
-      <Filter>头文件\API\UI\DlgBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

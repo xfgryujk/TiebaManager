@@ -230,9 +230,12 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-!Library/bin/
-!Library/bin/Debug/
-!Library/bin/Release/
+!3rdParty/bin/
+!3rdParty/bin/Debug/
+!3rdParty/bin/Release/
+!3rdParty/lib/Debug/
+!3rdParty/lib/Release/
 发布用/opencv_world300.dll
 历史备份
+CommonProperty.props
 IgnoreBefore

@@ -64,22 +64,22 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="API\TBMOperate.h">
+    <ClInclude Include="..\Include\TBMCoreConfig.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\TiebaManagerCoreCommon.h">
+    <ClInclude Include="..\Include\TBMOperate.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\TBMScan.h">
+    <ClInclude Include="..\Include\TBMOperateEvent.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\TBMScanEvent.h">
+    <ClInclude Include="..\Include\TBMScan.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\TBMCoreConfig.h">
+    <ClInclude Include="..\Include\TBMScanEvent.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\TBMOperateEvent.h">
+    <ClInclude Include="..\Include\TiebaManagerCoreCommon.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>

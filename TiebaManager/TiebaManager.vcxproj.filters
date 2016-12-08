@@ -156,9 +156,6 @@
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
     </ClInclude>
-    <ClInclude Include="API\TiebaManagerCommon.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
     <ClInclude Include="TBMOperateListeners.h">
       <Filter>头文件\Event</Filter>
     </ClInclude>
@@ -183,15 +180,6 @@
     <ClInclude Include="Plugin.h">
       <Filter>头文件\Plugin</Filter>
     </ClInclude>
-    <ClInclude Include="API\PluginFunctions.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
-    <ClInclude Include="API\TBMEvent.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
-    <ClInclude Include="API\TBMAPI.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
     <ClInclude Include="PluginDlg.h">
       <Filter>头文件\GUI</Filter>
     </ClInclude>
@@ -200,6 +188,18 @@
     </ClInclude>
     <ClInclude Include="GetImages.h">
       <Filter>头文件\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\PluginFunctions.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TBMAPI.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TBMEvent.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TiebaManagerCommon.h">
+      <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

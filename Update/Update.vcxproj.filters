@@ -49,7 +49,10 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="API\Update.h">
+    <ClInclude Include="..\Include\Update.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\UpdateCommon.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>

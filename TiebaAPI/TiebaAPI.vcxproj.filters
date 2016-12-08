@@ -55,13 +55,13 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="API\TiebaAPICommon.h">
+    <ClInclude Include="..\Include\TiebaAPICommon.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\TiebaOperate.h">
+    <ClInclude Include="..\Include\TiebaClawer.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="API\TiebaClawer.h">
+    <ClInclude Include="..\Include\TiebaOperate.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>
