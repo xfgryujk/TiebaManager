@@ -63,8 +63,44 @@ public:
 };
 
 template<class Class>
-class CServerXMLHTTPRequest : public CWinHttpBase
+class CServerXMLHTTPRequest : public CWinHttpBase, private IDispatch
 {
+	// 实现IUnknown
+private:
+	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void **ppvObject)
+	{
+		if (iid == IID_IDispatch || iid == IID_IUnknown)
+		{
+			*ppvObject = (iid == IID_IDispatch ? (IDispatch*)this : (IUnknown*)this);
+			return S_OK;
+		}
+		return E_NOINTERFACE;
+	}
+
+	ULONG STDMETHODCALLTYPE AddRef() { return 0; }
+	ULONG STDMETHODCALLTYPE Release() { return 0; }
+
+	// 实现IDispatch
+protected:
+	BOOL m_completed = FALSE;
+
+private:
+	HRESULT STDMETHODCALLTYPE GetTypeInfoCount(UINT *pctinfo) { return E_NOTIMPL; }
+	HRESULT STDMETHODCALLTYPE GetTypeInfo(UINT iTInfo, LCID lcid, ITypeInfo **ppTInfo) { return E_NOTIMPL; }
+	HRESULT STDMETHODCALLTYPE GetIDsOfNames(REFIID riid, LPOLESTR *rgszNames, UINT cNames, LCID lcid, DISPID *rgDispId) { return E_NOTIMPL; }
+
+	HRESULT STDMETHODCALLTYPE Invoke(DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams,
+		VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr)
+	{
+		long state = 0;
+		if (FAILED(m_xml->get_readyState(&state)))
+			return S_OK;
+		if (state == 4)
+			m_completed = TRUE;
+		return S_OK;
+	}
+
+	// 实现CWinHttpBase
 protected:
 	CComPtr<IServerXMLHTTPRequest> m_xml;
 
@@ -74,6 +110,9 @@ public:
 		HRESULT hr = m_xml.CoCreateInstance(__uuidof(Class));
 		if (FAILED(hr))
 			WriteError(errorOutput, hr);
+
+		// 注册回调事件
+		m_xml->put_onreadystatechange(this);
 	}
 
 	BOOL IsEmpty()
@@ -98,10 +137,7 @@ public:
 	
 	BOOL IsCompleted()
 	{
-		long state = 0;
-		if (FAILED(m_xml->get_readyState(&state)))
-			return FALSE;
-		return state == 4;
+		return m_completed;
 	}
 
 	HRESULT Abort()
@@ -164,86 +200,64 @@ public:
 	}
 };
 
-class CWinHttpRequest : public CWinHttpBase
+class CWinHttpRequest : public CWinHttpBase, private IWinHttpRequestEvents
 {
-protected:
-	// 传递给COM组件的回调类，用来监听回应结束事件
-	class CWinHttpRequestEvents : public IWinHttpRequestEvents
+	// 实现IUnknown
+private:
+	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void **ppvObject)
 	{
-		// 实现IUnknown
-	protected:
-		DWORD m_dwRefCount;
-
-	public:
-		HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, void **ppvObject)
+		if (iid == __uuidof(IWinHttpRequestEvents) || iid == IID_IUnknown)
 		{
-			if (iid == __uuidof(IWinHttpRequestEvents) || iid == IID_IUnknown)
-			{
-				m_dwRefCount++;
-				*ppvObject = this;
-				return S_OK;
-			}
-			return E_NOINTERFACE;
+			*ppvObject = (iid == __uuidof(IWinHttpRequestEvents) ? (IWinHttpRequestEvents*)this : (IUnknown*)this);
+			return S_OK;
 		}
+		return E_NOINTERFACE;
+	}
 
-		ULONG STDMETHODCALLTYPE AddRef()
-		{
-			return m_dwRefCount++;
-		}
+	ULONG STDMETHODCALLTYPE AddRef() { return 0; }
+	ULONG STDMETHODCALLTYPE Release() { return 0; }
 
-		ULONG STDMETHODCALLTYPE Release()
-		{
-			ULONG count = m_dwRefCount--;
-			if (m_dwRefCount == 0)
-				delete this;
-			return count;
-		}
+	// 实现IWinHttpRequestEvents
+protected:
+	BOOL m_completed = FALSE;
 
-		// 实现IWinHttpRequestEvents
-	protected:
-		CWinHttpRequest* m_request;
+private:
+	void __stdcall OnResponseStart(long Status, BSTR ContentType) {}
+	void __stdcall OnResponseDataAvailable(SAFEARRAY** Data) {}
+	void __stdcall OnError(long ErrorNumber, BSTR ErrorDescription) {}
 
-	public:
-		CWinHttpRequestEvents(CWinHttpRequest* request)
-		{
-			m_dwRefCount = 0;
-			m_request = request;
-		}
+	void __stdcall OnResponseFinished()
+	{
+		m_completed = TRUE;
+	}
 
-		void __stdcall OnResponseStart(long Status, BSTR ContentType) {};
-		void __stdcall OnResponseDataAvailable(SAFEARRAY** Data) {};
-		void __stdcall OnError(long ErrorNumber, BSTR ErrorDescription) {};
-
-		void __stdcall OnResponseFinished()
-		{
-			m_request->m_completed = TRUE;
-		}
-	};
-
+	// 实现CWinHttpBase
 protected:
 	CComPtr<IWinHttpRequest> m_request;
 	DWORD m_dwAdvise;
 
-	BOOL m_completed;
-
 public:
 	CWinHttpRequest()
 	{
-		m_completed = FALSE;
-
 		HRESULT hr = m_request.CoCreateInstance(__uuidof(WinHttpRequest));
 		if (FAILED(hr))
+		{
 			WriteError(_T("CoCreateInstance(WinHttpRequest)"), hr);
+			return;
+		}
 
 		// 注册回调事件
 		CComPtr<IConnectionPointContainer> connectionPointContainer;
 		hr = m_request.QueryInterface(&connectionPointContainer);
 		if (FAILED(hr))
+		{
 			WriteError(_T("QueryInterface(IConnectionPointContainer)"), hr);
+			return;
+		}
 
 		CComPtr<IConnectionPoint> connectionPoint;
 		connectionPointContainer->FindConnectionPoint(__uuidof(IWinHttpRequestEvents), &connectionPoint);
-		connectionPoint->Advise(new CWinHttpRequestEvents(this), &m_dwAdvise);
+		connectionPoint->Advise(this, &m_dwAdvise);
 	}
 
 	BOOL IsEmpty()
