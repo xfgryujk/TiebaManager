@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="GBK"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 修复部分贴吧还扫描其他贴吧的帖子</UpdateLog>
+    <UpdateLog>1. 修改更新方式
+2. 修复大部分获取主题列表失败的问题</UpdateLog>
     <Files>
         <item>
             <value>
@@ -23,6 +24,46 @@
             <value>
                 <Dir></Dir>
                 <Name>msvcr120.dll</Name>
+                <URL></URL>
+                <MD5></MD5>
+            </value>
+        </item>
+        <item>
+            <value>
+                <Dir></Dir>
+                <Name>libcurl.dll</Name>
+                <URL></URL>
+                <MD5></MD5>
+            </value>
+        </item>
+        <item>
+            <value>
+                <Dir></Dir>
+                <Name>libeay32.dll</Name>
+                <URL></URL>
+                <MD5></MD5>
+            </value>
+        </item>
+        <item>
+            <value>
+                <Dir></Dir>
+                <Name>libidn-11.dll</Name>
+                <URL></URL>
+                <MD5></MD5>
+            </value>
+        </item>
+        <item>
+            <value>
+                <Dir></Dir>
+                <Name>ssleay32.dll</Name>
+                <URL></URL>
+                <MD5></MD5>
+            </value>
+        </item>
+        <item>
+            <value>
+                <Dir></Dir>
+                <Name>zlib1.dll</Name>
                 <URL></URL>
                 <MD5></MD5>
             </value>
