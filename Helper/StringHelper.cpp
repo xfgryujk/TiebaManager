@@ -242,8 +242,7 @@ HELPER_API CStringW ANSI2W(const CStringA& src, UINT codePage)
 	return res;
 }
 
-// URL编码
-HELPER_API CString EncodeURI(const CString& src)
+static CString EncodeURIBase(LPCTSTR functionName, const CString& src)
 {
 	CComPtr<IScriptControl> script;
 	if (FAILED(script.CoCreateInstance(__uuidof(ScriptControl))))
@@ -255,9 +254,23 @@ HELPER_API CString EncodeURI(const CString& src)
 	if (FAILED(SafeArrayPutElement(params, &index, &param)))
 		return _T("");
 	_variant_t result;
-	script->raw_Run(_bstr_t(_T("encodeURIComponent")), &params, result.GetAddress());
+	script->raw_Run(_bstr_t(functionName), &params, result.GetAddress());
 	SafeArrayDestroy(params);
 	return (LPCTSTR)(_bstr_t)result;
+}
+
+// URL编码
+HELPER_API CString EncodeURI(const CString& src)
+{
+	return EncodeURIBase(_T("encodeURIComponent"), src);
+}
+
+// URL编码，不替换":/%=+"等字符
+HELPER_API CString EncodeFullURI(const CString& src)
+{
+	CString result = EncodeURIBase(_T("encodeURI"), src);
+	result.Replace(_T("%25"), _T("%"));
+	return result;
 }
 
 // URL编码 GBK版

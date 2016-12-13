@@ -75,6 +75,8 @@ inline CStringA W2GBK(const CStringW& src) { return W2ANSI(src, 936); }
 inline CStringW GBK2W(const CStringA& src) { return ANSI2W(src, 936); }
 // URL编码
 HELPER_API CString EncodeURI(const CString& src);
+// URL编码，不替换":/%=+"等字符
+HELPER_API CString EncodeFullURI(const CString& src);
 // URL编码 GBK版
 HELPER_API CString EncodeURI_GBK(const CString& src);
 // HTML转义

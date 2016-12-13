@@ -2,7 +2,8 @@
 <UpdateInfo>
     <Version></Version>
     <UpdateLog>1. 修改更新方式
-2. 修复大部分获取主题列表失败的问题</UpdateLog>
+2. 修复大部分获取主题列表失败的问题
+3. 修复POST忘记添加参数</UpdateLog>
     <Files>
         <item>
             <value>

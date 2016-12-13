@@ -63,7 +63,7 @@ static HTTPRequestResult HTTPRequestBase(unique_ptr<BYTE[]>* buffer, ULONG* size
 		return NET_FAILED_TO_CREATE_INSTANCE;
 
 	// 设置
-	curl_easy_setopt(easyHandle.get(), CURLOPT_URL, (LPCSTR)CStringA(URL));
+	curl_easy_setopt(easyHandle.get(), CURLOPT_URL, (LPCSTR)CStringA(EncodeFullURI(URL)));
 	curl_easy_setopt(easyHandle.get(), CURLOPT_SSL_VERIFYPEER, 0L);
 	curl_easy_setopt(easyHandle.get(), CURLOPT_SSL_VERIFYHOST, 0L);
 	CMemFile headerBuf, bodyBuf;
@@ -78,7 +78,12 @@ static HTTPRequestResult HTTPRequestBase(unique_ptr<BYTE[]>* buffer, ULONG* size
 	curl_easy_setopt(easyHandle.get(), CURLOPT_ACCEPT_ENCODING, "gzip, deflate");
 	chunk = curl_slist_append(chunk, "Accept-Language: zh-CN,zh;q=0.8");
 	if (postMethod)
-		chunk = curl_slist_append(chunk, "Content-Type: application/x-www-form-urlencoded");
+	{
+		curl_easy_setopt(easyHandle.get(), CURLOPT_POST, 1L);
+		CStringA dataA(EncodeFullURI(data));
+		curl_easy_setopt(easyHandle.get(), CURLOPT_POSTFIELDSIZE, (long)dataA.GetLength());
+		curl_easy_setopt(easyHandle.get(), CURLOPT_COPYPOSTFIELDS, (LPCSTR)dataA);
+	}
 	if (cookie != NULL)
 		curl_easy_setopt(easyHandle.get(), CURLOPT_COOKIE, (LPCSTR)CStringA(*cookie));
 	curl_easy_setopt(easyHandle.get(), CURLOPT_HTTPHEADER, chunk);
@@ -136,16 +141,19 @@ static HTTPRequestResult HTTPRequestBase(unique_ptr<BYTE[]>* buffer, ULONG* size
 	{
 		char* pContentType = NULL;
 		curl_easy_getinfo(easyHandle.get(), CURLINFO_CONTENT_TYPE, &pContentType);
-		char* pLeft = strstr(pContentType, "charset=");
-		if (pLeft == NULL)
-			*charset = _T("");
-		else
+		if (pContentType != NULL)
 		{
-			pLeft += 8;
-			char* pRight = pLeft;
-			while (*pRight != '\0' && *pRight != ';')
-				pRight++;
-			*charset = CString(pLeft, pRight - pLeft).MakeLower();
+			char* pLeft = strstr(pContentType, "charset=");
+			if (pLeft == NULL)
+				*charset = _T("");
+			else
+			{
+				pLeft += 8;
+				char* pRight = pLeft;
+				while (*pRight != '\0' && *pRight != ';')
+					pRight++;
+				*charset = CString(pLeft, pRight - pLeft).MakeLower();
+			}
 		}
 	}
 
