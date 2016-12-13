@@ -41,7 +41,7 @@ struct RegexText
 HELPER_API void SplitString(CStringArray& dst, const CString& src, const CString& slipt);
 
 // 字符串包含
-HELPER_API BOOL StringIncludes(const CString& str, const CString& content);
+inline BOOL StringIncludes(const CString& str, const CString& content) { return str.Find(content) != -1; }
 // 字符串包含
 HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL isRegex);
 // 字符串包含
@@ -61,10 +61,18 @@ HELPER_API CString GetStringBefore(const CString& src, const CString& right, int
 // 写字符串到文件
 HELPER_API BOOL WriteString(const CString& src, const CString& path);
 
-// Unicode转GBK
-HELPER_API CStringA W2GBK(const CStringW& src);
-// GBK转Unicode
-HELPER_API CStringW GBK2W(const CStringA& src);
+// Unicode(UCS-2)转ANSI
+HELPER_API CStringA W2ANSI(const CStringW& src, UINT codePage);
+// ANSI转Unicode(UCS-2)
+HELPER_API CStringW ANSI2W(const CStringA& src, UINT codePage);
+// Unicode(UCS-2)转UTF-8
+inline CStringA W2UTF8(const CStringW& src) { return W2ANSI(src, CP_UTF8); }
+// UTF-8转Unicode(UCS-2)
+inline CStringW UTF82W(const CStringA& src) { return ANSI2W(src, CP_UTF8); }
+// Unicode(UCS-2)转GBK
+inline CStringA W2GBK(const CStringW& src) { return W2ANSI(src, 936); }
+// GBK转Unicode(UCS-2)
+inline CStringW GBK2W(const CStringA& src) { return ANSI2W(src, 936); }
 // URL编码
 HELPER_API CString EncodeURI(const CString& src);
 // URL编码 GBK版

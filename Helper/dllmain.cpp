@@ -5,6 +5,8 @@
 #include <afxwin.h>
 #include <afxdllx.h>
 
+#include <curl\curl.h>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -39,6 +41,8 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 
 		new CDynLinkLibrary(HelperDLL);
 
+
+		curl_global_init(CURL_GLOBAL_ALL);
 	}
 	else if (dwReason == DLL_PROCESS_DETACH)
 	{
@@ -46,6 +50,9 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 
 		// 在调用析构函数之前终止该库
 		AfxTermExtensionModule(HelperDLL);
+
+
+		curl_global_cleanup();
 	}
 	return 1;   // 确定
 }

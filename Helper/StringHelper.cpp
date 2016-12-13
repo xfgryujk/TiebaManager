@@ -76,12 +76,6 @@ HELPER_API void SplitString(CStringArray& dst, const CString& src, const CString
 
 
 // 字符串包含
-HELPER_API BOOL StringIncludes(const CString& str, const CString& content)
-{
-	return str.Find(content) != -1;
-}
-
-// 字符串包含
 HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL isRegex)
 {
 	if (isRegex)
@@ -224,26 +218,26 @@ HELPER_API BOOL WriteString(const CString& src, const CString& path)
 }
 
 
-// Unicode转GBK
-HELPER_API CStringA W2GBK(const CStringW& src)
+// Unicode(UCS-2)转ANSI
+HELPER_API CStringA W2ANSI(const CStringW& src, UINT codePage)
 {
-	int dstLen = WideCharToMultiByte(936, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
+	int dstLen = WideCharToMultiByte(codePage, 0, src, src.GetLength(), NULL, 0, NULL, NULL);
 	if (dstLen == 0)
 		return "";
 	CStringA res;
-	WideCharToMultiByte(936, 0, src, src.GetLength(), res.GetBuffer(dstLen), dstLen, NULL, NULL);
+	WideCharToMultiByte(codePage, 0, src, src.GetLength(), res.GetBuffer(dstLen), dstLen, NULL, NULL);
 	res.ReleaseBuffer(dstLen);
 	return res;
 }
 
-// GBK转Unicode
-HELPER_API CStringW GBK2W(const CStringA& src)
+// ANSI转Unicode(UCS-2)
+HELPER_API CStringW ANSI2W(const CStringA& src, UINT codePage)
 {
-	int dstLen = MultiByteToWideChar(936, 0, src, src.GetLength(), NULL, 0);
+	int dstLen = MultiByteToWideChar(codePage, 0, src, src.GetLength(), NULL, 0);
 	if (dstLen == 0)
 		return L"";
 	CStringW res;
-	MultiByteToWideChar(936, 0, src, src.GetLength(), res.GetBuffer(dstLen), dstLen);
+	MultiByteToWideChar(codePage, 0, src, src.GetLength(), res.GetBuffer(dstLen), dstLen);
 	res.ReleaseBuffer(dstLen);
 	return res;
 }

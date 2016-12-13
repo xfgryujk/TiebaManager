@@ -16,6 +16,7 @@ TiebaManager
 
 * [OpenCV](http://opencv.org/) 3.0.0
 * [TinyXML2](http://www.grinninglizard.com/tinyxml2/index.html)
+* [libcurl](https://curl.haxx.se/libcurl/) 7.40.0
 
 
 链接
