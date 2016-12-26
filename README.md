@@ -31,9 +31,9 @@ TiebaManager
 =========
 
 1. 本项目使用VS2013编写，未在其他开发环境中测试
-2. 搭建OpenCV 3.0.0
+2. 安装OpenCV 3.0.0
 3. 下载本项目源码
-3. 把`CommonProperty.props.example`复制一份并重命名为`CommonProperty.props`
-3. 用文本编辑器（或在VS2013里）打开CommonProperty.props，把里面的OpenCV目录设置为你安装的OpenCV目录
-4. 新建Debug目录，把`%OpenCV%\build\x86\vc12\bin\opencv_world300d.dll`和`Library\bin\Debug\tinyxml2.dll`放进去
-5. 新建Release目录，把`%OpenCV%\build\x86\vc12\bin\opencv_world300.dll`和`Library\bin\Release\tinyxml2.dll`放进去
+4. 把`CommonProperty.props.example`复制一份并重命名为`CommonProperty.props`
+5. 用文本编辑器（或在VS2013里）打开CommonProperty.props，把里面的OpenCV目录设置为你安装的OpenCV目录
+6. 运行`SetupEnvironment.bat`
+7. 把`%OpenCV%\build\x86\vc12\bin\opencv_world300d.dll`放到`Debug`目录，把`%OpenCV%\build\x86\vc12\bin\opencv_world300.dll`放到`Release`目录和`贴吧管理器`目录

@@ -235,7 +235,12 @@ $RECYCLE.BIN/
 !3rdParty/*/*/
 # 不忽略Debug、Release
 !3rdParty/*/*/*/
-发布用/opencv_world300.dll
+
+贴吧管理器/*.dll
+!贴吧管理器/mfc120u.dll
+!贴吧管理器/msvcp120.dll
+!贴吧管理器/msvcr120.dll
+
 历史备份
 CommonProperty.props
 IgnoreBefore
