@@ -37,7 +37,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 CPluginSample g_pluginSample;
 
 
-// 见TiebaManager\API\PluginFunctions.h
+// 见TiebaManager\Include\PluginFunctions.h
 
 extern "C" __declspec(dllexport) bool __cdecl Init()
 {
