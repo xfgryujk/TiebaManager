@@ -20,6 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "HelperCommon.h"
 #include "ListPage.h"
+#include <vector>
+#include <set>
 
 
 // CNormalListPage 对话框
@@ -45,10 +47,10 @@ public:
 	virtual BOOL SetItem(int index);
 	virtual BOOL Export(const CString& path);
 	virtual BOOL Import(const CString& path);
-	virtual void ShowList(const vector<CString>& list);
-	virtual void ShowList(const set<CString>& list);
-	virtual void ApplyList(vector<CString>& list);
-	virtual void ApplyList(set<CString>& list);
+	virtual void ShowList(const std::vector<CString>& list);
+	virtual void ShowList(const std::set<CString>& list);
+	virtual void ApplyList(std::vector<CString>& list);
+	virtual void ApplyList(std::set<CString>& list);
 
 
 protected:

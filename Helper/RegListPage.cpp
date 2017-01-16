@@ -68,7 +68,7 @@ BOOL CRegListPage::OnInitDialog()
 class CRegListFile : public CConfigBase
 {
 public:
-	COption<vector<RegexText> > m_list;
+	COption<std::vector<RegexText> > m_list;
 
 	CRegListFile()
 		: CConfigBase("RegList"),
@@ -130,7 +130,7 @@ BOOL CRegListPage::TestMatch(int index)
 	return TestMatch(test, text, isRegex);
 }
 
-void CRegListPage::ShowList(const vector<RegexText>& list)
+void CRegListPage::ShowList(const std::vector<RegexText>& list)
 {
 	m_list.DeleteAllItems();
 	for (UINT i = 0; i < list.size(); i++)
@@ -140,7 +140,7 @@ void CRegListPage::ShowList(const vector<RegexText>& list)
 	}
 }
 
-void CRegListPage::ApplyList(vector<RegexText>& list)
+void CRegListPage::ApplyList(std::vector<RegexText>& list)
 {
 	int size = m_list.GetItemCount();
 	list.resize(size);

@@ -19,14 +19,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "HelperCommon.h"
+#pragma warning(disable:4819) // OpenCV头文件包含Unicode字符
 #include <opencv2\core\mat.hpp>
-using cv::Mat;
-using std::min;
+using std::min; // 用于GDI+的头文件
 using std::max;
 #include <atlimage.h>
 
 
-HELPER_API BOOL ReadImage(const CString& path, Mat& img);
+HELPER_API BOOL ReadImage(const CString& path, cv::Mat& img);
 HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, CImage& img);
-HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, Mat& img);
+HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, cv::Mat& img);
 HELPER_API CString GetImageName(const CString& imgUrl);

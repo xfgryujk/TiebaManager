@@ -45,8 +45,8 @@ public:
 	virtual BOOL SetItem(int index);
 	virtual BOOL Export(const CString& path);
 	virtual BOOL Import(const CString& path);
-	virtual void ShowList(const vector<RegexText>& list);
-	virtual void ApplyList(vector<RegexText>& list);
+	virtual void ShowList(const std::vector<RegexText>& list);
+	virtual void ApplyList(std::vector<RegexText>& list);
 protected:
 	virtual BOOL CheckMatchTooMuch(const CString& text, BOOL isRegex){ return FALSE; };
 	virtual BOOL TestMatch(int index);

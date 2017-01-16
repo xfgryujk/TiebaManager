@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <opencv2\imgcodecs.hpp>
 
 
-static BOOL CImageToMat(const CImage& image, Mat& img)
+static BOOL CImageToMat(const CImage& image, cv::Mat& img)
 {
 	img.create(image.GetHeight(), image.GetWidth(), CV_8UC3);
 	if (img.data == NULL)
@@ -49,7 +49,7 @@ static BOOL CImageToMat(const CImage& image, Mat& img)
 }
 
 // 从文件加载图片
-HELPER_API BOOL ReadImage(const CString& path, Mat& img)
+HELPER_API BOOL ReadImage(const CString& path, cv::Mat& img)
 {
 	img = cv::imread((LPCSTR)(CStringA)path);
 	if (img.data != NULL)
@@ -91,12 +91,12 @@ HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, CImage& img)
 }
 
 // 从内存加载图片
-HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, Mat& img)
+HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, cv::Mat& img)
 {
 	try
 	{
-		vector<BYTE> _imgBuffer(buffer, buffer + size);
-		img = cv::imdecode(Mat(_imgBuffer), cv::IMREAD_COLOR);
+		std::vector<BYTE> _imgBuffer(buffer, buffer + size);
+		img = cv::imdecode(cv::Mat(_imgBuffer), cv::IMREAD_COLOR);
 	}
 	catch (...)
 	{

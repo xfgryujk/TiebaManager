@@ -61,7 +61,6 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>.\Helper.def</ModuleDefinitionFile>
       <AdditionalDependencies>libcurldll.a;tinyxml2.lib;opencv_ts300d.lib;opencv_world300d.lib</AdditionalDependencies>
     </Link>
     <Midl>
@@ -92,7 +91,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <ModuleDefinitionFile>.\Helper.def</ModuleDefinitionFile>
       <AdditionalDependencies>libcurldll.a;tinyxml2.lib;opencv_ts300.lib;opencv_world300.lib</AdditionalDependencies>
     </Link>
     <Midl>
@@ -115,7 +113,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="EventHelper.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="ImageHelper.cpp" />
     <ClCompile Include="InputDlg.cpp" />
@@ -136,7 +133,6 @@
     <ClCompile Include="StringHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Helper.def" />
     <None Include="res\Helper.rc2" />
   </ItemGroup>
   <ItemGroup>

@@ -139,6 +139,8 @@ BOOL CImageViewDlg::OnInitDialog()
 // 设置图片
 void CImageViewDlg::SetImages(unique_ptr<vector<CString> > imageURL)
 {
+	if (imageURL == nullptr)
+		return;
 	m_imageURL = std::move(imageURL);
 	m_image.resize(m_imageURL->size());
 

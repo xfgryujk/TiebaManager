@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "HelperCommon.h"
+#include <thread>
 
 
 // 不阻塞消息的延迟
@@ -30,4 +31,4 @@ HELPER_API BOOL CreateDir(const CString& path);
 // 初始化COM库
 HELPER_API BOOL CoInitializeHelper();
 // 判断线程是否在运行
-HELPER_API BOOL IsThreadRunning(thread& thread_);
+HELPER_API BOOL IsThreadRunning(std::thread& thread_);

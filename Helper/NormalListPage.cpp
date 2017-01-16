@@ -72,7 +72,7 @@ BOOL CNormalListPage::OnInitDialog()
 class CNormalListFile : public CConfigBase
 {
 public:
-	COption<vector<CString> > m_list;
+	COption<std::vector<CString> > m_list;
 
 	CNormalListFile()
 		: CConfigBase("NormalList"),
@@ -118,14 +118,14 @@ BOOL CNormalListPage::SetItem(int index)
 	return FALSE;
 }
 
-void CNormalListPage::ShowList(const vector<CString>& list)
+void CNormalListPage::ShowList(const std::vector<CString>& list)
 {
 	m_list.DeleteAllItems();
 	for (UINT i = 0; i < list.size(); i++)
 		m_list.InsertItem(i, list[i]);
 }
 
-void CNormalListPage::ShowList(const set<CString>& list)
+void CNormalListPage::ShowList(const std::set<CString>& list)
 {
 	m_list.DeleteAllItems();
 	int i = 0;
@@ -133,7 +133,7 @@ void CNormalListPage::ShowList(const set<CString>& list)
 		m_list.InsertItem(i++, item);
 }
 
-void CNormalListPage::ApplyList(vector<CString>& list)
+void CNormalListPage::ApplyList(std::vector<CString>& list)
 {
 	int size = m_list.GetItemCount();
 	list.resize(size);
@@ -141,7 +141,7 @@ void CNormalListPage::ApplyList(vector<CString>& list)
 		list[i] = m_list.GetItemText(i, 0);
 }
 
-void CNormalListPage::ApplyList(set<CString>& list)
+void CNormalListPage::ApplyList(std::set<CString>& list)
 {
 	list.clear();
 	CString tmp;

@@ -19,7 +19,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include <NetworkHelper.h>
-using std::regex_iterator;
 #include <StringHelper.h>
 #include <MiscHelper.h>
 #include <curl\curl.h>
@@ -28,8 +27,8 @@ using std::regex_iterator;
 // 从HTTP头提取Cookie并修改cookie
 static void ReceiveCookie(const CString& headers, CString& cookie)
 {
-	static const wregex cookieExp(_T("Set-Cookie: (.*?)=(.*?);"));
-	for (regex_iterator<LPCTSTR> it(headers, (LPCTSTR)headers + _tcslen(headers), cookieExp), end; it != end; ++it)
+	static const std::wregex cookieExp(_T("Set-Cookie: (.*?)=(.*?);"));
+	for (std::regex_iterator<LPCTSTR> it(headers, (LPCTSTR)headers + _tcslen(headers), cookieExp), end; it != end; ++it)
 	{
 		CString name = (*it)[1].str().c_str();
 		CString value = (*it)[2].str().c_str();
@@ -53,11 +52,11 @@ static size_t WriteData(void *buffer, size_t size, size_t nmemb, void *userp)
 }
 
 // HTTP请求
-static HTTPRequestResult HTTPRequestBase(unique_ptr<BYTE[]>* buffer, ULONG* size, BOOL postMethod,
+static HTTPRequestResult HTTPRequestBase(std::unique_ptr<BYTE[]>* buffer, ULONG* size, BOOL postMethod,
 	const CString& URL, const CString& data, CString* cookie, CString* charset = NULL)
 {
-	unique_ptr<CURL, void(*)(CURL*)> easyHandle(curl_easy_init(), [](CURL* p){ curl_easy_cleanup(p); });
-	unique_ptr<CURLM, std::function<void(CURLM*)> > multiHandle(curl_multi_init(), [&easyHandle](CURLM* p){ 
+	std::unique_ptr<CURL, void(*)(CURL*)> easyHandle(curl_easy_init(), [](CURL* p){ curl_easy_cleanup(p); });
+	std::unique_ptr<CURLM, std::function<void(CURLM*)> > multiHandle(curl_multi_init(), [&easyHandle](CURLM* p){
 		curl_multi_remove_handle(p, easyHandle.get()); curl_multi_cleanup(p); });
 	if (easyHandle == nullptr || multiHandle == nullptr)
 		return NET_FAILED_TO_CREATE_INSTANCE;
@@ -87,7 +86,7 @@ static HTTPRequestResult HTTPRequestBase(unique_ptr<BYTE[]>* buffer, ULONG* size
 	if (cookie != NULL)
 		curl_easy_setopt(easyHandle.get(), CURLOPT_COOKIE, (LPCSTR)CStringA(*cookie));
 	curl_easy_setopt(easyHandle.get(), CURLOPT_HTTPHEADER, chunk);
-	unique_ptr<curl_slist, void(*)(curl_slist*)> pChunk(chunk, [](curl_slist* p){ curl_slist_free_all(p); });
+	std::unique_ptr<curl_slist, void(*)(curl_slist*)> pChunk(chunk, [](curl_slist* p){ curl_slist_free_all(p); });
 
 	// 发送
 	curl_multi_add_handle(multiHandle.get(), easyHandle.get());
@@ -163,7 +162,7 @@ static HTTPRequestResult HTTPRequestBase(unique_ptr<BYTE[]>* buffer, ULONG* size
 // HTTP请求，把响应转码
 static CString HTTPRequestBase_Convert(BOOL postMethod, const CString& URL, const CString& data, CString* cookie)
 {
-	unique_ptr<BYTE[]> buffer;
+	std::unique_ptr<BYTE[]> buffer;
 	ULONG size = 0;
 	CString charset;
 	HTTPRequestResult ret = HTTPRequestBase(&buffer, &size, postMethod, URL, data, cookie, &charset);
@@ -205,7 +204,7 @@ HELPER_API CString HTTPPost(const CString& URL, const CString& data, CString* co
 }
 
 // HTTP GET请求，取得原始数据
-HELPER_API HTTPRequestResult HTTPGetRaw(const CString& URL, unique_ptr<BYTE[]>* buffer, ULONG* size, CString* cookie)
+HELPER_API HTTPRequestResult HTTPGetRaw(const CString& URL, std::unique_ptr<BYTE[]>* buffer, ULONG* size, CString* cookie)
 {
 	return HTTPRequestBase(buffer, size, FALSE, URL, NULL, cookie);
 }

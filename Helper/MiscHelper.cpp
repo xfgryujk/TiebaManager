@@ -75,7 +75,7 @@ HELPER_API BOOL CoInitializeHelper()
 }
 
 // 判断线程是否在运行
-HELPER_API BOOL IsThreadRunning(thread& thread_)
+HELPER_API BOOL IsThreadRunning(std::thread& thread_)
 {
 	DWORD exitCode = 0;
 	if (!GetExitCodeThread(thread_.native_handle(), &exitCode))

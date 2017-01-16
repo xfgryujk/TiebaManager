@@ -20,6 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "HelperCommon.h"
 #include <tinyxml2.h>
+#include <vector>
+#include <set>
+#include <map>
 
 
 class COptionBase
@@ -236,7 +239,7 @@ public:
 class CConfigBase
 {
 protected:
-	vector<COptionBase*> m_options;
+	std::vector<COptionBase*> m_options;
 
 public:
 	const CStringA m_name;

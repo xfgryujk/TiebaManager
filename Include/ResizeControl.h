@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "HelperCommon.h"
+#include <set>
 
 
 enum ResizeType{ RT_NULL, RT_KEEP_DIST_TO_LEFT, RT_KEEP_DIST_TO_TOP, RT_KEEP_DIST_TO_RIGHT, RT_KEEP_DIST_TO_BOTTOM };
@@ -43,5 +44,5 @@ public:
 	void Resize();
 
 	CWnd* m_parentWnd;
-	set<ResizeInfo> m_controlList;
+	std::set<ResizeInfo> m_controlList;
 };

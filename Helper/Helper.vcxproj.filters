@@ -72,9 +72,6 @@
     <ClCompile Include="NetworkHelper.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
-    <ClCompile Include="EventHelper.cpp">
-      <Filter>源文件\API</Filter>
-    </ClCompile>
     <ClCompile Include="ResizeControl.cpp">
       <Filter>源文件\API\UI</Filter>
     </ClCompile>
@@ -101,9 +98,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Helper.def">
-      <Filter>源文件</Filter>
-    </None>
     <None Include="res\Helper.rc2">
       <Filter>资源文件</Filter>
     </None>
