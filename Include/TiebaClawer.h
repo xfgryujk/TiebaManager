@@ -19,19 +19,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TiebaAPICommon.h"
+#include <regex>
+#include <vector>
 
 
 // 采集贴吧用的常量
 #pragma region 用户信息
 // 3是fid，7是贴吧名
-const wregex FORUM_ID_NAME_REG(_T("id('|\")?:\\s*('|\")?(\\d+)('|\")?,")
+const std::wregex FORUM_ID_NAME_REG(_T("id('|\")?:\\s*('|\")?(\\d+)('|\")?,")
 							   _T(".*?name('|\")?:\\s*('|\")(.*?)('|\")"));
 // 3是用户名
-const wregex USER_NAME_REG(_T("name('|\")?:\\s*('|\")(.*?)('|\")"));
+const std::wregex USER_NAME_REG(_T("name('|\")?:\\s*('|\")(.*?)('|\")"));
 const TCHAR _TBS_LEFT[] = _T("PageData.tbs = \"");
 const TCHAR _TBS_RIGHT[] = _T("\"");
 // 3是tbs
-const wregex TBS_REG(_T("tbs('|\")?:\\s*('|\")(.*?)('|\")"));
+const std::wregex TBS_REG(_T("tbs('|\")?:\\s*('|\")(.*?)('|\")"));
 #pragma endregion
 
 
@@ -106,7 +108,7 @@ public:
 };
 
 
-TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThread, vector<ThreadInfo>& threads);
+TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads);
 enum GetPostsResult { GET_POSTS_SUCCESS, GET_POSTS_TIMEOUT, GET_POSTS_DELETED };
-TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, vector<PostInfo>& posts);
-TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const vector<PostInfo>& posts, vector<LzlInfo>& lzls);
+TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, std::vector<PostInfo>& posts);
+TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls);

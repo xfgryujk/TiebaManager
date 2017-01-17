@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TiebaClawer.h>
 #include <StringHelper.h>
 #include <NetworkHelper.h>
+#include <map>
 
 
 // 采集贴吧用的常量
@@ -63,7 +64,7 @@ const TCHAR POST_SIGN_LEFT[] = _T("<img class=\"j_user_sign\"");
 const TCHAR POST_SIGN_RIGHT[] = _T("/>");
 #pragma endregion
 #pragma region 楼中楼列表
-const wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)during_time\":\\d+\\}\\]"));
+const std::wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)during_time\":\\d+\\}\\]"));
 
 const TCHAR LZL_USER_SPLIT[] = _T("\"user_name\":\"");
 const TCHAR LZL_USER_NAME_RIGHT[] = _T("\"");
@@ -128,7 +129,7 @@ CString LzlInfo::GetContent() const
 
 
 // 取主题列表
-TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThread, vector<ThreadInfo>& threads)
+TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=UTF-8&kw=") + EncodeURI(forumName)
 		+ _T("&pn=") + ignoreThread);
@@ -168,7 +169,7 @@ TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThr
 }
 
 // 取帖子列表
-TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, vector<PostInfo>& posts)
+TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, std::vector<PostInfo>& posts)
 {
 	CString src = _src != _T("") ? _src : HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
 	if (src == NET_TIMEOUT_TEXT)
@@ -220,7 +221,7 @@ TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, c
 }
 
 // 取楼中楼列表
-TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const vector<PostInfo>& posts, vector<LzlInfo>& lzls)
+TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
 {
 	time_t timestamp;
 	time(&timestamp);
@@ -238,7 +239,7 @@ TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString
 	// 遍历用户采集头像哈希
 	CStringArray users;
 	SplitString(users, splitedSrc[1], LZL_USER_SPLIT);
-	map<CString, CString> portrait;
+	std::map<CString, CString> portrait;
 	for (int i = 1; i < users.GetSize(); i++)
 	{
 		CString id = JSUnescape(GetStringBefore(users[i], LZL_USER_NAME_RIGHT));
