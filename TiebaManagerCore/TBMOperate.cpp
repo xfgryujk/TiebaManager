@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include <TBMOperate.h>
-#include <TBMOperateEvent.h>
+#include <TBMCoreEvents.h>
 
 #include <TiebaClawer.h>
 #include <TiebaOperate.h>
@@ -37,8 +37,8 @@ CTBMOperate::CTBMOperate(CTBMCoreConfig* config, CUserCache* userCache, CTiebaOp
 	m_tiebaOperate(tiebaOperate),
 	m_log(log)
 {
-	m_operateThread.reset(new thread(&CTBMOperate::OperateThread, this));
-	m_confirmThread.reset(new thread(&CTBMOperate::ConfirmThread, this));
+	m_operateThread.reset(new std::thread(&CTBMOperate::OperateThread, this));
+	m_confirmThread.reset(new std::thread(&CTBMOperate::ConfirmThread, this));
 }
 
 CTBMOperate::~CTBMOperate()
@@ -81,9 +81,9 @@ void CTBMOperate::ConfirmThread()
 		// 确认是否操作
 		if (m_config->m_confirm || op.forceToConfirm)
 		{
-			COperateEvent event_(op);
-			event_.result = TRUE;
-			if (!m_eventBus.Post(ComfirmEvent, event_) || !event_.result)
+			BOOL pass = TRUE;
+			g_comfirmEvent(op, pass);
+			if (pass)
 			{
 				switch (op.object->m_type)
 				{
@@ -151,7 +151,9 @@ void CTBMOperate::OperateThread()
 		if (!m_config->m_delete && !m_config->m_banID && !m_config->m_defriend)
 			continue;
 
-		if (!m_eventBus.Post(PreOperateEvent, COperateEvent(op)))
+		BOOL pass = TRUE;
+		g_preOperateEvent(op, pass);
+		if (!pass)
 			continue;
 
 		// 增加违规次数
@@ -165,85 +167,89 @@ void CTBMOperate::OperateThread()
 
 		// 封禁
 		if (m_config->m_banID && count >= m_config->m_banTrigCount
-			&& m_userCache->m_bannedUser->find(op.object->author) == m_userCache->m_bannedUser->end() // 达到封禁违规次数且未封
-			&& m_eventBus.Post(PreBanEvent, COperateEvent(op)))
+			&& m_userCache->m_bannedUser->find(op.object->author) == m_userCache->m_bannedUser->end()) // 达到封禁违规次数且未封
 		{
-			BOOL result = FALSE;
-			CString pid;
-			// 不使用客户端接口必须获取PID
-			if (!m_config->m_wapBanInterface)
+			pass = TRUE;
+			g_preBanEvent(op, pass);
+			if (pass)
 			{
-				switch (op.object->m_type)
+				BOOL result = FALSE;
+				CString pid;
+				// 不使用客户端接口必须获取PID
+				if (!m_config->m_wapBanInterface)
 				{
-				case TBObject::THREAD:
-				{
-					vector<PostInfo> posts;
-					GetPosts(op.object->tid, _T(""), _T("1"), posts);
-					if (posts.size() > 0)
-						pid = posts[0].pid;
-					break;
-				}
-				case TBObject::POST:
-					pid = ((PostInfo*)op.object.get())->pid;
-					break;
-				case TBObject::LZL:
-					pid = ((LzlInfo*)op.object.get())->cid;
-					break;
+					switch (op.object->m_type)
+					{
+					case TBObject::THREAD:
+					{
+						std::vector<PostInfo> posts;
+						GetPosts(op.object->tid, _T(""), _T("1"), posts);
+						if (posts.size() > 0)
+							pid = posts[0].pid;
+						break;
+					}
+					case TBObject::POST:
+						pid = ((PostInfo*)op.object.get())->pid;
+						break;
+					case TBObject::LZL:
+						pid = ((LzlInfo*)op.object.get())->cid;
+						break;
+					}
+
+					if (pid == _T(""))
+						m_log->Log(_T("<font color=red>封禁 </font>") + op.object->author + _T("<font color=red> 失败！(获取帖子ID失败)</font>"));
 				}
 
-				if (pid == _T(""))
-					m_log->Log(_T("<font color=red>封禁 </font>") + op.object->author + _T("<font color=red> 失败！(获取帖子ID失败)</font>"));
-			}
-			
-			CString code = (m_config->m_wapBanInterface || pid == _T("")) ? 
-				m_tiebaOperate->BanIDClient(op.object->author) : m_tiebaOperate->BanID(op.object->author, pid);
-			if (code != _T("0"))
-			{
-				CString content;
-				content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
-								_T("\"bd:%s,%s\">重试</a>"), (LPCTSTR)op.object->author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), 
-								(LPCTSTR)op.object->author, (LPCTSTR)pid);
-				m_log->Log(content);
-			}
-			else
-			{
-				result = TRUE;
-				sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
-				m_userCache->m_bannedUser->insert(op.object->author);
-				m_log->Log(_T("<font color=red>封禁 </font>") + op.object->author);
-			}
+				CString code = (m_config->m_wapBanInterface || pid == _T("")) ?
+					m_tiebaOperate->BanIDClient(op.object->author) : m_tiebaOperate->BanID(op.object->author, pid);
+				if (code != _T("0"))
+				{
+					CString content;
+					content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
+						_T("\"bd:%s,%s\">重试</a>"), (LPCTSTR)op.object->author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code),
+						(LPCTSTR)op.object->author, (LPCTSTR)pid);
+					m_log->Log(content);
+				}
+				else
+				{
+					result = TRUE;
+					sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
+					m_userCache->m_bannedUser->insert(op.object->author);
+					m_log->Log(_T("<font color=red>封禁 </font>") + op.object->author);
+				}
 
-			COperateEvent event_(op);
-			event_.result = result;
-			m_eventBus.Post(PostBanEvent, event_);
+				g_postBanEvent(op, result);
+			}
 		}
 
 		// 拉黑
 		if (m_config->m_defriend && count >= m_config->m_defriendTrigCount
-			&& m_userCache->m_defriendedUser->find(op.object->author) == m_userCache->m_defriendedUser->end() // 达到拉黑违规次数且未拉黑
-			&& m_eventBus.Post(PreDefriendEvent, COperateEvent(op)))
+			&& m_userCache->m_defriendedUser->find(op.object->author) == m_userCache->m_defriendedUser->end()) // 达到拉黑违规次数且未拉黑
 		{
-			BOOL result = FALSE;
-			CString code = m_tiebaOperate->Defriend(op.object->authorID);
-			if (code != _T("0"))
+			pass = TRUE;
+			g_preDefriendEvent(op, pass);
+			if (pass)
 			{
-				CString content;
-				content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
-							   _T("\"df:%s\">重试</a>"), (LPCTSTR)op.object->author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), 
-							   (LPCTSTR)op.object->authorID);
-				m_log->Log(content);
-			}
-			else
-			{
-				result = TRUE;
-				sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
-				m_userCache->m_defriendedUser->insert(op.object->author);
-				m_log->Log(_T("<font color=red>拉黑 </font>") + op.object->author);
-			}
+				BOOL result = FALSE;
+				CString code = m_tiebaOperate->Defriend(op.object->authorID);
+				if (code != _T("0"))
+				{
+					CString content;
+					content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
+						_T("\"df:%s\">重试</a>"), (LPCTSTR)op.object->author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code),
+						(LPCTSTR)op.object->authorID);
+					m_log->Log(content);
+				}
+				else
+				{
+					result = TRUE;
+					sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
+					m_userCache->m_defriendedUser->insert(op.object->author);
+					m_log->Log(_T("<font color=red>拉黑 </font>") + op.object->author);
+				}
 
-			COperateEvent event_(op);
-			event_.result = result;
-			m_eventBus.Post(PostDefriendEvent, event_);
+				g_postDefriendEvent(op, result);
+			}
 		}
 
 		// 主题已被删则不再删帖
@@ -252,81 +258,83 @@ void CTBMOperate::OperateThread()
 			continue;
 
 		// 删帖
-		if (m_config->m_delete
-			&& m_eventBus.Post(PreDeleteEvent, COperateEvent(op)))
+		if (m_config->m_delete)
 		{
-			BOOL result = FALSE;
-			if (op.object->m_type == TBObject::THREAD) // 主题
+			pass = TRUE;
+			g_preDeleteEvent(op, pass);
+			if (pass)
 			{
-			CaseThread:
-				CString code = m_tiebaOperate->DeleteThread(op.object->tid);
-				if (code != _T("0"))
+				BOOL result = FALSE;
+				if (op.object->m_type == TBObject::THREAD) // 主题
 				{
-					CString content;
-					content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a><font color=red> 删除失败！错误代码：%s(%s)</font><a href=")
-								   _T("\"dt:%s\">重试</a>"), (LPCTSTR)op.object->tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)code, 
-								   (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.object->tid);
-					m_log->Log(content);
+				CaseThread:
+					CString code = m_tiebaOperate->DeleteThread(op.object->tid);
+					if (code != _T("0"))
+					{
+						CString content;
+						content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a><font color=red> 删除失败！错误代码：%s(%s)</font><a href=")
+							_T("\"dt:%s\">重试</a>"), (LPCTSTR)op.object->tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)code,
+							(LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.object->tid);
+						m_log->Log(content);
+					}
+					else
+					{
+						result = TRUE;
+						sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
+						m_userCache->m_deletedTID.insert(_ttoi64(op.object->tid));
+						m_log->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.object->tid
+							+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
+						Sleep((DWORD)(m_config->m_deleteInterval * 1000));
+					}
 				}
-				else
+				else if (op.object->m_type == TBObject::POST) // 帖子
 				{
-					result = TRUE;
-					sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
-					m_userCache->m_deletedTID.insert(_ttoi64(op.object->tid));
-					m_log->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.object->tid
-						+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
-					Sleep((DWORD)(m_config->m_deleteInterval * 1000));
-				}
-			}
-			else if (op.object->m_type == TBObject::POST) // 帖子
-			{
-				PostInfo* post = (PostInfo*)op.object.get();
-				if (post->floor == _T("1"))
-					goto CaseThread;
+					PostInfo* post = (PostInfo*)op.object.get();
+					if (post->floor == _T("1"))
+						goto CaseThread;
 
-				CString code = m_tiebaOperate->DeletePost(op.object->tid, post->pid);
-				if (code != _T("0"))
-				{
-					CString content;
-					content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼<font color=red> 删除失败！错误代码：%s(%s)</font>")
-						_T("<a href=\"dp:%s,%s\">重试</a>"), (LPCTSTR)op.object->tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)post->floor, 
-						(LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.object->tid, (LPCTSTR)post->pid);
-					m_log->Log(content);
+					CString code = m_tiebaOperate->DeletePost(op.object->tid, post->pid);
+					if (code != _T("0"))
+					{
+						CString content;
+						content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼<font color=red> 删除失败！错误代码：%s(%s)</font>")
+							_T("<a href=\"dp:%s,%s\">重试</a>"), (LPCTSTR)op.object->tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)post->floor,
+							(LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.object->tid, (LPCTSTR)post->pid);
+						m_log->Log(content);
+					}
+					else
+					{
+						result = TRUE;
+						sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
+						m_log->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.object->tid
+							+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + post->floor + _T("楼"));
+						Sleep((DWORD)(m_config->m_deleteInterval * 1000));
+					}
 				}
-				else
+				else if (op.object->m_type == TBObject::LZL) // 楼中楼
 				{
-					result = TRUE;
-					sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
-					m_log->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.object->tid
-						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + post->floor + _T("楼"));
-					Sleep((DWORD)(m_config->m_deleteInterval * 1000));
+					LzlInfo* lzl = (LzlInfo*)op.object.get();
+					CString code = m_tiebaOperate->DeleteLZL(op.object->tid, lzl->cid);
+					if (code != _T("0"))
+					{
+						CString content;
+						content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼回复<font color=red> 删除失败！错误代码：")
+							_T("%s(%s)</font><a href=\"dl:%s,%s\">重试</a>"), (LPCTSTR)lzl->tid, (LPCTSTR)HTMLEscape(op.title),
+							(LPCTSTR)lzl->floor, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)lzl->tid, (LPCTSTR)lzl->cid);
+						m_log->Log(content);
+					}
+					else
+					{
+						result = TRUE;
+						sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
+						m_log->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + lzl->tid
+							+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + lzl->floor + _T("楼回复"));
+						Sleep((DWORD)(m_config->m_deleteInterval * 1000));
+					}
 				}
-			}
-			else if (op.object->m_type == TBObject::LZL) // 楼中楼
-			{
-				LzlInfo* lzl = (LzlInfo*)op.object.get();
-				CString code = m_tiebaOperate->DeleteLZL(op.object->tid, lzl->cid);
-				if (code != _T("0"))
-				{
-					CString content;
-					content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼回复<font color=red> 删除失败！错误代码：")
-						_T("%s(%s)</font><a href=\"dl:%s,%s\">重试</a>"), (LPCTSTR)lzl->tid, (LPCTSTR)HTMLEscape(op.title),
-						(LPCTSTR)lzl->floor, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)lzl->tid, (LPCTSTR)lzl->cid);
-					m_log->Log(content);
-				}
-				else
-				{
-					result = TRUE;
-					sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
-					m_log->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + lzl->tid
-						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + lzl->floor + _T("楼回复"));
-					Sleep((DWORD)(m_config->m_deleteInterval * 1000));
-				}
-			}
 
-			COperateEvent event_(op);
-			event_.result = result;
-			m_eventBus.Post(PostDeleteEvent, event_);
+				g_postDeleteEvent(op, result);
+			}
 		}
 	}
 

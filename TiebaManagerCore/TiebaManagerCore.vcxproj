@@ -117,9 +117,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TBMCoreConfig.cpp" />
+    <ClCompile Include="TBMCoreEvents.cpp" />
     <ClCompile Include="TBMOperate.cpp" />
-    <ClCompile Include="TBMOperateEvent.cpp" />
-    <ClCompile Include="TBMScanEvent.cpp" />
     <ClCompile Include="TiebaManagerCore.cpp" />
     <ClCompile Include="TBMScan.cpp" />
   </ItemGroup>
@@ -128,10 +127,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\TBMCoreConfig.h" />
+    <ClInclude Include="..\Include\TBMCoreEvents.h" />
     <ClInclude Include="..\Include\TBMOperate.h" />
-    <ClInclude Include="..\Include\TBMOperateEvent.h" />
     <ClInclude Include="..\Include\TBMScan.h" />
-    <ClInclude Include="..\Include\TBMScanEvent.h" />
     <ClInclude Include="..\Include\TiebaManagerCoreCommon.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

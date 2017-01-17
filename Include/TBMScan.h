@@ -19,20 +19,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TiebaManagerCoreCommon.h"
-#include <EventHelper.h>
-class ILog;
-class CTBMCoreConfig;
-class CUserCache;
-class CTBMOperate;
-#include <TiebaClawer.h>
+#include "TBMCoreConfig.h"
+#include "TBMOperate.h"
+#include "TiebaClawer.h"
+#include <memory>
+#include <thread>
 
 
-class TIEBA_MANAGER_CORE_API CTBMScan
+class TBM_CORE_API CTBMScan
 {
 public:
-	// 可以注册事件监听，见TBMScanEvent.h
-	CEventBus m_eventBus;
-
 	// 记得依赖注入哦
 	ILog* m_log = NULL;
 	CTBMCoreConfig* m_config = NULL;
@@ -52,11 +48,11 @@ public:
 
 protected:
 	volatile BOOL m_stopScanFlag = FALSE;
-	unique_ptr<thread> m_scanThread;
+	std::unique_ptr<std::thread> m_scanThread;
 
-	vector<ThreadInfo> m_threads; // 当前扫描的主题列表
+	std::vector<ThreadInfo> m_threads; // 当前扫描的主题列表
 	int m_threadIndex; // 下个要扫描的主题索引
-	mutex m_threadIndexLock;
+	std::mutex m_threadIndexLock;
 
 
 	void ScanThreadImage();

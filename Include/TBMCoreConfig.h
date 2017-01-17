@@ -19,10 +19,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TiebaManagerCoreCommon.h"
-#include <ConfigFile.h>
+#include "ConfigFile.h"
 
 
-class TIEBA_MANAGER_CORE_API CTBMCoreConfig : public CConfigBase
+class TBM_CORE_API CTBMCoreConfig : public CConfigBase
 {
 public:
 	COption<int>		m_scanInterval;			// 扫描间隔
@@ -45,21 +45,21 @@ public:
 	CTBMCoreConfig(CStringA name);
 };
 
-class TIEBA_MANAGER_CORE_API CUserCache : public CConfigBase
+class TBM_CORE_API CUserCache : public CConfigBase
 {
 public:
-	COption<set<__int64> > m_initIgnoredTID;		// 不删的主题ID(手动忽略)，要写入文件
-	COption<set<__int64> > m_initIgnoredPID;		// 不删的帖子ID(手动忽略)，要写入文件
-	COption<set<__int64> > m_initIgnoredLZLID;		// 不删的楼中楼ID(手动忽略)，要写入文件
-	set<__int64> m_ignoredTID;						// 不删的主题ID(已扫描且违规)
-	set<__int64> m_ignoredPID;						// 不删的帖子ID(已扫描且违规)
-	set<__int64> m_ignoredLZLID;					// 不删的楼中楼ID(已扫描且违规)
-	set<__int64> m_deletedTID;						// 已删的主题ID
-	COption<map<__int64, int> > m_reply;			// 主题的回复数，要写入文件
-	COption<map<__int64, CString> > m_lastAuthor;	// 主题的最后回复作者，要写入文件
-	COption<map<CString, int> > m_userTrigCount;	// 某用户违规次数，要写入文件
-	COption<set<CString> > m_bannedUser;			// 已封的用户，要写入文件
-	COption<set<CString> > m_defriendedUser;		// 已拉黑的用户，要写入文件
+	COption<std::set<__int64> > m_initIgnoredTID;		// 不删的主题ID(手动忽略)，要写入文件
+	COption<std::set<__int64> > m_initIgnoredPID;		// 不删的帖子ID(手动忽略)，要写入文件
+	COption<std::set<__int64> > m_initIgnoredLZLID;		// 不删的楼中楼ID(手动忽略)，要写入文件
+	std::set<__int64> m_ignoredTID;						// 不删的主题ID(已扫描且违规)
+	std::set<__int64> m_ignoredPID;						// 不删的帖子ID(已扫描且违规)
+	std::set<__int64> m_ignoredLZLID;					// 不删的楼中楼ID(已扫描且违规)
+	std::set<__int64> m_deletedTID;						// 已删的主题ID
+	COption<std::map<__int64, int> > m_reply;			// 主题的回复数，要写入文件
+	COption<std::map<__int64, CString> > m_lastAuthor;	// 主题的最后回复作者，要写入文件
+	COption<std::map<CString, int> > m_userTrigCount;	// 某用户违规次数，要写入文件
+	COption<std::set<CString> > m_bannedUser;			// 已封的用户，要写入文件
+	COption<std::set<CString> > m_defriendedUser;		// 已拉黑的用户，要写入文件
 
 	CUserCache();
 

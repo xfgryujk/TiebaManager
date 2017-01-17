@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include <TBMScan.h>
-#include <TBMScanEvent.h>
+#include <TBMCoreEvents.h>
 
 #include <TBMCoreConfig.h>
 #include <TiebaOperate.h>
@@ -56,7 +56,7 @@ void CTBMScan::StartScan(const CString& sPage)
 	StopScan();
 	if (m_scanThread != nullptr && m_scanThread->joinable())
 		m_scanThread->join();
-	m_scanThread.reset(new thread(&CTBMScan::ScanThread, this, sPage));
+	m_scanThread.reset(new std::thread(&CTBMScan::ScanThread, this, sPage));
 }
 
 // 结束扫描
@@ -84,11 +84,12 @@ void CTBMScan::ScanThreadImage()
 		__int64 tid = _ttoi64(thread.tid);
 		if (m_userCache->m_ignoredTID.find(tid) == m_userCache->m_ignoredTID.end())
 		{
-			CCheckThreadIllegalEvent event_(thread, msg, forceToConfirm, pos, length);
-			if (m_eventBus.Post(CheckThreadImageIllegalEvent, event_) && event_.result)
+			BOOL res = FALSE;
+			g_checkThreadImageIllegalEvent(thread, res, msg, forceToConfirm, pos, length);
+			if (res)
 			{
 				m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
-					unique_ptr<ThreadInfo>(new ThreadInfo(thread))));
+					std::make_unique<ThreadInfo>(thread)));
 				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 					+ HTMLEscape(thread.title) + _T("</a>") + msg);
 				m_userCache->m_ignoredTID.insert(tid);
@@ -100,7 +101,9 @@ void CTBMScan::ScanThreadImage()
 // 总扫描线程
 void CTBMScan::ScanThread(CString sPage)
 {
-	if (!m_eventBus.Post(ScanThreadStartEvent))
+	BOOL pass = TRUE;
+	g_scanThreadStartEvent(pass);
+	if (!pass)
 		goto ScanThreadEnd;
 
 	m_stopScanFlag = FALSE;
@@ -121,7 +124,9 @@ void CTBMScan::ScanThread(CString sPage)
 		int pos, length;
 		while (!m_stopScanFlag)
 		{
-			if (!m_eventBus.Post(ScanOnceStartEvent))
+			pass = TRUE;
+			g_scanOnceStartEvent(pass);
+			if (!pass)
 				goto ScanOnceEnd;
 
 #pragma warning(suppress: 28159)
@@ -145,11 +150,12 @@ void CTBMScan::ScanThread(CString sPage)
 				__int64 tid = _ttoi64(thread.tid);
 				if (m_userCache->m_ignoredTID.find(tid) == m_userCache->m_ignoredTID.end())
 				{
-					CCheckThreadIllegalEvent event_(thread, msg, forceToConfirm, pos, length);
-					if (m_eventBus.Post(CheckThreadIllegalEvent, event_) && event_.result)
+					BOOL res = FALSE;
+					g_checkThreadIllegalEvent(thread, res, msg, forceToConfirm, pos, length);
+					if (res)
 					{
 						m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
-							unique_ptr<ThreadInfo>(new ThreadInfo(thread))));
+							std::make_unique<ThreadInfo>(thread)));
 						m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 							+ HTMLEscape(thread.title) + _T("</a>") + msg);
 						m_userCache->m_ignoredTID.insert(tid);
@@ -160,23 +166,28 @@ void CTBMScan::ScanThread(CString sPage)
 			BOOL imageScanned = FALSE;
 
 			// 扫描帖子
-			if (!m_config->m_onlyScanTitle && m_eventBus.Post(PreScanAllThreadsEvent))
+			if (!m_config->m_onlyScanTitle)
 			{
-				m_threadIndex = 0;
+				pass = TRUE;
+				g_preScanAllThreadsEvent(pass);
+				if (pass)
+				{
+					m_threadIndex = 0;
 
-				// 创建线程扫描帖子
-				int threadCount = m_config->m_threadCount; // m_config->m_threadCount会变
-				vector<thread> threads;
-				for (int i = 0; i < threadCount; i++)
-					threads.push_back(thread(&CTBMScan::ScanPostThread, this, i));
+					// 创建线程扫描帖子
+					int threadCount = m_config->m_threadCount; // m_config->m_threadCount会变
+					std::vector<std::thread> threads;
+					for (int i = 0; i < threadCount; i++)
+						threads.push_back(std::thread(&CTBMScan::ScanPostThread, this, i));
 
-				// 等待扫描帖子时扫描主题图片
-				ScanThreadImage();
-				imageScanned = TRUE;
+					// 等待扫描帖子时扫描主题图片
+					ScanThreadImage();
+					imageScanned = TRUE;
 
-				// 等待扫描帖子线程结束
-				for (thread& i : threads)
-					i.join();
+					// 等待扫描帖子线程结束
+					for (auto& i : threads)
+						i.join();
+				}
 			}
 
 			// 如果没有扫描帖子，在这里扫描主题图片
@@ -192,7 +203,7 @@ void CTBMScan::ScanThread(CString sPage)
 			}
 
 		ScanOnceEnd:
-			m_eventBus.Post(ScanOnceEndEvent);
+			g_scanOnceEndEvent();
 
 			// 延时
 			int count = m_config->m_scanInterval * 10;
@@ -213,7 +224,7 @@ void CTBMScan::ScanThread(CString sPage)
 	CoUninitialize();
 
 ScanThreadEnd:
-	m_eventBus.Post(ScanThreadEndEvent);
+	g_scanThreadEndEvent();
 
 	TRACE(_T("总扫描线程结束\n"));
 }
@@ -221,7 +232,9 @@ ScanThreadEnd:
 // 扫描帖子线程
 void CTBMScan::ScanPostThread(int threadID)
 {
-	if (!m_eventBus.Post(ScanPostThreadStartEvent, CScanPostThreadEvent(threadID)))
+	BOOL pass = TRUE;
+	g_scanPostThreadStartEvent(threadID, pass);
+	if (!pass)
 		goto ScanPostThreadEnd;
 
 	// 初始化
@@ -230,7 +243,7 @@ void CTBMScan::ScanPostThread(int threadID)
 
 	{
 		CString pageCount, src;
-		map<__int64, int>::iterator historyReplyIt;
+		std::map<__int64, int>::iterator historyReplyIt;
 		m_threadIndexLock.lock();
 		while (!m_stopScanFlag && m_threadIndex < (int)m_threads.size())
 		{
@@ -252,11 +265,10 @@ void CTBMScan::ScanPostThread(int threadID)
 				goto Next;
 			}
 
-			{
-				CPreScanThreadEvent event_(thread, threadID);
-				if (!m_eventBus.Post(PreScanThreadEvent, event_))
-					goto Next;
-			}
+			pass = TRUE;
+			g_preScanThreadEvent(threadID, thread, pass);
+			if (!pass)
+				goto Next;
 
 
 			// 获取第一页
@@ -313,7 +325,7 @@ void CTBMScan::ScanPostThread(int threadID)
 	CoUninitialize();
 	
 ScanPostThreadEnd:
-	m_eventBus.Post(ScanPostThreadEndEvent, CScanPostThreadEvent(threadID));
+	g_scanPostThreadEndEvent(threadID);
 	TRACE(_T("扫描帖子线程结束\n"));
 }
 
@@ -321,15 +333,17 @@ ScanPostThreadEnd:
 BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryReply,
 	int ScanedCount, const CString& src, int threadID)
 {
-	if (!m_eventBus.Post(ScanPostPageEvent, CScanPostPageEvent(thread, threadID, page)))
+	BOOL pass = TRUE;
+	g_scanPostPageEvent(threadID, thread, page, pass);
+	if (!pass)
 		return FALSE;
 
 	CString sPage;
 	sPage.Format(_T("%d"), page);
 
 	// 获取帖子列表
-	vector<PostInfo> posts;
-	vector<LzlInfo> lzls;
+	std::vector<PostInfo> posts;
+	std::vector<LzlInfo> lzls;
 	GetPostsResult res = GetPosts(thread.tid, src, sPage, posts);
 	switch (res)
 	{
@@ -353,11 +367,12 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		__int64 pid = _ttoi64(post.pid);
 		if (m_userCache->m_ignoredPID.find(pid) == m_userCache->m_ignoredPID.end())
 		{
-			CCheckPostIllegalEvent event_(post, msg, forceToConfirm, pos, length);
-			if (m_eventBus.Post(CheckPostIllegalEvent, event_) && event_.result)
+			BOOL res = FALSE;
+			g_checkPostIllegalEvent(post, res, msg, forceToConfirm, pos, length);
+			if (res)
 			{
 				m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
-					unique_ptr<PostInfo>(new PostInfo(post))));
+					std::make_unique<PostInfo>(post)));
 				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + post.floor + _T("楼") + msg);
 				m_userCache->m_ignoredPID.insert(pid);
@@ -370,14 +385,15 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 	{
 		if (m_stopScanFlag)
 			return FALSE;
-		CCheckLzlIllegalEvent event_(lzl, msg, forceToConfirm, pos, length);
-		if (m_eventBus.Post(CheckLzlIllegalEvent, event_) && event_.result)
+		BOOL res = FALSE;
+		g_checkLzlIllegalEvent(lzl, res, msg, forceToConfirm, pos, length);
+		if (res)
 		{
 			__int64 cid = _ttoi64(lzl.cid);
 			if (m_userCache->m_ignoredLZLID.find(cid) == m_userCache->m_ignoredLZLID.end())
 			{
 				m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
-					unique_ptr<LzlInfo>(new LzlInfo(lzl))));
+					std::make_unique<LzlInfo>(lzl)));
 				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 				m_userCache->m_ignoredLZLID.insert(cid);
@@ -393,11 +409,12 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		__int64 pid = _ttoi64(post.pid);
 		if (m_userCache->m_ignoredPID.find(pid) == m_userCache->m_ignoredPID.end())
 		{
-			CCheckPostIllegalEvent event_(post, msg, forceToConfirm, pos, length);
-			if (m_eventBus.Post(CheckPostImageIllegalEvent, event_) && event_.result)
+			BOOL res = FALSE;
+			g_checkPostImageIllegalEvent(post, res, msg, forceToConfirm, pos, length);
+			if (res)
 			{
 				m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
-					unique_ptr<PostInfo>(new PostInfo(post))));
+					std::make_unique<PostInfo>(post)));
 				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + post.floor + _T("楼") + msg);
 				m_userCache->m_ignoredPID.insert(pid);
@@ -413,11 +430,12 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		__int64 cid = _ttoi64(lzl.cid);
 		if (m_userCache->m_ignoredLZLID.find(cid) == m_userCache->m_ignoredLZLID.end())
 		{
-			CCheckLzlIllegalEvent event_(lzl, msg, forceToConfirm, pos, length);
-			if (m_eventBus.Post(CheckLzlImageIllegalEvent, event_) && event_.result)
+			BOOL res = FALSE;
+			g_checkLzlImageIllegalEvent(lzl, res, msg, forceToConfirm, pos, length);
+			if (res)
 			{
 				m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
-					unique_ptr<LzlInfo>(new LzlInfo(lzl))));
+					std::make_unique<LzlInfo>(lzl)));
 				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 				m_userCache->m_ignoredLZLID.insert(cid);

@@ -36,13 +36,10 @@
     <ClCompile Include="TBMScan.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
-    <ClCompile Include="TBMScanEvent.cpp">
-      <Filter>源文件\API</Filter>
-    </ClCompile>
     <ClCompile Include="TBMCoreConfig.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
-    <ClCompile Include="TBMOperateEvent.cpp">
+    <ClCompile Include="TBMCoreEvents.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
   </ItemGroup>
@@ -67,16 +64,13 @@
     <ClInclude Include="..\Include\TBMOperate.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\TBMOperateEvent.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\TBMScan.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\TBMScanEvent.h">
+    <ClInclude Include="..\Include\TiebaManagerCoreCommon.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\TiebaManagerCoreCommon.h">
+    <ClInclude Include="..\Include\TBMCoreEvents.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>

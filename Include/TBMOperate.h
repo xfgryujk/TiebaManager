@@ -19,13 +19,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TiebaManagerCoreCommon.h"
-class TBObject;
-#include <EventHelper.h>
-class ILog;
-class CTBMCoreConfig;
-class CUserCache;
-class CTiebaOperate;
-#include <BlockingQueue.h>
+#include "TBMCoreConfig.h"
+#include "TiebaClawer.h"
+#include "TiebaOperate.h"
+#include "BlockingQueue.h"
+#include <memory>
+#include <thread>
 
 
 struct Operation
@@ -35,7 +34,7 @@ struct Operation
 	int length;				// 高亮长度
 
 	CString title;			// 主题标题
-	unique_ptr<TBObject> object; // 操作对象
+	std::unique_ptr<TBObject> object; // 操作对象
 
 
 	Operation() = default;
@@ -55,7 +54,7 @@ struct Operation
 		*this = std::move(other);
 	}
 
-	Operation(BOOL forceToConfirm_, int pos_, int length_, const CString& title_, unique_ptr<TBObject>&& object_) :
+	Operation(BOOL forceToConfirm_, int pos_, int length_, const CString& title_, std::unique_ptr<TBObject>&& object_) :
 		forceToConfirm(forceToConfirm_),
 		pos(pos_),
 		length(length_),
@@ -64,12 +63,9 @@ struct Operation
 	{ }
 };
 
-class TIEBA_MANAGER_CORE_API CTBMOperate
+class TBM_CORE_API CTBMOperate
 {
 public:
-	// 可以注册事件监听，见TBMOperateEvent.h
-	CEventBus m_eventBus;
-
 	// 记得依赖注入哦
 	ILog* m_log = NULL;
 	CTBMCoreConfig* m_config = NULL;
@@ -84,8 +80,8 @@ public:
 	void AddOperation(Operation&& op);
 
 protected:
-	unique_ptr<thread> m_confirmThread;
-	unique_ptr<thread> m_operateThread;
+	std::unique_ptr<std::thread> m_confirmThread;
+	std::unique_ptr<std::thread> m_operateThread;
 	BlockingQueue<Operation> m_confirmQueue; // 确认队列
 	BlockingQueue<Operation> m_operationQueue; // 操作队列
 

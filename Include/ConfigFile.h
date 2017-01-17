@@ -44,7 +44,7 @@ class COptionTBase : public COptionBase
 public:
 	const T m_default;
 	T m_value;
-	typedef BOOL(*IsValidFunc)(const T& value);
+	typedef bool(*IsValidFunc)(const T& value);
 	const IsValidFunc IsValid;
 
 	COptionTBase(const CStringA& name, IsValidFunc _isValid)
@@ -67,9 +67,9 @@ template <class T>
 class COption : public COptionTBase<T>
 {
 public:
-	COption(const CStringA& name, IsValidFunc _isValid = [](const T&){ return TRUE; })
+	COption(const CStringA& name, IsValidFunc _isValid = [](const T&){ return true; })
 		: COptionTBase<T>(name, _isValid) { }
-	COption(const CStringA& name, const T& _default, IsValidFunc _isValid = [](const T&){ return TRUE; })
+	COption(const CStringA& name, const T& _default, IsValidFunc _isValid = [](const T&){ return true; })
 		: COptionTBase<T>(name, _default, _isValid) { }
 	virtual ~COption() = default;
 
@@ -93,9 +93,9 @@ template <class T>
 class COption<std::vector<T> > : public COptionTBase<std::vector<T> >
 {
 public:
-	COption(const CStringA& name, IsValidFunc _isValid = [](const std::vector<T>&){ return TRUE; })
+	COption(const CStringA& name, IsValidFunc _isValid = [](const std::vector<T>&){ return true; })
 		: COptionTBase<std::vector<T> >(name, _isValid) { }
-	COption(const CStringA& name, const std::vector<T>& _default, IsValidFunc _isValid = [](const std::vector<T>&){ return TRUE; })
+	COption(const CStringA& name, const std::vector<T>& _default, IsValidFunc _isValid = [](const std::vector<T>&){ return true; })
 		: COptionTBase<std::vector<T> >(name, _default, _isValid) { }
 	virtual ~COption() = default;
 
@@ -140,9 +140,9 @@ template <class T>
 class COption<std::set<T> > : public COptionTBase<std::set<T> >
 {
 public:
-	COption(const CStringA& name, IsValidFunc _isValid = [](const std::set<T>&){ return TRUE; })
+	COption(const CStringA& name, IsValidFunc _isValid = [](const std::set<T>&){ return true; })
 		: COptionTBase<std::set<T> >(name, _isValid) { }
-	COption(const CStringA& name, const std::set<T>& _default, IsValidFunc _isValid = [](const std::set<T>&){ return TRUE; })
+	COption(const CStringA& name, const std::set<T>& _default, IsValidFunc _isValid = [](const std::set<T>&){ return true; })
 		: COptionTBase<std::set<T> >(name, _default, _isValid) { }
 	virtual ~COption() = default;
 
@@ -187,9 +187,9 @@ template <class T1, class T2>
 class COption<std::map<T1, T2> > : public COptionTBase<std::map<T1, T2> >
 {
 public:
-	COption(const CStringA& name, IsValidFunc _isValid = [](const std::map<T1, T2>&){ return TRUE; })
+	COption(const CStringA& name, IsValidFunc _isValid = [](const std::map<T1, T2>&){ return true; })
 		: COptionTBase<std::map<T1, T2> >(name, _isValid) { }
-	COption(const CStringA& name, const std::map<T1, T2>& _default, IsValidFunc _isValid = [](const std::map<T1, T2>&){ return TRUE; })
+	COption(const CStringA& name, const std::map<T1, T2>& _default, IsValidFunc _isValid = [](const std::map<T1, T2>&){ return true; })
 		: COptionTBase<std::map<T1, T2> >(name, _default, _isValid) { }
 	virtual ~COption() = default;
 
@@ -255,3 +255,24 @@ public:
 	virtual void OnChange() { }
 	virtual void PostChange() { }
 };
+
+
+// IsValidFunc
+
+template<class T, T min, T max>
+bool InRange(const T& value)
+{
+	return min <= value && value <= max;
+}
+
+template<class T, T min>
+bool GreaterThan(const T& value)
+{
+	return value >= min;
+}
+
+template<class T, T max>
+bool LessThan(const T& value)
+{
+	return value <= max;
+}

@@ -22,20 +22,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 CTBMCoreConfig::CTBMCoreConfig(CStringA name) : CConfigBase(name),
-	m_scanInterval		("ScanInterval",		5,		[](const int& value)->BOOL{ return 0 <= value && value <= 600; }),
+	m_scanInterval		("ScanInterval",		5,		InRange<int, 0, 600>),
 	m_onlyScanTitle		("OnlyScanTitle",		FALSE),
-	m_scanPageCount		("ScanPageCount",		1,		[](const int& value)->BOOL{ return 1 <= value; }),
+	m_scanPageCount		("ScanPageCount",		1,		GreaterThan<int, 1>),
 	m_briefLog			("BriefLog",			FALSE),
-	m_threadCount		("ThreadCount",			2,		[](const int& value)->BOOL{ return 1 <= value && value <= 16; }),
+	m_threadCount		("ThreadCount",			2,		InRange<int, 1, 16>),
 
 	m_delete			("Delete",				TRUE),
 	m_banID				("BanID",				FALSE),
 	m_defriend			("Defriend",			FALSE),
-	m_deleteInterval	("DeleteInterval",		2.5f,	[](const float& value)->BOOL{ return 0.0f <= value && value <= 60.0f; }),
-	m_banDuration		("BanDuration",			1,		[](const int& value)->BOOL{ return value == 1 || value == 3 || value == 10; }),
+	m_deleteInterval	("DeleteInterval",		2.5f,	[](const float& value){ return 0.0f <= value && value <= 60.0f; }/*InRange<float, 0.0f, 60.0f>*/),
+	m_banDuration		("BanDuration",			1,		[](const int& value){ return value == 1 || value == 3 || value == 10; }),
 	m_banReason			("BanReason",			_T("")),
-	m_banTrigCount		("BanTrigCount",		1,		[](const int& value)->BOOL{ return 1 <= value; }),
-	m_defriendTrigCount	("DefriendTrigCount",	5,		[](const int& value)->BOOL{ return 1 <= value; }),
+	m_banTrigCount		("BanTrigCount",		1,		GreaterThan<int, 1>),
+	m_defriendTrigCount	("DefriendTrigCount",	5,		GreaterThan<int, 1>),
 	m_confirm			("Confirm",				TRUE),
 	m_wapBanInterface	("WapBanInterface",		FALSE)
 {
