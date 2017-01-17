@@ -26,7 +26,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <MiscHelper.h>
 
 #include "TBMConfigPath.h"
-#include <TBMEvent.h>
+#include <TBMEvents.h>
 
 
 // 保存当前账号配置
@@ -48,7 +48,9 @@ void CConfigHelper::SaveCurrentUserConfig()
 // 设置当前账号
 void CConfigHelper::SetCurrentUser(const CString& userName, BOOL save)
 {
-	if (!theApp.m_tbmEventBus->Post(PreSetCurrentUserEvent, CSetCurrentUserEvent(userName)))
+	BOOL pass = TRUE;
+	g_preSetCurrentUserEvent(userName, pass);
+	if (!pass)
 		return;
 
 	// 保存当前账号配置
@@ -74,14 +76,14 @@ void CConfigHelper::SetCurrentUser(const CString& userName, BOOL save)
 	// 历史回复、忽略ID等
 	theApp.m_userCache->Load(CACHE_PATH);
 
-	theApp.m_tbmEventBus->Post(PostSetCurrentUserEvent, CSetCurrentUserEvent(userName));
+	g_postSetCurrentUserEvent(userName);
 }
 
 
 // 从目录读取图片到images
-void CConfigHelper::ReadImages(const CString& dir, vector<CPlan::NameImage>& images)
+void CConfigHelper::ReadImages(const CString& dir, std::vector<CPlan::NameImage>& images)
 {
-	vector<CString> imagePath;
+	std::vector<CString> imagePath;
 
 	if (dir == _T(""))
 	{

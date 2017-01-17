@@ -24,43 +24,38 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TBMConfigPath.h"
 
 
-CEventBus* CTBMAPI::GetEventBus()
+ILog& GetLog()
 {
-	return theApp.m_tbmEventBus.get();
+	return *theApp.m_log;
 }
 
-ILog* CTBMAPI::GetLog()
+CUserCache& GetUserCache()
 {
-	return theApp.m_log;
+	return *theApp.m_userCache;
 }
 
-CUserCache* CTBMAPI::GetUserCache()
+CTiebaOperate& GetTiebaOperate()
 {
-	return theApp.m_userCache.get();
+	return *theApp.m_tiebaOperate;
 }
 
-CTiebaOperate* CTBMAPI::GetTiebaOperate()
+CTBMScan& GetScan()
 {
-	return theApp.m_tiebaOperate.get();
+	return *theApp.m_scan;
 }
 
-CTBMScan* CTBMAPI::GetScan()
+CTBMOperate& GetOperate()
 {
-	return theApp.m_scan.get();
-}
-
-CTBMOperate* CTBMAPI::GetOperate()
-{
-	return theApp.m_operate.get();
+	return *theApp.m_operate;
 }
 
 
-CString CTBMAPI::GetCurrentUserDir()
+CString GetCurrentUserDir()
 {
 	return CURRENT_USER_DIR_PATH;
 }
 
-CString CTBMAPI::GetImgCacheDir()
+CString GetImgCacheDir()
 {
 	return IMG_CACHE_PATH;
 }

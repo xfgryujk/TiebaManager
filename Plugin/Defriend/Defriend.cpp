@@ -104,7 +104,7 @@ void CDefriend::StartDefriend(const CString& startPage, const CString& endPage, 
 	StopDefriend();
 	if (m_defriendThread != nullptr && m_defriendThread->joinable())
 		m_defriendThread->join();
-	m_defriendThread.reset(new thread(&CDefriend::DefriendThread, this, startPage, endPage, defriendNewUsers));
+	m_defriendThread = std::make_unique<std::thread>(&CDefriend::DefriendThread, this, startPage, endPage, defriendNewUsers);
 }
 
 void CDefriend::StopDefriend()

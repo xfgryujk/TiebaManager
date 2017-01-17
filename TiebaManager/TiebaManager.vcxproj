@@ -122,7 +122,7 @@
   <ItemGroup>
     <ClInclude Include="..\Include\PluginFunctions.h" />
     <ClInclude Include="..\Include\TBMAPI.h" />
-    <ClInclude Include="..\Include\TBMEvent.h" />
+    <ClInclude Include="..\Include\TBMEvents.h" />
     <ClInclude Include="..\Include\TiebaManagerCommon.h" />
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="BlackListPage.h" />
@@ -155,8 +155,6 @@
     <ClInclude Include="TBMConfig.h" />
     <ClInclude Include="TBMConfigPath.h" />
     <ClInclude Include="TBMListeners.h" />
-    <ClInclude Include="TBMOperateListeners.h" />
-    <ClInclude Include="TBMScanListeners.h" />
     <ClInclude Include="TextButton.h" />
     <ClInclude Include="TiebaManager.h" />
     <ClInclude Include="TiebaManagerDlg.h" />
@@ -196,13 +194,11 @@
     </ClCompile>
     <ClCompile Include="TBMConfig.cpp" />
     <ClCompile Include="TBMConfigPath.cpp" />
-    <ClCompile Include="TBMEvent.cpp" />
+    <ClCompile Include="TBMEvents.cpp" />
     <ClCompile Include="TBMListeners.cpp" />
-    <ClCompile Include="TBMOperateListeners.cpp" />
     <ClCompile Include="TextButton.cpp" />
     <ClCompile Include="TiebaManager.cpp" />
     <ClCompile Include="TiebaManagerDlg.cpp" />
-    <ClCompile Include="TBMScanListeners.cpp" />
     <ClCompile Include="UsersPage.cpp" />
     <ClCompile Include="WhiteContentPage.cpp" />
   </ItemGroup>

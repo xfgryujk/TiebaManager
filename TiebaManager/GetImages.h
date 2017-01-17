@@ -28,5 +28,5 @@ public:
 
 	CGetImages(const TBObject& object);
 	virtual ~CGetImages() = default;
-	virtual void operator () (vector<CString>& img);
+	virtual void operator () (std::vector<CString>& img);
 };

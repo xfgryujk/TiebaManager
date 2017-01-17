@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "afxwin.h"
 #include "ResizeControl.h"
 #include <TBMOperate.h>
-class CImageViewDlg;
+#include "ImageViewDlg.h"
 
 
 // CConfirmDlg 对话框

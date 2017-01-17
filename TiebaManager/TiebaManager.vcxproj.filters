@@ -156,12 +156,6 @@
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
     </ClInclude>
-    <ClInclude Include="TBMOperateListeners.h">
-      <Filter>头文件\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="TBMScanListeners.h">
-      <Filter>头文件\Event</Filter>
-    </ClInclude>
     <ClInclude Include="TBMConfig.h">
       <Filter>头文件\Config</Filter>
     </ClInclude>
@@ -195,10 +189,10 @@
     <ClInclude Include="..\Include\TBMAPI.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\TBMEvent.h">
+    <ClInclude Include="..\Include\TiebaManagerCommon.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\TiebaManagerCommon.h">
+    <ClInclude Include="..\Include\TBMEvents.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>
@@ -278,12 +272,6 @@
     <ClCompile Include="InputKeywordDlg.cpp">
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
     </ClCompile>
-    <ClCompile Include="TBMScanListeners.cpp">
-      <Filter>源文件\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="TBMOperateListeners.cpp">
-      <Filter>源文件\Event</Filter>
-    </ClCompile>
     <ClCompile Include="TBMConfig.cpp">
       <Filter>源文件\Config</Filter>
     </ClCompile>
@@ -302,9 +290,6 @@
     <ClCompile Include="Plugin.cpp">
       <Filter>源文件\Plugin</Filter>
     </ClCompile>
-    <ClCompile Include="TBMEvent.cpp">
-      <Filter>源文件\API</Filter>
-    </ClCompile>
     <ClCompile Include="TBMAPI.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
@@ -316,6 +301,9 @@
     </ClCompile>
     <ClCompile Include="GetImages.cpp">
       <Filter>源文件\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMEvents.cpp">
+      <Filter>源文件\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

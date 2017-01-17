@@ -19,25 +19,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TiebaManagerCommon.h"
-class CEventBus;
-class ILog;
-class CUserCache;
-class CTiebaOperate;
-class CTBMScan;
-class CTBMOperate;
+#include "TBMCoreConfig.h"
+#include "TBMScan.h"
+#include "TBMOperate.h"
 
 
-class TIEBA_MANAGER_API CTBMAPI
-{
-public:
-	// 可以注册事件监听，见TBMEvent.h
-	static CEventBus* GetEventBus();
-	static ILog* GetLog();
-	static CUserCache* GetUserCache();
-	static CTiebaOperate* GetTiebaOperate();
-	static CTBMScan* GetScan();
-	static CTBMOperate* GetOperate();
+ILog& GetLog();
+CUserCache& GetUserCache();
+CTiebaOperate& GetTiebaOperate();
+CTBMScan& GetScan();
+CTBMOperate& GetOperate();
 
-	static CString GetCurrentUserDir();
-	static CString GetImgCacheDir();
-};
+CString GetCurrentUserDir();
+CString GetImgCacheDir();

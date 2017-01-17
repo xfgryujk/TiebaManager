@@ -19,20 +19,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include <functional>
-namespace cv { class Mat; }
+#include <set>
+#pragma warning(disable:4819) // OpenCV头文件包含Unicode字符
+#include <opencv2\core\mat.hpp>
 
 
 class CScanImage
 {
 protected:
-	set<CString> m_leagalImage; // 已检查不违规的图片
-	set<CString> m_illegalImage; // 已检查违规的图片
+	std::set<CString> m_leagalImage; // 已检查不违规的图片
+	std::set<CString> m_illegalImage; // 已检查违规的图片
 
 public:
 	// 检查图片违规1，检测信任用户、获取图片地址
-	BOOL CheckImageIllegal(const CString& author, std::function<void(vector<CString>&)> getImages, CString& msg);
+	BOOL CheckImageIllegal(const CString& author, std::function<void(std::vector<CString>&)> getImages, CString& msg);
 	// 检查图片违规2，下载图片、比较图片
-	BOOL DoCheckImageIllegal(vector<CString>& imgs, CString& msg);
+	BOOL DoCheckImageIllegal(std::vector<CString>& imgs, CString& msg);
 protected:
 	double GetMSSIM(const cv::Mat& i1, const cv::Mat& i2);
 public:

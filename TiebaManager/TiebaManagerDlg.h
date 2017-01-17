@@ -27,9 +27,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TextButton.h"
 #include <NormalDlg.h>
 #include "ExplorerLog.h"
-class CSettingDlg;
-class CExplorerDlg;
-class CPluginDlg;
+
+#include "SettingDlg.h"
+#include "ExplorerDlg.h"
+#include "PluginDlg.h"
+
+#include "resource.h"
 
 
 // CTiebaManagerDlg 对话框

@@ -106,7 +106,7 @@ void CLockThread::StartLockThread()
 	StopLockThread();
 	if (m_lockThreadThread != nullptr && m_lockThreadThread->joinable())
 		m_lockThreadThread->join();
-	m_lockThreadThread.reset(new thread(&CLockThread::LockThreadThread, this));
+	m_lockThreadThread = std::make_unique<std::thread>(&CLockThread::LockThreadThread, this);
 }
 
 void CLockThread::StopLockThread()

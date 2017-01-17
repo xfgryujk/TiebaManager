@@ -19,18 +19,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "SettingDlg.h"
-#include <TBMCoreConfig.h>
-
-#include "ScanPage.h"
-#include "OperatePage.h"
-#include "KeywordsPage.h"
-#include "ImagePage.h"
-#include "BlackListPage.h"
-#include "NormalListPage.h"
-#include "WhiteContentPage.h"
-#include "OptionsPage.h"
-#include "UsersPage.h"
-#include "AboutPage.h"
 
 #include "TBMConfig.h"
 #include "TBMConfigPath.h"

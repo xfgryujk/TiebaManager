@@ -163,6 +163,9 @@
     <ClInclude Include="..\Include\RegListPage.h">
       <Filter>头文件\API\UI\ListPage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Singleton.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Helper.rc">

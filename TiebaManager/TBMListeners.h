@@ -18,13 +18,51 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-class CEventBase;
+#include <Singleton.h>
+#include <TBMCoreEvents.h>
+#include <TBMEvents.h>
 
 
-class CTBMListeners
+class CTBMListeners final : public Singleton<CTBMListeners>
 {
-public:
-	CTBMListeners();
+	DECL_SINGLETON(CTBMListeners);
 
-	void OnOpenLinkInLog(CEventBase* event__);
+private:
+	CTBMListeners::CTBMListeners();
+	
+
+	// 扫描事件
+
+	static BOOL CheckIllegal(const CString& content, const CString& author, const CString& authorLevel, 
+		CString& msg, BOOL& forceToConfirm, int& pos, int& length);
+	static void OnCheckThreadIllegal(const ThreadInfo& thread, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
+	static void OnCheckPostIllegal(const PostInfo& post, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
+	static void OnCheckLzlIllegal(const LzlInfo& lzl, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
+	static void OnCheckThreadImageIllegal(const ThreadInfo& thread, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
+	static void OnCheckPostImageIllegal(const PostInfo& post, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
+	static void OnCheckLzlImageIllegal(const LzlInfo& lzl, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
+	
+	static void OnScanThreadStart(BOOL& pass);
+	static void OnScanThreadEnd();
+	static void OnScanOnceStart(BOOL& pass);
+	void OnScanOnceEnd();
+	void OnPreScanAllThreads(BOOL& pass);
+	
+	void OnPreScanThread(int threadID, const ThreadInfo& thread, BOOL& pass);
+	void OnScanPostThreadEnd(int threadID);
+
+	void OnScanPostPage(int threadID, const ThreadInfo& thread, int page, BOOL& pass);
+
+
+	CCriticalSection m_stateListLock;
+
+
+	// 操作事件
+
+	static void OnConfirm(const Operation& op, BOOL& res);
+
+
+	// UI事件
+
+	static void OnOpenLinkInLog(const CString& url, BOOL& pass);
 };

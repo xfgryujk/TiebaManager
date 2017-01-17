@@ -24,13 +24,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TiebaClawer.h>
 
 #include "TiebaManager.h"
-#include <TBMEvent.h>
+#include <TBMEvents.h>
 
 
 // 1是图片地址
-static const wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
+static const std::wregex THREAD_IMG_REG(_T("<img .*?bpic=\"(.*?)\".*?/>"));
 // 2是图片地址
-static const wregex POST_IMG_REG(_T("<img .*?class=\"(BDE_Image|j_user_sign)\".*?src=\"(.*?)\".*?>"));
+static const std::wregex POST_IMG_REG(_T("<img .*?class=\"(BDE_Image|j_user_sign)\".*?src=\"(.*?)\".*?>"));
 
 
 CGetImages::CGetImages(const TBObject& object) :
@@ -39,14 +39,15 @@ CGetImages::CGetImages(const TBObject& object) :
 
 }
 
-void CGetImages::operator () (vector<CString>& img)
+void CGetImages::operator () (std::vector<CString>& img)
 {
 	if (m_object.m_type == TBObject::THREAD)
 	{
 		// 从主题预览取图片地址
 		ThreadInfo& thread = (ThreadInfo&)m_object;
-		CGetThreadImagesEvent event_(thread, img);
-		if (!theApp.m_tbmEventBus->Post(GetThreadImagesEvent, event_) || event_.result)
+		BOOL useDefault = TRUE;
+		g_getThreadImagesEvent(thread, img, useDefault);
+		if (!useDefault)
 			return;
 		for (std::regex_iterator<LPCTSTR> it((LPCTSTR)thread.preview, (LPCTSTR)thread.preview + thread.preview.GetLength(), THREAD_IMG_REG),
 			end; it != end; ++it)
@@ -59,8 +60,9 @@ void CGetImages::operator () (vector<CString>& img)
 		if (m_object.m_type == TBObject::POST)
 		{
 			PostInfo& post = (PostInfo&)m_object;
-			CGetPostImagesEvent event_(post, img);
-			if (!theApp.m_tbmEventBus->Post(GetPostImagesEvent, event_) || event_.result)
+			BOOL useDefault = TRUE;
+			g_getPostImagesEvent(post, img, useDefault);
+			if (!useDefault)
 				return;
 			content = post.GetContent();
 			CString tmp = GetStringBetween(post.rawData, _T("class=\"p_author_face"), _T("</a>"));
@@ -71,8 +73,9 @@ void CGetImages::operator () (vector<CString>& img)
 		else if (m_object.m_type == TBObject::LZL)
 		{
 			LzlInfo& lzl = (LzlInfo&)m_object;
-			CGetLzlImagesEvent event_(lzl, img);
-			if (!theApp.m_tbmEventBus->Post(GetLzlImagesEvent, event_) || event_.result)
+			BOOL useDefault = TRUE;
+			g_getLzlImagesEvent(lzl, img, useDefault);
+			if (!useDefault)
 				return;
 			content = lzl.GetContent();
 			portraitUrl = _T("http://tb.himg.baidu.com/sys/portrait/item/") + lzl.authorPortrait;

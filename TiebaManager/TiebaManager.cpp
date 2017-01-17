@@ -29,22 +29,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <Dbghelp.h>
 #include "TBMConfigPath.h"
 
-#include "TBMConfig.h"
-#include <TBMCoreConfig.h>
-#include "ConfigHelper.h"
-
-#include <TiebaOperate.h>
-#include <TBMScan.h>
-#include <TBMOperate.h>
-
-#include "ScanImage.h"
-#include "TBMScanListeners.h"
-#include "TBMOperateListeners.h"
-#include "TBMListeners.h"
-
-#include <TBMAPI.h>
-#include "PluginManager.h"
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -141,52 +125,44 @@ void CTiebaManagerApp::Init()
 	// 添加异常处理
 	SetUnhandledExceptionFilter(ExceptionHandler);
 
-	// 本地化输出
+	// 本地化输出，用于CStdioFile
 	_tsetlocale(LC_ALL, _T(".936"));
 
 	// 初始化配置文件路径
-	TCHAR cd[MAX_PATH] = { _T('\0') };
-	GetCurrentDirectory(_countof(cd), cd);
-#pragma warning(suppress: 6102)
+	CString cd;
+	cd.ReleaseBuffer(GetCurrentDirectory(MAX_PATH, cd.GetBuffer(MAX_PATH)));
 	GLOBAL_CONFIG_PATH = cd + GLOBAL_CONFIG_PATH;
 	USERS_DIR_PATH = cd + USERS_DIR_PATH;
 
 	// 判断一下有没有解压
-	TCHAR tmpDir[MAX_PATH] = { _T('\0') };
-	if (GetEnvironmentVariable(_T("TMP"), tmpDir, _countof(tmpDir)) != 0
-#pragma warning(suppress: 6102)
-		&& StrStrI(cd, tmpDir) != NULL)
+	CString tmpDir;
+	tmpDir.ReleaseBuffer(GetEnvironmentVariable(_T("TMP"), tmpDir.GetBuffer(MAX_PATH), MAX_PATH));
+	if (cd.Find(tmpDir) != -1)
 		AfxMessageBox(_T("请先解压再运行，否则无法保存设置"), MB_ICONINFORMATION);
 
 	// 初始化各模块 ////////////////////////////////////////////////////////////////
 
 	// 各种设置
-	m_globalConfig.reset(new CGlobalConfig());
-	m_userConfig.reset(new CUserConfig());
-	m_cookieConfig.reset(new CCookieConfig());
-	m_plan.reset(new CPlan());
-	m_userCache.reset(new CUserCache());
+	m_globalConfig = std::make_unique<CGlobalConfig>();
+	m_userConfig = std::make_unique<CUserConfig>();
+	m_cookieConfig = std::make_unique<CCookieConfig>();
+	m_plan = std::make_unique<CPlan>();
+	m_userCache = std::make_unique<CUserCache>();
 
 	// 外部模块
-	m_tiebaOperate.reset(new CTiebaOperate(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason));
-	m_operate.reset(new CTBMOperate(m_plan.get(), m_userCache.get(), m_tiebaOperate.get(), m_log));
-	m_scan.reset(new CTBMScan(m_plan.get(), m_userCache.get(), m_operate.get(), m_log));
+	m_tiebaOperate = std::make_unique<CTiebaOperate>(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason);
+	m_operate = std::make_unique<CTBMOperate>(m_plan.get(), m_userCache.get(), m_tiebaOperate.get(), m_log);
+	m_scan = std::make_unique<CTBMScan>(m_plan.get(), m_userCache.get(), m_operate.get(), m_log);
 
 	// 内部模块
-	m_tbmEventBus.reset(new CEventBus());
-	m_configHelper.reset(new CConfigHelper());
-	m_scanImage.reset(new CScanImage());
-
-	// API
-	m_tbmApi.reset(new CTBMAPI());
+	m_configHelper = std::make_unique<CConfigHelper>();
+	m_scanImage = std::make_unique<CScanImage>();
 
 	// 内部Listeners
-	m_scanListeners.reset(new CTBMScanListeners());
-	m_operateListeners.reset(new CTBMOperateListeners());
-	m_tbmListeners.reset(new CTBMListeners());
+	CTBMListeners::GetInstance();
 
 	// 插件
-	m_pluginManager.reset(new CPluginManager());
+	m_pluginManager = std::make_unique<CPluginManager>();
 	m_pluginManager->LoadDir(PLUGIN_PATH);
 }
 

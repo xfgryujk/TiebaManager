@@ -37,8 +37,9 @@ CTBMOperate::CTBMOperate(CTBMCoreConfig* config, CUserCache* userCache, CTiebaOp
 	m_tiebaOperate(tiebaOperate),
 	m_log(log)
 {
-	m_operateThread.reset(new std::thread(&CTBMOperate::OperateThread, this));
-	m_confirmThread.reset(new std::thread(&CTBMOperate::ConfirmThread, this));
+	// 线程要在任务队列初始化后启动
+	m_operateThread = std::make_unique<std::thread>(&CTBMOperate::OperateThread, this);
+	m_confirmThread = std::make_unique<std::thread>(&CTBMOperate::ConfirmThread, this);
 }
 
 CTBMOperate::~CTBMOperate()
@@ -81,9 +82,9 @@ void CTBMOperate::ConfirmThread()
 		// 确认是否操作
 		if (m_config->m_confirm || op.forceToConfirm)
 		{
-			BOOL pass = TRUE;
-			g_comfirmEvent(op, pass);
-			if (pass)
+			BOOL res = TRUE;
+			g_comfirmEvent(op, res);
+			if (res)
 			{
 				switch (op.object->m_type)
 				{

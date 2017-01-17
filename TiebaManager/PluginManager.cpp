@@ -42,7 +42,7 @@ BOOL CPluginManager::Load(const CString& path)
 		right = path.GetLength();
 	CString name = path.Mid(left, right - left);
 
-	unique_ptr<CPlugin> plugin(new CPlugin(handle, name));
+	std::unique_ptr<CPlugin> plugin(new CPlugin(handle, name));
 	if (!plugin->Load())
 	{
 		FreeLibrary(handle);
@@ -86,7 +86,7 @@ BOOL CPluginManager::UnloadAll()
 	return res;
 }
 
-const vector<unique_ptr<CPlugin> >& CPluginManager::GetPlugins()
+const std::vector<std::unique_ptr<CPlugin> >& CPluginManager::GetPlugins()
 {
 	return m_plugins;
 }

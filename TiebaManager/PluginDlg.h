@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 Copyright (C) 2015  xfgryujk
 http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
@@ -19,25 +19,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include <ModelessDlg.h>
-class CPluginManager;
-class CPlugin;
+#include "PluginManager.h"
+#include "resource.h"
+#include <memory>
+#include <vector>
 
 
-// CPluginDlg ¶Ô»°¿ò
+// CPluginDlg å¯¹è¯æ¡†
 
 class CPluginDlg : public CModelessDlg
 {
 	DECLARE_DYNAMIC(CPluginDlg)
 
 public:
-	CPluginDlg(CPluginDlg*& pThis, CPluginManager& pluginManager, CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+	CPluginDlg(CPluginDlg*& pThis, CPluginManager& pluginManager, CWnd* pParent = NULL);   // æ ‡å‡†æ„é€ å‡½æ•°
 	virtual ~CPluginDlg();
 
-// ¶Ô»°¿òÊı¾İ
+// å¯¹è¯æ¡†æ•°æ®
 	enum { IDD = IDD_PLUGIN_DIALOG };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
 	DECLARE_MESSAGE_MAP()
 public:
@@ -53,5 +55,5 @@ public:
 
 protected:
 	CPluginManager& m_pluginManager;
-	const vector<unique_ptr<CPlugin> >& m_plugins;
+	const std::vector<std::unique_ptr<CPlugin> >& m_plugins;
 };

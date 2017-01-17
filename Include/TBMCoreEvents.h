@@ -26,7 +26,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // 操作事件
 
-extern TBM_CORE_API PreEvent<const Operation&, BOOL&>   g_comfirmEvent;        // 确认是否操作，参数：操作, 不取消
+extern TBM_CORE_API PreEvent<const Operation&, BOOL&>   g_comfirmEvent;        // 确认是否操作，参数：操作, 结果
 
 extern TBM_CORE_API PreEvent<const Operation&, BOOL&>   g_preOperateEvent;     // 准备操作时触发，参数：操作, 不取消
 extern TBM_CORE_API PreEvent<const Operation&, BOOL&>   g_preBanEvent;         // 准备封禁时触发，参数：操作, 不取消
@@ -59,4 +59,4 @@ extern TBM_CORE_API PreEvent<int, const ThreadInfo&, int, BOOL&>   g_scanPostPag
 
 
 // 外部模块可注册的事件集合，用来自动卸载外部listener
-extern TBM_CORE_API std::vector<EventBase*> g_externalEvents;
+extern TBM_CORE_API std::vector<EventBase*> g_tbmCoreEvents;

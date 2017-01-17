@@ -22,10 +22,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "ExplorerDlg.h"
-#include "ExploreThreadPage.h"
-#include "ExplorePostPage.h"
-#include "ExploreLzlPage.h"
-#include "ImageViewDlg.h"
 
 #include "TiebaManager.h"
 #include "TBMConfig.h"
@@ -189,7 +185,7 @@ void CExplorerDlg::OnBnClickedButton2()
 		author = m_exploreThreadPage->m_threads[index].author;
 		if (!theApp.m_plan->m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
 		{
-			vector<PostInfo> posts;
+			std::vector<PostInfo> posts;
 			GetPosts(m_exploreThreadPage->m_threads[index].tid, _T(""), _T("1"), posts);
 			if (posts.size() > 0)
 				pid = posts[0].pid;
@@ -247,7 +243,7 @@ void CExplorerDlg::OnBnClickedButton3()
 }
 
 // 打开浏览图片对话框
-void CExplorerDlg::ViewImages(unique_ptr<vector<CString> > img)
+void CExplorerDlg::ViewImages(std::unique_ptr<std::vector<CString> > img)
 {
 	if (m_imageViewDlg == NULL)
 	{

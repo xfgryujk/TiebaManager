@@ -19,6 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "Plugin.h"
+#include <vector>
+#include <memory>
 
 
 class CPluginManager
@@ -31,8 +33,8 @@ public:
 	BOOL Unload(int index);
 	BOOL UnloadAll();
 
-	const vector<unique_ptr<CPlugin> >& GetPlugins();
+	const std::vector<std::unique_ptr<CPlugin> >& GetPlugins();
 
 protected:
-	vector<unique_ptr<CPlugin> > m_plugins;
+	std::vector<std::unique_ptr<CPlugin> > m_plugins;
 };

@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <NormalDlg.h>
 #include "explorer1.h"
 #include "afxwin.h"
+#include "resource.h"
 
 
 // CLoginDlg 对话框

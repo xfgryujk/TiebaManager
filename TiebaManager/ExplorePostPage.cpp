@@ -127,7 +127,7 @@ void CExplorePostPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 		CExplorerDlg* explorerDlg = (CExplorerDlg*)GetParent()->GetParent();
 		explorerDlg->m_edit.SetWindowText(m_posts[pNMLV->iItem].content + 
 			_T("\r\n\r\n") + m_posts[pNMLV->iItem].author);
-		unique_ptr<vector<CString> > img(new vector<CString>());
+		auto img = std::make_unique<std::vector<CString> >();
 		CGetImages(m_posts[pNMLV->iItem]).operator()(*img);
 		explorerDlg->ViewImages(std::move(img));
 	}

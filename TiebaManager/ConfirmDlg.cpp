@@ -94,7 +94,7 @@ BOOL CConfirmDlg::OnInitDialog()
 		m_contentEdit.SetWindowText(m_operation->object->GetContent() + _T("\r\n\r\n作者：") + m_operation->object->author);
 		m_contentEdit.SetSel(m_operation->pos, m_operation->pos + m_operation->length);
 
-		unique_ptr<vector<CString> > img(new vector<CString>());
+		auto img = std::make_unique<std::vector<CString> >();
 		CGetImages(*m_operation->object)(*img);
 		if (!img->empty())
 		{

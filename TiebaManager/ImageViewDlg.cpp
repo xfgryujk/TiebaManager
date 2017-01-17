@@ -137,7 +137,7 @@ BOOL CImageViewDlg::OnInitDialog()
 }
 
 // 设置图片
-void CImageViewDlg::SetImages(unique_ptr<vector<CString> > imageURL)
+void CImageViewDlg::SetImages(std::unique_ptr<std::vector<CString> > imageURL)
 {
 	if (imageURL == nullptr)
 		return;
@@ -158,7 +158,7 @@ void CImageViewDlg::SetImages(unique_ptr<vector<CString> > imageURL)
 		else
 		{
 			// 下载图片
-			unique_ptr<BYTE[]> buffer;
+			std::unique_ptr<BYTE[]> buffer;
 			ULONG size;
 			if (HTTPGetRaw((*m_imageURL)[i], &buffer, &size) == NET_SUCCESS)
 			{

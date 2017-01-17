@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "afxwin.h"
 #include "InputDlg.h"
+#include "resource.h"
 
 
 // CInputKeywordDlg 对话框

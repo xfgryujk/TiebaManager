@@ -30,5 +30,5 @@ public:
 	static void SetCurrentUser(const CString& userName, BOOL save);
 
 	// 从目录读取图片到images
-	static void ReadImages(const CString& dir, vector<CPlan::NameImage>& images);
+	static void ReadImages(const CString& dir, std::vector<CPlan::NameImage>& images);
 };

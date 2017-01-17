@@ -21,11 +21,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "afxcmn.h"
 #include "afxwin.h"
 #include <ModelessDlg.h>
-class CExploreThreadPage;
-class CExplorePostPage;
-class CExploreLzlPage;
-class CExplorerPage;
-class CImageViewDlg;
+#include "resource.h"
+#include <memory>
+#include <vector>
+
+#include "ExploreThreadPage.h"
+#include "ExplorePostPage.h"
+#include "ExploreLzlPage.h"
+
+#include "ImageViewDlg.h"
 
 
 // CExplorerDlg 对话框
@@ -53,14 +57,14 @@ public:
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedButton3();
 
-	void ViewImages(unique_ptr<vector<CString> > img);
+	void ViewImages(std::unique_ptr<std::vector<CString> > img);
 
 
 public:
 	CTabCtrl m_tab;
-	unique_ptr<CExploreThreadPage> m_exploreThreadPage;
-	unique_ptr<CExplorePostPage> m_explorePostPage;
-	unique_ptr<CExploreLzlPage> m_exploreLzlPage;
+	std::unique_ptr<CExploreThreadPage> m_exploreThreadPage;
+	std::unique_ptr<CExplorePostPage> m_explorePostPage;
+	std::unique_ptr<CExploreLzlPage> m_exploreLzlPage;
 	CEdit m_edit;
 	CButton m_deleteButton;
 	CButton m_banButton;

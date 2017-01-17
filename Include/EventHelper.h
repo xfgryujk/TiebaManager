@@ -36,7 +36,7 @@ template<class KeyCmp, class... ArgTypes>
 class Event final : public EventBase
 {
 public:
-	typedef std::function<bool(ArgTypes...)> FunctionType;
+	typedef std::function<void(ArgTypes...)> FunctionType;
 
 private:
 	struct Listener

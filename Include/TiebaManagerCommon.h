@@ -20,8 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 
 #ifdef TIEBA_MANAGER_EXPORTS
-#define TIEBA_MANAGER_API __declspec(dllexport)
+#define TBM_API __declspec(dllexport)
 #else
-#define TIEBA_MANAGER_API __declspec(dllimport)
+#define TBM_API __declspec(dllimport)
 #pragma comment(lib, "TiebaManager.lib")
 #endif

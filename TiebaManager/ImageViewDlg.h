@@ -20,6 +20,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "afxwin.h"
 #include <ModelessDlg.h>
+#include "resource.h"
+#include <memory>
+#include <vector>
 
 
 // CImageViewDlg 对话框
@@ -48,7 +51,7 @@ public:
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);
 	afx_msg void OnBnClickedButton3();
 
-	void SetImages(unique_ptr<vector<CString> > imageURL);
+	void SetImages(std::unique_ptr<std::vector<CString> > imageURL);
 protected:
 	SIZE GetImageSize(const CImage& image);
 
@@ -59,6 +62,6 @@ public:
 	CButton m_saveButton;
 
 protected:
-	unique_ptr<vector<CString> > m_imageURL;
-	vector<CImage> m_image;
+	std::unique_ptr<std::vector<CString> > m_imageURL;
+	std::vector<CImage> m_image;
 };

@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "afxwin.h"
 #include "TextButton.h"
 #include <NormalDlg.h>
+#include "resource.h"
 
 
 // CAboutPage 对话框

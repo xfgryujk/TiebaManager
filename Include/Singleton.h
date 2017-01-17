@@ -17,46 +17,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "stdafx.h"
-#include <TBMEvent.h>
-#include <TiebaClawer.h>
+#pragma once
 
 
-CSetCurrentUserEvent::CSetCurrentUserEvent(const CString& userName) : 
-	m_userName(userName)
+template<class T>
+class Singleton
 {
+protected:
+	Singleton() = default;
+	virtual ~Singleton() = default;
 
-}
+public:
+	static T& GetInstance()
+	{
+		static T s_instance;
+		return s_instance;
+	}
+};
 
-CSetTiebaEvent::CSetTiebaEvent(const CString& forumName) :
-	m_forumName(forumName)
-{
-
-}
-
-CGetThreadImagesEvent::CGetThreadImagesEvent(const ThreadInfo& thread, vector<CString>& img) :
-	m_thread(thread),
-	m_img(img)
-{
-	result = FALSE;
-}
-
-CGetPostImagesEvent::CGetPostImagesEvent(const PostInfo& post, vector<CString>& img) :
-	m_post(post),
-	m_img(img)
-{
-	result = FALSE;
-}
-
-CGetLzlImagesEvent::CGetLzlImagesEvent(const LzlInfo& lzl, vector<CString>& img) :
-	m_lzl(lzl),
-	m_img(img)
-{
-	result = FALSE;
-}
-
-COpenLinkEvent::COpenLinkEvent(const CString& url) :
-	m_url(url)
-{
-
-}
+#define DECL_SINGLETON(T) friend class Singleton<T>
+#define DECL_SINGLETON_DEFAULT(T) \
+	DECL_SINGLETON(T); \
+	private: \
+	T() = default; \
+	~T() = default

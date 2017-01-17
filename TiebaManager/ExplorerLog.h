@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include <TBMCoreConfig.h>
 #include <mshtml.h>
-class CExplorer1;
+#include "explorer1.h"
 
 
 class CExplorerLog : public ILog

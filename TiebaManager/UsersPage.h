@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "afxwin.h"
 #include <NormalDlg.h>
+#include "resource.h"
 
 
 // CUsersPage 对话框

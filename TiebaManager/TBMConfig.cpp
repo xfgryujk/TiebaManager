@@ -19,7 +19,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "TBMConfig.h"
-using tinyxml2::XMLElement;
 #include "TBMConfigPath.h"
 #include "ConfigHelper.h"
 
@@ -27,7 +26,7 @@ using tinyxml2::XMLElement;
 // 全局配置
 CGlobalConfig::CGlobalConfig() : CConfigBase("Global"),
 	m_firstRun("FirstRun", TRUE),
-	m_currentUser("UserName", _T("[NULL]"), [](const CString& value)->BOOL{ return value != _T("") && PathFileExists(USERS_DIR_PATH + value + _T("\\ck.xml")); }),
+	m_currentUser("UserName", _T("[NULL]"), [](const CString& value){ return value != _T("") && PathFileExists(USERS_DIR_PATH + value + _T("\\ck.xml")); }),
 	m_autoUpdate("AutoUpdate", TRUE)
 {
 	m_options.push_back(&m_firstRun);
@@ -54,7 +53,7 @@ CCookieConfig::CCookieConfig() : CConfigBase("Cookie"),
 // 方案
 DECLEAR_READ(CPlan::Keyword)
 {
-	const XMLElement* optionNode = root.FirstChildElement(m_name);
+	const tinyxml2::XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
 		UseDefault();
@@ -81,7 +80,7 @@ DECLEAR_READ(CPlan::Keyword)
 DECLEAR_WRITE(CPlan::Keyword)
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(m_name);
+	tinyxml2::XMLElement* optionNode = doc->NewElement(m_name);
 	root.LinkEndChild(optionNode);
 
 	COption<BOOL> isRegex("IsRegex");
@@ -100,25 +99,23 @@ DECLEAR_WRITE(CPlan::Keyword)
 
 CPlan::CPlan() : CTBMCoreConfig("Plan"),
 	m_autoSaveLog		("AutoSaveLog",			FALSE),
-	m_illegalLevel		("IllegalLevel",		0,		[](const int& value)->BOOL{ return 0 <= value && value <= 6; }),
-	m_keywords			("IllegalContent", [](const vector<Keyword>& value)->BOOL
-											{
-												for (const RegexText& i : value)
-													if (StringIncludes(MATCH_TOO_MUCH_CONTENT_TEST1, i) 
-														&& StringIncludes(MATCH_TOO_MUCH_CONTENT_TEST2, i))
-														return FALSE;
-												return TRUE;
-											}),
+	m_illegalLevel		("IllegalLevel",		0,		InRange<int, 0, 6>),
+	m_keywords			("IllegalContent",              [](const std::vector<Keyword>& value) {
+											            	for (const RegexText& i : value)
+											            		if (StringIncludes(MATCH_TOO_MUCH_CONTENT_TEST1, i) 
+											            			&& StringIncludes(MATCH_TOO_MUCH_CONTENT_TEST2, i))
+											            			return false;
+											            	return true;
+											            }),
 	m_imageDir			("IllegalImageDir",		_T("")),
-	m_SSIMThreshold		("SSIMThreshold",		2.43f,	[](const double& value)->BOOL{ return 1.0f <= value && value <= 3.0f; }),
-	m_blackList			("BlackList", [](const vector<RegexText>& value)->BOOL
-										{
-											for (const RegexText& i : value)
-												if (StringIncludes(MATCH_TOO_MUCH_USERNAME_TEST1, i) 
-													&& StringIncludes(MATCH_TOO_MUCH_USERNAME_TEST2, i))
-													return FALSE;
-											return TRUE;
-										}),
+	m_SSIMThreshold		("SSIMThreshold",		2.43,	[](const double& value) { return 1.0 <= value && value <= 3.0; }/*InRange<double, 1.0, 3.0>*/),
+	m_blackList			("BlackList",                   [](const std::vector<RegexText>& value) {
+										                	for (const RegexText& i : value)
+										                		if (StringIncludes(MATCH_TOO_MUCH_USERNAME_TEST1, i) 
+										                			&& StringIncludes(MATCH_TOO_MUCH_USERNAME_TEST2, i))
+										                			return false;
+										                	return true;
+										                }),
 	m_whiteList			("WhiteList"),
 	m_whiteContent		("TrustedContent"),
 	m_trustedThread		("TrustedThread")

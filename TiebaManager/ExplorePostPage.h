@@ -47,7 +47,7 @@ public:
 
 public:
 	CString m_tid;
-	vector<PostInfo> m_posts;
+	std::vector<PostInfo> m_posts;
 
 protected:
 	CString m_forumID;

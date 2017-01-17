@@ -31,7 +31,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 // 检查图片违规1，检测信任用户、获取图片地址
-BOOL CScanImage::CheckImageIllegal(const CString& author, std::function<void(vector<CString>&)> getImages, CString& msg)
+BOOL CScanImage::CheckImageIllegal(const CString& author, std::function<void(std::vector<CString>&)> getImages, CString& msg)
 {
 	if (theApp.m_plan->m_images.empty())
 		return FALSE;
@@ -45,13 +45,13 @@ BOOL CScanImage::CheckImageIllegal(const CString& author, std::function<void(vec
 	}
 	theApp.m_plan->m_optionsLock.Unlock();
 
-	vector<CString> imgs;
+	std::vector<CString> imgs;
 	getImages(imgs);
 	return DoCheckImageIllegal(imgs, msg);
 }
 
 // 检查图片违规2，下载图片、比较图片
-BOOL CScanImage::DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
+BOOL CScanImage::DoCheckImageIllegal(std::vector<CString>& imgs, CString& msg)
 {
 	for (const CString& img : imgs)
 	{
@@ -64,7 +64,7 @@ BOOL CScanImage::DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 			return TRUE;
 
 		// 读取图片
-		Mat image;
+		cv::Mat image;
 		if (PathFileExists(IMG_CACHE_PATH + imgName))
 		{
 			// 读取图片缓存
@@ -73,7 +73,7 @@ BOOL CScanImage::DoCheckImageIllegal(vector<CString>& imgs, CString& msg)
 		else
 		{
 			// 下载图片
-			unique_ptr<BYTE[]> buffer;
+			std::unique_ptr<BYTE[]> buffer;
 			ULONG size;
 			if (HTTPGetRaw(img, &buffer, &size) == NET_SUCCESS)
 			{
@@ -118,7 +118,7 @@ double CScanImage::GetMSSIM(const cv::Mat& i1, const cv::Mat& i2)
 	static const int d = CV_32F;
 	try
 	{
-		Mat I1, I2;
+		cv::Mat I1, I2;
 		i1.convertTo(I1, d);           // 不能在单字节像素上进行计算，范围不够。
 		i2.convertTo(I2, d);
 
@@ -127,25 +127,25 @@ double CScanImage::GetMSSIM(const cv::Mat& i1, const cv::Mat& i2)
 		else
 			cv::resize(I1, I1, I2.size());
 
-		Mat I2_2 = I2.mul(I2);        // I2^2
-		Mat I1_2 = I1.mul(I1);        // I1^2
-		Mat I1_I2 = I1.mul(I2);        // I1 * I2
+		cv::Mat I2_2 = I2.mul(I2);        // I2^2
+		cv::Mat I1_2 = I1.mul(I1);        // I1^2
+		cv::Mat I1_I2 = I1.mul(I2);        // I1 * I2
 
 		///////////////////////// 初步计算 ///////////////////////////////
 
-		Mat mu1, mu2;
+		cv::Mat mu1, mu2;
 		GaussianBlur(I1, mu1, cv::Size(11, 11), 1.5);
 		I1.release();
 		GaussianBlur(I2, mu2, cv::Size(11, 11), 1.5);
 		I2.release();
 
-		Mat mu1_2 = mu1.mul(mu1);
-		Mat mu2_2 = mu2.mul(mu2);
-		Mat mu1_mu2 = mu1.mul(mu2);
+		cv::Mat mu1_2 = mu1.mul(mu1);
+		cv::Mat mu2_2 = mu2.mul(mu2);
+		cv::Mat mu1_mu2 = mu1.mul(mu2);
 		mu1.release();
 		mu2.release();
 
-		Mat sigma1_2, sigma2_2, sigma12;
+		cv::Mat sigma1_2, sigma2_2, sigma12;
 
 		GaussianBlur(I1_2, sigma1_2, cv::Size(11, 11), 1.5);
 		I1_2.release();
@@ -160,7 +160,7 @@ double CScanImage::GetMSSIM(const cv::Mat& i1, const cv::Mat& i2)
 		sigma12 -= mu1_mu2;
 
 		///////////////////////////////// 公式 ////////////////////////////////
-		Mat t1, t2, t3;
+		cv::Mat t1, t2, t3;
 
 		t1 = 2 * mu1_mu2 + C1;
 		t2 = 2 * sigma12 + C2;
@@ -171,7 +171,7 @@ double CScanImage::GetMSSIM(const cv::Mat& i1, const cv::Mat& i2)
 		t1 = t1.mul(t2);               // t1 =((mu1_2 + mu2_2 + C1).*(sigma1_2 + sigma2_2 + C2))
 		t2.release();
 
-		Mat ssim_map;
+		cv::Mat ssim_map;
 		divide(t3, t1, ssim_map);      // ssim_map =  t3./t1;
 		t1.release();
 		t3.release();

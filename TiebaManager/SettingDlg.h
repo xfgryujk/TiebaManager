@@ -21,20 +21,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "afxcmn.h"
 #include "afxwin.h"
 #include <ModeLessDlg.h>
-class ILog;
-class CPlan;
+#include "resource.h"
+#include <memory>
 
-class CScanPage;
-class COperatePage;
-class CKeywordsPage;
-class CImagePage;
-class CImagePage;
-class CBlackListPage;
-class CNormalListPage;
-class CWhiteContentPage;
-class COptionsPage;
-class CUsersPage;
-class CAboutPage;
+#include <TBMCoreConfig.h>
+
+#include "ScanPage.h"
+#include "OperatePage.h"
+#include "KeywordsPage.h"
+#include "ImagePage.h"
+#include "BlackListPage.h"
+#include "NormalListPage.h"
+#include "WhiteContentPage.h"
+#include "OptionsPage.h"
+#include "UsersPage.h"
+#include "AboutPage.h"
 
 
 // CSettingDlg 对话框
@@ -72,17 +73,17 @@ public:
 
 public:
 	CTabCtrl m_tab;
-	unique_ptr<CScanPage> m_scanPage;
-	unique_ptr<COperatePage> m_operatePage;
-	unique_ptr<CKeywordsPage> m_keywordsPage;
-	unique_ptr<CImagePage> m_imagePage;
-	unique_ptr<CBlackListPage> m_blackListPage;
-	unique_ptr<CNormalListPage> m_whiteListPage;
-	unique_ptr<CWhiteContentPage> m_whiteContentPage;
-	unique_ptr<CNormalListPage> m_trustedThreadPage;
-	unique_ptr<COptionsPage> m_optionsPage;
-	unique_ptr<CUsersPage> m_usersPage;
-	unique_ptr<CAboutPage> m_aboutPage;
+	std::unique_ptr<CScanPage> m_scanPage;
+	std::unique_ptr<COperatePage> m_operatePage;
+	std::unique_ptr<CKeywordsPage> m_keywordsPage;
+	std::unique_ptr<CImagePage> m_imagePage;
+	std::unique_ptr<CBlackListPage> m_blackListPage;
+	std::unique_ptr<CNormalListPage> m_whiteListPage;
+	std::unique_ptr<CWhiteContentPage> m_whiteContentPage;
+	std::unique_ptr<CNormalListPage> m_trustedThreadPage;
+	std::unique_ptr<COptionsPage> m_optionsPage;
+	std::unique_ptr<CUsersPage> m_usersPage;
+	std::unique_ptr<CAboutPage> m_aboutPage;
 	CButton m_okButton;
 	CButton m_cancelButton;
 

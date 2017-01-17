@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include <TBMCoreConfig.h>
 #include <StringHelper.h>
+#pragma warning(disable:4819) // OpenCV头文件包含Unicode字符
 #include <opencv2\core\mat.hpp>
 
 
@@ -80,14 +81,14 @@ public:
 
 	COption<BOOL>				m_autoSaveLog;		// 自动保存日志
 	COption<int>				m_illegalLevel;		// 违规等级
-	COption<vector<Keyword> >	m_keywords;			// 违规内容
-	vector<NameImage>			m_images;			// 违规图片
+	COption<std::vector<Keyword> >	m_keywords;			// 违规内容
+	std::vector<NameImage>			m_images;			// 违规图片
 	COption<CString>			m_imageDir;			// 违规图片目录
 	COption<double>				m_SSIMThreshold;	// 阈值
-	COption<vector<RegexText> >	m_blackList;		// 屏蔽用户
-	COption<set<CString> >		m_whiteList;		// 信任用户
-	COption<vector<RegexText> >	m_whiteContent;		// 信任内容
-	COption<set<CString> >		m_trustedThread;	// 信任主题
+	COption<std::vector<RegexText> >	m_blackList;		// 屏蔽用户
+	COption<std::set<CString> >		m_whiteList;		// 信任用户
+	COption<std::vector<RegexText> >	m_whiteContent;		// 信任内容
+	COption<std::set<CString> >		m_trustedThread;	// 信任主题
 
 	CPlan();
 	void OnChange();

@@ -86,7 +86,7 @@ void CExploreLzlPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 		CExplorerDlg* explorerDlg = (CExplorerDlg*)GetParent()->GetParent();
 		explorerDlg->m_edit.SetWindowText(m_lzls[pNMLV->iItem].content +
 			_T("\r\n\r\n") + m_lzls[pNMLV->iItem].author);
-		unique_ptr<vector<CString> > img(new vector<CString>());
+		auto img = std::make_unique<std::vector<CString> >();
 		CGetImages(m_lzls[pNMLV->iItem]).operator()(*img);
 		explorerDlg->ViewImages(std::move(img));
 	}

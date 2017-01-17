@@ -71,7 +71,7 @@ BOOL CKeywordsPage::OnInitDialog()
 	// 异常:  OCX 属性页应返回 FALSE
 }
 
-void CKeywordsPage::ShowList(const vector<CPlan::Keyword>& list)
+void CKeywordsPage::ShowList(const std::vector<CPlan::Keyword>& list)
 {
 	m_list.DeleteAllItems();
 	CString tmp;
@@ -85,7 +85,7 @@ void CKeywordsPage::ShowList(const vector<CPlan::Keyword>& list)
 	}
 }
 
-void CKeywordsPage::ApplyList(vector<CPlan::Keyword>& list)
+void CKeywordsPage::ApplyList(std::vector<CPlan::Keyword>& list)
 {
 	int size = m_list.GetItemCount();
 	list.resize(size);
@@ -100,7 +100,7 @@ void CKeywordsPage::ApplyList(vector<CPlan::Keyword>& list)
 class CKeywordListFile : public CConfigBase
 {
 public:
-	COption<vector<CPlan::Keyword> > m_list;
+	COption<std::vector<CPlan::Keyword> > m_list;
 
 	CKeywordListFile()
 		: CConfigBase("RegList"),

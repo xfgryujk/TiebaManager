@@ -152,6 +152,7 @@
     <ClInclude Include="..\Include\NormalListPage.h" />
     <ClInclude Include="..\Include\RegListPage.h" />
     <ClInclude Include="..\Include\ResizeControl.h" />
+    <ClInclude Include="..\Include\Singleton.h" />
     <ClInclude Include="..\Include\StringHelper.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

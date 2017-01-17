@@ -45,5 +45,5 @@ public:
 
 
 public:
-	vector<LzlInfo> m_lzls;
+	std::vector<LzlInfo> m_lzls;
 };

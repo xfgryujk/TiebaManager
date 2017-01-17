@@ -19,7 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "TiebaManagerDlg.h"
-#include <TBMEvent.h>
+#include <TBMEvents.h>
 #include <TBMAPI.h>
 #include "TiebaManager.h"
 
@@ -177,7 +177,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	m_log.Init();
 
 	// 读取设置
-	theApp.m_tbmEventBus->AddListener(PostSetCurrentUserEvent, [this](CEventBase* event__) {
+	g_postSetCurrentUserEvent.AddListener([this](const CString&) {
 		m_forumNameEdit.SetWindowText(*theApp.m_userConfig->m_forumName); // 显示贴吧名
 	});
 	theApp.m_globalConfig->Load(GLOBAL_CONFIG_PATH);
@@ -185,7 +185,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	
 	// 自动更新
 	if (theApp.m_globalConfig->m_autoUpdate)
-		thread(&CTiebaManagerDlg::AutoUpdateThread, this).detach();
+		std::thread(&CTiebaManagerDlg::AutoUpdateThread, this).detach();
 
 	// 初次运行先看关于
 	if (theApp.m_globalConfig->m_firstRun)
@@ -216,7 +216,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	});
 
 
-	theApp.m_tbmEventBus->Post(MainDialogPostInitEvent);
+	g_mainDialogPostInitEvent();
 
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -227,7 +227,9 @@ void CTiebaManagerDlg::OnClose()
 {
 	if (m_isClosing)
 		return;
-	if (!theApp.m_tbmEventBus->Post(MainDialogCloseEvent))
+	BOOL pass = TRUE;
+	g_mainDialogCloseEvent(pass);
+	if (!pass)
 		return;
 	m_isClosing = TRUE;
 
@@ -252,7 +254,7 @@ void CTiebaManagerDlg::OnDestroy()
 	theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
 	theApp.m_plan->Save(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
 
-	theApp.m_tbmEventBus->Post(MainDialogDestroyEvent);
+	g_mainDialogDestroyEvent();
 
 	// 还是有内存泄漏，但我找不出了...
 }
@@ -303,7 +305,9 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 		return;
 	*Cancel = TRUE;
 
-	if (theApp.m_tbmEventBus->Post(OpenLinkInLogEvent, COpenLinkEvent(url)))
+	BOOL pass = TRUE;
+	g_openLinkInLogEvent(url, pass);
+	if (pass)
 		ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
 }
 
@@ -404,7 +408,9 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		return;
 	}
 
-	if (!theApp.m_tbmEventBus->Post(PreSetTiebaEvent, CSetTiebaEvent(forumName)))
+	BOOL pass = TRUE;
+	g_preSetTiebaEvent(forumName, pass);
+	if (!pass)
 		return;
 
 	m_forumNameEdit.EnableWindow(FALSE);
@@ -449,7 +455,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + tiebaOperate.GetForumName()
 		+ _T("<font color=green> 吧，使用账号：</font>" + tiebaOperate.GetUserName_()));
 
-	theApp.m_tbmEventBus->Post(PostSetTiebaEvent, CSetTiebaEvent(forumName));
+	g_postSetTiebaEvent(forumName);
 	return;
 
 Error:

@@ -56,7 +56,7 @@ void CTBMScan::StartScan(const CString& sPage)
 	StopScan();
 	if (m_scanThread != nullptr && m_scanThread->joinable())
 		m_scanThread->join();
-	m_scanThread.reset(new std::thread(&CTBMScan::ScanThread, this, sPage));
+	m_scanThread = std::make_unique<std::thread>(&CTBMScan::ScanThread, this, sPage);
 }
 
 // 结束扫描

@@ -44,8 +44,8 @@ public:
 	virtual BOOL SetItem(int index);
 	virtual BOOL Export(const CString& path);
 	virtual BOOL Import(const CString& path);
-	virtual void ShowList(const vector<CPlan::Keyword>& list);
-	virtual void ApplyList(vector<CPlan::Keyword>& list);
+	virtual void ShowList(const std::vector<CPlan::Keyword>& list);
+	virtual void ApplyList(std::vector<CPlan::Keyword>& list);
 protected:
 	virtual void OnAdd(int index);
 	virtual BOOL CheckMatchTooMuch(const CString& text, BOOL isRegex);
