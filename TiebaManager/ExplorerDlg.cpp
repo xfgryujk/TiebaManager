@@ -239,7 +239,7 @@ void CExplorerDlg::OnBnClickedButton3()
 		m_exploreThreadPage->m_edit.GetWindowText(page);
 		url = _T("http://tieba.baidu.com/p/") + m_explorePostPage->m_tid + _T("?pn=") + page;
 	}
-	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
+	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
 }
 
 // 打开浏览图片对话框

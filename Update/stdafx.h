@@ -1,56 +1,37 @@
-// stdafx.h : ±ê×¼ÏµÍ³°üº¬ÎÄ¼şµÄ°üº¬ÎÄ¼ş£¬
-// »òÊÇ¾­³£Ê¹ÓÃµ«²»³£¸ü¸ÄµÄ
-// ÌØ¶¨ÓÚÏîÄ¿µÄ°üº¬ÎÄ¼ş
+ï»¿// stdafx.h : æ ‡å‡†ç³»ç»ŸåŒ…å«æ–‡ä»¶çš„åŒ…å«æ–‡ä»¶ï¼Œ
+// æˆ–æ˜¯ç»å¸¸ä½¿ç”¨ä½†ä¸å¸¸æ›´æ”¹çš„
+// ç‰¹å®šäºé¡¹ç›®çš„åŒ…å«æ–‡ä»¶
 
 #pragma once
 
 #ifndef VC_EXTRALEAN
-#define VC_EXTRALEAN            // ´Ó Windows Í·ÖĞÅÅ³ı¼«ÉÙÊ¹ÓÃµÄ×ÊÁÏ
+#define VC_EXTRALEAN            // ä» Windows å¤´ä¸­æ’é™¤æå°‘ä½¿ç”¨çš„èµ„æ–™
 #endif
 
 #include "targetver.h"
 
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // Ä³Ğ© CString ¹¹Ôìº¯Êı½«ÊÇÏÔÊ½µÄ
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // æŸäº› CString æ„é€ å‡½æ•°å°†æ˜¯æ˜¾å¼çš„
 
-#include <afxwin.h>         // MFC ºËĞÄ×é¼şºÍ±ê×¼×é¼ş
-#include <afxext.h>         // MFC À©Õ¹
+#include <afxwin.h>         // MFC æ ¸å¿ƒç»„ä»¶å’Œæ ‡å‡†ç»„ä»¶
+#include <afxext.h>         // MFC æ‰©å±•
 
 #ifndef _AFX_NO_OLE_SUPPORT
-#include <afxole.h>         // MFC OLE Àà
-#include <afxodlgs.h>       // MFC OLE ¶Ô»°¿òÀà
-#include <afxdisp.h>        // MFC ×Ô¶¯»¯Àà
+#include <afxole.h>         // MFC OLE ç±»
+#include <afxodlgs.h>       // MFC OLE å¯¹è¯æ¡†ç±»
+#include <afxdisp.h>        // MFC è‡ªåŠ¨åŒ–ç±»
 #endif // _AFX_NO_OLE_SUPPORT
 
 #ifndef _AFX_NO_DB_SUPPORT
-#include <afxdb.h>                      // MFC ODBC Êı¾İ¿âÀà
+#include <afxdb.h>                      // MFC ODBC æ•°æ®åº“ç±»
 #endif // _AFX_NO_DB_SUPPORT
 
 #ifndef _AFX_NO_DAO_SUPPORT
-#include <afxdao.h>                     // MFC DAO Êı¾İ¿âÀà
+#include <afxdao.h>                     // MFC DAO æ•°æ®åº“ç±»
 #endif // _AFX_NO_DAO_SUPPORT
 
 #ifndef _AFX_NO_OLE_SUPPORT
-#include <afxdtctl.h>           // MFC ¶Ô Internet Explorer 4 ¹«¹²¿Ø¼şµÄÖ§³Ö
+#include <afxdtctl.h>           // MFC å¯¹ Internet Explorer 4 å…¬å…±æ§ä»¶çš„æ”¯æŒ
 #endif
 #ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>                     // MFC ¶Ô Windows ¹«¹²¿Ø¼şµÄÖ§³Ö
+#include <afxcmn.h>                     // MFC å¯¹ Windows å…¬å…±æ§ä»¶çš„æ”¯æŒ
 #endif // _AFX_NO_AFXCMN_SUPPORT
-
-
-// STL
-#include <vector>
-#include <queue>
-#include <set>
-#include <map>
-#include <regex>
-#include <memory>
-#include <thread>
-#include <mutex>
-using std::vector;
-using std::queue;
-using std::set;
-using std::map;
-using std::wregex;
-using std::unique_ptr;
-using std::thread;
-using std::mutex;

@@ -103,5 +103,5 @@ void CAboutPage::OnStnClickedStatic1()
 // 关于作者
 void CAboutPage::OnStnClickedStatic2()
 {
-	ShellExecute(NULL, _T("open"), _T("http://tieba.baidu.com/i/37897560"), NULL, NULL, SW_NORMAL);
+	ShellExecute(NULL, _T("open"), _T("http://tieba.baidu.com/i/37897560"), NULL, NULL, SW_SHOWNORMAL);
 }

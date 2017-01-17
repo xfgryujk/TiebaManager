@@ -131,5 +131,5 @@ void CConfirmDlg::OnBnClickedButton1()
 			(LPCTSTR)lzl->cid, (LPCTSTR)lzl->cid, (LPCTSTR)lzl->cid);
 	}
 
-	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
+	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
 }

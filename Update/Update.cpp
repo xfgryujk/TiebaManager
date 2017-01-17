@@ -19,7 +19,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include <Update.h>
-using tinyxml2::XMLElement;
 
 #include <StringHelper.h>
 #include <NetworkHelper.h>
@@ -42,7 +41,7 @@ static const CString RESTORE_BAT_NAME = _T("Restore.bat");
 #pragma region CUpdateInfo
 UPDATE_API DECLEAR_READ(CUpdateInfo::FileInfo)
 {
-	const XMLElement* optionNode = root.FirstChildElement(m_name);
+	const tinyxml2::XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
 	{
 		UseDefault();
@@ -70,7 +69,7 @@ UPDATE_API DECLEAR_READ(CUpdateInfo::FileInfo)
 UPDATE_API DECLEAR_WRITE(CUpdateInfo::FileInfo)
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
-	XMLElement* optionNode = doc->NewElement(m_name);
+	tinyxml2::XMLElement* optionNode = doc->NewElement(m_name);
 	root.LinkEndChild(optionNode);
 
 	COption<CString> dir("Dir");
@@ -100,7 +99,7 @@ CUpdateInfo::CUpdateInfo() : CConfigBase("UpdateInfo"),
 
 
 // 用新版文件替换旧版的
-static BOOL ReplaceFiles(const vector<CUpdateInfo::FileInfo>& files, const CString& relativeDir, const CString& updateDir)
+static BOOL ReplaceFiles(const std::vector<CUpdateInfo::FileInfo>& files, const CString& relativeDir, const CString& updateDir)
 {
 	// 原理：可移动正在运行的程序、DLL文件（但是不能删除），貌似可以用ReplaceFile这个API，但是没试过
 	for (const auto& fileInfo : files)
@@ -123,7 +122,7 @@ static BOOL ReplaceFiles(const vector<CUpdateInfo::FileInfo>& files, const CStri
 }
 
 // 备份、写还原批处理
-static BOOL Backup(const vector<CUpdateInfo::FileInfo>& updateFiles, const CString& relativeDir)
+static BOOL Backup(const std::vector<CUpdateInfo::FileInfo>& updateFiles, const CString& relativeDir)
 {
 	CString backupDir = relativeDir + BACKUP_DIR_PATH;
 	CreateDir(backupDir);
@@ -189,8 +188,8 @@ ping 127.0.0.1 -n 1 >nul
 //}
 
 // 下载需要更新的文件
-static BOOL DownloadFiles(const vector<CUpdateInfo::FileInfo>& files, const CString& relativeDir, 
-	const CString& updateDir, vector<CUpdateInfo::FileInfo>& updateFiles)
+static BOOL DownloadFiles(const std::vector<CUpdateInfo::FileInfo>& files, const CString& relativeDir,
+	const CString& updateDir, std::vector<CUpdateInfo::FileInfo>& updateFiles)
 {
 	for (const auto& fileInfo : files)
 	{
@@ -212,7 +211,7 @@ static BOOL DownloadFiles(const vector<CUpdateInfo::FileInfo>& files, const CStr
 			f.Close();
 
 		// 下载
-		unique_ptr<BYTE[]> buffer;
+		std::unique_ptr<BYTE[]> buffer;
 		ULONG size;
 		if (HTTPGetRaw(fileInfo.url, &buffer, &size) != NET_SUCCESS)
 		{
@@ -233,7 +232,7 @@ static BOOL DownloadFiles(const vector<CUpdateInfo::FileInfo>& files, const CStr
 // 更新线程
 static void UpdateThread(CUpdateInfo* updateInfo_)
 {
-	unique_ptr<CUpdateInfo> updateInfo(updateInfo_);
+	std::unique_ptr<CUpdateInfo> updateInfo(updateInfo_);
 	if (!CoInitializeHelper())
 		return;
 
@@ -246,7 +245,7 @@ static void UpdateThread(CUpdateInfo* updateInfo_)
 
 	CString updateDir = relativeDir + UPDATE_DIR_PATH;
 	// 需要更新的文件
-	vector<CUpdateInfo::FileInfo> updateFiles;
+	std::vector<CUpdateInfo::FileInfo> updateFiles;
 
 
 	// 下载需要更新的文件
@@ -267,7 +266,7 @@ static void UpdateThread(CUpdateInfo* updateInfo_)
 	//AfxMessageBox(_T("更新文件下载完毕，关闭本程序以完成更新，不要关闭cmd窗口"));
 
 	//// 执行批处理
-	//ShellExecute(NULL, _T("open"), updateDir + UPDATE_BAT_NAME, NULL, updateDir, SW_NORMAL);
+	//ShellExecute(NULL, _T("open"), updateDir + UPDATE_BAT_NAME, NULL, updateDir, SW_SHOWNORMAL);
 
 	// 替换旧文件
 	if (!ReplaceFiles(updateFiles, relativeDir, updateDir))
@@ -284,11 +283,11 @@ End:
 UPDATE_API CheckUpdateResult CheckUpdate()
 {
 	// 取更新信息
-	unique_ptr<BYTE[]> buffer;
+	std::unique_ptr<BYTE[]> buffer;
 	ULONG size;
 	if (HTTPGetRaw(UPDATE_INFO_URL, &buffer, &size) != NET_SUCCESS) // 用HTTPGetRaw防止转码
 		return UPDATE_FAILED_TO_GET_INFO;
-	unique_ptr<CUpdateInfo> updateInfo(new CUpdateInfo());
+	auto updateInfo = std::make_unique<CUpdateInfo>();
 	if (!updateInfo->LoadFromString((LPCSTR)buffer.get(), size))
 		return UPDATE_FAILED_TO_GET_INFO;
 
@@ -302,12 +301,12 @@ UPDATE_API CheckUpdateResult CheckUpdate()
 		return UPDATE_HAS_UPDATE;
 
 	// 在线程中更新
-	thread(UpdateThread, updateInfo.release()).detach();
+	std::thread(UpdateThread, updateInfo.release()).detach();
 	return UPDATE_HAS_UPDATE;
 }
 
 // 手动更新，打开一个URL
 UPDATE_API void ManuallyUpdate()
 {
-	ShellExecute(NULL, _T("open"), MANUALLY_UPDATE_URL, NULL, NULL, SW_NORMAL);
+	ShellExecute(NULL, _T("open"), MANUALLY_UPDATE_URL, NULL, NULL, SW_SHOWNORMAL);
 }

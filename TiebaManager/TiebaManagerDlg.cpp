@@ -308,7 +308,7 @@ void CTiebaManagerDlg::BeforeNavigate2Explorer1(LPDISPATCH pDisp, VARIANT* URL, 
 	BOOL pass = TRUE;
 	g_openLinkInLogEvent(url, pass);
 	if (pass)
-		ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_NORMAL);
+		ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
 }
 
 // 清空日志
