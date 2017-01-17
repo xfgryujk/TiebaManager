@@ -32,9 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Update.def">
-      <Filter>源文件</Filter>
-    </None>
     <None Include="res\Update.rc2">
       <Filter>资源文件</Filter>
     </None>

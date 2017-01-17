@@ -47,9 +47,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TiebaManagerCore.def">
-      <Filter>源文件</Filter>
-    </None>
     <None Include="res\TiebaManagerCore.rc2">
       <Filter>资源文件</Filter>
     </None>

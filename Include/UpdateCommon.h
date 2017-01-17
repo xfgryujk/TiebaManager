@@ -23,4 +23,5 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define UPDATE_API __declspec(dllexport)
 #else
 #define UPDATE_API __declspec(dllimport)
+#pragma comment(lib, "Update.lib")
 #endif

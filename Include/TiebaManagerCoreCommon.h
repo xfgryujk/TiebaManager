@@ -23,4 +23,5 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define TIEBA_MANAGER_CORE_API __declspec(dllexport)
 #else
 #define TIEBA_MANAGER_CORE_API __declspec(dllimport)
+#pragma comment(lib, "TiebaManagerCore.lib")
 #endif

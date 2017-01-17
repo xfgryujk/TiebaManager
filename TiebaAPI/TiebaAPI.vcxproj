@@ -61,8 +61,6 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>.\TiebaAPI.def</ModuleDefinitionFile>
-      <AdditionalDependencies>Helper.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -92,8 +90,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <ModuleDefinitionFile>.\TiebaAPI.def</ModuleDefinitionFile>
-      <AdditionalDependencies>Helper.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -124,7 +120,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\TiebaAPI.rc2" />
-    <None Include="TiebaAPI.def" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\TiebaAPICommon.h" />

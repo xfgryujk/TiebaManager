@@ -23,4 +23,5 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define TIEBA_API_API __declspec(dllexport)
 #else
 #define TIEBA_API_API __declspec(dllimport)
+#pragma comment(lib, "TiebaAPI.lib")
 #endif
