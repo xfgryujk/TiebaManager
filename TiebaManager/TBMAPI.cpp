@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TBMConfigPath.h"
 
 
-CPlugin* GetPlugin(HMODULE module)
+TBM_API CPlugin* GetPlugin(HMODULE module)
 {
 	CPlugin* res = NULL;
 	auto& plugins = CPluginManager::GetInstance().GetPlugins();
@@ -41,38 +41,38 @@ CPlugin* GetPlugin(HMODULE module)
 }
 
 
-ILog& GetLog()
+TBM_API ILog& GetLog()
 {
 	return *theApp.m_log;
 }
 
-CUserCache& GetUserCache()
+TBM_API CUserCache& GetUserCache()
 {
 	return *theApp.m_userCache;
 }
 
-CTiebaOperate& GetTiebaOperate()
+TBM_API CTiebaOperate& GetTiebaOperate()
 {
 	return *theApp.m_tiebaOperate;
 }
 
-CTBMScan& GetScan()
+TBM_API CTBMScan& GetScan()
 {
 	return *theApp.m_scan;
 }
 
-CTBMOperate& GetOperate()
+TBM_API CTBMOperate& GetOperate()
 {
 	return *theApp.m_operate;
 }
 
 
-CString GetCurrentUserDir()
+TBM_API CString GetCurrentUserDir()
 {
 	return CURRENT_USER_DIR_PATH;
 }
 
-CString GetImgCacheDir()
+TBM_API CString GetImgCacheDir()
 {
 	return IMG_CACHE_PATH;
 }

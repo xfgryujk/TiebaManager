@@ -23,13 +23,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "Defriend.h"
 #include "resource.h"
-#include "DefriendDlg.h"
 
 #include <StringHelper.h>
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
 
 #include <TBMAPI.h>
+#include <TBMEvents.h>
 #include <TBMCoreConfig.h>
 #include <TiebaOperate.h>
 
@@ -38,38 +38,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #endif
 
 
-CDefriend g_defriend;
-
-
-extern "C" __declspec(dllexport) bool __cdecl Init()
+CDefriend::CDefriend(HMODULE module) :
+	m_module(module)
 {
-	return g_defriend.Init();
-}
-
-extern "C" __declspec(dllexport) bool __cdecl Uninit()
-{
-	return g_defriend.Uninit();
-}
-
-extern "C" __declspec(dllexport) LPCWSTR __cdecl GetDescription()
-{
-	return _T("批量拉黑插件\r\n")
-		_T("\r\n")
-		_T("作者：盗我原号的没J8");
-}
-
-extern "C" __declspec(dllexport) void __cdecl OnConfig()
-{
-	g_defriend.OnConfig();
+	g_mainDialogPostInitEvent.AddListener(std::bind(&CDefriend::Init, this), m_module);
 }
 
 
-bool CDefriend::Init()
+void CDefriend::Init()
 {
-	return true;
+	auto plugin = GetPlugin(m_module);
+	if (plugin == NULL)
+		return;
+
+	plugin->m_description = _T("批量拉黑插件\r\n")
+		                    _T("\r\n")
+		                    _T("作者：盗我原号的没J8");
+	plugin->m_onConfig = std::bind(&CDefriend::OnConfig, this);
 }
 
-bool CDefriend::Uninit()
+void CDefriend::Uninit()
 {
 	// 关闭窗口
 	if (m_defriendDlg != NULL)
@@ -79,13 +67,11 @@ bool CDefriend::Uninit()
 	StopDefriend();
 	if (m_defriendThread != nullptr && m_defriendThread->joinable())
 		m_defriendThread->join();
-
-	return true;
 }
 
 void CDefriend::OnConfig()
 {
-	if (!CTBMAPI::GetTiebaOperate()->HasSetTieba())
+	if (!GetTiebaOperate().HasSetTieba())
 	{
 		AfxMessageBox(_T("请先确认贴吧！"), MB_ICONERROR);
 		return;
@@ -120,7 +106,7 @@ void CDefriend::DefriendThread(CString startPage, CString endPage, BOOL defriend
 	if (!CoInitializeHelper())
 		return;
 
-	CTiebaOperate& tiebaOperate = *CTBMAPI::GetTiebaOperate();
+	CTiebaOperate& tiebaOperate = GetTiebaOperate();
 
 
 	int iStartPage = _ttoi(startPage), iEndPage = _ttoi(endPage);
@@ -172,9 +158,9 @@ void CDefriend::DefriendThread(CString startPage, CString endPage, BOOL defriend
 
 void CDefriend::DoDefriend(int startPage, int endPage)
 {
-	ILog& log = *CTBMAPI::GetLog();
-	CTiebaOperate& tiebaOperate = *CTBMAPI::GetTiebaOperate();
-	CUserCache& userCache = *CTBMAPI::GetUserCache();
+	ILog& log = GetLog();
+	CTiebaOperate& tiebaOperate = GetTiebaOperate();
+	CUserCache& userCache = GetUserCache();
 
 
 	// 获取拉黑列表

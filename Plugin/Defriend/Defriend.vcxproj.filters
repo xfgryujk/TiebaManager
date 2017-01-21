@@ -29,9 +29,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Defriend.def">
-      <Filter>源文件</Filter>
-    </None>
     <None Include="res\Defriend.rc2">
       <Filter>资源文件</Filter>
     </None>

@@ -34,6 +34,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TiebaOperate.h>
 
 
+extern std::unique_ptr<CDefriend> g_defriend;
+
 // CDefriendDlg 对话框
 
 CString CDefriendDlg::s_startPage;
@@ -43,9 +45,9 @@ BOOL CDefriendDlg::s_defriendNewUsers = FALSE;
 
 IMPLEMENT_DYNAMIC(CDefriendDlg, CModelessDlg)
 
-CDefriendDlg::CDefriendDlg(CDefriendDlg*& pThis, CWnd* pParent /*=NULL*/) : CModelessDlg(CDefriendDlg::IDD, (CModelessDlg**)&pThis, pParent)
+CDefriendDlg::CDefriendDlg(CDefriendDlg*& pThis, CWnd* pParent /*=NULL*/) :
+	CModelessDlg(CDefriendDlg::IDD, (CModelessDlg**)&pThis, pParent)
 {
-
 }
 
 #pragma region MFC
@@ -79,7 +81,7 @@ BOOL CDefriendDlg::OnInitDialog()
 {
 	CModelessDlg::OnInitDialog();
 
-	if (!g_defriend.m_stopFlag)
+	if (!g_defriend->m_stopFlag)
 	{
 		m_startPageEdit.EnableWindow(FALSE);
 		m_endPageEdit.EnableWindow(FALSE);
@@ -135,11 +137,11 @@ void CDefriendDlg::OnBnClickedButton1()
 	m_startButton.EnableWindow(FALSE);
 	m_stopButton.EnableWindow(TRUE);
 	
-	g_defriend.StartDefriend(s_startPage, s_endPage, s_defriendNewUsers);
+	g_defriend->StartDefriend(s_startPage, s_endPage, s_defriendNewUsers);
 }
 
 // 停止
 void CDefriendDlg::OnBnClickedButton2()
 {
-	g_defriend.StopDefriend();
+	g_defriend->StopDefriend();
 }

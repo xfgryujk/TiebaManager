@@ -25,13 +25,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TBMOperate.h"
 
 
-CPlugin* GetPlugin(HMODULE module);
+TBM_API CPlugin* GetPlugin(HMODULE module);
 
-ILog& GetLog();
-CUserCache& GetUserCache();
-CTiebaOperate& GetTiebaOperate();
-CTBMScan& GetScan();
-CTBMOperate& GetOperate();
+TBM_API ILog& GetLog();
+TBM_API CUserCache& GetUserCache();
+TBM_API CTiebaOperate& GetTiebaOperate();
+TBM_API CTBMScan& GetScan();
+TBM_API CTBMOperate& GetOperate();
 
-CString GetCurrentUserDir();
-CString GetImgCacheDir();
+TBM_API CString GetCurrentUserDir();
+TBM_API CString GetImgCacheDir();

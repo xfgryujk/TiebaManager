@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include <ModelessDlg.h>
 #include "afxwin.h"
+#include "resource.h"
 
 
 // CDefriendDlg 对话框
