@@ -93,6 +93,7 @@ BOOL CPluginManager::UnloadPlugin(int index)
 			i->DeleteListenersOfModule(plugin.m_module);
 		for (auto i : g_tbmEvents)
 			i->DeleteListenersOfModule(plugin.m_module);
+		plugin.m_onConfig = nullptr;
 
 		if (!FreeLibrary(plugin.m_module))
 			return FALSE;

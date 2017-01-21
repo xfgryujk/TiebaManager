@@ -26,6 +26,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "LockThread.h"
 
 
+extern std::unique_ptr<CLockThread> g_lockThread;
+
 // CLockThreadDlg 对话框
 
 IMPLEMENT_DYNAMIC(CLockThreadDlg, CModelessDlg)
@@ -64,7 +66,7 @@ BOOL CLockThreadDlg::OnInitDialog()
 {
 	CModelessDlg::OnInitDialog();
 
-	if (!g_lockThread.m_stopFlag)
+	if (!g_lockThread->m_stopFlag)
 	{
 		m_tidEdit.EnableWindow(FALSE);
 		m_pageEdit.EnableWindow(FALSE);
@@ -86,11 +88,11 @@ void CLockThreadDlg::OnBnClickedButton1()
 	m_startButton.EnableWindow(FALSE);
 	m_stopButton.EnableWindow(TRUE);
 	
-	g_lockThread.StartLockThread();
+	g_lockThread->StartLockThread();
 }
 
 // 停止
 void CLockThreadDlg::OnBnClickedButton2()
 {
-	g_lockThread.StopLockThread();
+	g_lockThread->StopLockThread();
 }

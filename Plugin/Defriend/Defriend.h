@@ -27,6 +27,7 @@ class CDefriend final
 {
 public:
 	CDefriend(HMODULE module);
+	~CDefriend();
 
 	void Init();
 	void Uninit();

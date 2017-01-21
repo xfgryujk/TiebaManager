@@ -18,15 +18,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-class CEventBase;
-class CLockThreadDlg;
+#include "LockThreadDlg.h"
+#include <memory>
+#include <thread>
 
 
-class CLockThread
+class CLockThread final
 {
 public:
-	bool Init();
-	bool Uninit();
+	CLockThread(HMODULE module);
+	~CLockThread();
+
+	void Init();
+	void Uninit();
 	void OnConfig();
 
 	void StartLockThread();
@@ -34,9 +38,10 @@ public:
 	void LockThreadThread();
 
 
+	HMODULE m_module;
+
 	CLockThreadDlg* m_lockThreadDlg = NULL;
 
-	unique_ptr<thread> m_lockThreadThread;
-	volatile BOOL m_stopFlag = TRUE;
+	std::unique_ptr<std::thread> m_lockThreadThread;
+	BOOL m_stopFlag = TRUE;
 };
-extern CLockThread g_lockThread;

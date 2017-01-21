@@ -22,12 +22,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "LockThread.h"
-#include "resource.h"
-#include "LockThreadDlg.h"
 
 #include <MiscHelper.h>
 
 #include <TBMAPI.h>
+#include <TBMEvents.h>
 #include <TBMCoreConfig.h>
 #include <TiebaClawer.h>
 #include <TiebaOperate.h>
@@ -40,38 +39,31 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #endif
 
 
-CLockThread g_lockThread;
-
-
-extern "C" __declspec(dllexport) bool __cdecl Init()
+CLockThread::CLockThread(HMODULE module) :
+	m_module(module)
 {
-	return g_lockThread.Init();
+	g_mainDialogPostInitEvent.AddListener(std::bind(&CLockThread::Init, this), m_module);
 }
 
-extern "C" __declspec(dllexport) bool __cdecl Uninit()
+CLockThread::~CLockThread()
 {
-	return g_lockThread.Uninit();
-}
-
-extern "C" __declspec(dllexport) LPCWSTR __cdecl GetDescription()
-{
-	return _T("锁帖插件\r\n")
-		_T("\r\n")
-		_T("作者：盗我原号的没J8");
-}
-
-extern "C" __declspec(dllexport) void __cdecl OnConfig()
-{
-	g_lockThread.OnConfig();
+	Uninit();
 }
 
 
-bool CLockThread::Init()
+void CLockThread::Init()
 {
-	return true;
+	auto plugin = GetPlugin(m_module);
+	if (plugin == NULL)
+		return;
+
+	plugin->m_description = _T("锁帖插件\r\n")
+		                    _T("\r\n")
+		                    _T("作者：盗我原号的没J8");
+	plugin->m_onConfig = std::bind(&CLockThread::OnConfig, this);
 }
 
-bool CLockThread::Uninit()
+void CLockThread::Uninit()
 {
 	// 关闭窗口
 	if (m_lockThreadDlg != NULL)
@@ -81,13 +73,11 @@ bool CLockThread::Uninit()
 	StopLockThread();
 	if (m_lockThreadThread != nullptr && m_lockThreadThread->joinable())
 		m_lockThreadThread->join();
-
-	return true;
 }
 
 void CLockThread::OnConfig()
 {
-	if (!CTBMAPI::GetTiebaOperate()->HasSetTieba())
+	if (!GetTiebaOperate().HasSetTieba())
 	{
 		AfxMessageBox(_T("请先确认贴吧！"), MB_ICONERROR);
 		return;
@@ -122,9 +112,9 @@ void CLockThread::LockThreadThread()
 	if (!CoInitializeHelper())
 		return;
 
-	ILog& log = *CTBMAPI::GetLog();
-	CTiebaOperate& tiebaOperate = *CTBMAPI::GetTiebaOperate();
-	CTBMOperate& operate = *CTBMAPI::GetOperate();
+	ILog& log = GetLog();
+	CTiebaOperate& tiebaOperate = GetTiebaOperate();
+	CTBMOperate& operate = GetOperate();
 
 
 	CString tid, page, floor;
@@ -149,7 +139,7 @@ void CLockThread::LockThreadThread()
 	// 锁帖
 	while (!m_stopFlag)
 	{
-		vector<PostInfo> posts;
+		std::vector<PostInfo> posts;
 		GetPosts(tid, _T(""), page, posts);
 
 		for (const PostInfo& post : posts)

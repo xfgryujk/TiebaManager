@@ -22,7 +22,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "Defriend.h"
-#include "resource.h"
 
 #include <StringHelper.h>
 #include <NetworkHelper.h>
@@ -42,6 +41,11 @@ CDefriend::CDefriend(HMODULE module) :
 	m_module(module)
 {
 	g_mainDialogPostInitEvent.AddListener(std::bind(&CDefriend::Init, this), m_module);
+}
+
+CDefriend::~CDefriend()
+{
+	Uninit();
 }
 
 

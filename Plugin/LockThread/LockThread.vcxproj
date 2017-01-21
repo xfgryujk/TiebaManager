@@ -63,7 +63,6 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>.\LockThread.def</ModuleDefinitionFile>
       <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
@@ -94,7 +93,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <ModuleDefinitionFile>.\LockThread.def</ModuleDefinitionFile>
       <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
@@ -124,7 +122,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="LockThread.def" />
     <None Include="res\LockThread.rc2" />
   </ItemGroup>
   <ItemGroup>

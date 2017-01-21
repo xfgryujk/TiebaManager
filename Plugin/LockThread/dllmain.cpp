@@ -1,51 +1,63 @@
-// dllmain.cpp : ¶¨Òå DLL µÄ³õÊ¼»¯Àı³Ì¡£
+ï»¿// dllmain.cpp : å®šä¹‰ DLL çš„åˆå§‹åŒ–ä¾‹ç¨‹ã€‚
 //
 
 #include "stdafx.h"
 #include <afxwin.h>
 #include <afxdllx.h>
+#include "LockThread.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+
 static AFX_EXTENSION_MODULE LockThreadDLL = { NULL, NULL };
+
+std::unique_ptr<CLockThread> g_lockThread;
+
 
 extern "C" int APIENTRY
 DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
-	// Èç¹ûÊ¹ÓÃ lpReserved£¬Çë½«´ËÒÆ³ı
+	// å¦‚æœä½¿ç”¨ lpReservedï¼Œè¯·å°†æ­¤ç§»é™¤
 	UNREFERENCED_PARAMETER(lpReserved);
 
 	if (dwReason == DLL_PROCESS_ATTACH)
 	{
-		TRACE0("LockThread.DLL ÕıÔÚ³õÊ¼»¯!\n");
+		TRACE0("LockThread.DLL æ­£åœ¨åˆå§‹åŒ–!\n");
 		
-		// À©Õ¹ DLL Ò»´ÎĞÔ³õÊ¼»¯
+		// æ‰©å±• DLL ä¸€æ¬¡æ€§åˆå§‹åŒ–
 		if (!AfxInitExtensionModule(LockThreadDLL, hInstance))
 			return 0;
 
-		// ½«´Ë DLL ²åÈëµ½×ÊÔ´Á´ÖĞ
-		// ×¢Òâ:  Èç¹û´ËÀ©Õ¹ DLL ÓÉ
-		//  MFC ¹æÔò DLL (Èç ActiveX ¿Ø¼ş)ÒşÊ½Á´½Óµ½£¬
-		//  ¶ø²»ÊÇÓÉ MFC Ó¦ÓÃ³ÌĞòÁ´½Óµ½£¬ÔòĞèÒª
-		//  ½«´ËĞĞ´Ó DllMain ÖĞÒÆ³ı²¢½«Æä·ÅÖÃÔÚÒ»¸ö
-		//  ´Ó´ËÀ©Õ¹ DLL µ¼³öµÄµ¥¶ÀµÄº¯ÊıÖĞ¡£  Ê¹ÓÃ´ËÀ©Õ¹ DLL µÄ
-		//  ¹æÔò DLL È»ºóÓ¦ÏÔÊ½
-		//  µ÷ÓÃ¸Ãº¯ÊıÒÔ³õÊ¼»¯´ËÀ©Õ¹ DLL¡£  ·ñÔò£¬
-		//  CDynLinkLibrary ¶ÔÏó²»»á¸½¼Óµ½
-		//  ¹æÔò DLL µÄ×ÊÔ´Á´£¬²¢½«µ¼ÖÂÑÏÖØµÄ
-		//  ÎÊÌâ¡£
+		// å°†æ­¤ DLL æ’å…¥åˆ°èµ„æºé“¾ä¸­
+		// æ³¨æ„:  å¦‚æœæ­¤æ‰©å±• DLL ç”±
+		//  MFC è§„åˆ™ DLL (å¦‚ ActiveX æ§ä»¶)éšå¼é“¾æ¥åˆ°ï¼Œ
+		//  è€Œä¸æ˜¯ç”± MFC åº”ç”¨ç¨‹åºé“¾æ¥åˆ°ï¼Œåˆ™éœ€è¦
+		//  å°†æ­¤è¡Œä» DllMain ä¸­ç§»é™¤å¹¶å°†å…¶æ”¾ç½®åœ¨ä¸€ä¸ª
+		//  ä»æ­¤æ‰©å±• DLL å¯¼å‡ºçš„å•ç‹¬çš„å‡½æ•°ä¸­ã€‚  ä½¿ç”¨æ­¤æ‰©å±• DLL çš„
+		//  è§„åˆ™ DLL ç„¶ååº”æ˜¾å¼
+		//  è°ƒç”¨è¯¥å‡½æ•°ä»¥åˆå§‹åŒ–æ­¤æ‰©å±• DLLã€‚  å¦åˆ™ï¼Œ
+		//  CDynLinkLibrary å¯¹è±¡ä¸ä¼šé™„åŠ åˆ°
+		//  è§„åˆ™ DLL çš„èµ„æºé“¾ï¼Œå¹¶å°†å¯¼è‡´ä¸¥é‡çš„
+		//  é—®é¢˜ã€‚
 
 		new CDynLinkLibrary(LockThreadDLL);
 
+
+		g_lockThread = std::make_unique<CLockThread>(hInstance);
 	}
 	else if (dwReason == DLL_PROCESS_DETACH)
 	{
-		TRACE0("LockThread.DLL ÕıÔÚÖÕÖ¹!\n");
+		TRACE0("LockThread.DLL æ­£åœ¨ç»ˆæ­¢!\n");
 
-		// ÔÚµ÷ÓÃÎö¹¹º¯ÊıÖ®Ç°ÖÕÖ¹¸Ã¿â
+
+		if (g_lockThread != nullptr)
+			g_lockThread = nullptr;
+
+
+		// åœ¨è°ƒç”¨ææ„å‡½æ•°ä¹‹å‰ç»ˆæ­¢è¯¥åº“
 		AfxTermExtensionModule(LockThreadDLL);
 	}
-	return 1;   // È·¶¨
+	return 1;   // ç¡®å®š
 }

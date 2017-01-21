@@ -53,10 +53,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 
 
 		if (g_defriend != nullptr)
-		{
-			g_defriend->Uninit();
 			g_defriend = nullptr;
-		}
 
 
 		// 在调用析构函数之前终止该库
