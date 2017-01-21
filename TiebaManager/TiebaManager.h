@@ -37,7 +37,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ConfigHelper.h"
 #include "ScanImage.h"
 #include "TBMListeners.h"
-#include "PluginManager.h"
 #include "TiebaManagerDlg.h"
 
 
@@ -72,8 +71,6 @@ public:
 	std::unique_ptr<CScanImage> m_scanImage;
 
 	std::unique_ptr<CTBMListeners> m_tbmListeners;
-
-	std::unique_ptr<CPluginManager> m_pluginManager;
 
 private:
 	static LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo);

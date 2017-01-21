@@ -120,7 +120,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Include\PluginFunctions.h" />
+    <ClInclude Include="..\Include\Plugin.h" />
     <ClInclude Include="..\Include\TBMAPI.h" />
     <ClInclude Include="..\Include\TBMEvents.h" />
     <ClInclude Include="..\Include\TiebaManagerCommon.h" />
@@ -130,7 +130,6 @@
     <ClInclude Include="GetImages.h" />
     <ClInclude Include="InputKeywordDlg.h" />
     <ClInclude Include="ExplorerLog.h" />
-    <ClInclude Include="Plugin.h" />
     <ClInclude Include="PluginDlg.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="ImageViewDlg.h" />
@@ -172,7 +171,6 @@
     <ClCompile Include="InputKeywordDlg.cpp" />
     <ClCompile Include="ExplorerLog.cpp" />
     <ClCompile Include="OperatePage.cpp" />
-    <ClCompile Include="Plugin.cpp" />
     <ClCompile Include="PluginManager.cpp" />
     <ClCompile Include="ScanImage.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />

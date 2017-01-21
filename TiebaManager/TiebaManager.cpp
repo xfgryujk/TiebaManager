@@ -29,6 +29,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <Dbghelp.h>
 #include "TBMConfigPath.h"
 
+#include "PluginManager.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -162,15 +164,14 @@ void CTiebaManagerApp::Init()
 	CTBMListeners::GetInstance();
 
 	// 插件
-	m_pluginManager = std::make_unique<CPluginManager>();
-	m_pluginManager->LoadDir(PLUGIN_PATH);
+	CPluginManager::GetInstance();
 }
 
 // 释放
 int CTiebaManagerApp::ExitInstance()
 {
 	TRACE(_T("释放m_pluginManager\n"));
-	m_pluginManager = nullptr;
+	CPluginManager::GetInstance().Uninit();
 	TRACE(_T("释放m_scan\n"));
 	m_scan = nullptr;
 	TRACE(_T("释放m_operate\n"));

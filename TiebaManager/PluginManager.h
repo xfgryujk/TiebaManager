@@ -18,23 +18,29 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include "Plugin.h"
+#include <Singleton.h>
+#include <Plugin.h>
 #include <vector>
-#include <memory>
 
 
-class CPluginManager
+class CPluginManager final : public Singleton<CPluginManager>
 {
+	DECL_SINGLETON(CPluginManager);
 public:
-	virtual ~CPluginManager();
+	void Init();
+	void Uninit();
 
-	BOOL Load(const CString& path);
+	const std::vector<CPlugin>& GetPlugins() { return m_plugins; }
+
+	BOOL LoadPlugin(const CString& path);
 	BOOL LoadDir(const CString& dir);
-	BOOL Unload(int index);
+	BOOL UnloadPlugin(int index);
 	BOOL UnloadAll();
 
-	const std::vector<std::unique_ptr<CPlugin> >& GetPlugins();
+private:
+	CPluginManager();
+	~CPluginManager();
 
-protected:
-	std::vector<std::unique_ptr<CPlugin> > m_plugins;
+
+	std::vector<CPlugin> m_plugins;
 };

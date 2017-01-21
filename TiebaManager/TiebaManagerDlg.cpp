@@ -356,7 +356,7 @@ void CTiebaManagerDlg::OnBnClickedButton4()
 {
 	if (m_pluginDlg == NULL)
 	{
-		m_pluginDlg = new CPluginDlg(m_pluginDlg, *theApp.m_pluginManager);
+		m_pluginDlg = new CPluginDlg(m_pluginDlg);
 		m_pluginDlg->Create(m_pluginDlg->IDD, this);
 	}
 }

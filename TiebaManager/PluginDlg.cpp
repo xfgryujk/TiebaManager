@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 Copyright (C) 2015  xfgryujk
 http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
@@ -17,7 +17,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-// PluginDlg.cpp : ÊµÏÖÎÄ¼þ
+// PluginDlg.cpp : å®žçŽ°æ–‡ä»¶
 //
 
 #include "stdafx.h"
@@ -26,15 +26,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "PluginManager.h"
 
 
-// CPluginDlg ¶Ô»°¿ò
+// CPluginDlg å¯¹è¯æ¡†
 
 IMPLEMENT_DYNAMIC(CPluginDlg, CModelessDlg)
 
-CPluginDlg::CPluginDlg(CPluginDlg*& pThis, CPluginManager& pluginManager, CWnd* pParent /*=NULL*/) : CModelessDlg(CPluginDlg::IDD, (CModelessDlg**)&pThis, pParent),
-	m_pluginManager(pluginManager),
-	m_plugins(pluginManager.GetPlugins())
+CPluginDlg::CPluginDlg(CPluginDlg*& pThis, CWnd* pParent /*=NULL*/) : 
+	CModelessDlg(CPluginDlg::IDD, (CModelessDlg**)&pThis, pParent)
 {
-
 }
 
 #pragma region MFC
@@ -57,43 +55,46 @@ BEGIN_MESSAGE_MAP(CPluginDlg, CModelessDlg)
 END_MESSAGE_MAP()
 #pragma endregion
 
-// CPluginDlg ÏûÏ¢´¦Àí³ÌÐò
+// CPluginDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 BOOL CPluginDlg::OnInitDialog()
 {
 	CModelessDlg::OnInitDialog();
 
 	HICON hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
-	SetIcon(hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(hIcon, FALSE);			// ÉèÖÃÐ¡Í¼±ê
+	SetIcon(hIcon, TRUE);			// è®¾ç½®å¤§å›¾æ ‡
+	SetIcon(hIcon, FALSE);			// è®¾ç½®å°å›¾æ ‡
 
 	m_resize.AddControl(&m_list, RT_NULL, NULL, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
 	m_resize.AddControl(&m_configButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 	m_resize.AddControl(&m_edit, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
 
-	// ÏÔÊ¾²å¼þ
-	for (const auto& i : m_plugins)
-		m_list.AddString(i->m_name);
+	// æ˜¾ç¤ºæ’ä»¶
+	for (const auto& i : CPluginManager::GetInstance().GetPlugins())
+		m_list.AddString(i.m_name);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// Òì³£:  OCX ÊôÐÔÒ³Ó¦·µ»Ø FALSE
+	// å¼‚å¸¸:  OCX å±žæ€§é¡µåº”è¿”å›ž FALSE
 }
 
-// Ñ¡ÖÐ
+// é€‰ä¸­
 void CPluginDlg::OnLbnSelchangeList1()
 {
 	int index = m_list.GetCurSel();
 	if (index == LB_ERR)
 		return;
-	m_edit.SetWindowText(m_plugins[index]->GetDescription());
+	auto& plugin = CPluginManager::GetInstance().GetPlugins()[index];
+	m_edit.SetWindowText(plugin.m_description);
 }
 
-// ÉèÖÃ
+// è®¾ç½®
 void CPluginDlg::OnBnClickedButton1()
 {
 	int index = m_list.GetCurSel();
 	if (index == LB_ERR)
 		return;
-	m_plugins[m_list.GetCurSel()]->OnConfig();
+	auto& plugin = CPluginManager::GetInstance().GetPlugins()[index];
+	if (!plugin.m_onConfig._Empty())
+		plugin.m_onConfig();
 }

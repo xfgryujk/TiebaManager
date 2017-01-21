@@ -19,10 +19,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TiebaManagerCommon.h"
+#include "Plugin.h"
 #include "TBMCoreConfig.h"
 #include "TBMScan.h"
 #include "TBMOperate.h"
 
+
+CPlugin* GetPlugin(HMODULE module);
 
 ILog& GetLog();
 CUserCache& GetUserCache();

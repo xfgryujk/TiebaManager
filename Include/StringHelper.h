@@ -32,7 +32,15 @@ struct RegexText
 	{
 		isRegex = _isRegex;
 		text = _text;
-		regexp = isRegex ? text : _T("");
+		try
+		{
+			regexp = isRegex ? text : _T("");
+		}
+		catch (...)
+		{
+			Set(FALSE, _T(""));
+			AfxMessageBox(_T("正则表达式错误！"), MB_ICONERROR);
+		}
 	}
 };
 

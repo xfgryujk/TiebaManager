@@ -20,8 +20,25 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include <TBMAPI.h>
 
+#include "PluginManager.h"
 #include "TiebaManager.h"
 #include "TBMConfigPath.h"
+
+
+CPlugin* GetPlugin(HMODULE module)
+{
+	CPlugin* res = NULL;
+	auto& plugins = CPluginManager::GetInstance().GetPlugins();
+	for (auto& i : plugins)
+	{
+		if (i.m_module == module)
+		{
+			res = const_cast<CPlugin*>(&i);
+			break;
+		}
+	}
+	return res;
+}
 
 
 ILog& GetLog()

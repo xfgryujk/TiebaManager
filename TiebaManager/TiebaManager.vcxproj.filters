@@ -171,9 +171,6 @@
     <ClInclude Include="PluginManager.h">
       <Filter>头文件\Plugin</Filter>
     </ClInclude>
-    <ClInclude Include="Plugin.h">
-      <Filter>头文件\Plugin</Filter>
-    </ClInclude>
     <ClInclude Include="PluginDlg.h">
       <Filter>头文件\GUI</Filter>
     </ClInclude>
@@ -183,9 +180,6 @@
     <ClInclude Include="GetImages.h">
       <Filter>头文件\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\PluginFunctions.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\TBMAPI.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
@@ -193,6 +187,9 @@
       <Filter>头文件\API</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\TBMEvents.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Plugin.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>
@@ -285,9 +282,6 @@
       <Filter>源文件\Helper</Filter>
     </ClCompile>
     <ClCompile Include="PluginManager.cpp">
-      <Filter>源文件\Plugin</Filter>
-    </ClCompile>
-    <ClCompile Include="Plugin.cpp">
       <Filter>源文件\Plugin</Filter>
     </ClCompile>
     <ClCompile Include="TBMAPI.cpp">

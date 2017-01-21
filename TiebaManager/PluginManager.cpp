@@ -19,17 +19,36 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "PluginManager.h"
+#include "TBMConfigPath.h"
+#include <TBMCoreEvents.h>
+#include <TBMEvents.h>
 
+
+CPluginManager::CPluginManager()
+{
+	Init();
+}
 
 CPluginManager::~CPluginManager()
+{
+	Uninit();
+}
+
+void CPluginManager::Init()
+{
+	LoadDir(PLUGIN_PATH);
+}
+
+void CPluginManager::Uninit()
 {
 	UnloadAll();
 }
 
-BOOL CPluginManager::Load(const CString& path)
+
+BOOL CPluginManager::LoadPlugin(const CString& path)
 {
-	HMODULE handle = LoadLibrary(path);
-	if (handle == NULL)
+	HMODULE module = LoadLibrary(path);
+	if (module == NULL)
 		return FALSE;
 
 	int left = path.ReverseFind(_T('\\'));
@@ -42,14 +61,12 @@ BOOL CPluginManager::Load(const CString& path)
 		right = path.GetLength();
 	CString name = path.Mid(left, right - left);
 
-	std::unique_ptr<CPlugin> plugin(new CPlugin(handle, name));
-	if (!plugin->Load())
-	{
-		FreeLibrary(handle);
-		return FALSE;
-	}
+	m_plugins.resize(m_plugins.size() + 1);
+	auto& plugin = m_plugins.back();
+	plugin.m_path = path;
+	plugin.m_module = module;
+	plugin.m_name = name;
 
-	m_plugins.push_back(std::move(plugin));
 	return TRUE;
 }
 
@@ -57,22 +74,29 @@ BOOL CPluginManager::LoadDir(const CString& dir)
 {
 	BOOL res = TRUE;
 	CFileFind fileFind;
-	BOOL flag = fileFind.FindFile(dir + _T("//*.dll"));
-	while (flag)
+	BOOL found = fileFind.FindFile(dir + _T("//*.dll"));
+	while (found)
 	{
-		flag = fileFind.FindNextFile();
-		if (!Load(fileFind.GetFilePath()))
+		found = fileFind.FindNextFile();
+		if (!LoadPlugin(fileFind.GetFilePath()))
 			res = FALSE;
 	}
 	return res;
 }
 
-BOOL CPluginManager::Unload(int index)
+BOOL CPluginManager::UnloadPlugin(int index)
 {
-	if (!m_plugins[index]->Unload())
-		return FALSE;
-	if (!FreeLibrary(m_plugins[index]->m_handle))
-		return FALSE;
+	auto& plugin = m_plugins[index];
+	if (plugin.m_module != NULL)
+	{
+		for (auto i : g_tbmCoreEvents)
+			i->DeleteListenersOfModule(plugin.m_module);
+		for (auto i : g_tbmEvents)
+			i->DeleteListenersOfModule(plugin.m_module);
+
+		if (!FreeLibrary(plugin.m_module))
+			return FALSE;
+	}
 	m_plugins.erase(m_plugins.begin() + index);
 	return TRUE;
 }
@@ -81,12 +105,6 @@ BOOL CPluginManager::UnloadAll()
 {
 	BOOL res = TRUE;
 	for (int i = m_plugins.size() - 1; i >= 0; i--)
-	if (!Unload(i))
-		res = FALSE;
+		res = res && UnloadPlugin(i);
 	return res;
-}
-
-const std::vector<std::unique_ptr<CPlugin> >& CPluginManager::GetPlugins()
-{
-	return m_plugins;
 }

@@ -19,10 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include <ModelessDlg.h>
-#include "PluginManager.h"
 #include "resource.h"
-#include <memory>
-#include <vector>
 
 
 // CPluginDlg 对话框
@@ -32,7 +29,7 @@ class CPluginDlg : public CModelessDlg
 	DECLARE_DYNAMIC(CPluginDlg)
 
 public:
-	CPluginDlg(CPluginDlg*& pThis, CPluginManager& pluginManager, CWnd* pParent = NULL);   // 标准构造函数
+	CPluginDlg(CPluginDlg*& pThis, CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CPluginDlg();
 
 // 对话框数据
@@ -52,8 +49,4 @@ public:
 	CListBox m_list;
 	CButton m_configButton;
 	CEdit m_edit;
-
-protected:
-	CPluginManager& m_pluginManager;
-	const std::vector<std::unique_ptr<CPlugin> >& m_plugins;
 };

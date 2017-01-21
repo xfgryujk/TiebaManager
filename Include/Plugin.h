@@ -18,32 +18,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include "PluginFunctions.h"
+#include <functional>
 
 
-class CPlugin
+struct CPlugin
 {
-	friend class CPluginManager;
+	CString m_path;
+	HMODULE m_module;
+	CString m_name;
+	CString m_description;
 
-protected:
-	HMODULE m_handle = NULL;
-
-	InitType m_init = NULL;
-	UninitType m_uninit = NULL;
-	GetDescriptionType m_getDescription = NULL;
-	OnConfigType m_onConfig = NULL;
-
-
-	CPlugin(HMODULE handle, const CString& name);
-
-	BOOL Load();
-	BOOL Unload();
-
-public:
-	// 取插件描述
-	CString GetDescription();
-	// 打开插件设置
-	void OnConfig();
-
-	const CString m_name;
+	std::function<void()> m_onConfig;
 };
