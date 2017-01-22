@@ -18,19 +18,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-class CEventBase;
 
 
 class CPluginSample
 {
-protected:
-	int m_onPostSetTiebaID = -1;
-
 public:
-	bool Init();
-	bool Uninit();
+	CPluginSample(HMODULE module);
+	~CPluginSample();
+
+	void Init();
+	void Uninit();
 	void OnConfig();
 
-	void OnPostSetTieba(CEventBase* event__);
+	void OnPostSetTieba(const CString& forumName);
+
+
+	HMODULE m_module;
 };
-extern CPluginSample g_pluginSample;

@@ -26,9 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="PluginSample.def">
-      <Filter>源文件</Filter>
-    </None>
     <None Include="res\PluginSample.rc2">
       <Filter>资源文件</Filter>
     </None>
