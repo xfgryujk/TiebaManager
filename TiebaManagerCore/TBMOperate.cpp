@@ -67,7 +67,7 @@ void CTBMOperate::ConfirmThread()
 		return;
 
 	Operation op;
-	while (TRUE)
+	while (true)
 	{
 		PopResult res = m_confirmQueue.pop(op);
 		if (res == POP_STOP)
@@ -140,7 +140,7 @@ void CTBMOperate::OperateThread()
 		return;
 
 	Operation op;
-	while (TRUE)
+	while (true)
 	{
 		PopResult res = m_operationQueue.pop(op);
 		if (res == POP_STOP)

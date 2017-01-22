@@ -200,6 +200,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 
 
 	// 每24小时清除已封名单
+	theApp.m_userCache->m_bannedUser->clear(); // 临时解决方案，相当于不保存已封名单
 	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD) {
 		theApp.m_userCache->m_bannedUser->clear();
 	});
@@ -207,10 +208,10 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 	// 每30分钟清除图片缓存
 	SetTimer(1, 30 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD) {
 		CFileFind fileFind;
-		BOOL flag = fileFind.FindFile(IMG_CACHE_PATH + _T("*"));
-		while (flag)
+		BOOL found = fileFind.FindFile(IMG_CACHE_PATH + _T("*"));
+		while (found)
 		{
-			flag = fileFind.FindNextFile();
+			found = fileFind.FindNextFile();
 			DeleteFile(fileFind.GetFilePath());
 		}
 	});
