@@ -6,12 +6,12 @@
     <OpenCV>F:\OpenCV-3.0.0</OpenCV>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludePath>$(SolutionDir)Include;$(OpenCV)\build\include;$(SolutionDir)3rdParty\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Configuration);$(OpenCV)\build\x86\vc12\lib;$(SolutionDir)3rdParty\lib\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Include;$(OpenCV)\build\include;$(SolutionDir)3rdParty\libcurl\include;$(SolutionDir)3rdParty\tinyxml2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)$(Configuration);$(OpenCV)\build\x86\vc12\lib;$(SolutionDir)3rdParty\libcurl\lib;$(SolutionDir)3rdParty\tinyxml2\lib\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>Update.lib;TiebaManager.lib;TiebaManagerCore.lib;TiebaAPI.lib;Helper.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcurldll.a;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
