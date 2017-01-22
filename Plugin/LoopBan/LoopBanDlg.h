@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "afxwin.h"
 #include <NormalListPage.h>
 class CLoopBanConfig;
+#include "resource.h"
 
 
 // CLoopBanDlg 对话框

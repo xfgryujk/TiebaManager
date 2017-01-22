@@ -19,24 +19,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include <ConfigFile.h>
-class CEventBase;
-class CLoopBanDlg;
+#include "LoopBanDlg.h"
+#include <memory>
+#include <thread>
+struct Operation;
 
 
 class CLoopBanConfig : public CConfigBase
 {
 public:
-	COption<BOOL> m_enable;					// 开启
-	COption<BOOL> m_log;					// 输出日志
-	COption<float> m_banInterval;			// 封禁间隔
-	COption<vector<CString> > m_userList;	// 用户列表
-	COption<vector<CString> > m_pidList;	// PID列表
-	COption<BOOL> m_autoLoopBan;			// 自动循环封
+	COption<BOOL> m_enable;					    // 开启
+	COption<BOOL> m_log;					    // 输出日志
+	COption<float> m_banInterval;			    // 封禁间隔
+	COption<std::vector<CString> > m_userList;	// 用户列表
+	COption<std::vector<CString> > m_pidList;	// PID列表
+	COption<BOOL> m_autoLoopBan;			    // 自动循环封
 
 	CLoopBanConfig() : CConfigBase("LoopBan"),
 		m_enable("Enable", TRUE),
 		m_log("Log"),
-		m_banInterval("BanInterval", 0.0f, [](const float& value)->BOOL{ return 0.0f <= value && value <= 60.0f; }),
+		m_banInterval("BanInterval", 0.0f, [](const float& value){ return 0.0f <= value && value <= 60.0f; }/*InRange<float, 0.0f, 60.0f>*/),
 		m_userList("Name"),
 		m_pidList("PID"),
 		m_autoLoopBan("AutoLoopBan", FALSE)
@@ -61,22 +63,22 @@ public:
 
 class CLoopBan
 {
-protected:
-	int m_onPostSetTiebaID = -1;
-	int m_onPostBanID = -1;
-
 public:
-	bool Init();
-	bool Uninit();
+	CLoopBan(HMODULE module);
+	~CLoopBan();
+
+	void Init();
+	void Uninit();
 	void OnConfig();
 
-	void OnPostSetTieba(CEventBase* event__);
-	void OnPostBan(CEventBase* event__);
+	void OnPostSetTieba(const CString& forumName);
+	void OnPostBan(const Operation& op, BOOL succeeded);
 
 	void LoopBanThread();
 
 
+	HMODULE m_module;
+
 	CLoopBanConfig m_config;
 	CLoopBanDlg* m_loopBanDlg = NULL;
 };
-extern CLoopBan g_loopBan;

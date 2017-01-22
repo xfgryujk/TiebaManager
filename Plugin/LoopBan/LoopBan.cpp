@@ -22,12 +22,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "LoopBan.h"
-#include "resource.h"
-#include "LoopBanDlg.h"
 
 #include <TBMAPI.h>
-#include <TBMEvent.h>
-#include <TBMOperateEvent.h>
+#include <TBMEvents.h>
+#include <TBMCoreEvents.h>
 
 #include <StringHelper.h>
 #include <NetworkHelper.h>
@@ -38,80 +36,69 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMCoreConfig.h>
 #include <TBMOperate.h>
 
+using namespace std::placeholders;
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-CLoopBan g_loopBan;
-
-
-extern "C" __declspec(dllexport) bool __cdecl Init()
+CLoopBan::CLoopBan(HMODULE module) :
+	m_module(module)
 {
-	return g_loopBan.Init();
+	g_mainDialogPostInitEvent.AddListener(std::bind(&CLoopBan::Init, this), m_module);
 }
 
-extern "C" __declspec(dllexport) bool __cdecl Uninit()
+CLoopBan::~CLoopBan()
 {
-	return g_loopBan.Uninit();
-}
-
-extern "C" __declspec(dllexport) LPCWSTR __cdecl GetDescription()
-{
-	return _T("循环封插件\r\n")
-		   _T("\r\n")
-		   _T("作者：盗我原号的没J8");
-}
-
-extern "C" __declspec(dllexport) void __cdecl OnConfig()
-{
-	g_loopBan.OnConfig();
+	Uninit();
 }
 
 
-bool CLoopBan::Init()
+void CLoopBan::Init()
 {
+	auto plugin = GetPlugin(m_module);
+	if (plugin == NULL)
+		return;
+
+	plugin->m_description = _T("循环封插件\r\n")
+		                    _T("\r\n")
+		                    _T("作者：盗我原号的没J8");
+	plugin->m_onConfig = std::bind(&CLoopBan::OnConfig, this);
+
+
 	// 注册监听
-	m_onPostSetTiebaID = CTBMAPI::GetEventBus()->AddListener(PostSetTiebaEvent, 
-		std::bind(&CLoopBan::OnPostSetTieba, this, std::placeholders::_1));
-	m_onPostBanID = CTBMAPI::GetOperate()->m_eventBus.AddListener(PostBanEvent,
-		std::bind(&CLoopBan::OnPostBan, this, std::placeholders::_1));
+	g_postSetTiebaEvent.AddListener(std::bind(&CLoopBan::OnPostSetTieba, this, _1), m_module);
+	g_postBanEvent.AddListener(std::bind(&CLoopBan::OnPostBan, this, _1, _2), m_module);
 	
 	// 每24小时开始循环封
-	thread([this]{
-		while (TRUE)
+	std::thread([this]{
+		while (true)
 		{
 			Sleep(24 * 60 * 60 * 1000);
-			if (CTBMAPI::GetTiebaOperate()->HasSetTieba())
-				thread(&CLoopBan::LoopBanThread, this).detach();
+			if (GetTiebaOperate().HasSetTieba())
+				std::thread(&CLoopBan::LoopBanThread, this).detach();
 		}
 	}).detach();
-
-	return true;
 }
 
-bool CLoopBan::Uninit()
+void CLoopBan::Uninit()
 {
-	// 删除监听
-	CTBMAPI::GetEventBus()->DeleteListener(PostSetTiebaEvent, m_onPostSetTiebaID);
-	CTBMAPI::GetOperate()->m_eventBus.DeleteListener(PostBanEvent, m_onPostBanID);
-	
 	// 关闭窗口
 	if (m_loopBanDlg != NULL)
 		m_loopBanDlg->DestroyWindow();
 
 	// 保存配置
-	if (CTBMAPI::GetTiebaOperate()->HasSetTieba())
+	if (GetTiebaOperate().HasSetTieba())
 	{
-		CString currentUserDir = CTBMAPI::GetCurrentUserDir();
+		CString currentUserDir = GetCurrentUserDir();
 		m_config.Save(currentUserDir + _T("options2.xml"));
 	}
-	return true;
 }
 
 void CLoopBan::OnConfig()
 {
-	if (!CTBMAPI::GetTiebaOperate()->HasSetTieba())
+	if (!GetTiebaOperate().HasSetTieba())
 	{
 		AfxMessageBox(_T("请先确认贴吧！"), MB_ICONERROR);
 		return;
@@ -125,28 +112,27 @@ void CLoopBan::OnConfig()
 }
 
 
-void CLoopBan::OnPostSetTieba(CEventBase* event__)
+void CLoopBan::OnPostSetTieba(const CString& forumName)
 {
 	// 载入配置
-	CString currentUserDir = CTBMAPI::GetCurrentUserDir();
+	CString currentUserDir = GetCurrentUserDir();
 	m_config.Load(currentUserDir + _T("options2.xml"));
 
 	// 开始循环封
-	thread(&CLoopBan::LoopBanThread, this).detach();
+	std::thread(&CLoopBan::LoopBanThread, this).detach();
 }
 
-void CLoopBan::OnPostBan(CEventBase* event__)
+void CLoopBan::OnPostBan(const Operation& op, BOOL succeeded)
 {
-	COperateEvent* event_ = (COperateEvent*)event__;
 	// 自动循环封
 	if (m_config.m_autoLoopBan)
 	{
-		auto it = std::find(m_config.m_userList->cbegin(), m_config.m_userList->cend(), event_->m_op.object->author);
+		auto it = std::find(m_config.m_userList->cbegin(), m_config.m_userList->cend(), op.object->author);
 		if (it == m_config.m_userList->cend())
 		{
-			m_config.m_userList->push_back(event_->m_op.object->author);
+			m_config.m_userList->push_back(op.object->author);
 			m_config.m_pidList->push_back(_T(""));
-			CString currentUserDir = CTBMAPI::GetCurrentUserDir();
+			CString currentUserDir = GetCurrentUserDir();
 			DeleteFile(currentUserDir + _T("LoopBanDate.xml"));
 		}
 	}
@@ -156,7 +142,7 @@ void CLoopBan::OnPostBan(CEventBase* event__)
 // 取用户发的帖子ID
 static CString GetPIDFromUser(const CString& userName)
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + CTBMAPI::GetTiebaOperate()->GetEncodedForumName() 
+	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + GetTiebaOperate().GetEncodedForumName() 
 		+ _T("&qw=&rn=10&un=") + userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"));
 	if (src == NET_TIMEOUT_TEXT)
 		return NET_TIMEOUT_TEXT;
@@ -167,10 +153,10 @@ static CString GetPIDFromUser(const CString& userName)
 
 void CLoopBan::LoopBanThread()
 {
-	ILog& log = *CTBMAPI::GetLog();
-	CString currentUserDir = CTBMAPI::GetCurrentUserDir();
-	CTiebaOperate& tiebaOperate = *CTBMAPI::GetTiebaOperate();
-	CTBMOperate& operate = *CTBMAPI::GetOperate();
+	ILog& log = GetLog();
+	CString currentUserDir = GetCurrentUserDir();
+	CTiebaOperate& tiebaOperate = GetTiebaOperate();
+	CTBMOperate& operate = GetOperate();
 
 
 	class CLoopBanDate : public CConfigBase
