@@ -19,112 +19,46 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include <TiebaClawer.h>
+
 #include <StringHelper.h>
 #include <NetworkHelper.h>
-#include <map>
+
+#include <tinyxml2.h>
+using namespace tinyxml2;
+#include <document.h>
+#include <stringbuffer.h>
+#include <writer.h>
+using namespace rapidjson;
 
 
 // 采集贴吧用的常量
 // 正则表达式太慢所以不用
 #pragma region 主题列表
-const TCHAR THREAD_SPLIT[] = _T("data-field='{&quot;id&quot;:");
-const TCHAR THREAD_END[] = _T("<div id=\"frs_list_pager\"");
-//const TCHAR THREAD_TID_LEFT[] = _T("&quot;id&quot;:");
-const TCHAR THREAD_TID_RIGHT[] = _T(",");
-const TCHAR THREAD_REPLY_LEFT[] = _T("&quot;reply_num&quot;:");
-const TCHAR THREAD_REPLY_RIGHT[] = _T(",");
-const TCHAR THREAD_TITLE_LEFT[] = _T(R"(class="j_th_tit ">)");
-const TCHAR THREAD_TITLE_RIGHT[] = _T("</a>");
-const TCHAR THREAD_PREVIEW_LEFT[] = _T(R"(threadlist_abs_onlyline ">)");
-const TCHAR THREAD_PREVIEW_RIGHT[] = _T("</div>");
-const TCHAR THREAD_MEDIA_LEFT[] = _T("<ul class=\"threadlist_media");
-const TCHAR THREAD_MEDIA_RIGHT[] = _T("</ul>");
-const TCHAR THREAD_AUTHOR_LEFT[] = _T("&quot;author_name&quot;:&quot;");
-const TCHAR THREAD_AUTHOR_RIGHT[] = _T("&quot;");
-const TCHAR THREAD_AUTHOR_ID_LEFT[] = _T("&quot;user_id&quot;:");
-const TCHAR THREAD_AUTHOR_ID_RIGHT[] = _T("}");
-const TCHAR THREAD_LAST_AUTHOR_LEFT[] = _T(R"(title="最后回复人: )");
-const TCHAR THREAD_LAST_AUTHOR_RIGHT[] = _T("\"");
+const TCHAR THREAD_SPLIT[]                      = _T(R"(<li class=" j_thread_list)");
+const TCHAR THREAD_END[]                        = _T(R"(<div class="thread_list_bottom)");
+const TCHAR THREAD_DATA_FIELD_LEFT[]            = _T("data-field='");
+const TCHAR THREAD_DATA_FIELD_RIGHT[]           = _T("'");
+const TCHAR THREAD_AUTHOR_ID_LEFT[]             = _T("&quot;user_id&quot;:");
+const TCHAR THREAD_AUTHOR_ID_RIGHT[]            = _T("}");
+const TCHAR THREAD_TITLE_LEFT[]                 = _T(R"(class="j_th_tit ">)");
+const TCHAR THREAD_TITLE_RIGHT[]                = _T("</a>");
+const TCHAR THREAD_PREVIEW_LEFT[]               = _T(R"(threadlist_abs_onlyline ">)");
+const TCHAR THREAD_PREVIEW_RIGHT[]              = _T("</div>");
+const TCHAR THREAD_MEDIA_LEFT[]                 = _T(R"(<ul class="threadlist_media)");
+const TCHAR THREAD_MEDIA_RIGHT[]                = _T("</ul>");
+const TCHAR THREAD_LAST_AUTHOR_LEFT[]           = _T(R"(title="最后回复人: )");
+const TCHAR THREAD_LAST_AUTHOR_RIGHT[]          = _T("\"");
 #pragma endregion
 #pragma region 帖子列表
-const TCHAR POST_SPLIT[] = _T("data-field='{&quot;author&quot;:");
-const TCHAR POST_PID_LEFT[] = _T("&quot;post_id&quot;:");
-const TCHAR POST_PID_RIGHT[] = _T(",");
-const TCHAR POST_FLOOR_LEFT[] = _T("&quot;post_no&quot;:");
-const TCHAR POST_FLOOR_RIGHT[] = _T(",");
-const TCHAR POST_AUTHOR_LEFT[] = _T("&quot;user_name&quot;:&quot;");
-const TCHAR POST_AUTHOR_RIGHT[] = _T("&quot;");
-const TCHAR POST_AUTHOR_ID_LEFT[] = _T("&quot;user_id&quot;:");
-const TCHAR POST_AUTHOR_ID_RIGHT[] = _T(",");
-const TCHAR POST_AUTHOR_LEVEL_LEFT[] = _T("<div class=\"d_badge_lv\">");
-const TCHAR POST_AUTHOR_LEVEL_RIGHT[] = _T("</div>");
-const TCHAR POST_CONTENT_LEFT[] = _T("<cc>");
-const TCHAR POST_CONTENT_RIGHT[] = _T("</cc>");
-const TCHAR POST_SIGN_LEFT[] = _T("<img class=\"j_user_sign\"");
-const TCHAR POST_SIGN_RIGHT[] = _T("/>");
-#pragma endregion
-#pragma region 楼中楼列表
-const std::wregex LZL_FLOOR_REG(_T("\"(\\d+)\":.*?\"comment_info\":\\[(.*?)during_time\":\\d+\\}\\]"));
-
-const TCHAR LZL_USER_SPLIT[] = _T("\"user_name\":\"");
-const TCHAR LZL_USER_NAME_RIGHT[] = _T("\"");
-const TCHAR LZL_USER_PORTRAIT_LEFT[] = _T("\"portrait\":\"");
-const TCHAR LZL_USER_PORTRAIT_RIGHT[] = _T("\"");
-
-const TCHAR LZL_SPLIT[] = _T("{\"thread_id\"");
-const TCHAR LZL_PID_LEFT[] = _T("\"comment_id\":\"");
-const TCHAR LZL_PID_RIGHT[] = _T("\"");
-const TCHAR LZL_AUTHOR_LEFT[] = _T("\"username\":\"");
-const TCHAR LZL_AUTHOR_RIGHT[] = _T("\"");
-const TCHAR LZL_AUTHOR_ID_LEFT[] = _T("\"user_id\":\"");
-const TCHAR LZL_AUTHOR_ID_RIGHT[] = _T("\"");
-const TCHAR LZL_CONTENT_LEFT[] = _T("\"content\":\"");
-const TCHAR LZL_CONTENT_RIGHT[] = _T("\",\"");
-const TCHAR LZL_PTYPE_LEFT[] = _T("\"ptype\":");
-const TCHAR LZL_PTYPE_RIGHT[] = _T(",");
-const TCHAR LZL_DURING_TIME_LEFT[] = _T("\"during_time\":");
-const TCHAR LZL_DURING_TIME_RIGHT[] = _T("}");
-#pragma endregion
-
-
-#pragma region TBObject
-TBObject::TBObject(TBObjectType type) : m_type(type)
-{
-
-}
-
-
-ThreadInfo::ThreadInfo() : TBObject(THREAD)
-{
-
-}
-
-CString ThreadInfo::GetContent() const
-{
-	return title + _T("\r\n") + preview;
-}
-
-
-PostInfo::PostInfo() : TBObject(POST)
-{
-
-}
-
-CString PostInfo::GetContent() const
-{
-	return content;
-}
-
-
-LzlInfo::LzlInfo() : TBObject(LZL)
-{
-
-}
-
-CString LzlInfo::GetContent() const
-{
-	return content;
-}
+const TCHAR POST_SPLIT[]                        = _T(R"(<div class="l_post)");
+const TCHAR POST_DATA_FIELD_LEFT[]              = _T("data-field='");
+const TCHAR POST_DATA_FIELD_RIGHT[]             = _T("'");
+const TCHAR POST_AUTHOR_LEVEL_LEFT[]            = _T(R"(<div class="d_badge_lv">)");
+const TCHAR POST_AUTHOR_LEVEL_RIGHT[]           = _T("</div>");
+const TCHAR POST_CONTENT_LEFT[]                 = _T("<cc>");
+const TCHAR POST_CONTENT_RIGHT[]                = _T("</cc>");
+const TCHAR POST_SIGN_LEFT[]                    = _T(R"(<img class="j_user_sign")");
+const TCHAR POST_SIGN_RIGHT[]                   = _T("/>");
 #pragma endregion
 
 
@@ -145,23 +79,27 @@ TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThr
 
 	rawThreads[rawThreads.GetSize() - 1] = GetStringBefore(rawThreads[rawThreads.GetSize() - 1], THREAD_END);
 	threads.resize(rawThreads.GetSize() - 1);
-	for (int iRawThreads = 1, iThreads = 0; iRawThreads < rawThreads.GetSize(); iRawThreads++, iThreads++)
+	for (int iRawThreads = 1, iThreads = 0; iRawThreads < rawThreads.GetSize(); ++iRawThreads, ++iThreads)
 	{
-		threads[iThreads].rawData = rawThreads[iRawThreads];
-		//threads[iThreads].tid = GetStringBetween(rawThreads[iRawThreads], THREAD_TID_LEFT, THREAD_TID_RIGHT);
-		threads[iThreads].tid = GetStringBefore(rawThreads[iRawThreads], THREAD_TID_RIGHT);
-		//threads[iThreads].author = JSUnescape(GetStringBefore(rawThreads[iRawThreads], THREAD_AUTHOR_RIGHT));
-		threads[iThreads].author = JSUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_LEFT, THREAD_AUTHOR_RIGHT));
-		threads[iThreads].authorID = GetStringBetween(rawThreads[iRawThreads], THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
-
-		threads[iThreads].reply = GetStringBetween(rawThreads[iRawThreads], THREAD_REPLY_LEFT, THREAD_REPLY_RIGHT);
-		threads[iThreads].title = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
-		threads[iThreads].preview = HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT).Trim())
-			+ _T("\r\n") + GetStringBetween2(rawThreads[iRawThreads], THREAD_MEDIA_LEFT, THREAD_MEDIA_RIGHT);
-		threads[iThreads].lastAuthor = GetStringBetween(rawThreads[iRawThreads], THREAD_LAST_AUTHOR_LEFT, THREAD_LAST_AUTHOR_RIGHT);
+		GenericDocument<UTF16<> > dataField;
+		dataField.Parse(HTMLUnescape(GetStringBetween(rawThreads[iRawThreads], THREAD_DATA_FIELD_LEFT, THREAD_DATA_FIELD_RIGHT)));
+		if (dataField.HasParseError() || !dataField.IsObject())
+			continue;
+		
+		auto& rawThread = rawThreads[iRawThreads];
+		auto& thread = threads[iThreads];
+		thread.rawData = rawThread;
+		thread.tid.Format(_T("%I64u"), dataField[L"id"].GetUint64());
+		thread.author = dataField[L"author_name"].GetString();
+		thread.authorID = GetStringBetween(rawThread, THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
+		thread.reply.Format(_T("%u"), dataField[L"reply_num"].GetUint());
+		thread.title = HTMLUnescape(GetStringBetween(rawThread, THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
+		thread.preview = HTMLUnescape(GetStringBetween(rawThread, THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT).Trim())
+			+ _T("\r\n") + GetStringBetween2(rawThread, THREAD_MEDIA_LEFT, THREAD_MEDIA_RIGHT);
+		thread.lastAuthor = GetStringBetween(rawThread, THREAD_LAST_AUTHOR_LEFT, THREAD_LAST_AUTHOR_RIGHT);
 
 		//OutputDebugString(_T("\n"));
-		//OutputDebugString(rawThreads[iRawThreads]);
+		//OutputDebugString(rawThread);
 		//OutputDebugString(_T("\n----------------------------------"));
 	}
 
@@ -180,42 +118,53 @@ TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, c
 	if (rawPosts.GetSize() < 2)
 		return GET_POSTS_DELETED;
 
-	posts.resize(rawPosts.GetSize() - 1);
-	for (int iRawPosts = 1, iPosts = 0; iRawPosts < rawPosts.GetSize(); iRawPosts++, iPosts++)
+	size_t size = rawPosts.GetSize() - 1;
+	posts.resize(size);
+	for (int iRawPosts = 1, iPosts = 0; iRawPosts < rawPosts.GetSize(); ++iRawPosts, ++iPosts)
 	{
-		posts[iPosts].rawData = rawPosts[iRawPosts];
-		posts[iPosts].tid = tid;
-		posts[iPosts].author = JSUnescape(GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_LEFT, POST_AUTHOR_RIGHT));
-		posts[iPosts].authorID = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_ID_LEFT, POST_AUTHOR_ID_RIGHT);
+		GenericDocument<UTF16<> > dataField;
+		dataField.Parse(HTMLUnescape(GetStringBetween(rawPosts[iRawPosts], POST_DATA_FIELD_LEFT, POST_DATA_FIELD_RIGHT)));
+		if (dataField.HasParseError() || !dataField.IsObject()) // 去掉广告
+		{
+			--size;
+			--iPosts;
+			continue;
+		}
 
-		posts[iPosts].pid = GetStringBetween(rawPosts[iRawPosts], POST_PID_LEFT, POST_PID_RIGHT);
-		posts[iPosts].floor = GetStringBetween(rawPosts[iRawPosts], POST_FLOOR_LEFT, POST_FLOOR_RIGHT);
-		posts[iPosts].authorLevel = GetStringBetween(rawPosts[iRawPosts], POST_AUTHOR_LEVEL_LEFT, POST_AUTHOR_LEVEL_RIGHT);
+		auto& rawPost = rawPosts[iRawPosts];
+		auto& post = posts[iPosts];
+		post.rawData = rawPost;
+		post.tid = tid;
+		post.author = dataField[L"author"][L"user_name"].GetString();
+		post.authorID.Format(_T("%I64u"), dataField[L"author"][L"user_id"].GetUint64());
+		post.pid.Format(_T("%I64u"), dataField[L"content"][L"post_id"].GetUint64());
+		post.floor.Format(_T("%u"), dataField[L"content"][L"post_no"].GetUint());
+		post.authorLevel = GetStringBetween(rawPost, POST_AUTHOR_LEVEL_LEFT, POST_AUTHOR_LEVEL_RIGHT);
 
-		int left = rawPosts[iRawPosts].Find(POST_CONTENT_LEFT) + _tcslen(POST_CONTENT_LEFT);
-		left = rawPosts[iRawPosts].Find(_T(">"), left) + 1;
+		int left = rawPost.Find(POST_CONTENT_LEFT) + _countof(POST_CONTENT_LEFT) - 1;
+		left = rawPost.Find(_T(">"), left) + 1;
 		// 去掉首空格
-		while (left < rawPosts[iRawPosts].GetLength() && rawPosts[iRawPosts][left] == _T(' '))
+		while (left < rawPost.GetLength() && rawPost[left] == _T(' '))
 			left++;
-		int right = rawPosts[iRawPosts].Find(POST_CONTENT_RIGHT, left + 1);
-		// CString不支持反向查找字符串？
-		posts[iPosts].content = rawPosts[iRawPosts].Mid(left, right - left);
-		LPCTSTR pos = StrRStrI(posts[iPosts].content, NULL, _T("</div>"));
+		int right = rawPost.Find(POST_CONTENT_RIGHT, left + 1);
+		post.content = rawPost.Mid(left, right - left);
+		LPCTSTR pos = StrRStrI(post.content, NULL, _T("</div>"));
 		if (pos != NULL)
 		{
-			right = ((DWORD)pos - (DWORD)(LPCTSTR)posts[iPosts].content) / sizeof(TCHAR)-1;
+			right = ((DWORD)pos - (DWORD)(LPCTSTR)post.content) / sizeof(TCHAR)-1;
 			// 去掉尾空格
-			while (right >= 0 && posts[iPosts].content[right] == _T(' '))
+			while (right >= 0 && post.content[right] == _T(' '))
 				right--;
-			posts[iPosts].content = posts[iPosts].content.Left(right + 1);
+			post.content = post.content.Left(right + 1);
 		}
 		// 签名档
-		posts[iPosts].content += _T("\r\n") + GetStringBetween2(rawPosts[iRawPosts], POST_SIGN_LEFT, POST_SIGN_RIGHT);
+		post.content += _T("\r\n") + GetStringBetween2(rawPost, POST_SIGN_LEFT, POST_SIGN_RIGHT);
 
 		//OutputDebugString(_T("\n"));
-		//OutputDebugString(rawPosts[iRawPosts]);
+		//OutputDebugString(rawPost);
 		//OutputDebugString(_T("\n----------------------------------"));
 	}
+	posts.resize(size); // 去掉广告
 
 	return GET_POSTS_SUCCESS;
 }
@@ -230,59 +179,60 @@ TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString
 		timestamp, (LPCTSTR)tid, (LPCTSTR)fid, (LPCTSTR)page);
 	CString src = HTTPGet(url);
 	//WriteString(src, _T("lzl.txt"));
-	CStringArray splitedSrc; // 0楼中楼，1用户
-	SplitString(splitedSrc, src, _T("\"user_list\":{"));
+
 	lzls.clear();
-	if (splitedSrc.GetSize() != 2)
+	GenericDocument<UTF16<> > document;
+	document.Parse(src);
+	if (document.HasParseError() || !document.IsObject())
 		return;
 
-	// 遍历用户采集头像哈希
-	CStringArray users;
-	SplitString(users, splitedSrc[1], LZL_USER_SPLIT);
-	std::map<CString, CString> portrait;
-	for (int i = 1; i < users.GetSize(); i++)
-	{
-		CString id = JSUnescape(GetStringBefore(users[i], LZL_USER_NAME_RIGHT));
-		portrait[id] = GetStringBetween(users[i], LZL_USER_PORTRAIT_LEFT, LZL_USER_PORTRAIT_RIGHT);
-	}
-
-	// 遍历楼层
 	int iLzls = 0;
-	for (std::regex_iterator<LPCTSTR> it((LPCTSTR)splitedSrc[0], (LPCTSTR)splitedSrc[0] + splitedSrc[0].GetLength(), LZL_FLOOR_REG), end; it != end; ++it)
+	const auto& commentList = document[L"data"][L"comment_list"];
+	const auto& userList = document[L"data"][L"user_list"];
+	// 遍历楼层
+	for (auto it = commentList.MemberBegin(); it != commentList.MemberEnd(); ++it)
 	{
 		// 查找该层楼层
-		CString pid = (*it)[1].str().c_str(); // 该层PID
+		CString pid = it->name.GetString(); // 该层PID
 		CString floor;
 		for (const PostInfo& post : posts)
-		if (post.pid == pid)
 		{
-			floor = post.floor;
-			break;
+			if (post.pid == pid)
+			{
+				floor = post.floor;
+				break;
+			}
 		}
 
 		// 遍历该层楼中楼
-		CStringArray rawLzls;
-		SplitString(rawLzls, (*it)[2].str().c_str(), LZL_SPLIT);
-		lzls.resize(lzls.size() + rawLzls.GetSize() - 1);
-		for (int iRawLzls = 1; iRawLzls < rawLzls.GetSize(); iRawLzls++, iLzls++)
+		const auto& comments = it->value[L"comment_info"].GetArray();
+		lzls.resize(lzls.size() + comments.Size());
+		for (const auto& comment : comments)
 		{
-			lzls[iLzls].rawData = rawLzls[iRawLzls];
-			lzls[iLzls].tid = tid;
-			lzls[iLzls].author = JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_AUTHOR_LEFT, LZL_AUTHOR_RIGHT));
-			lzls[iLzls].authorID = GetStringBetween(rawLzls[iRawLzls], LZL_AUTHOR_ID_LEFT, LZL_AUTHOR_ID_RIGHT);
+			auto& lzl = lzls[iLzls];
+			GenericStringBuffer<UTF16<> > buffer;
+			Writer<decltype(buffer), UTF16<>, UTF16<> > writer(buffer);
+			comment.Accept(writer);
+			lzl.rawData = buffer.GetString();
 
-			lzls[iLzls].cid = GetStringBetween(rawLzls[iRawLzls], LZL_PID_LEFT, LZL_PID_RIGHT);
-			lzls[iLzls].floor = floor;
-			lzls[iLzls].authorPortrait = portrait[lzls[iLzls].author];
-
-			lzls[iLzls].content = HTMLUnescape(JSUnescape(GetStringBetween(rawLzls[iRawLzls], LZL_CONTENT_LEFT, LZL_CONTENT_RIGHT)));
+			lzl.tid = tid;
+			lzl.author = comment[L"username"].GetString();
+			lzl.authorID = comment[L"user_id"].GetString();
+			lzl.cid = comment[L"comment_id"].GetString();
+			lzl.floor = floor;
+			lzl.authorPortrait = userList[(LPCWSTR)lzl.authorID][L"portrait"].GetString();
+			lzl.content = comment[L"content"].GetString();
 			// 语音贴
-			if (GetStringBetween(rawLzls[iRawLzls], LZL_PTYPE_LEFT, LZL_PTYPE_RIGHT) == _T("1"))
+			if (comment[L"ptype"].GetInt() == 1)
 			{
-				lzls[iLzls].content += _T(R"(<div class="voice_player voice_player_mini voice_player_lzl"><a class="voice_player_inner" href="#"><span class="before">&nbsp;</span><span class="middle"><span class="speaker speaker_animate">&nbsp;</span><span class="time" style="width: 65px;"><span class="second">)");
-				lzls[iLzls].content += GetStringBetween(rawLzls[iRawLzls], LZL_DURING_TIME_LEFT, LZL_DURING_TIME_RIGHT);
+				lzls[iLzls].content += _T("\r\n") _T(R"(<div class="voice_player voice_player_mini voice_player_lzl"><a class="voice_player_inner" href="#"><span class="before">&nbsp;</span><span class="middle"><span class="speaker speaker_animate">&nbsp;</span><span class="time" style="width: 65px;"><span class="second">)");
+				CString duringTime;
+				duringTime.Format(_T("%u"), comment[L"during_time"].GetUint());
+				lzls[iLzls].content += duringTime;
 				lzls[iLzls].content += _T(R"(</span>"</span></span><span class="after">&nbsp;</span></a></div>)");
 			}
+
+			++iLzls;
 		}
 	}
 }

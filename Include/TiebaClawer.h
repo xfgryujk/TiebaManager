@@ -49,7 +49,7 @@ public:
 	CString authorID;	// 作者ID
 
 	
-	TBObject(TBObjectType type);
+	TBObject(TBObjectType type) : m_type(type) { }
 	virtual ~TBObject() = default;
 
 	// 返回标题+预览或内容什么的
@@ -66,11 +66,11 @@ public:
 	CString lastAuthor; // 最后回复
 
 
-	ThreadInfo();
+	ThreadInfo() : TBObject(THREAD) { }
 	virtual ~ThreadInfo() = default;
 
 	// 返回标题+预览
-	virtual CString GetContent() const;
+	virtual CString GetContent() const { return title + _T("\r\n") + preview; }
 };
 
 // 帖子信息
@@ -83,11 +83,11 @@ public:
 	CString content;		// 内容
 
 
-	PostInfo();
+	PostInfo() : TBObject(POST) { }
 	virtual ~PostInfo() = default;
 
 	// 返回内容
-	virtual CString GetContent() const;
+	virtual CString GetContent() const { return content; }
 };
 
 // 楼中楼信息
@@ -100,11 +100,11 @@ public:
 	CString content;		// 内容
 
 
-	LzlInfo();
+	LzlInfo() : TBObject(LZL) { }
 	virtual ~LzlInfo() = default;
 
 	// 返回内容
-	virtual CString GetContent() const;
+	virtual CString GetContent() const { return content; }
 };
 
 
