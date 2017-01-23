@@ -24,8 +24,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ExplorerDlg.h"
 
 #include "TiebaManager.h"
+#include <TBMAPI.h>
 #include "TBMConfig.h"
-#include <TiebaClawer.h>
+#include <TiebaClawerProxy.h>
 #include <TiebaOperate.h>
 
 #include <Mmsystem.h>
@@ -38,8 +39,8 @@ IMPLEMENT_DYNAMIC(CExplorerDlg, CModelessDlg)
 // 构造函数
 CExplorerDlg::CExplorerDlg(CExplorerDlg*& pThis, CWnd* pParent /*=NULL*/) : CModelessDlg(CExplorerDlg::IDD, (CModelessDlg**)&pThis, pParent),
 	m_pagesResize(&m_tab),
-	m_exploreThreadPage(new CExploreThreadPage(theApp.m_tiebaOperate->GetForumName())),
-	m_explorePostPage(new CExplorePostPage(theApp.m_tiebaOperate->GetForumID())),
+	m_exploreThreadPage(new CExploreThreadPage(GetTiebaOperate().GetForumName())),
+	m_explorePostPage(new CExplorePostPage(GetTiebaOperate().GetForumID())),
 	m_exploreLzlPage(new CExploreLzlPage())
 {
 	// 初始化m_pages
@@ -153,14 +154,14 @@ void CExplorerDlg::OnBnClickedButton1()
 	if (tabIndex == 0) // 主题
 	{
 		ThreadInfo& thread = m_exploreThreadPage->m_threads[index];
-		code = theApp.m_tiebaOperate->DeleteThread(thread.tid);
+		code = GetTiebaOperate().DeleteThread(thread.tid);
 		if (code == _T("0"))
 			theApp.m_userCache->m_deletedTID.insert(_ttoi64(thread.tid));
 	}
 	else if (tabIndex == 1) // 帖子
-		code = theApp.m_tiebaOperate->DeletePost(m_explorePostPage->m_tid, m_explorePostPage->m_posts[index].pid);
+		code = GetTiebaOperate().DeletePost(m_explorePostPage->m_tid, m_explorePostPage->m_posts[index].pid);
 	else // 楼中楼
-		code = theApp.m_tiebaOperate->DeleteLZL(m_explorePostPage->m_tid, m_exploreLzlPage->m_lzls[index].cid);
+		code = GetTiebaOperate().DeleteLZL(m_explorePostPage->m_tid, m_exploreLzlPage->m_lzls[index].cid);
 
 
 	if (code != _T("0"))
@@ -186,7 +187,8 @@ void CExplorerDlg::OnBnClickedButton2()
 		if (!theApp.m_plan->m_wapBanInterface/* || g_plan.m_banDuration != 1*/)
 		{
 			std::vector<PostInfo> posts;
-			GetPosts(m_exploreThreadPage->m_threads[index].tid, _T(""), _T("1"), posts);
+			std::vector<LzlInfo> lzls;
+			TiebaClawerProxy::GetInstance().GetPosts(theApp.m_tiebaOperate->GetForumID(), m_exploreThreadPage->m_threads[index].tid, _T("1"), posts, lzls);
 			if (posts.size() > 0)
 				pid = posts[0].pid;
 		}
@@ -210,7 +212,7 @@ void CExplorerDlg::OnBnClickedButton2()
 		AfxMessageBox(_T("封禁失败(获取帖子ID失败)"), MB_ICONERROR);
 		return;
 	}*/
-	CString code = pid == _T("") ? theApp.m_tiebaOperate->BanIDClient(author) : theApp.m_tiebaOperate->BanID(author, pid);
+	CString code = pid == _T("") ? GetTiebaOperate().BanIDClient(author) : GetTiebaOperate().BanID(author, pid);
 	if (code != _T("0"))
 		AfxMessageBox(_T("封禁失败，错误代码" + code + _T("(") + GetTiebaErrorText(code) + _T(")")), MB_ICONERROR);
 	else

@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMOperate.h>
 #include <TBMCoreEvents.h>
 
-#include <TiebaClawer.h>
+#include <TiebaClawerProxy.h>
 #include <TiebaOperate.h>
 #include <TBMCoreConfig.h>
 
@@ -184,7 +184,8 @@ void CTBMOperate::OperateThread()
 					case TBObject::THREAD:
 					{
 						std::vector<PostInfo> posts;
-						GetPosts(op.object->tid, _T(""), _T("1"), posts);
+						std::vector<LzlInfo> lzls;
+						TiebaClawerProxy::GetInstance().GetPosts(m_tiebaOperate->GetForumID(), op.object->tid, _T("1"), posts, lzls);
 						if (posts.size() > 0)
 							pid = posts[0].pid;
 						break;

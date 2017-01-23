@@ -25,6 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ExploreLzlPage.h"
 #include "ExplorerDlg.h"
 
+#include <TiebaClawerProxy.h>
 #include "GetImages.h"
 
 
@@ -35,7 +36,6 @@ IMPLEMENT_DYNAMIC(CExplorePostPage, CExplorerPage)
 CExplorePostPage::CExplorePostPage(const CString& forumID, CWnd* pParent /*=NULL*/) : CExplorerPage(pParent),
 	m_forumID(forumID)
 {
-
 }
 
 #pragma region MFC
@@ -94,8 +94,7 @@ void CExplorePostPage::OnBnClickedButton1()
 
 	CExplorerDlg* parentDlg = (CExplorerDlg*)GetParent()->GetParent();
 	CExploreLzlPage& exploreLzlPage = *parentDlg->m_exploreLzlPage;
-	GetPosts(m_tid, _T(""), sPage, m_posts);
-	GetLzls(m_forumID, m_tid, sPage, m_posts, exploreLzlPage.m_lzls);
+	TiebaClawerProxy::GetInstance().GetPosts(m_forumID, m_tid, sPage, m_posts, exploreLzlPage.m_lzls);
 	m_list.DeleteAllItems();
 	parentDlg->m_edit.SetWindowText(_T(""));
 	for (const PostInfo& i : m_posts)

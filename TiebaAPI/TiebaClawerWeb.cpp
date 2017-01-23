@@ -18,7 +18,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include "stdafx.h"
-#include <TiebaClawer.h>
+#include <TiebaClawerWeb.h>
 
 #include <StringHelper.h>
 #include <NetworkHelper.h>
@@ -62,8 +62,7 @@ const TCHAR POST_SIGN_RIGHT[]                   = _T("/>");
 #pragma endregion
 
 
-// 取主题列表
-TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads)
+BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=UTF-8&kw=") + EncodeURI(forumName)
 		+ _T("&pn=") + ignoreThread);
@@ -106,13 +105,38 @@ TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThr
 	return TRUE;
 }
 
-// 取帖子列表
-TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, std::vector<PostInfo>& posts)
+TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& fid, const CString& tid, const CString& page,
+	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
 {
-	CString src = _src != _T("") ? _src : HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
+	CString src = HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
 	if (src == NET_TIMEOUT_TEXT)
 		return GET_POSTS_TIMEOUT;
+	return GetPosts(fid, tid, page, src, posts, lzls);
+}
 
+TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& fid, const CString& tid, const CString& page, const CString& src,
+	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
+{
+	// 取帖子列表
+	GetPostsResult res = GetPosts(tid, page, src, posts);
+	if (res != GET_POSTS_SUCCESS)
+		return res;
+	// 取楼中楼列表
+	GetLzls(fid, tid, page, posts, lzls);
+	return res;
+}
+
+
+TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const CString& page, std::vector<PostInfo>& posts)
+{
+	CString src = HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
+	if (src == NET_TIMEOUT_TEXT)
+		return GET_POSTS_TIMEOUT;
+	return GetPosts(tid, page, src, posts);
+}
+
+TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const CString& page, const CString& src, std::vector<PostInfo>& posts)
+{
 	CStringArray rawPosts;
 	SplitString(rawPosts, src, POST_SPLIT);
 	if (rawPosts.GetSize() < 2)
@@ -169,8 +193,7 @@ TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, c
 	return GET_POSTS_SUCCESS;
 }
 
-// 取楼中楼列表
-TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
+void TiebaClawerWeb::GetLzls(const CString& fid, const CString& tid, const CString& page, const std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
 {
 	time_t timestamp;
 	time(&timestamp);

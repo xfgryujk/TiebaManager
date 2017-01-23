@@ -25,6 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ExplorerDlg.h"
 #include "ExplorePostPage.h"
 
+#include <TiebaClawerProxy.h>
 #include "GetImages.h"
 
 
@@ -95,7 +96,7 @@ void CExploreThreadPage::OnBnClickedButton1()
 	CString ignoreThread; // 忽略前几个主题
 	ignoreThread.Format(_T("%d"), (iPage - 1) * 50);
 
-	GetThreads(m_forumName, ignoreThread, m_threads);
+	TiebaClawerProxy::GetInstance().GetThreads(m_forumName, ignoreThread, m_threads);
 	m_list.DeleteAllItems();
 	((CExplorerDlg*)GetParent()->GetParent())->m_edit.SetWindowText(_T(""));
 	for (const ThreadInfo& i : m_threads)

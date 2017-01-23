@@ -108,7 +108,13 @@ public:
 };
 
 
-TIEBA_API_API BOOL GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads);
-enum GetPostsResult { GET_POSTS_SUCCESS, GET_POSTS_TIMEOUT, GET_POSTS_DELETED };
-TIEBA_API_API GetPostsResult GetPosts(const CString& tid, const CString& _src, const CString& page, std::vector<PostInfo>& posts);
-TIEBA_API_API void GetLzls(const CString& fid, const CString& tid, const CString& page, const std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls);
+class TIEBA_API_API TiebaClawer
+{
+public:
+	virtual BOOL GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads) = 0;
+	enum GetPostsResult { GET_POSTS_SUCCESS, GET_POSTS_TIMEOUT, GET_POSTS_DELETED };
+	virtual GetPostsResult GetPosts(const CString& fid, const CString& tid, const CString& page, std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls) = 0;
+	virtual GetPostsResult GetPosts(const CString& fid, const CString& tid, const CString& page, const CString& src, std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls) = 0;
+};
+
+enum TiebaInterface { TIEBA_INTERFACE_WEB, TIEBA_INTERFACE_CLIENT };

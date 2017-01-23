@@ -115,7 +115,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TiebaAPI.cpp" />
-    <ClCompile Include="TiebaClawer.cpp" />
+    <ClCompile Include="TiebaClawerClient.cpp" />
+    <ClCompile Include="TiebaClawerProxy.cpp" />
+    <ClCompile Include="TiebaClawerWeb.cpp" />
     <ClCompile Include="TiebaOperate.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +126,9 @@
   <ItemGroup>
     <ClInclude Include="..\Include\TiebaAPICommon.h" />
     <ClInclude Include="..\Include\TiebaClawer.h" />
+    <ClInclude Include="..\Include\TiebaClawerClient.h" />
+    <ClInclude Include="..\Include\TiebaClawerProxy.h" />
+    <ClInclude Include="..\Include\TiebaClawerWeb.h" />
     <ClInclude Include="..\Include\TiebaOperate.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

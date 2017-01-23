@@ -22,6 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMCoreEvents.h>
 
 #include <TBMCoreConfig.h>
+#include <TiebaClawerProxy.h>
 #include <TiebaOperate.h>
 #include <TBMOperate.h>
 
@@ -133,7 +134,7 @@ void CTBMScan::ScanThread(CString sPage)
 			DWORD startTime = GetTickCount();
 
 			// 获取主题列表
-			if (!GetThreads(m_operate->m_tiebaOperate->GetForumName(), ignoreThread, m_threads))
+			if (!TiebaClawerProxy::GetInstance().GetThreads(m_operate->m_tiebaOperate->GetForumName(), ignoreThread, m_threads))
 			{
 				if (m_stopScanFlag)
 					break;
@@ -344,17 +345,16 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 	// 获取帖子列表
 	std::vector<PostInfo> posts;
 	std::vector<LzlInfo> lzls;
-	GetPostsResult res = GetPosts(thread.tid, src, sPage, posts);
+	auto res = TiebaClawerProxy::GetInstance().GetPosts(m_operate->m_tiebaOperate->GetForumID(), thread.tid, sPage, src, posts, lzls);
 	switch (res)
 	{
-	case GET_POSTS_TIMEOUT:
-	case GET_POSTS_DELETED:
+	case TiebaClawer::GET_POSTS_TIMEOUT:
+	case TiebaClawer::GET_POSTS_DELETED:
 		m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
-			+ _T("</a> <font color=red>获取贴子列表失败(") + (res == GET_POSTS_TIMEOUT ? _T("超时") :
+			+ _T("</a> <font color=red>获取贴子列表失败(") + (res == TiebaClawer::GET_POSTS_TIMEOUT ? _T("超时") :
 			_T("可能已被删")) + _T(")，暂时跳过</font>"));
 		return FALSE;
 	}
-	GetLzls(m_operate->m_tiebaOperate->GetForumID(), thread.tid, sPage, posts, lzls);
 
 	CString msg;
 	BOOL forceToConfirm;

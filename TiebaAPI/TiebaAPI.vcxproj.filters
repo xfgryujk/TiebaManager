@@ -33,7 +33,13 @@
     <ClCompile Include="TiebaOperate.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
-    <ClCompile Include="TiebaClawer.cpp">
+    <ClCompile Include="TiebaClawerWeb.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="TiebaClawerProxy.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="TiebaClawerClient.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,6 +65,15 @@
       <Filter>头文件\API</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\TiebaOperate.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TiebaClawerWeb.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TiebaClawerProxy.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TiebaClawerClient.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>
