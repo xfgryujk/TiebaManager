@@ -177,7 +177,7 @@ void CTBMOperate::OperateThread()
 				BOOL result = FALSE;
 				CString pid;
 				// 不使用客户端接口必须获取PID
-				if (!m_config->m_wapBanInterface)
+				if (!m_config->m_banClientInterface)
 				{
 					switch (op.object->m_type)
 					{
@@ -202,7 +202,7 @@ void CTBMOperate::OperateThread()
 						m_log->Log(_T("<font color=red>封禁 </font>") + op.object->author + _T("<font color=red> 失败！(获取帖子ID失败)</font>"));
 				}
 
-				CString code = (m_config->m_wapBanInterface || pid == _T("")) ?
+				CString code = (m_config->m_banClientInterface || pid == _T("")) ?
 					m_tiebaOperate->BanIDClient(op.object->author) : m_tiebaOperate->BanID(op.object->author, pid);
 				if (code != _T("0"))
 				{

@@ -196,8 +196,8 @@ void CLoopBan::LoopBanThread()
 	for (UINT i = 0; i < config.m_userList->size(); i++)
 	{
 		CString code;
-		if (operate.m_config->m_wapBanInterface)
-			code = tiebaOperate.BanIDClient((*config.m_userList)[i]); // 用WAP接口封禁
+		if (operate.m_config->m_banClientInterface)
+			code = tiebaOperate.BanIDClient((*config.m_userList)[i]); // 用客户端接口封禁
 		else
 		{
 			if ((*config.m_pidList)[i] != _T("")) // 尝试用PID封禁

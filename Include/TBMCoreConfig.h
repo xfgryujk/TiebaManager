@@ -30,6 +30,7 @@ public:
 	COption<int>		m_scanPageCount;		// 扫描最后页数
 	COption<BOOL>		m_briefLog;				// 只输出删帖封号
 	COption<int>		m_threadCount;			// 线程数
+	COption<int>        m_clawerInterface;      // 贴吧采集API用的接口
 
 	COption<BOOL>		m_delete;				// 删帖
 	COption<BOOL>		m_banID;				// 封ID
@@ -40,9 +41,10 @@ public:
 	COption<int>		m_banTrigCount;			// 封禁违规次数
 	COption<int>		m_defriendTrigCount;	// 拉黑违规次数
 	COption<BOOL>		m_confirm;				// 操作前提示
-	COption<BOOL>		m_wapBanInterface;		// 封禁用WAP接口
+	COption<BOOL>		m_banClientInterface;	// 封禁用客户端接口
 
 	CTBMCoreConfig(CStringA name);
+	virtual void PostChange();
 };
 
 class TBM_CORE_API CUserCache : public CConfigBase
@@ -63,7 +65,7 @@ public:
 
 	CUserCache();
 
-	void PostChange();
+	virtual void PostChange();
 };
 
 class ILog

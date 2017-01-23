@@ -36,7 +36,6 @@ IMPLEMENT_DYNAMIC(CExploreThreadPage, CExplorerPage)
 CExploreThreadPage::CExploreThreadPage(const CString& forumName, CWnd* pParent /*=NULL*/) : CExplorerPage(pParent),
 	m_forumName(forumName)
 {
-
 }
 
 #pragma region MFC
@@ -70,7 +69,7 @@ BOOL CExploreThreadPage::OnInitDialog()
 	int i = 0;
 	m_list.InsertColumn(i++, _T(""), LVCFMT_LEFT, 0);
 	m_list.InsertColumn(i++, _T("回复"), LVCFMT_RIGHT, 50);
-	m_list.InsertColumn(i++, _T("标题"), LVCFMT_CENTER, 540);
+	m_list.InsertColumn(i++, _T("标题"), LVCFMT_LEFT, 540);
 	m_list.InsertColumn(i++, _T("作者"), LVCFMT_CENTER, 130);
 	m_list.DeleteColumn(0); // 解决第一列文字不能右对齐的问题
 

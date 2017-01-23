@@ -32,7 +32,6 @@ IMPLEMENT_DYNAMIC(COperatePage, CNormalDlg)
 COperatePage::COperatePage(CWnd* pParent /*=NULL*/)
 	: CNormalDlg(COperatePage::IDD, pParent)
 {
-
 }
 
 #pragma region MFC
@@ -52,7 +51,7 @@ void COperatePage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT7, m_banReasonEdit);
 	DDX_Control(pDX, IDC_CHECK3, m_defriendCheck);
 	DDX_Control(pDX, IDC_EDIT8, m_defriendTrigCountEdit);
-	DDX_Control(pDX, IDC_CHECK5, m_wapBanInterfaceCheck);
+	DDX_Control(pDX, IDC_CHECK5, m_banClientInterfaceCheck);
 }
 
 

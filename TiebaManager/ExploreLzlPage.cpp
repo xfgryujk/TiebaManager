@@ -34,7 +34,6 @@ IMPLEMENT_DYNAMIC(CExploreLzlPage, CExplorerPage)
 CExploreLzlPage::CExploreLzlPage(CWnd* pParent /*=NULL*/)
 	: CExplorerPage(pParent)
 {
-
 }
 
 #pragma region MFC

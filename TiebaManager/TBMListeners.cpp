@@ -298,7 +298,7 @@ void CTBMListeners::OnOpenLinkInLog(const CString& url, BOOL& pass)
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = (theApp.m_plan->m_wapBanInterface /*|| theApp.m_plan->m_banDuration == 1*/ || args[1] == _T("")) ?
+		CString code = (theApp.m_plan->m_banClientInterface /*|| theApp.m_plan->m_banDuration == 1*/ || args[1] == _T("")) ?
 			tiebaOperate.BanIDClient(args[0]) : tiebaOperate.BanID(args[0], args[1]);
 		if (code == _T("0"))
 			dlg->m_log.Log(_T("<font color=green>封禁成功！</font>"));

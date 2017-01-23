@@ -31,7 +31,6 @@ IMPLEMENT_DYNAMIC(CExplorerPage, CNormalDlg)
 CExplorerPage::CExplorerPage(CWnd* pParent /*=NULL*/)
 	: CNormalDlg(CExplorerPage::IDD, pParent)
 {
-
 }
 
 #pragma region MFC

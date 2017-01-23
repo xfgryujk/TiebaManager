@@ -222,35 +222,39 @@ void CSettingDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
 void CSettingDlg::ShowPlan(const CPlan& plan)
 {
 	CString tmp;
+
 	tmp.Format(_T("%d"), *plan.m_scanInterval);
-	m_scanPage->m_scanIntervalEdit.SetWindowText(tmp);				// 扫描间隔
-	m_operatePage->m_banIDCheck.SetCheck(plan.m_banID);				// 封ID
-	m_operatePage->OnBnClickedCheck1();
-	m_operatePage->m_banDurationCombo.SetCurSel(plan.m_banDuration == 1 ? 0 : (plan.m_banDuration == 3 ? 1 : 2)); // 封禁时长
-	tmp.Format(_T("%d"), *plan.m_banTrigCount);
-	m_operatePage->m_banTrigCountEdit.SetWindowText(tmp);			// 封禁违规次数
+	m_scanPage->m_scanIntervalEdit.SetWindowText(tmp);				    // 扫描间隔
 	m_scanPage->m_onlyScanTitleCheck.SetCheck(plan.m_onlyScanTitle);	// 只扫描标题
-	tmp.Format(_T("%g"), *plan.m_deleteInterval);
-	m_operatePage->m_deleteIntervalEdit.SetWindowText(tmp);			// 删帖间隔
-	m_operatePage->m_confirmCheck.SetCheck(plan.m_confirm);			// 操作前提示
-	m_operatePage->m_wapBanInterfaceCheck.SetCheck(plan.m_wapBanInterface);	// 封禁使用WAP接口
 	tmp.Format(_T("%d"), *plan.m_scanPageCount);
-	m_scanPage->m_scanPageCountEdit.SetWindowText(tmp);				// 扫描最后页数
-	m_scanPage->m_briefLogCheck.SetCheck(plan.m_briefLog);			// 只输出删帖封号
-	m_operatePage->m_deleteCheck.SetCheck(plan.m_delete);			// 删帖
-	tmp.Format(_T("%d"), *plan.m_threadCount);
-	m_scanPage->m_threadCountEdit.SetWindowText(tmp);				// 线程数
-	m_operatePage->m_banReasonEdit.SetWindowText(*plan.m_banReason);	// 封禁原因
-	m_imagePage->m_dirEdit.SetWindowText(*plan.m_imageDir);			// 违规图片目录
-	tmp.Format(_T("%g"), *plan.m_SSIMThreshold);
-	m_imagePage->m_thresholdEdit.SetWindowText(tmp);					// 阈值
-	m_operatePage->m_defriendCheck.SetCheck(plan.m_defriend);		// 拉黑
-	m_operatePage->OnBnClickedCheck3();
-	tmp.Format(_T("%d"), *plan.m_defriendTrigCount);
-	m_operatePage->m_defriendTrigCountEdit.SetWindowText(tmp);		// 拉黑违规次数
+	m_scanPage->m_scanPageCountEdit.SetWindowText(tmp);				    // 扫描最后页数
+	m_scanPage->m_briefLogCheck.SetCheck(plan.m_briefLog);			    // 只输出删帖封号
+	tmp.Format(_T("%d"), *plan.m_threadCount);						    
+	m_scanPage->m_threadCountEdit.SetWindowText(tmp);				    // 线程数
 	m_scanPage->m_autoSaveLogCheck.SetCheck(plan.m_autoSaveLog);		// 自动保存日志
 	tmp.Format(_T("%d"), *plan.m_illegalLevel);
-	m_scanPage->m_illegalLevelEdit.SetWindowText(tmp);				// 违规等级
+	m_scanPage->m_illegalLevelEdit.SetWindowText(tmp);				    // 违规等级
+	m_scanPage->m_clawerClientInterfaceCheck.SetCheck(plan.m_clawerInterface == 0 ? FALSE : TRUE); // 扫描接口
+
+	m_operatePage->m_deleteCheck.SetCheck(plan.m_delete);			    // 删帖
+	m_operatePage->m_banIDCheck.SetCheck(plan.m_banID);				    // 封ID
+	m_operatePage->OnBnClickedCheck1();
+	m_operatePage->m_defriendCheck.SetCheck(plan.m_defriend);		    // 拉黑
+	m_operatePage->OnBnClickedCheck3();
+	tmp.Format(_T("%g"), *plan.m_deleteInterval);
+	m_operatePage->m_deleteIntervalEdit.SetWindowText(tmp);			    // 删帖间隔
+	m_operatePage->m_banDurationCombo.SetCurSel(plan.m_banDuration == 1 ? 0 : (plan.m_banDuration == 3 ? 1 : 2)); // 封禁时长
+	m_operatePage->m_banReasonEdit.SetWindowText(*plan.m_banReason);	// 封禁原因
+	tmp.Format(_T("%d"), *plan.m_banTrigCount);
+	m_operatePage->m_banTrigCountEdit.SetWindowText(tmp);			    // 封禁违规次数
+	tmp.Format(_T("%d"), *plan.m_defriendTrigCount);
+	m_operatePage->m_defriendTrigCountEdit.SetWindowText(tmp);		    // 拉黑违规次数
+	m_operatePage->m_confirmCheck.SetCheck(plan.m_confirm);			    // 操作前提示
+	m_operatePage->m_banClientInterfaceCheck.SetCheck(plan.m_banClientInterface);	// 封禁使用客户端接口
+
+	m_imagePage->m_dirEdit.SetWindowText(*plan.m_imageDir);			    // 违规图片目录
+	tmp.Format(_T("%g"), *plan.m_SSIMThreshold);
+	m_imagePage->m_thresholdEdit.SetWindowText(tmp);					// 阈值
 
 	// 违规内容
 	m_keywordsPage->ShowList(plan.m_keywords);
@@ -277,33 +281,36 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 
 	m_scanPage->m_scanIntervalEdit.GetWindowText(strBuf);
 	*plan.m_scanInterval = _ttoi(strBuf);								// 扫描间隔
-	*plan.m_banID = m_operatePage->m_banIDCheck.GetCheck();				// 封ID
-	intBuf = m_operatePage->m_banDurationCombo.GetCurSel();
-	*plan.m_banDuration = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);		// 封禁时长
-	m_operatePage->m_banTrigCountEdit.GetWindowText(strBuf);
-	*plan.m_banTrigCount = _ttoi(strBuf);								// 封禁违规次数
 	*plan.m_onlyScanTitle = m_scanPage->m_onlyScanTitleCheck.GetCheck(); // 只扫描标题
-	m_operatePage->m_deleteIntervalEdit.GetWindowText(strBuf);
-	*plan.m_deleteInterval = (float)_ttof(strBuf);						// 删帖间隔
-	*plan.m_confirm = m_operatePage->m_confirmCheck.GetCheck();			// 操作前提示
-	*plan.m_wapBanInterface = m_operatePage->m_wapBanInterfaceCheck.GetCheck();	// 封禁使用WAP接口
 	m_scanPage->m_scanPageCountEdit.GetWindowText(strBuf);
 	*plan.m_scanPageCount = _ttoi(strBuf);								// 扫描最后页数
 	*plan.m_briefLog = m_scanPage->m_briefLogCheck.GetCheck();			// 只输出删帖封号
-	*plan.m_delete = m_operatePage->m_deleteCheck.GetCheck();			// 删帖
 	m_scanPage->m_threadCountEdit.GetWindowText(strBuf);
 	*plan.m_threadCount = _ttoi(strBuf);								// 线程数
+	*plan.m_autoSaveLog = m_scanPage->m_autoSaveLogCheck.GetCheck();	// 自动保存日志
+	m_scanPage->m_illegalLevelEdit.GetWindowText(strBuf);
+	*plan.m_illegalLevel = _ttoi(strBuf);								// 违规等级
+	*plan.m_clawerInterface = m_scanPage->m_clawerClientInterfaceCheck.GetCheck() == FALSE ? 0 : 1; // 扫描接口
+
+	*plan.m_delete = m_operatePage->m_deleteCheck.GetCheck();			// 删帖
+	*plan.m_banID = m_operatePage->m_banIDCheck.GetCheck();				// 封ID
+	*plan.m_defriend = m_operatePage->m_defriendCheck.GetCheck();		// 拉黑
+	m_operatePage->m_deleteIntervalEdit.GetWindowText(strBuf);
+	*plan.m_deleteInterval = (float)_ttof(strBuf);						// 删帖间隔
+	intBuf = m_operatePage->m_banDurationCombo.GetCurSel();
+	*plan.m_banDuration = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);		// 封禁时长
 	m_operatePage->m_banReasonEdit.GetWindowText(strBuf);
 	*plan.m_banReason = strBuf;											// 封禁原因
+	m_operatePage->m_banTrigCountEdit.GetWindowText(strBuf);
+	*plan.m_banTrigCount = _ttoi(strBuf);								// 封禁违规次数
+	m_operatePage->m_defriendTrigCountEdit.GetWindowText(strBuf);
+	*plan.m_defriendTrigCount = _ttoi(strBuf);							// 拉黑违规次数
+	*plan.m_confirm = m_operatePage->m_confirmCheck.GetCheck();			// 操作前提示
+	*plan.m_banClientInterface = m_operatePage->m_banClientInterfaceCheck.GetCheck();	// 封禁使用客户端接口
+
 	m_imagePage->m_dirEdit.GetWindowText(plan.m_imageDir);				// 违规图片目录
 	m_imagePage->m_thresholdEdit.GetWindowText(strBuf);
 	*plan.m_SSIMThreshold = _ttof(strBuf);								// 阈值
-	*plan.m_defriend = m_operatePage->m_defriendCheck.GetCheck();		// 拉黑
-	m_operatePage->m_defriendTrigCountEdit.GetWindowText(strBuf);
-	*plan.m_defriendTrigCount = _ttoi(strBuf);							// 拉黑违规次数
-	*plan.m_autoSaveLog = m_scanPage->m_autoSaveLogCheck.GetCheck();		// 自动保存日志
-	m_scanPage->m_illegalLevelEdit.GetWindowText(strBuf);
-	*plan.m_illegalLevel = _ttoi(strBuf);								// 违规等级
 
 	// 违规内容
 	m_keywordsPage->ApplyList(plan.m_keywords);

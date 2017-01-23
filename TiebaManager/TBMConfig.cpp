@@ -100,6 +100,7 @@ DECLEAR_WRITE(CPlan::Keyword)
 CPlan::CPlan() : CTBMCoreConfig("Plan"),
 	m_autoSaveLog		("AutoSaveLog",			FALSE),
 	m_illegalLevel		("IllegalLevel",		0,		InRange<int, 0, 6>),
+
 	m_keywords			("IllegalContent",              [](const std::vector<Keyword>& value) {
 											            	for (const RegexText& i : value)
 											            		if (StringIncludes(MATCH_TOO_MUCH_CONTENT_TEST1, i) 
@@ -123,6 +124,7 @@ CPlan::CPlan() : CTBMCoreConfig("Plan"),
 	m_updateImage = TRUE;
 	m_options.push_back(&m_autoSaveLog);
 	m_options.push_back(&m_illegalLevel);
+
 	m_options.push_back(&m_keywords);
 	m_options.push_back(&m_imageDir);
 	m_options.push_back(&m_SSIMThreshold);
@@ -139,10 +141,13 @@ void CPlan::OnChange()
 
 void CPlan::PostChange()
 {
+	CTBMCoreConfig::PostChange();
+
 	if (m_updateImage)
 	{
 		m_updateImage = FALSE;
 		CConfigHelper::ReadImages(m_imageDir, m_images); 
 	}
+
 	m_optionsLock.Unlock();
 }

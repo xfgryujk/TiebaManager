@@ -19,6 +19,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include <TBMCoreConfig.h>
+#include <TiebaClawerProxy.h>
 
 
 CTBMCoreConfig::CTBMCoreConfig(CStringA name) : CConfigBase(name),
@@ -27,6 +28,7 @@ CTBMCoreConfig::CTBMCoreConfig(CStringA name) : CConfigBase(name),
 	m_scanPageCount		("ScanPageCount",		1,		GreaterThan<int, 1>),
 	m_briefLog			("BriefLog",			FALSE),
 	m_threadCount		("ThreadCount",			2,		InRange<int, 1, 16>),
+	m_clawerInterface	("ClawerInterface",		0,		InRange<int, 0, 1>),
 
 	m_delete			("Delete",				TRUE),
 	m_banID				("BanID",				FALSE),
@@ -37,13 +39,14 @@ CTBMCoreConfig::CTBMCoreConfig(CStringA name) : CConfigBase(name),
 	m_banTrigCount		("BanTrigCount",		1,		GreaterThan<int, 1>),
 	m_defriendTrigCount	("DefriendTrigCount",	5,		GreaterThan<int, 1>),
 	m_confirm			("Confirm",				TRUE),
-	m_wapBanInterface	("WapBanInterface",		FALSE)
+	m_banClientInterface("WapBanInterface",		FALSE)
 {
 	m_options.push_back(&m_scanInterval);
 	m_options.push_back(&m_onlyScanTitle);
 	m_options.push_back(&m_scanPageCount);
 	m_options.push_back(&m_briefLog);
 	m_options.push_back(&m_threadCount);
+	m_options.push_back(&m_clawerInterface);
 
 	m_options.push_back(&m_delete);
 	m_options.push_back(&m_banID);
@@ -54,7 +57,12 @@ CTBMCoreConfig::CTBMCoreConfig(CStringA name) : CConfigBase(name),
 	m_options.push_back(&m_banTrigCount);
 	m_options.push_back(&m_defriendTrigCount);
 	m_options.push_back(&m_confirm);
-	m_options.push_back(&m_wapBanInterface);
+	m_options.push_back(&m_banClientInterface);
+}
+
+void CTBMCoreConfig::PostChange()
+{
+	TiebaClawerProxy::GetInstance().m_interface = m_clawerInterface == 0 ? TIEBA_INTERFACE_WEB : TIEBA_INTERFACE_CLIENT;
 }
 
 CUserCache::CUserCache() : CConfigBase("Cache"),

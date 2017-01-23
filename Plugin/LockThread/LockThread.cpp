@@ -28,7 +28,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMAPI.h>
 #include <TBMEvents.h>
 #include <TBMCoreConfig.h>
-#include <TiebaClawerProxy.h>
+#include <TiebaClawerWeb.h>
 #include <TiebaOperate.h>
 #include <TBMOperate.h>
 
@@ -140,8 +140,7 @@ void CLockThread::LockThreadThread()
 	while (!m_stopFlag)
 	{
 		std::vector<PostInfo> posts;
-		std::vector<LzlInfo> lzls;
-		TiebaClawerProxy::GetInstance().GetPosts(GetTiebaOperate().GetForumID(), tid, page, posts, lzls);
+		TiebaClawerWeb::GetInstance().GetPosts(tid, page, posts);
 
 		for (const PostInfo& post : posts)
 		if (_ttoi(post.floor) > iFloor)

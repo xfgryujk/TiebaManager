@@ -79,18 +79,19 @@ public:
 	CCriticalSection m_optionsLock; // 方案临界区
 	BOOL m_updateImage; // 读取后更新违规图片
 
-	COption<BOOL>				m_autoSaveLog;		// 自动保存日志
-	COption<int>				m_illegalLevel;		// 违规等级
-	COption<std::vector<Keyword> >	m_keywords;			// 违规内容
-	std::vector<NameImage>			m_images;			// 违规图片
-	COption<CString>			m_imageDir;			// 违规图片目录
-	COption<double>				m_SSIMThreshold;	// 阈值
-	COption<std::vector<RegexText> >	m_blackList;		// 屏蔽用户
-	COption<std::set<CString> >		m_whiteList;		// 信任用户
-	COption<std::vector<RegexText> >	m_whiteContent;		// 信任内容
-	COption<std::set<CString> >		m_trustedThread;	// 信任主题
+	COption<BOOL>                        m_autoSaveLog;       // 自动保存日志
+	COption<int>                         m_illegalLevel;      // 违规等级
+
+	COption<std::vector<Keyword> >       m_keywords;          // 违规内容
+	std::vector<NameImage>               m_images;            // 违规图片
+	COption<CString>                     m_imageDir;          // 违规图片目录
+	COption<double>                      m_SSIMThreshold;     // 阈值
+	COption<std::vector<RegexText> >     m_blackList;         // 屏蔽用户
+	COption<std::set<CString> >          m_whiteList;         // 信任用户
+	COption<std::vector<RegexText> >     m_whiteContent;      // 信任内容
+	COption<std::set<CString> >          m_trustedThread;     // 信任主题
 
 	CPlan();
-	void OnChange();
-	void PostChange();
+	virtual void OnChange();
+	virtual void PostChange();
 };

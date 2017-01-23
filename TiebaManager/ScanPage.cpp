@@ -50,6 +50,7 @@ void CScanPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT2, m_threadCountEdit);
 	DDX_Control(pDX, IDC_CHECK6, m_autoSaveLogCheck);
 	DDX_Control(pDX, IDC_EDIT7, m_illegalLevelEdit);
+	DDX_Control(pDX, IDC_CHECK7, m_clawerClientInterfaceCheck);
 }
 
 

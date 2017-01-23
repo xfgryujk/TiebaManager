@@ -182,7 +182,7 @@ HELPER_API DECLEAR_WRITE(CString)
 
 // 配置读写实现 ///////////////////////////////////////////////////////////////////////////
 
-HELPER_API BOOL CConfigBase::Load(const tinyxml2::XMLDocument& doc)
+BOOL CConfigBase::Load(const tinyxml2::XMLDocument& doc)
 {
 	const XMLElement* root = doc.FirstChildElement(m_name);
 	if (root == NULL)
@@ -198,7 +198,7 @@ HELPER_API BOOL CConfigBase::Load(const tinyxml2::XMLDocument& doc)
 	return TRUE;
 }
 
-HELPER_API BOOL CConfigBase::Load(const CString& path)
+BOOL CConfigBase::Load(const CString& path)
 {
 	FILE* f = NULL;
 	if (_tfopen_s(&f, path, _T("rb")) != 0 || f == NULL)
@@ -219,7 +219,7 @@ HELPER_API BOOL CConfigBase::Load(const CString& path)
 	return Load(doc);
 }
 
-HELPER_API BOOL CConfigBase::LoadFromString(LPCSTR str, size_t length)
+BOOL CConfigBase::LoadFromString(LPCSTR str, size_t length)
 {
 	tinyxml2::XMLDocument doc;
 	if (doc.Parse(str, length) != XML_NO_ERROR)
@@ -231,7 +231,7 @@ HELPER_API BOOL CConfigBase::LoadFromString(LPCSTR str, size_t length)
 	return Load(doc);
 }
 
-HELPER_API BOOL CConfigBase::Save(const CString& path) const
+BOOL CConfigBase::Save(const CString& path) const
 {
 	FILE* f = NULL;
 	if (_tfopen_s(&f, path, _T("wb")) != 0 || f == NULL)
@@ -250,7 +250,7 @@ HELPER_API BOOL CConfigBase::Save(const CString& path) const
 	return res;
 }
 
-HELPER_API void CConfigBase::UseDefault()
+void CConfigBase::UseDefault()
 {
 	OnChange();
 	for (COptionBase* i : m_options)

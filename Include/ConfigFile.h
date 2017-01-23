@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <map>
 
 
-class COptionBase
+class HELPER_API COptionBase
 {
 public:
 	const CStringA m_name;
@@ -236,7 +236,7 @@ public:
 };
 
 
-class CConfigBase
+class HELPER_API CConfigBase
 {
 protected:
 	std::vector<COptionBase*> m_options;
@@ -247,11 +247,11 @@ public:
 	CConfigBase(CStringA name) : m_name(name) { }
 	virtual ~CConfigBase() { }
 
-	HELPER_API virtual BOOL Load(const tinyxml2::XMLDocument& doc);
-	HELPER_API virtual BOOL Load(const CString& path);
-	HELPER_API virtual BOOL LoadFromString(LPCSTR str, size_t length = (size_t)-1);
-	HELPER_API virtual BOOL Save(const CString& path) const;
-	HELPER_API virtual void UseDefault();
+	virtual BOOL Load(const tinyxml2::XMLDocument& doc);
+	virtual BOOL Load(const CString& path);
+	virtual BOOL LoadFromString(LPCSTR str, size_t length = (size_t)-1);
+	virtual BOOL Save(const CString& path) const;
+	virtual void UseDefault();
 	virtual void OnChange() { }
 	virtual void PostChange() { }
 };

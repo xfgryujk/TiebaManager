@@ -56,4 +56,5 @@ public:
 	CEdit m_threadCountEdit;
 	CButton m_autoSaveLogCheck;
 	CEdit m_illegalLevelEdit;
+	CButton m_clawerClientInterfaceCheck;
 };
