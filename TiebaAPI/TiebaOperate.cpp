@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TiebaClawer.h>
 #include <StringHelper.h>
 #include <NetworkHelper.h>
-#include <Md5.h>
+#include <TiebaClientHelper.h>
 
 
 CTiebaOperate::CTiebaOperate(CString& cookie, const int& banDuration, const CString& banReason) :
@@ -30,7 +30,6 @@ CTiebaOperate::CTiebaOperate(CString& cookie, const int& banDuration, const CStr
 	m_banDuration(banDuration), 
 	m_banReason(banReason)
 {
-	
 }
 
 // 设置要操作的贴吧
@@ -184,13 +183,7 @@ CString CTiebaOperate::BanIDClient(const CString& userName)
 	data.Format(_T("BDUSS=%s&day=%d&fid=%s&ntn=banid&tbs=%s&un=%s&word=%s&z=1111111111"),
 		(LPCTSTR)m_bduss, m_banDuration, (LPCTSTR)m_forumID,
 		(LPCTSTR)m_tbs, userName, (LPCTSTR)m_forumName);
-	
-	CString signData = data;
-	signData.Replace(_T("&"), _T(""));
-	signData += _T("tiebaclient!!!");
-	data += _T("&sign=") + GetMD5_UTF8(signData);
-
-	CString src = this->HTTPPost(_T("http://c.tieba.baidu.com/c/c/bawu/commitprison"), data);
+	CString src = TiebaClientHTTPPost(_T("http://c.tieba.baidu.com/c/c/bawu/commitprison"), data, &m_cookie);
 	return GetOperationErrorCode(src);
 }
 

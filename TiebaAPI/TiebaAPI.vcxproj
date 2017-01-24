@@ -118,6 +118,7 @@
     <ClCompile Include="TiebaClawerClient.cpp" />
     <ClCompile Include="TiebaClawerProxy.cpp" />
     <ClCompile Include="TiebaClawerWeb.cpp" />
+    <ClCompile Include="TiebaClientHelper.cpp" />
     <ClCompile Include="TiebaOperate.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +130,7 @@
     <ClInclude Include="..\Include\TiebaClawerClient.h" />
     <ClInclude Include="..\Include\TiebaClawerProxy.h" />
     <ClInclude Include="..\Include\TiebaClawerWeb.h" />
+    <ClInclude Include="..\Include\TiebaClientHelper.h" />
     <ClInclude Include="..\Include\TiebaOperate.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

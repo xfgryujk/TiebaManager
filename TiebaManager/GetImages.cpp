@@ -36,7 +36,6 @@ static const std::wregex POST_IMG_REG(_T("<img .*?class=\"(BDE_Image|j_user_sign
 CGetImages::CGetImages(const TBObject& object) :
 	m_object(object)
 {
-
 }
 
 void CGetImages::operator () (std::vector<CString>& img)
@@ -49,6 +48,7 @@ void CGetImages::operator () (std::vector<CString>& img)
 		g_getThreadImagesEvent(thread, img, useDefault);
 		if (!useDefault)
 			return;
+
 		for (std::regex_iterator<LPCTSTR> it((LPCTSTR)thread.preview, (LPCTSTR)thread.preview + thread.preview.GetLength(), THREAD_IMG_REG),
 			end; it != end; ++it)
 			img.push_back((*it)[1].str().c_str());
@@ -56,7 +56,6 @@ void CGetImages::operator () (std::vector<CString>& img)
 	else
 	{
 		// 从帖子或楼中楼获取图片
-		CString content, portraitUrl;
 		if (m_object.m_type == TBObject::POST)
 		{
 			PostInfo& post = (PostInfo&)m_object;
@@ -64,11 +63,6 @@ void CGetImages::operator () (std::vector<CString>& img)
 			g_getPostImagesEvent(post, img, useDefault);
 			if (!useDefault)
 				return;
-			content = post.GetContent();
-			CString tmp = GetStringBetween(post.rawData, _T("class=\"p_author_face"), _T("</a>"));
-			portraitUrl = GetStringBetween(post.rawData, _T("data-tb-lazyload=\""), _T("\""));
-			if (portraitUrl == _T(""))
-				portraitUrl = GetStringBetween(post.rawData, _T("src=\""), _T("\""));
 		}
 		else if (m_object.m_type == TBObject::LZL)
 		{
@@ -77,14 +71,14 @@ void CGetImages::operator () (std::vector<CString>& img)
 			g_getLzlImagesEvent(lzl, img, useDefault);
 			if (!useDefault)
 				return;
-			content = lzl.GetContent();
-			portraitUrl = _T("http://tb.himg.baidu.com/sys/portrait/item/") + lzl.authorPortrait;
 		}
-		
+
+		CString content = m_object.GetContent();
 		for (std::regex_iterator<LPCTSTR> it((LPCTSTR)content, (LPCTSTR)content + content.GetLength(), POST_IMG_REG),
 			end; it != end; ++it)
 			img.push_back((*it)[2].str().c_str());
-		if (portraitUrl != _T(""))
-			img.push_back(portraitUrl);
 	}
+	// 头像
+	if (m_object.authorPortraitUrl != _T(""))
+		img.push_back(m_object.authorPortraitUrl);
 }

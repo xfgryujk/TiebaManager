@@ -42,6 +42,9 @@
     <ClCompile Include="TiebaClawerClient.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
+    <ClCompile Include="TiebaClientHelper.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\TiebaAPI.rc2">
@@ -74,6 +77,9 @@
       <Filter>头文件\API</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\TiebaClawerClient.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TiebaClientHelper.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>

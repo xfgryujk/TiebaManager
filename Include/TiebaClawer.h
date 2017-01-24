@@ -44,9 +44,10 @@ public:
 	TBObjectType m_type;
 	
 	CString rawData;
-	CString tid;		// 主题ID
-	CString author;		// 作者
-	CString authorID;	// 作者ID
+	CString tid;		          // 主题ID
+	CString author;		          // 作者
+	CString authorID;	          // 作者ID
+	CString authorPortraitUrl;	  // 作者头像URL
 
 	
 	TBObject(TBObjectType type) : m_type(type) { }
@@ -60,10 +61,10 @@ public:
 class TIEBA_API_API ThreadInfo : public TBObject
 {
 public:
-	CString reply;		// 回复数
-	CString title;		// 标题
-	CString preview;	// 预览
-	CString lastAuthor; // 最后回复
+	CString reply;		    // 回复数
+	CString title;		    // 标题
+	CString preview;	    // 预览
+	CString lastAuthor;     // 最后回复
 
 
 	ThreadInfo() : TBObject(THREAD) { }
@@ -96,7 +97,6 @@ class TIEBA_API_API LzlInfo : public TBObject
 public:
 	CString cid;			// 楼中楼ID
 	CString floor;			// 楼层
-	CString authorPortrait;	// 作者头像哈希
 	CString content;		// 内容
 
 

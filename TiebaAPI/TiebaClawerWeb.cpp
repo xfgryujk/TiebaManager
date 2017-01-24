@@ -23,8 +23,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <StringHelper.h>
 #include <NetworkHelper.h>
 
-#include <tinyxml2.h>
-using namespace tinyxml2;
 #include <document.h>
 #include <stringbuffer.h>
 #include <writer.h>
@@ -53,6 +51,10 @@ const TCHAR THREAD_LAST_AUTHOR_RIGHT[]          = _T("\"");
 const TCHAR POST_SPLIT[]                        = _T(R"(<div class="l_post)");
 const TCHAR POST_DATA_FIELD_LEFT[]              = _T("data-field='");
 const TCHAR POST_DATA_FIELD_RIGHT[]             = _T("'");
+const TCHAR POST_AUTHOR_PORTRAIT_LEFT1[]        = _T(R"(data-tb-lazyload=")");
+const TCHAR POST_AUTHOR_PORTRAIT_RIGHT1[]       = _T("\"");
+const TCHAR POST_AUTHOR_PORTRAIT_LEFT2[]        = _T(R"(src=")");
+const TCHAR POST_AUTHOR_PORTRAIT_RIGHT2[]       = _T("\"");
 const TCHAR POST_AUTHOR_LEVEL_LEFT[]            = _T(R"(<div class="d_badge_lv">)");
 const TCHAR POST_AUTHOR_LEVEL_RIGHT[]           = _T("</div>");
 const TCHAR POST_CONTENT_LEFT[]                 = _T("<cc>");
@@ -85,12 +87,13 @@ BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreT
 		if (dataField.HasParseError() || !dataField.IsObject())
 			continue;
 		
-		auto& rawThread = rawThreads[iRawThreads];
+		const auto& rawThread = rawThreads[iRawThreads];
 		auto& thread = threads[iThreads];
 		thread.rawData = rawThread;
 		thread.tid.Format(_T("%I64u"), dataField[L"id"].GetUint64());
 		thread.author = dataField[L"author_name"].GetString();
 		thread.authorID = GetStringBetween(rawThread, THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
+		thread.authorPortraitUrl = _T("");
 		thread.reply.Format(_T("%u"), dataField[L"reply_num"].GetUint());
 		thread.title = HTMLUnescape(GetStringBetween(rawThread, THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
 		thread.preview = HTMLUnescape(GetStringBetween(rawThread, THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT).Trim())
@@ -155,12 +158,15 @@ TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const C
 			continue;
 		}
 
-		auto& rawPost = rawPosts[iRawPosts];
+		const auto& rawPost = rawPosts[iRawPosts];
 		auto& post = posts[iPosts];
 		post.rawData = rawPost;
 		post.tid = tid;
 		post.author = dataField[L"author"][L"user_name"].GetString();
 		post.authorID.Format(_T("%I64u"), dataField[L"author"][L"user_id"].GetUint64());
+		post.authorPortraitUrl = GetStringBetween(rawPost, POST_AUTHOR_PORTRAIT_LEFT1, POST_AUTHOR_PORTRAIT_RIGHT1);
+		if (post.authorPortraitUrl == _T(""))
+			post.authorPortraitUrl = GetStringBetween(rawPost, POST_AUTHOR_PORTRAIT_LEFT2, POST_AUTHOR_PORTRAIT_RIGHT2);
 		post.pid.Format(_T("%I64u"), dataField[L"content"][L"post_id"].GetUint64());
 		post.floor.Format(_T("%u"), dataField[L"content"][L"post_no"].GetUint());
 		post.authorLevel = GetStringBetween(rawPost, POST_AUTHOR_LEVEL_LEFT, POST_AUTHOR_LEVEL_RIGHT);
@@ -201,7 +207,6 @@ void TiebaClawerWeb::GetLzls(const CString& fid, const CString& tid, const CStri
 	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), 
 		timestamp, (LPCTSTR)tid, (LPCTSTR)fid, (LPCTSTR)page);
 	CString src = HTTPGet(url);
-	//WriteString(src, _T("lzl.txt"));
 
 	lzls.clear();
 	GenericDocument<UTF16<> > document;
@@ -241,18 +246,17 @@ void TiebaClawerWeb::GetLzls(const CString& fid, const CString& tid, const CStri
 			lzl.tid = tid;
 			lzl.author = comment[L"username"].GetString();
 			lzl.authorID = comment[L"user_id"].GetString();
+			lzl.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + userList[(LPCWSTR)lzl.authorID][L"portrait"].GetString();
 			lzl.cid = comment[L"comment_id"].GetString();
 			lzl.floor = floor;
-			lzl.authorPortrait = userList[(LPCWSTR)lzl.authorID][L"portrait"].GetString();
 			lzl.content = comment[L"content"].GetString();
 			// 语音贴
 			if (comment[L"ptype"].GetInt() == 1)
 			{
-				lzls[iLzls].content += _T("\r\n") _T(R"(<div class="voice_player voice_player_mini voice_player_lzl"><a class="voice_player_inner" href="#"><span class="before">&nbsp;</span><span class="middle"><span class="speaker speaker_animate">&nbsp;</span><span class="time" style="width: 65px;"><span class="second">)");
-				CString duringTime;
-				duringTime.Format(_T("%u"), comment[L"during_time"].GetUint());
-				lzls[iLzls].content += duringTime;
-				lzls[iLzls].content += _T(R"(</span>"</span></span><span class="after">&nbsp;</span></a></div>)");
+				CString tmp;
+				tmp.Format(_T("\r\n") _T(R"(<div class="voice_player voice_player_mini voice_player_lzl"><a class="voice_player_inner" href="#"><span class="before">&nbsp;</span><span class="middle"><span class="speaker speaker_animate">&nbsp;</span><span class="time" style="width: 65px;"><span class="second">%u</span>"</span></span><span class="after">&nbsp;</span></a></div>)"), 
+					comment[L"during_time"].GetUint());
+				lzls[iLzls].content += tmp;
 			}
 
 			++iLzls;
