@@ -147,16 +147,19 @@ void CTBMListeners::OnCheckLzlIllegal(const LzlInfo& lzl, BOOL& res, CString& ms
 
 void CTBMListeners::OnCheckThreadImageIllegal(const ThreadInfo& thread, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
 {
+	forceToConfirm = FALSE;
 	res = theApp.m_scanImage->CheckImageIllegal(thread.author, CGetImages(thread), msg);
 }
 
 void CTBMListeners::OnCheckPostImageIllegal(const PostInfo& post, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
 {
+	forceToConfirm = FALSE;
 	res = theApp.m_scanImage->CheckImageIllegal(post.author, CGetImages(post), msg);
 }
 
 void CTBMListeners::OnCheckLzlImageIllegal(const LzlInfo& lzl, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
 {
+	forceToConfirm = FALSE;
 	res = theApp.m_scanImage->CheckImageIllegal(lzl.author, CGetImages(lzl), msg);
 }
 
