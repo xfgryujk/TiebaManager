@@ -31,17 +31,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <MiscHelper.h>
 
 
-static const TCHAR PAGE_COUNT_LEFT[] = _T(",\"total_page\":");
-static const TCHAR PAGE_COUNT_RIGHT[] = _T("}");
-
-
 CTBMScan::CTBMScan(CTBMCoreConfig* config, CUserCache* userCache, CTBMOperate* operate, ILog* log) :
 	m_config(config),
 	m_userCache(userCache),
 	m_operate(operate),
 	m_log(log)
 {
-
 }
 
 CTBMScan::~CTBMScan()
@@ -243,8 +238,7 @@ void CTBMScan::ScanPostThread(int threadID)
 		return;
 
 	{
-		CString pageCount, src;
-		std::map<__int64, int>::iterator historyReplyIt;
+		AdditionalThreadInfo addition;
 		m_threadIndexLock.lock();
 		while (!m_stopScanFlag && m_threadIndex < (int)m_threads.size())
 		{
@@ -255,15 +249,18 @@ void CTBMScan::ScanPostThread(int threadID)
 
 			__int64 tid = _ttoi64(thread.tid);
 			int reply = _ttoi(thread.reply);
-			historyReplyIt = m_userCache->m_reply->find(tid);
-			BOOL hasHistoryReply = historyReplyIt != m_userCache->m_reply->end();
-			if (hasHistoryReply
-				&& reply == historyReplyIt->second // 回复数减少时也扫描，防止漏掉
-				&& thread.lastAuthor == (*m_userCache->m_lastAuthor)[tid]) // 判断最后回复人，防止回复数-1然后有新回复+1
+			BOOL hasHistoryReply = FALSE;
 			{
-				// 无新回复，跳过
-				historyReplyIt->second = reply;
-				goto Next;
+				auto historyReplyIt = m_userCache->m_reply->find(tid);
+				hasHistoryReply = historyReplyIt != m_userCache->m_reply->end();
+				if (hasHistoryReply
+					&& reply == historyReplyIt->second // 回复数减少时也扫描，防止漏掉
+					&& thread.lastAuthor == (*m_userCache->m_lastAuthor)[tid]) // 判断最后回复人，防止回复数-1然后有新回复+1
+				{
+					// 无新回复，跳过
+					historyReplyIt->second = reply;
+					goto Next;
+				}
 			}
 
 			pass = TRUE;
@@ -273,41 +270,29 @@ void CTBMScan::ScanPostThread(int threadID)
 
 
 			// 获取第一页
-			src = HTTPGet(_T("http://tieba.baidu.com/p/" + thread.tid));
-			if (src == NET_TIMEOUT_TEXT)
 			{
-				if (!m_config->m_briefLog)
-					m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
-					+ _T("</a> <font color=red>获取贴子列表失败(超时)，暂时跳过</font>"));
-				goto Next;
+				std::vector<PostInfo> posts;
+				std::vector<LzlInfo> lzls;
+				if (TiebaClawerProxy::GetInstance().GetPosts(m_operate->m_tiebaOperate->GetForumID(), thread.tid, _T("1"), posts, lzls, &addition) != TiebaClawer::GET_POSTS_SUCCESS)
+				{
+					if (!m_config->m_briefLog)
+					{
+						m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
+							+ _T("</a> <font color=red>获取贴子列表失败，暂时跳过</font>"));
+					}
+					goto Next;
+				}
 			}
 
 			// 判断贴吧ID，避免百度乱插其他吧的帖子
-			{
-				CString tmp = GetStringBetween(src, _T("PageData.forum"), _T("}"));
-				tmp.Replace(_T("\r\n"), _T(""));
-				std::wcmatch res;
-				if (std::regex_search((LPCTSTR)tmp, res, FORUM_ID_NAME_REG)
-					&& res[3].str().c_str() != m_operate->m_tiebaOperate->GetForumID())
-					goto Next;
-			}
-
-			// 获取帖子页数
-			pageCount = GetStringBetween(src, PAGE_COUNT_LEFT, PAGE_COUNT_RIGHT);
-			if (pageCount == _T(""))
-			{
-				WriteString(src, _T("thread.txt"));
-				if (!m_config->m_briefLog)
-					m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
-					+ _T("</a> <font color=red>获取贴子列表失败(可能已被删)，暂时跳过</font>"));
+			if (addition.fid != m_operate->m_tiebaOperate->GetForumID())
 				goto Next;
-			}
 
 			// 扫描帖子页
-			int iPageCount = _ttoi(pageCount);
-			BOOL res = ScanPostPage(thread, 1, hasHistoryReply, 0, src, threadID);
+			int iPageCount = _ttoi(addition.pageCount);
+			BOOL res = ScanPostPage(thread, 1, hasHistoryReply, 0, addition.src, threadID); // 扫描第一页
 			if (iPageCount > 1 && !m_stopScanFlag)
-				res = ScanPostPage(thread, iPageCount, hasHistoryReply, 0, _T(""), threadID);
+				res = ScanPostPage(thread, iPageCount, hasHistoryReply, 0, _T(""), threadID); // 从最后一页扫描
 
 
 			// 记录历史回复
@@ -345,7 +330,11 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 	// 获取帖子列表
 	std::vector<PostInfo> posts;
 	std::vector<LzlInfo> lzls;
-	auto res = TiebaClawerProxy::GetInstance().GetPosts(m_operate->m_tiebaOperate->GetForumID(), thread.tid, sPage, src, posts, lzls);
+	TiebaClawer::GetPostsResult res;
+	if (src == _T(""))
+		res = TiebaClawerProxy::GetInstance().GetPosts(m_operate->m_tiebaOperate->GetForumID(), thread.tid, sPage, posts, lzls);
+	else
+		res = TiebaClawerProxy::GetInstance().GetPosts(m_operate->m_tiebaOperate->GetForumID(), thread.tid, sPage, src, posts, lzls);
 	switch (res)
 	{
 	case TiebaClawer::GET_POSTS_TIMEOUT:

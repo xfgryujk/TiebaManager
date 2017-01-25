@@ -96,7 +96,7 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 }
 
 TiebaClawer::GetPostsResult TiebaClawerClient::GetPosts(const CString& fid, const CString& tid, const CString& page,
-	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
+	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition)
 {
 	CString data;
 	data.Format(_T("_client_type=2&_client_version=7.0.0&back=0&floor_rn=3&from=tieba&kz=%s&mark=0&net_type=1&pn=%s&rn=30&st_type=tb_bookmarklist&with_floor=1"), 
@@ -105,7 +105,7 @@ TiebaClawer::GetPostsResult TiebaClawerClient::GetPosts(const CString& fid, cons
 	if (src == NET_TIMEOUT_TEXT)
 		return GET_POSTS_TIMEOUT;
 	//WriteString(src, _T("thread.txt"));
-	return GetPosts(fid, tid, page, src, posts, lzls);
+	return GetPosts(fid, tid, page, src, posts, lzls, addition);
 }
 
 // 取楼中楼
@@ -175,7 +175,7 @@ static void GetLzls(const CString& tid, const GenericDocument<UTF16<> >& documen
 }
 
 TiebaClawer::GetPostsResult TiebaClawerClient::GetPosts(const CString& fid, const CString& tid, const CString& page, const CString& src,
-	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
+	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition)
 {
 	posts.clear();
 	lzls.clear();
@@ -256,6 +256,14 @@ TiebaClawer::GetPostsResult TiebaClawerClient::GetPosts(const CString& fid, cons
 
 	// 取楼中楼
 	GetLzls(tid, document, userIndex, lzls);
+
+	// 附加信息
+	if (addition != NULL)
+	{
+		addition->src = src;
+		addition->fid = document[L"forum"][L"id"].GetString();
+		addition->pageCount = document[L"page"][L"total_page"].GetString();
+	}
 
 	return GET_POSTS_SUCCESS;
 }

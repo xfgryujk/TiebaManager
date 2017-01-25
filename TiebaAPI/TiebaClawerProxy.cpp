@@ -29,15 +29,15 @@ BOOL TiebaClawerProxy::GetThreads(const CString& forumName, const CString& ignor
 }
 
 TiebaClawer::GetPostsResult TiebaClawerProxy::GetPosts(const CString& fid, const CString& tid, const CString& page,
-	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
+	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition)
 {
-	return GetImplement().GetPosts(fid, tid, page, posts, lzls);
+	return GetImplement().GetPosts(fid, tid, page, posts, lzls, addition);
 }
 
 TiebaClawer::GetPostsResult TiebaClawerProxy::GetPosts(const CString& fid, const CString& tid, const CString& page, const CString& src,
-	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
+	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition)
 {
-	return GetImplement().GetPosts(fid, tid, page, src, posts, lzls);
+	return GetImplement().GetPosts(fid, tid, page, src, posts, lzls, addition);
 }
 
 

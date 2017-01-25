@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 //
 
 #include "stdafx.h"
-#include <vld.h> // Visual Leak Detector，检测内存泄漏的，可以不要
+//#include <vld.h> // Visual Leak Detector，检测内存泄漏的，可以不要
 
 #include "TiebaManager.h"
 #include "TiebaManagerDlg.h"

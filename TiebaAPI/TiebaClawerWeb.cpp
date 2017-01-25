@@ -62,6 +62,12 @@ const TCHAR POST_CONTENT_RIGHT[]                = _T("</cc>");
 const TCHAR POST_SIGN_LEFT[]                    = _T(R"(<img class="j_user_sign")");
 const TCHAR POST_SIGN_RIGHT[]                   = _T("/>");
 #pragma endregion
+#pragma region 附加主题信息
+const TCHAR ADDITION_THREAD_FORUM_DATA_LEFT[]   = _T("PageData.forum");
+const TCHAR ADDITION_THREAD_FORUM_DATA_RIGHT[]  = _T("}");
+const TCHAR ADDITION_THREAD_PAGE_COUNT_LEFT[]   = _T(R"(,"total_page":)");
+const TCHAR ADDITION_THREAD_PAGE_COUNT_RIGHT[]  = _T("}");
+#pragma endregion
 
 
 BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads)
@@ -109,19 +115,19 @@ BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreT
 }
 
 TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& fid, const CString& tid, const CString& page,
-	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
+	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
 	if (src == NET_TIMEOUT_TEXT)
 		return GET_POSTS_TIMEOUT;
-	return GetPosts(fid, tid, page, src, posts, lzls);
+	return GetPosts(fid, tid, page, src, posts, lzls, addition);
 }
 
 TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& fid, const CString& tid, const CString& page, const CString& src,
-	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls)
+	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition)
 {
 	// 取帖子列表
-	GetPostsResult res = GetPosts(tid, page, src, posts);
+	GetPostsResult res = GetPosts(tid, page, src, posts, addition);
 	if (res != GET_POSTS_SUCCESS)
 		return res;
 	// 取楼中楼列表
@@ -130,15 +136,17 @@ TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& fid, const C
 }
 
 
-TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const CString& page, std::vector<PostInfo>& posts)
+TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const CString& page, 
+	std::vector<PostInfo>& posts, AdditionalThreadInfo* addition)
 {
 	CString src = HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
 	if (src == NET_TIMEOUT_TEXT)
 		return GET_POSTS_TIMEOUT;
-	return GetPosts(tid, page, src, posts);
+	return GetPosts(tid, page, src, posts, addition);
 }
 
-TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const CString& page, const CString& src, std::vector<PostInfo>& posts)
+TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const CString& page, const CString& src, 
+	std::vector<PostInfo>& posts, AdditionalThreadInfo* addition)
 {
 	CStringArray rawPosts;
 	SplitString(rawPosts, src, POST_SPLIT);
@@ -196,6 +204,20 @@ TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const C
 	}
 	posts.resize(size); // 去掉广告
 
+	// 附加信息
+	if (addition != NULL)
+	{
+		addition->src = src;
+
+		CString tmp = GetStringBetween(src, ADDITION_THREAD_FORUM_DATA_LEFT, ADDITION_THREAD_FORUM_DATA_RIGHT);
+		tmp.Replace(_T("\r\n"), _T(""));
+		std::wcmatch res;
+		if (std::regex_search((LPCTSTR)tmp, res, FORUM_ID_NAME_REG))
+			addition->fid = res[3].str().c_str();
+
+		addition->pageCount = GetStringBetween(src, ADDITION_THREAD_PAGE_COUNT_LEFT, ADDITION_THREAD_PAGE_COUNT_RIGHT);
+	}
+
 	return GET_POSTS_SUCCESS;
 }
 
@@ -217,6 +239,9 @@ void TiebaClawerWeb::GetLzls(const CString& fid, const CString& tid, const CStri
 	int iLzls = 0;
 	const auto& commentList = document[L"data"][L"comment_list"];
 	const auto& userList = document[L"data"][L"user_list"];
+	if (!commentList.IsObject())
+		return;
+
 	// 遍历楼层
 	for (auto it = commentList.MemberBegin(); it != commentList.MemberEnd(); ++it)
 	{

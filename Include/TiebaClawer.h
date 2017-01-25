@@ -108,13 +108,23 @@ public:
 };
 
 
+struct AdditionalThreadInfo
+{
+	CString src;        // 主题源码
+	CString fid;        // 贴吧ID
+	CString pageCount;  // 页数
+};
+
+
 class TIEBA_API_API TiebaClawer
 {
 public:
 	virtual BOOL GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads) = 0;
 	enum GetPostsResult { GET_POSTS_SUCCESS, GET_POSTS_TIMEOUT, GET_POSTS_DELETED };
-	virtual GetPostsResult GetPosts(const CString& fid, const CString& tid, const CString& page, std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls) = 0;
-	virtual GetPostsResult GetPosts(const CString& fid, const CString& tid, const CString& page, const CString& src, std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls) = 0;
+	virtual GetPostsResult GetPosts(const CString& fid, const CString& tid, const CString& page, std::vector<PostInfo>& posts, 
+		std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition = NULL) = 0;
+	virtual GetPostsResult GetPosts(const CString& fid, const CString& tid, const CString& page, const CString& src, 
+		std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition = NULL) = 0;
 };
 
 enum TiebaInterface { TIEBA_INTERFACE_WEB, TIEBA_INTERFACE_CLIENT };

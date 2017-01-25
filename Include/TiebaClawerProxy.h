@@ -28,9 +28,11 @@ class TIEBA_API_API TiebaClawerProxy final : public TiebaClawer, public Singleto
 {
 	DECL_SINGLETON_DEFAULT(TiebaClawerProxy);
 public:
-	virtual BOOL GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads);
-	virtual GetPostsResult GetPosts(const CString& fid, const CString& tid, const CString& page, std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls);
-	virtual GetPostsResult GetPosts(const CString& fid, const CString& tid, const CString& page, const CString& src, std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls);
+	virtual BOOL GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads) override;
+	virtual GetPostsResult GetPosts(const CString& fid, const CString& tid, const CString& page, std::vector<PostInfo>& posts,
+		std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition = NULL) override;
+	virtual GetPostsResult GetPosts(const CString& fid, const CString& tid, const CString& page, const CString& src,
+		std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition = NULL) override;
 
 	TiebaClawer& GetImplement();
 
