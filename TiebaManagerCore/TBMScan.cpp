@@ -70,9 +70,6 @@ BOOL CTBMScan::IsScanning()
 // 扫描主题图片
 void CTBMScan::ScanThreadImage()
 {
-	CString msg;
-	BOOL forceToConfirm;
-	int pos, length;
 	for (const ThreadInfo& thread : m_threads)
 	{
 		if (m_stopScanFlag)
@@ -81,6 +78,9 @@ void CTBMScan::ScanThreadImage()
 		if (m_userCache->m_ignoredTID.find(tid) == m_userCache->m_ignoredTID.end())
 		{
 			BOOL res = FALSE;
+			CString msg;
+			BOOL forceToConfirm = FALSE;
+			int pos = 0, length = 0;
 			g_checkThreadImageIllegalEvent(thread, res, msg, forceToConfirm, pos, length);
 			if (res)
 			{
@@ -115,9 +115,6 @@ void CTBMScan::ScanThread(CString sPage)
 		ignoreThread.Format(_T("%d"), (iPage - 1) * 50);
 
 
-		CString msg;
-		BOOL forceToConfirm;
-		int pos, length;
 		while (!m_stopScanFlag)
 		{
 			pass = TRUE;
@@ -147,6 +144,9 @@ void CTBMScan::ScanThread(CString sPage)
 				if (m_userCache->m_ignoredTID.find(tid) == m_userCache->m_ignoredTID.end())
 				{
 					BOOL res = FALSE;
+					CString msg;
+					BOOL forceToConfirm = FALSE;
+					int pos = 0, length = 0;
 					g_checkThreadIllegalEvent(thread, res, msg, forceToConfirm, pos, length);
 					if (res)
 					{
@@ -345,9 +345,6 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		return FALSE;
 	}
 
-	CString msg;
-	BOOL forceToConfirm;
-	int pos, length;
 	// 扫描帖子
 	for (const PostInfo& post : posts)
 	{
@@ -357,6 +354,9 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		if (m_userCache->m_ignoredPID.find(pid) == m_userCache->m_ignoredPID.end())
 		{
 			BOOL res = FALSE;
+			CString msg;
+			BOOL forceToConfirm = FALSE;
+			int pos = 0, length = 0;
 			g_checkPostIllegalEvent(post, res, msg, forceToConfirm, pos, length);
 			if (res)
 			{
@@ -375,6 +375,9 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		if (m_stopScanFlag)
 			return FALSE;
 		BOOL res = FALSE;
+		CString msg;
+		BOOL forceToConfirm = FALSE;
+		int pos = 0, length = 0;
 		g_checkLzlIllegalEvent(lzl, res, msg, forceToConfirm, pos, length);
 		if (res)
 		{
@@ -399,6 +402,9 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		if (m_userCache->m_ignoredPID.find(pid) == m_userCache->m_ignoredPID.end())
 		{
 			BOOL res = FALSE;
+			CString msg;
+			BOOL forceToConfirm = FALSE;
+			int pos = 0, length = 0;
 			g_checkPostImageIllegalEvent(post, res, msg, forceToConfirm, pos, length);
 			if (res)
 			{
@@ -420,6 +426,9 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		if (m_userCache->m_ignoredLZLID.find(cid) == m_userCache->m_ignoredLZLID.end())
 		{
 			BOOL res = FALSE;
+			CString msg;
+			BOOL forceToConfirm = FALSE;
+			int pos = 0, length = 0;
 			g_checkLzlImageIllegalEvent(lzl, res, msg, forceToConfirm, pos, length);
 			if (res)
 			{
