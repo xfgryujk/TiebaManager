@@ -27,7 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 // 当前版本，每次更新后修改，也可以不是日期
-UPDATE_API const CString UPDATE_CURRENT_VERSION = _T("17-01-25");
+UPDATE_API const CString UPDATE_CURRENT_VERSION = _T("17-01-25-2");
 
 static const CString MANUALLY_UPDATE_URL = _T("http://sinacloud.net/xfgryujk/TiebaManager/贴吧管理器.zip");
 UPDATE_API const CString UPDATE_INFO_URL = _T("http://sinacloud.net/xfgryujk/TiebaManager/UpdateInfo.xml");
