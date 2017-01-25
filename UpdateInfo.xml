@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="GBK"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 修改更新方式
-2. 修复大部分获取主题列表失败的问题
-3. 修复POST忘记添加参数</UpdateLog>
+    <UpdateLog>1. 增加扫描使用客户端接口（速度大概是网页接口的3倍，可扫描直播贴和小尾巴等，还在测试中）
+2. 不缓存已封用户</UpdateLog>
     <Files>
         <item>
             <value>
