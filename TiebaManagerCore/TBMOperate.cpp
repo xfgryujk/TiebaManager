@@ -84,7 +84,7 @@ void CTBMOperate::ConfirmThread()
 		{
 			BOOL res = TRUE;
 			g_comfirmEvent(op, res);
-			if (res)
+			if (!res)
 			{
 				switch (op.object->m_type)
 				{
