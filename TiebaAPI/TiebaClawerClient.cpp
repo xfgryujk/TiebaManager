@@ -47,12 +47,14 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 		return FALSE;
 
 	const auto& threadList = document[L"thread_list"];
-	int size = threadList.Size();
-	threads.resize(size);
-	for (int i = 0; i < size; ++i)
+	threads.resize(threadList.Size());
+	int iThread = 0;
+	for (const auto& rawThread : threadList.GetArray())
 	{
-		const auto& rawThread = threadList[i];
-		auto& thread = threads[i];
+		if (!rawThread.HasMember(L"tid")) // 去掉广告
+			continue;
+
+		auto& thread = threads[iThread];
 		GenericStringBuffer<UTF16<> > buffer;
 		Writer<decltype(buffer), UTF16<>, UTF16<> > writer(buffer);
 		rawThread.Accept(writer);
@@ -90,7 +92,10 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 		
 		if (rawThread.HasMember(L"last_replyer")) // 直播贴没有last_replyer
 			thread.lastAuthor = rawThread[L"last_replyer"][L"name"].GetString();
+
+		++iThread;
 	}
+	threads.resize(iThread); // 去掉广告
 
 	return TRUE;
 }
