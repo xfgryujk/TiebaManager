@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="GBK"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 增加扫描使用客户端接口（速度大概是网页接口的3倍，可扫描直播贴和小尾巴等，还在测试中）
-2. 不缓存已封用户</UpdateLog>
+    <UpdateLog>1. 修复客户端接口某些小尾巴导致崩溃的问题</UpdateLog>
     <Files>
         <item>
             <value>

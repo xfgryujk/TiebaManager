@@ -258,7 +258,9 @@ TiebaClawer::GetPostsResult TiebaClawerClient::GetPosts(const CString& fid, cons
 			post.content += tmp;
 		}
 		// 小尾巴
-		if (rawPost[L"signature"].IsObject())
+		if (rawPost[L"signature"].IsObject()
+			&& rawPost[L"signature"][L"content"].Size() > 0
+			&& rawPost[L"signature"][L"content"][0].HasMember(L"text"))
 		{
 			post.content += _T("\r\n");
 			post.content += rawPost[L"signature"][L"content"][0][L"text"].GetString();
