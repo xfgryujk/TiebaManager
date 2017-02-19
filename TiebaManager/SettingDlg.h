@@ -23,6 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <ModeLessDlg.h>
 #include "resource.h"
 #include <memory>
+#include <vector>
 
 #include <TBMCoreConfig.h>
 
@@ -39,8 +40,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 // CSettingDlg 对话框
-
-const int SETTING_DLG_PAGE_COUNT = 11;
 
 class CSettingDlg : public CModelessDlg
 {
@@ -61,9 +60,10 @@ public:
 	virtual BOOL OnInitDialog();
 	virtual void OnCancel();
 	virtual void OnOK();
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnClose();
+	afx_msg void OnTvnSelchangedTree1(NMHDR *pNMHDR, LRESULT *pResult);
+
+	void ShowAbout();
 
 	void ShowPlan(const CPlan& plan);
 	void ApplyPlanInDlg(CPlan& plan);
@@ -72,7 +72,7 @@ public:
 
 
 public:
-	CTabCtrl m_tab;
+	CTreeCtrl m_tree;
 	std::unique_ptr<CScanPage> m_scanPage;
 	std::unique_ptr<COperatePage> m_operatePage;
 	std::unique_ptr<CKeywordsPage> m_keywordsPage;
@@ -91,6 +91,5 @@ public:
 protected:
 	ILog& m_log;
 
-	CWnd* m_pages[SETTING_DLG_PAGE_COUNT];
-	CResizeControl m_pagesResize;
+	std::vector<CWnd*> m_pages;
 };

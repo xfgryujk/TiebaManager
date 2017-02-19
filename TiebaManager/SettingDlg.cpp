@@ -37,7 +37,6 @@ IMPLEMENT_DYNAMIC(CSettingDlg, CModelessDlg)
 // 构造函数
 CSettingDlg::CSettingDlg(CSettingDlg*& pThis, ILog& log, CWnd* pParent /*=NULL*/) : CModelessDlg(CSettingDlg::IDD, (CModelessDlg**)&pThis, pParent),
 	m_log(log),
-	m_pagesResize(&m_tab), 
 	m_scanPage(new CScanPage()),
 	m_operatePage(new COperatePage()),
 	m_keywordsPage(new CKeywordsPage()),
@@ -51,18 +50,14 @@ CSettingDlg::CSettingDlg(CSettingDlg*& pThis, ILog& log, CWnd* pParent /*=NULL*/
 	m_aboutPage(new CAboutPage())
 {
 	// 初始化m_pages
-	int i = 0;
-	m_pages[i++] = m_scanPage.get();
-	m_pages[i++] = m_operatePage.get();
-	m_pages[i++] = m_keywordsPage.get();
-	m_pages[i++] = m_imagePage.get();
-	m_pages[i++] = m_blackListPage.get();
-	m_pages[i++] = m_whiteListPage.get();
-	m_pages[i++] = m_whiteContentPage.get();
-	m_pages[i++] = m_trustedThreadPage.get();
-	m_pages[i++] = m_optionsPage.get();
-	m_pages[i++] = m_usersPage.get();
-	m_pages[i++] = m_aboutPage.get();
+	m_pages.push_back(m_scanPage.get());
+	m_pages.push_back(m_operatePage.get());
+	m_pages.push_back(m_keywordsPage.get());
+	m_pages.push_back(m_whiteContentPage.get());
+	m_pages.push_back(m_trustedThreadPage.get());
+	m_pages.push_back(m_optionsPage.get());
+	m_pages.push_back(m_usersPage.get());
+	m_pages.push_back(m_aboutPage.get());
 }
 
 #pragma region MFC
@@ -73,16 +68,15 @@ CSettingDlg::~CSettingDlg()
 void CSettingDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CModelessDlg::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_TAB1, m_tab);
 	DDX_Control(pDX, IDOK, m_okButton);
 	DDX_Control(pDX, IDCANCEL, m_cancelButton);
+	DDX_Control(pDX, IDC_TREE1, m_tree);
 }
 
 
 BEGIN_MESSAGE_MAP(CSettingDlg, CModelessDlg)
-	ON_WM_SIZE()
-	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CSettingDlg::OnTcnSelchangeTab1)
 	ON_WM_CLOSE()
+	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE1, &CSettingDlg::OnTvnSelchangedTree1)
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -97,22 +91,22 @@ BOOL CSettingDlg::OnInitDialog()
 	SetIcon(hIcon, TRUE);			// 设置大图标
 	SetIcon(hIcon, FALSE);			// 设置小图标
 
-	// 初始化m_tab
+	// 初始化m_tree
 	int i = 0;
-	m_tab.InsertItem(i++, _T("扫描"));
-	m_tab.InsertItem(i++, _T("操作"));
-	m_tab.InsertItem(i++, _T("违规内容"));
-	m_tab.InsertItem(i++, _T("违规图片"));
-	m_tab.InsertItem(i++, _T("屏蔽用户"));
-	m_tab.InsertItem(i++, _T("信任用户"));
-	m_tab.InsertItem(i++, _T("信任内容"));
-	m_tab.InsertItem(i++, _T("信任主题"));
-	m_tab.InsertItem(i++, _T("方案"));
-	m_tab.InsertItem(i++, _T("账号管理"));
-	m_tab.InsertItem(i++, _T("关于&&更新"));
+	HTREEITEM item = NULL;
+	m_tree.SetItemData(m_tree.InsertItem(_T("扫描")), i++);
+	m_tree.SetItemData(m_tree.InsertItem(_T("操作")), i++);
+	m_tree.SetItemData(item = m_tree.InsertItem(_T("规则")), i);
+	m_tree.SetItemData(m_tree.InsertItem(_T("违规规则"), item), i++);
+	m_tree.SetItemData(m_tree.InsertItem(_T("信任规则"), item), i++);
+	m_tree.SetItemData(m_tree.InsertItem(_T("忽略主题"), item), i++);
+	m_tree.SetItemData(m_tree.InsertItem(_T("方案"), item), i++);
+	m_tree.Expand(item, TVE_EXPAND);
+	m_tree.SetItemData(m_tree.InsertItem(_T("账号管理")), i++);
+	m_tree.SetItemData(m_tree.InsertItem(_T("关于&更新")), i++);
 
 	// 初始化各页
-#define CREATE_PAGE(page) page->Create(page->IDD, &m_tab)
+#define CREATE_PAGE(page) page->Create(page->IDD, this)
 	CREATE_PAGE(m_scanPage);
 	CREATE_PAGE(m_operatePage);
 	CREATE_PAGE(m_keywordsPage);
@@ -127,18 +121,20 @@ BOOL CSettingDlg::OnInitDialog()
 	CREATE_PAGE(m_usersPage);
 	CREATE_PAGE(m_aboutPage);
 
-	CRect rect;
-	m_tab.GetClientRect(&rect);
-	rect.left += 1; rect.right -= 3; rect.top += 23; rect.bottom -= 2;
-	m_pages[0]->SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(), SWP_SHOWWINDOW);
-	for (i = 1; i < _countof(m_pages); i++)
-		m_pages[i]->SetWindowPos(NULL, rect.left, rect.top, rect.Width(), rect.Height(), SWP_HIDEWINDOW);
+	CRect treeRect, wndRect, pageRect;
+	m_tree.GetWindowRect(&treeRect);
+	ScreenToClient(&treeRect);
+	GetClientRect(&wndRect);
+	pageRect.SetRect(treeRect.right + treeRect.left, treeRect.top, wndRect.Width() - treeRect.left, treeRect.bottom);
+	for (const auto& page : m_pages)
+		page->SetWindowPos(NULL, pageRect.left, pageRect.top, pageRect.Width(), pageRect.Height(), SWP_HIDEWINDOW);
 
-	m_resize.AddControl(&m_tab, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
-	m_resize.AddControl(&m_okButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
-	m_resize.AddControl(&m_cancelButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
-	for (i = 0; i < _countof(m_pages); i++)
-		m_pagesResize.AddControl(m_pages[i], RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, &m_tab, RT_KEEP_DIST_TO_BOTTOM, &m_tab);
+	m_resize.AddControl(&m_tree, RT_NULL, NULL, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_resize.AddControl(&m_okButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_tree);
+	m_resize.AddControl(&m_cancelButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_tree);
+	for (const auto& page : m_pages)
+		m_resize.AddControl(page, RT_NULL, NULL, RT_NULL, NULL, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
+	m_tree.SelectItem(m_tree.GetFirstVisibleItem());
 
 	// 显示配置
 	ShowPlan(*theApp.m_plan);
@@ -200,21 +196,22 @@ void CSettingDlg::OnClose()
 	CModelessDlg::OnClose();
 }
 
-// 改变尺寸
-void CSettingDlg::OnSize(UINT nType, int cx, int cy)
-{
-	CModelessDlg::OnSize(nType, cx, cy);
-	m_pagesResize.Resize();
-}
-
 // 切换标签
-void CSettingDlg::OnTcnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult)
+void CSettingDlg::OnTvnSelchangedTree1(NMHDR *pNMHDR, LRESULT *pResult)
 {
+	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
 	*pResult = 0;
 
-	int index = m_tab.GetCurSel();
-	for (int i = 0; i < _countof(m_pages); i++)
+	int index = m_tree.GetItemData(pNMTreeView->itemNew.hItem);
+	for (int i = 0; i < (int)m_pages.size(); i++)
 		m_pages[i]->ShowWindow(i == index ? SW_SHOW : SW_HIDE);
+}
+
+// 显示关于
+void CSettingDlg::ShowAbout()
+{
+	for (const auto& page : m_pages)
+		page->ShowWindow(page == m_aboutPage.get() ? SW_SHOW : SW_HIDE);
 }
 #pragma endregion
 

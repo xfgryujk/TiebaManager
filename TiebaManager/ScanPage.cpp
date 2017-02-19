@@ -88,7 +88,7 @@ void CScanPage::OnEnKillfocusEdit5()
 // 扫描最后页数 内容改变
 void CScanPage::OnEnChangeEdit5()
 {
-	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+	((CSettingDlg*)GetParent())->m_clearScanCache = TRUE;
 }
 
 // 线程数

@@ -193,9 +193,7 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 		*theApp.m_globalConfig->m_firstRun = FALSE;
 		theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
 		OnBnClickedButton5();
-		m_settingDlg->m_tab.SetCurSel(SETTING_DLG_PAGE_COUNT - 1);
-		LRESULT tmp;
-		m_settingDlg->OnTcnSelchangeTab1(NULL, &tmp);
+		m_settingDlg->ShowAbout();
 	}
 
 

@@ -164,7 +164,7 @@ BOOL CKeywordsPage::SetItem(int index)
 
 void CKeywordsPage::OnAdd(int index)
 {
-	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+	((CSettingDlg*)GetParent())->m_clearScanCache = TRUE;
 }
 
 BOOL CKeywordsPage::CheckMatchTooMuch(const CString& text, BOOL isRegex)

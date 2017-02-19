@@ -98,7 +98,7 @@ void CImagePage::OnBnClickedButton1()
 void CImagePage::OnBnClickedButton2()
 {
 	theApp.m_plan->m_updateImage = TRUE;
-	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+	((CSettingDlg*)GetParent())->m_clearScanCache = TRUE;
 }
 
 // 阈值
@@ -114,6 +114,6 @@ void CImagePage::OnEnKillfocusEdit5()
 	{
 		theApp.m_plan->m_updateImage = TRUE;
 		if (threshold < theApp.m_plan->m_SSIMThreshold)
-			((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+			((CSettingDlg*)GetParent())->m_clearScanCache = TRUE;
 	}
 }

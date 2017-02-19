@@ -75,7 +75,7 @@ BOOL CBlackListPage::CheckMatchTooMuch(const CString& text, BOOL isRegex)
 
 void CBlackListPage::OnAdd(int index)
 {
-	((CSettingDlg*)GetParent()->GetParent())->m_clearScanCache = TRUE;
+	((CSettingDlg*)GetParent())->m_clearScanCache = TRUE;
 }
 
 BOOL CBlackListPage::TestMatch(const CString& test, const CString& text, BOOL isRegex)
