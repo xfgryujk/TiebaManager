@@ -67,7 +67,10 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 		thread.reply = rawThread[L"reply_num"].GetString();
 		thread.title = rawThread[L"title"].GetString();
 
-		thread.preview = rawThread[L"abstract"][0][L"text"].GetString();
+		if (rawThread[L"abstract"][0].HasMember(L"text"))
+			thread.preview = rawThread[L"abstract"][0][L"text"].GetString();
+		else
+			thread.preview = _T("");
 		thread.preview += _T("\r\n");
 		// 多媒体
 		if (rawThread.HasMember(L"media")) // 直播贴没有media
@@ -92,6 +95,8 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 		
 		if (rawThread.HasMember(L"last_replyer")) // 直播贴没有last_replyer
 			thread.lastAuthor = rawThread[L"last_replyer"][L"name"].GetString();
+		else
+			thread.lastAuthor = _T("");
 
 		++iThread;
 	}
