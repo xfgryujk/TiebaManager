@@ -26,21 +26,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // 规则
 
-class CIllegalRule final : public CRule
+class TBM_CORE_API CIllegalRule final : public CRule
 {
 public:
 	BOOL m_forceToConfirm = FALSE;	          // 强制确认
 	int m_trigCount = 0;    			      // 触发次数
 };
 
-class CTrustedRule final : public CRule
-{
-public:
-	int m_trigCount = 0;    			      // 触发次数
-};
-
 
 // 条件
+
+// 关键词条件
 
 enum KeywordRange
 {
@@ -52,7 +48,7 @@ enum KeywordRange
 	ALL_CONTENT       // 所有内容（包括主题标题、主题预览、帖子内容、楼中楼内容）
 };
 
-class CKeywordParam : public CConditionParam
+class TBM_CORE_API CKeywordParam final : public CConditionParam
 {
 public:
 	KeywordRange m_range;      // 搜索范围
@@ -61,9 +57,48 @@ public:
 	RegexText m_keyword;       // 关键词
 };
 
-class CKeywordCondition : public CCondition, public Singleton<CKeywordCondition>
+class TBM_CORE_API CKeywordCondition final : public CCondition, public Singleton<CKeywordCondition>
 {
-	DECL_SINGLETON_DEFAULT(CKeywordCondition);
+private:
+	DECL_SINGLETON(CKeywordCondition);
+	CKeywordCondition() : CCondition(_T("关键词条件")) { };
+
+public:
+	virtual CString GetDescription(const CConditionParam& param) override;
+
+	virtual CConditionParam* ReadParam(const tinyxml2::XMLElement* optionNode) override;
+	virtual void WriteParam(const CConditionParam& param, tinyxml2::XMLElement* optionNode) override;
+
+	virtual BOOL MatchThread(const CConditionParam& param, const ThreadInfo& thread, int& pos, int& length) override;
+	virtual BOOL MatchPost(const CConditionParam& param, const PostInfo& post, int& pos, int& length) override;
+	virtual BOOL MatchLzl(const CConditionParam& param, const LzlInfo& lzl, int& pos, int& length) override;
+
+private:
+	BOOL MatchContent(const CKeywordParam& param, const CString& content, int startPos, int& pos, int& length);
+};
+
+
+// 等级条件
+
+enum LevelOperator
+{
+	LESS,             // <=
+	GREATER           // >=
+};
+
+class TBM_CORE_API CLevelParam final : public CConditionParam
+{
+public:
+	LevelOperator m_operator;  // 操作符
+	int m_level;               // 等级
+};
+
+class TBM_CORE_API CLevelCondition final : public CCondition, public Singleton<CLevelCondition>
+{
+private:
+	DECL_SINGLETON(CLevelCondition);
+	CLevelCondition() : CCondition(_T("等级条件")) { };
+
 public:
 	virtual CString GetDescription(const CConditionParam& param) override;
 

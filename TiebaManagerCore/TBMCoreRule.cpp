@@ -30,7 +30,7 @@ CCondition& CConditionParam::GetCondition()
 }
 
 
-DECLEAR_READ(std::unique_ptr<CConditionParam>)
+DECLEAR_READ(std::shared_ptr<CConditionParam>)
 {
 	const XMLElement* optionNode = root.FirstChildElement(m_name);
 	if (optionNode == NULL)
@@ -52,7 +52,7 @@ DECLEAR_READ(std::unique_ptr<CConditionParam>)
 		UseDefault();
 }
 
-DECLEAR_WRITE(std::unique_ptr<CConditionParam>)
+DECLEAR_WRITE(std::shared_ptr<CConditionParam>)
 {
 	tinyxml2::XMLDocument* doc = root.GetDocument();
 	XMLElement* optionNode = doc->NewElement(m_name);
@@ -138,6 +138,8 @@ static XMLNode* DeepCloneXMLNode(const XMLNode* node, XMLNode* newParent)
 	// 拷贝子结点
 	for (const XMLNode* child = node->FirstChild(); child != NULL; child = child->NextSiblingElement())
 		DeepCloneXMLNode(child, newNode);
+
+	return newNode;
 }
 
 CConditionParam* CCondition::ReadParam(const XMLElement* optionNode)
@@ -183,7 +185,7 @@ DECLEAR_READ(CRule)
 	}
 
 	COption<CString> name("Name");
-	COption<std::vector<std::unique_ptr<CConditionParam> > > conditions("Conditions");
+	COption<std::vector<std::shared_ptr<CConditionParam> > > conditions("Conditions");
 	name.Read(*optionNode);
 	conditions.Read(*optionNode);
 
@@ -206,14 +208,13 @@ DECLEAR_WRITE(CRule)
 
 	XMLElement* conditionsNode = doc->NewElement("Conditions");
 	optionNode->LinkEndChild(conditionsNode);
-	COption<std::unique_ptr<CConditionParam> > value("value");
+	COption<std::shared_ptr<CConditionParam> > value("value");
 	for (const auto& i : m_value.m_conditionParams)
 	{
 		XMLElement* item = doc->NewElement("item");
 		optionNode->LinkEndChild(item);
-		value->reset(i.get());
+		*value = i;
 		value.Write(*item);
-		value->release();
 	}
 }
 

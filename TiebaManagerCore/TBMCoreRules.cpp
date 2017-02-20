@@ -24,6 +24,46 @@ using namespace tinyxml2;
 
 // 规则 ///////////////////////////////////////////////////////////////////////////
 
+DECLEAR_READ(CIllegalRule)
+{
+	const XMLElement* optionNode = root.FirstChildElement(m_name);
+	if (optionNode == NULL)
+	{
+		UseDefault();
+		return;
+	}
+
+	COption<CRule> rule(m_name);
+	COption<BOOL> forceToConfirm("ForceToConfirm");
+	COption<int> trigCount("TrigCount");
+	rule.Read(root);
+	forceToConfirm.Read(*optionNode);
+	trigCount.Read(*optionNode);
+
+	m_value.m_name = std::move(rule->m_name);
+	m_value.m_conditionParams = std::move(rule->m_conditionParams);
+	m_value.m_forceToConfirm = forceToConfirm;
+	m_value.m_trigCount = trigCount;
+
+	if (!IsValid(m_value))
+		UseDefault();
+}
+
+DECLEAR_WRITE(CIllegalRule)
+{
+	COption<CRule> rule(m_name);
+	*rule = m_value;
+	rule.Write(root);
+
+	XMLElement* optionNode = root.FirstChildElement(m_name);
+
+	COption<BOOL> forceToConfirm("ForceToConfirm");
+	*forceToConfirm = m_value.m_forceToConfirm;
+	forceToConfirm.Write(*optionNode);
+	COption<int> trigCount("TrigCount");
+	*trigCount = m_value.m_trigCount;
+	trigCount.Write(*optionNode);
+}
 
 
 // 条件 ///////////////////////////////////////////////////////////////////////////
@@ -31,6 +71,7 @@ using namespace tinyxml2;
 void InitRules()
 {
 	CCondition::AddCondition(CKeywordCondition::GetInstance());
+	CCondition::AddCondition(CLevelCondition::GetInstance());
 }
 
 
@@ -39,7 +80,7 @@ void InitRules()
 CString CKeywordCondition::GetDescription(const CConditionParam& _param)
 {
 	const auto& param = (CKeywordParam&)_param;
-	static CString rangeDesc[] = {
+	static LPCTSTR rangeDesc[] = {
 		_T("主题标题"),
 		_T("主题预览"),
 		_T("帖子内容"),
@@ -61,7 +102,7 @@ CString CKeywordCondition::GetDescription(const CConditionParam& _param)
 
 CConditionParam* CKeywordCondition::ReadParam(const tinyxml2::XMLElement* optionNode)
 {
-	CKeywordParam* param = new CKeywordParam();
+	auto* param = new CKeywordParam();
 
 	param->m_conditionName = m_name;
 	COption<int> range("Range");
@@ -81,7 +122,7 @@ CConditionParam* CKeywordCondition::ReadParam(const tinyxml2::XMLElement* option
 	return param;
 }
 
-void WriteParam(const CConditionParam& _param, tinyxml2::XMLElement* optionNode)
+void CKeywordCondition::WriteParam(const CConditionParam& _param, tinyxml2::XMLElement* optionNode)
 {
 	const auto& param = (CKeywordParam&)_param;
 
@@ -97,4 +138,152 @@ void WriteParam(const CConditionParam& _param, tinyxml2::XMLElement* optionNode)
 	COption<RegexText> keyword("Keyword");
 	*keyword = param.m_keyword;
 	keyword.Write(*optionNode);
+}
+
+
+BOOL CKeywordCondition::MatchContent(const CKeywordParam& param, const CString& content, int startPos, int& pos, int& length)
+{
+	// 判断匹配
+	BOOL res;
+	if (param.m_include)
+	{
+		res = StringIncludes(content, param.m_keyword, &pos, &length);
+		pos += startPos;
+	}
+	else
+	{
+		res = StringMatchs(content, param.m_keyword);
+		pos = 0;
+		length = content.GetLength();
+	}
+
+	// 取FALSE
+	if (param.m_not)
+		res = !res;
+
+	return res;
+}
+
+BOOL CKeywordCondition::MatchThread(const CConditionParam& _param, const ThreadInfo& thread, int& pos, int& length)
+{
+	const auto& param = (CKeywordParam&)_param;
+
+	// 判断范围
+	int startPos;
+	CString content;
+	switch (param.m_range)
+	{
+	default: return FALSE;
+	case KeywordRange::TITLE:           startPos = 0;                                    content = thread.title;         break;
+	case KeywordRange::PREVIEW:         startPos = thread.title.GetLength() + 2;         content = thread.preview;       break;
+	case KeywordRange::AUTHOR:          startPos = thread.GetContent().GetLength() + 7;  content = thread.author;        break;
+	case KeywordRange::ALL_CONTENT:     startPos = 0;                                    content = thread.GetContent();  break;
+	}
+
+	return MatchContent(param, content, startPos, pos, length);
+}
+
+BOOL CKeywordCondition::MatchPost(const CConditionParam& _param, const PostInfo& post, int& pos, int& length)
+{
+	const auto& param = (CKeywordParam&)_param;
+
+	// 判断范围
+	int startPos;
+	CString content;
+	switch (param.m_range)
+	{
+	default: return FALSE;
+	case KeywordRange::POST_CONTENT:    startPos = 0;                                    content = post.content;         break;
+	case KeywordRange::AUTHOR:          startPos = post.GetContent().GetLength() + 7;    content = post.author;          break;
+	case KeywordRange::ALL_CONTENT:     startPos = 0;                                    content = post.GetContent();    break;
+	}
+
+	return MatchContent(param, content, startPos, pos, length);
+}
+
+BOOL CKeywordCondition::MatchLzl(const CConditionParam& _param, const LzlInfo& lzl, int& pos, int& length)
+{
+	const auto& param = (CKeywordParam&)_param;
+
+	// 判断范围
+	int startPos;
+	CString content;
+	switch (param.m_range)
+	{
+	default: return FALSE;
+	case KeywordRange::LZL_CONTENT:     startPos = 0;                                    content = lzl.content;          break;
+	case KeywordRange::AUTHOR:          startPos = lzl.GetContent().GetLength() + 7;     content = lzl.author;           break;
+	case KeywordRange::ALL_CONTENT:     startPos = 0;                                    content = lzl.GetContent();     break;
+	}
+
+	return MatchContent(param, content, startPos, pos, length);
+}
+
+
+// 等级条件
+
+CString CLevelCondition::GetDescription(const CConditionParam& _param)
+{
+	const auto& param = (CLevelParam&)_param;
+	static LPCTSTR operatorDesc[] = {
+		_T("等级 <= "),
+		_T("等级 >= ")
+	};
+
+	CString res;
+	res.Format(_T("%s%d"), operatorDesc[param.m_operator], param.m_level);
+	return res;
+}
+
+
+CConditionParam* CLevelCondition::ReadParam(const tinyxml2::XMLElement* optionNode)
+{
+	auto* param = new CLevelParam();
+
+	param->m_conditionName = m_name;
+	COption<int> op("Operator");
+	COption<int> level("Level");
+	op.Read(*optionNode);
+	level.Read(*optionNode);
+
+	param->m_operator = (0 <= op && op <= LevelOperator::GREATER) ? LevelOperator(*op) : LevelOperator::LESS;
+	param->m_level = level;
+
+	return param;
+}
+
+void CLevelCondition::WriteParam(const CConditionParam& _param, tinyxml2::XMLElement* optionNode)
+{
+	const auto& param = (CLevelParam&)_param;
+
+	COption<int> op("Operator");
+	*op = param.m_operator;
+	op.Write(*optionNode);
+	COption<int> level("Level");
+	*level = param.m_level;
+	level.Write(*optionNode);
+}
+
+
+BOOL CLevelCondition::MatchThread(const CConditionParam& _param, const ThreadInfo& thread, int& pos, int& length)
+{
+	return FALSE;
+}
+
+BOOL CLevelCondition::MatchPost(const CConditionParam& _param, const PostInfo& post, int& pos, int& length)
+{
+	const auto& param = (CLevelParam&)_param;
+
+	int level = _ttoi(post.authorLevel);
+	switch (param.m_operator)
+	{
+	default: return FALSE;
+	case LevelOperator::LESS:       return level <= param.m_level;
+	case LevelOperator::GREATER:    return level >= param.m_level;
+	}
+}
+
+BOOL CLevelCondition::MatchLzl(const CConditionParam& _param, const LzlInfo& lzl, int& pos, int& length)
+{
+	return FALSE;
 }

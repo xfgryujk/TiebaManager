@@ -79,7 +79,7 @@ class TBM_CORE_API CRule
 public:
 	CString m_name;
 	
-	std::vector<std::unique_ptr<CConditionParam> > m_conditionParams;      // 条件参数
+	std::vector<std::shared_ptr<CConditionParam> > m_conditionParams;      // 条件参数
 
 
 	virtual ~CRule() = default;
