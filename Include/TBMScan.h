@@ -19,26 +19,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TiebaManagerCoreCommon.h"
-#include "TBMCoreConfig.h"
-#include "TBMOperate.h"
+#include "Singleton.h"
 #include "TiebaClawer.h"
 #include <memory>
 #include <thread>
+#include <mutex>
 
 
-class TBM_CORE_API CTBMScan
+class TBM_CORE_API CTBMScan final : public Singleton<CTBMScan>
 {
+	DECL_SINGLETON(CTBMScan);
+private:
+	CTBMScan() = default;
+	~CTBMScan();
+
 public:
-	// 记得依赖注入哦
-	ILog* m_log = NULL;
-	CTBMCoreConfig* m_config = NULL;
-	CUserCache* m_userCache = NULL;
-	CTBMOperate* m_operate = NULL;
-
-
-	CTBMScan(CTBMCoreConfig* config = NULL, CUserCache* userCache = NULL, CTBMOperate* operate = NULL, ILog* log = NULL);
-	virtual ~CTBMScan();
-
 	// 开始扫描
 	void StartScan(const CString& sPage);
 	// 停止扫描，不等待线程结束

@@ -32,7 +32,6 @@ IMPLEMENT_DYNAMIC(CScanPage, CNormalDlg)
 CScanPage::CScanPage(CWnd* pParent /*=NULL*/)
 	: CNormalDlg(CScanPage::IDD, pParent)
 {
-
 }
 
 #pragma region MFC
@@ -49,7 +48,6 @@ void CScanPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK5, m_briefLogCheck);
 	DDX_Control(pDX, IDC_EDIT2, m_threadCountEdit);
 	DDX_Control(pDX, IDC_CHECK6, m_autoSaveLogCheck);
-	DDX_Control(pDX, IDC_EDIT7, m_illegalLevelEdit);
 	DDX_Control(pDX, IDC_CHECK7, m_clawerClientInterfaceCheck);
 }
 
@@ -59,7 +57,6 @@ BEGIN_MESSAGE_MAP(CScanPage, CNormalDlg)
 	ON_EN_KILLFOCUS(IDC_EDIT5, &CScanPage::OnEnKillfocusEdit5)
 	ON_EN_CHANGE(IDC_EDIT5, &CScanPage::OnEnChangeEdit5)
 	ON_EN_KILLFOCUS(IDC_EDIT2, &CScanPage::OnEnKillfocusEdit2)
-	ON_EN_KILLFOCUS(IDC_EDIT7, &CScanPage::OnEnKillfocusEdit7)
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -99,14 +96,4 @@ void CScanPage::OnEnKillfocusEdit2()
 	int threadCount = _ttoi(tmp);
 	if (threadCount < 1 || threadCount > 16)
 		m_threadCountEdit.SetWindowText(_T("2"));
-}
-
-// 违规等级
-void CScanPage::OnEnKillfocusEdit7()
-{
-	CString tmp;
-	m_illegalLevelEdit.GetWindowText(tmp);
-	int illegalLevel = _ttoi(tmp);
-	if (illegalLevel < 0 || illegalLevel > 6)
-		m_illegalLevelEdit.SetWindowText(_T("0"));
 }

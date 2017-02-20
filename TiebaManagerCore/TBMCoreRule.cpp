@@ -29,6 +29,11 @@ CCondition& CConditionParam::GetCondition()
 	return CCondition::GetCondition(m_conditionName);
 }
 
+CString CConditionParam::GetDescription()
+{
+	return GetCondition().GetDescription(*this);
+}
+
 
 DECLEAR_READ(std::shared_ptr<CConditionParam>)
 {
@@ -219,7 +224,7 @@ DECLEAR_WRITE(CRule)
 }
 
 
-BOOL CRule::MatchThread(const ThreadInfo& thread, int& pos, int& length)
+BOOL CRule::Match(const ThreadInfo& thread, int& pos, int& length)
 {
 	if (m_conditionParams.empty())
 		return FALSE;
@@ -231,7 +236,7 @@ BOOL CRule::MatchThread(const ThreadInfo& thread, int& pos, int& length)
 	return TRUE;
 }
 
-BOOL CRule::MatchPost(const PostInfo& post, int& pos, int& length)
+BOOL CRule::Match(const PostInfo& post, int& pos, int& length)
 {
 	if (m_conditionParams.empty())
 		return FALSE;
@@ -243,7 +248,7 @@ BOOL CRule::MatchPost(const PostInfo& post, int& pos, int& length)
 	return TRUE;
 }
 
-BOOL CRule::MatchLzl(const LzlInfo& lzl, int& pos, int& length)
+BOOL CRule::Match(const LzlInfo& lzl, int& pos, int& length)
 {
 	if (m_conditionParams.empty())
 		return FALSE;

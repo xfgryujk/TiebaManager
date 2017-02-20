@@ -17,37 +17,43 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#pragma once
-#include <TBMCoreGlobal.h>
-#include <mshtml.h>
-#include "explorer1.h"
+#include "stdafx.h"
+#include "RulesPage.h"
 
 
-class CExplorerLog : public ILog
+CRulesPage::CRulesPage(const CString& inputTitle, CWnd* pParent /*=NULL*/) :
+	CNormalListPage(inputTitle, pParent)
 {
-protected:
-	CExplorer1& m_logExplorer;
-	HWND m_explorerHwnd = NULL;
-	CComPtr<IHTMLDocument2> m_logDocument;
+}
 
-	SYSTEMTIME m_logStartTime;
+CRulesPage::CRulesPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd /*=NULL*/) : 
+	CNormalListPage(inputTitle, nIDTemplate, pParentWnd)
+{
+}
 
-	static WNDPROC s_oldExplorerWndProc;
 
-public:
-	CExplorerLog(CExplorer1& explorer) : m_logExplorer(explorer){ }
+BOOL CRulesPage::SetItem(int index)
+{
+	return TRUE;
+}
 
-	void Init();
-	void Release();
-	void Log(const CString& content);
-	void Clear();
-	void Save(const CString& folder);
+BOOL CRulesPage::Export(const CString& path)
+{
+	return TRUE;
+}
 
-protected:
-	static BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam);
-	static LRESULT CALLBACK ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+BOOL CRulesPage::Import(const CString& path)
+{
+	return TRUE;
+}
 
-	void WriteDocument(const CString& content);
+void CRulesPage::ShowList(const std::vector<CRule>& list)
+{
 
-	void DoLog(const CString* output);
-};
+}
+
+void CRulesPage::ApplyList(std::vector<CRule>& list)
+{
+
+}
+

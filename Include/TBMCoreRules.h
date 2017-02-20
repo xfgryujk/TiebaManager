@@ -59,8 +59,8 @@ public:
 
 class TBM_CORE_API CKeywordCondition final : public CCondition, public Singleton<CKeywordCondition>
 {
-private:
 	DECL_SINGLETON(CKeywordCondition);
+private:
 	CKeywordCondition() : CCondition(_T("关键词条件")) { };
 
 public:
@@ -95,8 +95,8 @@ public:
 
 class TBM_CORE_API CLevelCondition final : public CCondition, public Singleton<CLevelCondition>
 {
-private:
 	DECL_SINGLETON(CLevelCondition);
+private:
 	CLevelCondition() : CCondition(_T("等级条件")) { };
 
 public:

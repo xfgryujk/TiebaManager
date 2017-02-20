@@ -73,6 +73,12 @@
     <Filter Include="源文件\Plugin">
       <UniqueIdentifier>{87cce4d1-a426-4a61-bd2b-60df129c4bd8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\GUI\UIHelper\ListPage">
+      <UniqueIdentifier>{b560a43c-71e3-4dfd-aefc-ef7d88f58d06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GUI\UIHelper\ListPage">
+      <UniqueIdentifier>{ba310af7-f0b5-4a37-b59a-2cab3bfdd951}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -91,15 +97,6 @@
       <Filter>头文件\GUI</Filter>
     </ClInclude>
     <ClInclude Include="SettingDlg.h">
-      <Filter>头文件\GUI\Setting</Filter>
-    </ClInclude>
-    <ClInclude Include="BlackListPage.h">
-      <Filter>头文件\GUI\Setting</Filter>
-    </ClInclude>
-    <ClInclude Include="KeywordsPage.h">
-      <Filter>头文件\GUI\Setting</Filter>
-    </ClInclude>
-    <ClInclude Include="WhiteContentPage.h">
       <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
     <ClInclude Include="OptionsPage.h">
@@ -132,9 +129,6 @@
     <ClInclude Include="ExplorePostPage.h">
       <Filter>头文件\GUI\TiebaExplorer</Filter>
     </ClInclude>
-    <ClInclude Include="ImagePage.h">
-      <Filter>头文件\GUI\Setting</Filter>
-    </ClInclude>
     <ClInclude Include="ImageViewDlg.h">
       <Filter>头文件\GUI</Filter>
     </ClInclude>
@@ -149,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="OperatePage.h">
       <Filter>头文件\GUI\Setting</Filter>
-    </ClInclude>
-    <ClInclude Include="ScanImage.h">
-      <Filter>头文件\Helper</Filter>
     </ClInclude>
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
@@ -192,6 +183,12 @@
     <ClInclude Include="..\Include\Plugin.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
+    <ClInclude Include="RulesPage.h">
+      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
+    </ClInclude>
+    <ClInclude Include="IllegalRulesPage.h">
+      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -204,15 +201,6 @@
       <Filter>源文件\GUI</Filter>
     </ClCompile>
     <ClCompile Include="SettingDlg.cpp">
-      <Filter>源文件\GUI\Setting</Filter>
-    </ClCompile>
-    <ClCompile Include="BlackListPage.cpp">
-      <Filter>源文件\GUI\Setting</Filter>
-    </ClCompile>
-    <ClCompile Include="KeywordsPage.cpp">
-      <Filter>源文件\GUI\Setting</Filter>
-    </ClCompile>
-    <ClCompile Include="WhiteContentPage.cpp">
       <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
     <ClCompile Include="OptionsPage.cpp">
@@ -245,9 +233,6 @@
     <ClCompile Include="ExplorePostPage.cpp">
       <Filter>源文件\GUI\TiebaExplorer</Filter>
     </ClCompile>
-    <ClCompile Include="ImagePage.cpp">
-      <Filter>源文件\GUI\Setting</Filter>
-    </ClCompile>
     <ClCompile Include="ImageViewDlg.cpp">
       <Filter>源文件\GUI</Filter>
     </ClCompile>
@@ -262,9 +247,6 @@
     </ClCompile>
     <ClCompile Include="OperatePage.cpp">
       <Filter>源文件\GUI\Setting</Filter>
-    </ClCompile>
-    <ClCompile Include="ScanImage.cpp">
-      <Filter>源文件\Helper</Filter>
     </ClCompile>
     <ClCompile Include="InputKeywordDlg.cpp">
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
@@ -298,6 +280,12 @@
     </ClCompile>
     <ClCompile Include="TBMEvents.cpp">
       <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="RulesPage.cpp">
+      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
+    </ClCompile>
+    <ClCompile Include="IllegalRulesPage.cpp">
+      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

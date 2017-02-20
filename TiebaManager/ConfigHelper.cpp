@@ -68,7 +68,6 @@ void CConfigHelper::SetCurrentUser(const CString& userName, BOOL save)
 	theApp.m_userConfig->Load(USER_CONFIG_PATH);
 	// 方案
 	theApp.m_plan->Load(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
-	ReadImages(theApp.m_plan->m_imageDir, theApp.m_plan->m_images);
 
 	// Cookie
 	theApp.m_cookieConfig->Load(COOKIE_PATH);
@@ -77,44 +76,4 @@ void CConfigHelper::SetCurrentUser(const CString& userName, BOOL save)
 	theApp.m_userCache->Load(CACHE_PATH);
 
 	g_postSetCurrentUserEvent(userName);
-}
-
-
-// 从目录读取图片到images
-void CConfigHelper::ReadImages(const CString& dir, std::vector<CPlan::NameImage>& images)
-{
-	std::vector<CString> imagePath;
-
-	if (dir == _T(""))
-	{
-		images.clear();
-		return;
-	}
-	CFileFind fileFind;
-	static const TCHAR* IMG_EXT[] = { _T("\\*.jpg"), _T("\\*.png"), _T("\\*.gif"), _T("\\*.jpeg"), _T("\\*.bmp") };
-	for (int i = 0; i < _countof(IMG_EXT); i++)
-	{
-		BOOL flag = fileFind.FindFile(dir + IMG_EXT[i]);
-		while (flag)
-		{
-			flag = fileFind.FindNextFile();
-			imagePath.push_back(fileFind.GetFilePath());
-		}
-	}
-
-	images.resize(imagePath.size());
-	UINT imgCount = 0;
-	for (CString& i : imagePath)
-	{
-		images[imgCount].name = GetImageName(i);
-		if (ReadImage(i, images[imgCount].img))
-			imgCount++;
-	}
-	if (imagePath.size() != imgCount)
-	{
-		images.resize(imgCount);
-		CString msg;
-		msg.Format(_T("%u张图片加载失败！"), imagePath.size() - imgCount);
-		AfxMessageBox(msg, MB_ICONINFORMATION);
-	}
 }

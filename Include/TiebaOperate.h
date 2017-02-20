@@ -36,8 +36,6 @@ protected:
 	const int& m_banDuration;	// 封禁时长
 	const CString& m_banReason; // 封禁原因
 
-	CString m_randomTid;		// 某个tid，确认贴吧时初始化，用于WAP接口封禁
-
 public:
 	CString GetForumID() { return m_forumID; }
 	CString GetForumName() { return m_forumName; }
@@ -61,8 +59,6 @@ public:
 	CString BanID(const CString& userName, const CString& pid);
 	// 封ID，返回错误代码，不用PID（用户必须为本吧会员）
 	CString BanID(const CString& userName);
-	// 封ID，返回错误代码，WAP接口，不用PID，只能封1天（否则要用TID）
-	CString BanIDWap(const CString& userName);
 	// 封ID，返回错误代码，客户端接口，不用PID，小吧可封10天
 	CString BanIDClient(const CString& userName);
 	// 拉黑，返回错误代码

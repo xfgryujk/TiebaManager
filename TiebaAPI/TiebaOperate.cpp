@@ -103,11 +103,6 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 		return SET_TIEBA_NO_TBS;
 	}
 
-	// 取第一个tid
-	m_randomTid = GetStringBetween(src, _T("&quot;id&quot;:"), _T(","));
-	if (m_randomTid == _T(""))
-		m_randomTid = _T("4426261107");
-
 	// 确定BDUSS
 	m_bduss = GetStringBetween(m_cookie, _T("BDUSS="), _T(";"));
 	
@@ -160,18 +155,6 @@ CString CTiebaOperate::BanID(const CString& userName)
 		m_banDuration, (LPCTSTR)m_forumID, (LPCTSTR)m_tbs, (LPCTSTR)EncodeURI(userName),
 		m_banReason != _T("") ? (LPCTSTR)m_banReason : _T("%20"));
 	CString src = this->HTTPPost(_T("http://tieba.baidu.com/pmc/blockid"), data);
-	return GetOperationErrorCode(src);
-}
-
-// 封ID，返回错误代码，WAP接口，不用PID，只能封1天（否则要用TID）
-CString CTiebaOperate::BanIDWap(const CString& userName)
-{
-	CString url;
-	url.Format(_T("http://tieba.baidu.com/mo/q/m?tn=bdFIL&ntn=banid&day=1&un=%s&tbs=%s")
-			   _T("&word=%s&fid=%s&z=%s&$el=%%5Bobject%%20Array%%5D&reason=%s"),
-		(LPCTSTR)EncodeURI(userName), (LPCTSTR)m_tbs, (LPCTSTR)m_encodedForumName,
-		(LPCTSTR)m_forumID, (LPCTSTR)m_randomTid, m_banReason != _T("") ? (LPCTSTR)m_banReason : _T("%20"));
-	CString src = this->HTTPGet(url);
 	return GetOperationErrorCode(src);
 }
 

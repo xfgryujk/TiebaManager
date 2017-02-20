@@ -24,7 +24,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ImageViewDlg.h"
 #include <ImageHelper.h>
 #include "TBMConfigPath.h"
-#include "ScanImage.h"
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
 #include "InputDlg.h"

@@ -18,7 +18,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include "TBMConfig.h"
 
 
 class CConfigHelper
@@ -28,7 +27,4 @@ public:
 	static void SaveCurrentUserConfig();
 	// 设置当前账号
 	static void SetCurrentUser(const CString& userName, BOOL save);
-
-	// 从目录读取图片到images
-	static void ReadImages(const CString& dir, std::vector<CPlan::NameImage>& images);
 };

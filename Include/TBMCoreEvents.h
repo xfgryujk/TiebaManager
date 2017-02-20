@@ -39,11 +39,8 @@ extern TBM_CORE_API PostEvent<const Operation&, BOOL>   g_postDeleteEvent;     /
 // 扫描事件
 
 extern TBM_CORE_API PreEvent<const ThreadInfo&, BOOL&, CString&, BOOL&, int&, int&>   g_checkThreadIllegalEvent;        // 判断主题是否违规，参数：主题信息, 是否违规, 日志里输出的信息, 强制确认, 确认时高亮位置, 确认时高亮长度
-extern TBM_CORE_API PreEvent<const ThreadInfo&, BOOL&, CString&, BOOL&, int&, int&>   g_checkThreadImageIllegalEvent;   // 判断主题图片是否违规，参数：主题信息, 是否违规, 日志里输出的信息, 强制确认, 确认时高亮位置, 确认时高亮长度
 extern TBM_CORE_API PreEvent<const PostInfo&, BOOL&, CString&, BOOL&, int&, int&>     g_checkPostIllegalEvent;          // 判断帖子是否违规，参数：帖子信息, 是否违规, 日志里输出的信息, 强制确认, 确认时高亮位置, 确认时高亮长度
-extern TBM_CORE_API PreEvent<const PostInfo&, BOOL&, CString&, BOOL&, int&, int&>     g_checkPostImageIllegalEvent;     // 判断帖子图片是否违规，参数：帖子信息, 是否违规, 日志里输出的信息, 强制确认, 确认时高亮位置, 确认时高亮长度
 extern TBM_CORE_API PreEvent<const LzlInfo&, BOOL&, CString&, BOOL&, int&, int&>      g_checkLzlIllegalEvent;           // 判断楼中楼是否违规，参数：帖子信息, 是否违规, 日志里输出的信息, 强制确认, 确认时高亮位置, 确认时高亮长度
-extern TBM_CORE_API PreEvent<const LzlInfo&, BOOL&, CString&, BOOL&, int&, int&>      g_checkLzlImageIllegalEvent;      // 判断楼中楼图片是否违规，参数：帖子信息, 是否违规, 日志里输出的信息, 强制确认, 确认时高亮位置, 确认时高亮长度
 
 extern TBM_CORE_API PreEvent<BOOL&>                                g_scanThreadStartEvent;      // 总扫描线程开始，参数：不取消
 extern TBM_CORE_API PostEvent<>                                    g_scanThreadEndEvent;        // 总扫描线程结束

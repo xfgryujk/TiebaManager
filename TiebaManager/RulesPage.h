@@ -18,36 +18,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include <TBMCoreGlobal.h>
-#include <mshtml.h>
-#include "explorer1.h"
+#include <NormalListPage.h>
+#include <TBMCoreRule.h>
 
 
-class CExplorerLog : public ILog
+class CRulesPage : public CNormalListPage
 {
-protected:
-	CExplorer1& m_logExplorer;
-	HWND m_explorerHwnd = NULL;
-	CComPtr<IHTMLDocument2> m_logDocument;
-
-	SYSTEMTIME m_logStartTime;
-
-	static WNDPROC s_oldExplorerWndProc;
-
 public:
-	CExplorerLog(CExplorer1& explorer) : m_logExplorer(explorer){ }
+	CRulesPage(const CString& inputTitle, CWnd* pParent = NULL);   // 标准构造函数
+	CRulesPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd = NULL);
+	virtual ~CRulesPage() = default;
 
-	void Init();
-	void Release();
-	void Log(const CString& content);
-	void Clear();
-	void Save(const CString& folder);
-
-protected:
-	static BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam);
-	static LRESULT CALLBACK ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-	void WriteDocument(const CString& content);
-
-	void DoLog(const CString* output);
+	virtual BOOL SetItem(int index) override;
+	virtual BOOL Export(const CString& path) override;
+	virtual BOOL Import(const CString& path) override;
+	virtual void ShowList(const std::vector<CRule>& list);
+	virtual void ApplyList(std::vector<CRule>& list);
 };

@@ -40,6 +40,7 @@ public:
 	virtual ~CConditionParam() = default;
 
 	CCondition& GetCondition();
+	CString GetDescription();
 
 	BOOL MatchThread(const ThreadInfo& thread, int& pos, int& length);
 	BOOL MatchPost(const PostInfo& post, int& pos, int& length);
@@ -84,7 +85,7 @@ public:
 
 	virtual ~CRule() = default;
 
-	BOOL MatchThread(const ThreadInfo& thread, int& pos, int& length);
-	BOOL MatchPost(const PostInfo& post, int& pos, int& length);
-	BOOL MatchLzl(const LzlInfo& lzl, int& pos, int& length);
+	BOOL Match(const ThreadInfo& thread, int& pos, int& length);
+	BOOL Match(const PostInfo& post, int& pos, int& length);
+	BOOL Match(const LzlInfo& lzl, int& pos, int& length);
 };

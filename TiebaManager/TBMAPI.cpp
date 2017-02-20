@@ -58,12 +58,12 @@ TBM_API CTiebaOperate& GetTiebaOperate()
 
 TBM_API CTBMScan& GetScan()
 {
-	return *theApp.m_scan;
+	return CTBMScan::GetInstance();
 }
 
 TBM_API CTBMOperate& GetOperate()
 {
-	return *theApp.m_operate;
+	return CTBMOperate::GetInstance();
 }
 
 

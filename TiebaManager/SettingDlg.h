@@ -25,15 +25,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <memory>
 #include <vector>
 
-#include <TBMCoreConfig.h>
+#include <TBMCoreGlobal.h>
+#include "TBMConfig.h"
 
 #include "ScanPage.h"
 #include "OperatePage.h"
-#include "KeywordsPage.h"
-#include "ImagePage.h"
-#include "BlackListPage.h"
+#include "IllegalRulesPage.h"
 #include "NormalListPage.h"
-#include "WhiteContentPage.h"
 #include "OptionsPage.h"
 #include "UsersPage.h"
 #include "AboutPage.h"
@@ -75,11 +73,8 @@ public:
 	CTreeCtrl m_tree;
 	std::unique_ptr<CScanPage> m_scanPage;
 	std::unique_ptr<COperatePage> m_operatePage;
-	std::unique_ptr<CKeywordsPage> m_keywordsPage;
-	std::unique_ptr<CImagePage> m_imagePage;
-	std::unique_ptr<CBlackListPage> m_blackListPage;
-	std::unique_ptr<CNormalListPage> m_whiteListPage;
-	std::unique_ptr<CWhiteContentPage> m_whiteContentPage;
+	std::unique_ptr<CIllegalRulesPage> m_illegalRulesPage;
+	std::unique_ptr<CRulesPage> m_trustedRulesPage;
 	std::unique_ptr<CNormalListPage> m_trustedThreadPage;
 	std::unique_ptr<COptionsPage> m_optionsPage;
 	std::unique_ptr<CUsersPage> m_usersPage;

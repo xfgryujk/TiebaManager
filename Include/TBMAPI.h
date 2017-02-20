@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "TiebaManagerCommon.h"
 #include "Plugin.h"
-#include "TBMCoreConfig.h"
+#include "TBMCoreGlobal.h"
 #include "TBMScan.h"
 #include "TBMOperate.h"
 

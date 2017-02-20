@@ -44,9 +44,9 @@ protected:
 public:
 	virtual BOOL OnInitDialog();
 
-	virtual BOOL SetItem(int index);
-	virtual BOOL Export(const CString& path);
-	virtual BOOL Import(const CString& path);
+	virtual BOOL SetItem(int index) override;
+	virtual BOOL Export(const CString& path) override;
+	virtual BOOL Import(const CString& path) override;
 	virtual void ShowList(const std::vector<CString>& list);
 	virtual void ShowList(const std::set<CString>& list);
 	virtual void ApplyList(std::vector<CString>& list);

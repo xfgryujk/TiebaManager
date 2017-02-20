@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMScan.h>
 #include <TBMCoreEvents.h>
 
-#include <TBMCoreConfig.h>
+#include <TBMCoreGlobal.h>
 #include <TiebaClawerProxy.h>
 #include <TiebaOperate.h>
 #include <TBMOperate.h>
@@ -30,14 +30,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <NetworkHelper.h>
 #include <MiscHelper.h>
 
-
-CTBMScan::CTBMScan(CTBMCoreConfig* config, CUserCache* userCache, CTBMOperate* operate, ILog* log) :
-	m_config(config),
-	m_userCache(userCache),
-	m_operate(operate),
-	m_log(log)
-{
-}
 
 CTBMScan::~CTBMScan()
 {
@@ -65,33 +57,6 @@ void CTBMScan::StopScan()
 BOOL CTBMScan::IsScanning()
 {
 	return m_scanThread != nullptr && IsThreadRunning(*m_scanThread);
-}
-
-// 扫描主题图片
-void CTBMScan::ScanThreadImage()
-{
-	for (const ThreadInfo& thread : m_threads)
-	{
-		if (m_stopScanFlag)
-			break;
-		__int64 tid = _ttoi64(thread.tid);
-		if (m_userCache->m_ignoredTID.find(tid) == m_userCache->m_ignoredTID.end())
-		{
-			BOOL res = FALSE;
-			CString msg;
-			BOOL forceToConfirm = FALSE;
-			int pos = 0, length = 0;
-			g_checkThreadImageIllegalEvent(thread, res, msg, forceToConfirm, pos, length);
-			if (res)
-			{
-				m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
-					std::make_unique<ThreadInfo>(thread)));
-				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
-					+ HTMLEscape(thread.title) + _T("</a>") + msg);
-				m_userCache->m_ignoredTID.insert(tid);
-			}
-		}
-	}
 }
 
 // 总扫描线程
@@ -126,12 +91,12 @@ void CTBMScan::ScanThread(CString sPage)
 			DWORD startTime = GetTickCount();
 
 			// 获取主题列表
-			if (!TiebaClawerProxy::GetInstance().GetThreads(m_operate->m_tiebaOperate->GetForumName(), ignoreThread, m_threads))
+			if (!TiebaClawerProxy::GetInstance().GetThreads(g_pTiebaOperate->GetForumName(), ignoreThread, m_threads))
 			{
 				if (m_stopScanFlag)
 					break;
-				if (!m_config->m_briefLog)
-					m_log->Log(_T("<font color=red>获取主题列表失败，重新开始本轮</font>"));
+				if (!g_pTbmCoreConfig->m_briefLog)
+					g_pLog->Log(_T("<font color=red>获取主题列表失败，重新开始本轮</font>"));
 				continue;
 			}
 
@@ -141,7 +106,7 @@ void CTBMScan::ScanThread(CString sPage)
 				if (m_stopScanFlag)
 					break;
 				__int64 tid = _ttoi64(thread.tid);
-				if (m_userCache->m_ignoredTID.find(tid) == m_userCache->m_ignoredTID.end())
+				if (g_pUserCache->m_ignoredTID.find(tid) == g_pUserCache->m_ignoredTID.end())
 				{
 					BOOL res = FALSE;
 					CString msg;
@@ -150,19 +115,17 @@ void CTBMScan::ScanThread(CString sPage)
 					g_checkThreadIllegalEvent(thread, res, msg, forceToConfirm, pos, length);
 					if (res)
 					{
-						m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
+						CTBMOperate::GetInstance().AddConfirm(Operation(forceToConfirm, pos, length, thread.title,
 							std::make_unique<ThreadInfo>(thread)));
-						m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
+						g_pLog->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
 							+ HTMLEscape(thread.title) + _T("</a>") + msg);
-						m_userCache->m_ignoredTID.insert(tid);
+						g_pUserCache->m_ignoredTID.insert(tid);
 					}
 				}
 			}
-			
-			BOOL imageScanned = FALSE;
 
 			// 扫描帖子
-			if (!m_config->m_onlyScanTitle)
+			if (!g_pTbmCoreConfig->m_onlyScanTitle)
 			{
 				pass = TRUE;
 				g_preScanAllThreadsEvent(pass);
@@ -171,14 +134,10 @@ void CTBMScan::ScanThread(CString sPage)
 					m_threadIndex = 0;
 
 					// 创建线程扫描帖子
-					int threadCount = m_config->m_threadCount; // m_config->m_threadCount会变
+					int threadCount = g_pTbmCoreConfig->m_threadCount; // g_pTbmCoreConfig->m_threadCount会变
 					std::vector<std::thread> threads;
 					for (int i = 0; i < threadCount; i++)
 						threads.push_back(std::thread(&CTBMScan::ScanPostThread, this, i));
-
-					// 等待扫描帖子时扫描主题图片
-					ScanThreadImage();
-					imageScanned = TRUE;
 
 					// 等待扫描帖子线程结束
 					for (auto& i : threads)
@@ -186,23 +145,19 @@ void CTBMScan::ScanThread(CString sPage)
 				}
 			}
 
-			// 如果没有扫描帖子，在这里扫描主题图片
-			if (!imageScanned)
-				ScanThreadImage();
-
-			if (!m_config->m_briefLog)
+			if (!g_pTbmCoreConfig->m_briefLog)
 			{
 				CString content;
 #pragma warning(suppress: 28159)
 				content.Format(_T("<font color=green>本轮扫描结束，用时%.3f秒</font>"), (float)(GetTickCount() - startTime) / 1000.0f);
-				m_log->Log(content);
+				g_pLog->Log(content);
 			}
 
 		ScanOnceEnd:
 			g_scanOnceEndEvent();
 
 			// 延时
-			int count = m_config->m_scanInterval * 10;
+			int count = g_pTbmCoreConfig->m_scanInterval * 10;
 			for (int i = 0; i < count; i++)
 			{
 				if (m_stopScanFlag)
@@ -214,8 +169,8 @@ void CTBMScan::ScanThread(CString sPage)
 
 	m_stopScanFlag = FALSE;
 
-	if (!m_config->m_briefLog)
-		m_log->Log(_T("<font color=green>扫描结束</font>"));
+	if (!g_pTbmCoreConfig->m_briefLog)
+		g_pLog->Log(_T("<font color=green>扫描结束</font>"));
 
 	CoUninitialize();
 
@@ -244,18 +199,18 @@ void CTBMScan::ScanPostThread(int threadID)
 		{
 			ThreadInfo& thread = m_threads[m_threadIndex++];
 			m_threadIndexLock.unlock();
-			if (m_userCache->m_deletedTID.find(_ttoi64(thread.tid)) != m_userCache->m_deletedTID.end()) // 已删
+			if (g_pUserCache->m_deletedTID.find(_ttoi64(thread.tid)) != g_pUserCache->m_deletedTID.end()) // 已删
 				goto Next;
 
 			__int64 tid = _ttoi64(thread.tid);
 			int reply = _ttoi(thread.reply);
 			BOOL hasHistoryReply = FALSE;
 			{
-				auto historyReplyIt = m_userCache->m_reply->find(tid);
-				hasHistoryReply = historyReplyIt != m_userCache->m_reply->end();
+				auto historyReplyIt = g_pUserCache->m_reply->find(tid);
+				hasHistoryReply = historyReplyIt != g_pUserCache->m_reply->end();
 				if (hasHistoryReply
 					&& reply == historyReplyIt->second // 回复数减少时也扫描，防止漏掉
-					&& thread.lastAuthor == (*m_userCache->m_lastAuthor)[tid]) // 判断最后回复人，防止回复数-1然后有新回复+1
+					&& thread.lastAuthor == (*g_pUserCache->m_lastAuthor)[tid]) // 判断最后回复人，防止回复数-1然后有新回复+1
 				{
 					// 无新回复，跳过
 					historyReplyIt->second = reply;
@@ -273,11 +228,11 @@ void CTBMScan::ScanPostThread(int threadID)
 			{
 				std::vector<PostInfo> posts;
 				std::vector<LzlInfo> lzls;
-				if (TiebaClawerProxy::GetInstance().GetPosts(m_operate->m_tiebaOperate->GetForumID(), thread.tid, _T("1"), posts, lzls, &addition) != TiebaClawer::GET_POSTS_SUCCESS)
+				if (TiebaClawerProxy::GetInstance().GetPosts(g_pTiebaOperate->GetForumID(), thread.tid, _T("1"), posts, lzls, &addition) != TiebaClawer::GET_POSTS_SUCCESS)
 				{
-					if (!m_config->m_briefLog)
+					if (!g_pTbmCoreConfig->m_briefLog)
 					{
-						m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
+						g_pLog->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
 							+ _T("</a> <font color=red>获取贴子列表失败，暂时跳过</font>"));
 					}
 					goto Next;
@@ -285,7 +240,7 @@ void CTBMScan::ScanPostThread(int threadID)
 			}
 
 			// 判断贴吧ID，避免百度乱插其他吧的帖子
-			if (addition.fid != m_operate->m_tiebaOperate->GetForumID())
+			if (addition.fid != g_pTiebaOperate->GetForumID())
 				goto Next;
 
 			// 扫描帖子页
@@ -298,8 +253,8 @@ void CTBMScan::ScanPostThread(int threadID)
 			// 记录历史回复
 			if (res)
 			{
-				(*m_userCache->m_reply)[tid] = reply;
-				(*m_userCache->m_lastAuthor)[tid] = thread.lastAuthor;
+				(*g_pUserCache->m_reply)[tid] = reply;
+				(*g_pUserCache->m_lastAuthor)[tid] = thread.lastAuthor;
 			}
 
 		Next:
@@ -332,18 +287,20 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 	std::vector<LzlInfo> lzls;
 	TiebaClawer::GetPostsResult res;
 	if (src == _T(""))
-		res = TiebaClawerProxy::GetInstance().GetPosts(m_operate->m_tiebaOperate->GetForumID(), thread.tid, sPage, posts, lzls);
+		res = TiebaClawerProxy::GetInstance().GetPosts(g_pTiebaOperate->GetForumID(), thread.tid, sPage, posts, lzls);
 	else
-		res = TiebaClawerProxy::GetInstance().GetPosts(m_operate->m_tiebaOperate->GetForumID(), thread.tid, sPage, src, posts, lzls);
+		res = TiebaClawerProxy::GetInstance().GetPosts(g_pTiebaOperate->GetForumID(), thread.tid, sPage, src, posts, lzls);
 	switch (res)
 	{
 	case TiebaClawer::GET_POSTS_TIMEOUT:
 	case TiebaClawer::GET_POSTS_DELETED:
-		m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
+		g_pLog->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
 			+ _T("</a> <font color=red>获取贴子列表失败(") + (res == TiebaClawer::GET_POSTS_TIMEOUT ? _T("超时") :
 			_T("可能已被删")) + _T(")，暂时跳过</font>"));
 		return FALSE;
 	}
+
+	auto& operate = CTBMOperate::GetInstance();
 
 	// 扫描帖子
 	for (const PostInfo& post : posts)
@@ -351,7 +308,7 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		if (m_stopScanFlag)
 			return FALSE;
 		__int64 pid = _ttoi64(post.pid);
-		if (m_userCache->m_ignoredPID.find(pid) == m_userCache->m_ignoredPID.end())
+		if (g_pUserCache->m_ignoredPID.find(pid) == g_pUserCache->m_ignoredPID.end())
 		{
 			BOOL res = FALSE;
 			CString msg;
@@ -360,11 +317,11 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 			g_checkPostIllegalEvent(post, res, msg, forceToConfirm, pos, length);
 			if (res)
 			{
-				m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
+				operate.AddConfirm(Operation(forceToConfirm, pos, length, thread.title,
 					std::make_unique<PostInfo>(post)));
-				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
+				g_pLog->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + post.floor + _T("楼") + msg);
-				m_userCache->m_ignoredPID.insert(pid);
+				g_pUserCache->m_ignoredPID.insert(pid);
 			}
 		}
 	}
@@ -382,61 +339,13 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 		if (res)
 		{
 			__int64 cid = _ttoi64(lzl.cid);
-			if (m_userCache->m_ignoredLZLID.find(cid) == m_userCache->m_ignoredLZLID.end())
+			if (g_pUserCache->m_ignoredLZLID.find(cid) == g_pUserCache->m_ignoredLZLID.end())
 			{
-				m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
+				operate.AddConfirm(Operation(forceToConfirm, pos, length, thread.title,
 					std::make_unique<LzlInfo>(lzl)));
-				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
+				g_pLog->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
-				m_userCache->m_ignoredLZLID.insert(cid);
-			}
-		}
-	}
-
-	// 扫描帖子图片
-	for (const PostInfo& post : posts)
-	{
-		if (m_stopScanFlag)
-			return FALSE;
-		__int64 pid = _ttoi64(post.pid);
-		if (m_userCache->m_ignoredPID.find(pid) == m_userCache->m_ignoredPID.end())
-		{
-			BOOL res = FALSE;
-			CString msg;
-			BOOL forceToConfirm = FALSE;
-			int pos = 0, length = 0;
-			g_checkPostImageIllegalEvent(post, res, msg, forceToConfirm, pos, length);
-			if (res)
-			{
-				m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
-					std::make_unique<PostInfo>(post)));
-				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
-					_T("</a> ") + post.floor + _T("楼") + msg);
-				m_userCache->m_ignoredPID.insert(pid);
-			}
-		}
-	}
-
-	// 扫描楼中楼图片
-	for (const LzlInfo& lzl : lzls)
-	{
-		if (m_stopScanFlag)
-			return FALSE;
-		__int64 cid = _ttoi64(lzl.cid);
-		if (m_userCache->m_ignoredLZLID.find(cid) == m_userCache->m_ignoredLZLID.end())
-		{
-			BOOL res = FALSE;
-			CString msg;
-			BOOL forceToConfirm = FALSE;
-			int pos = 0, length = 0;
-			g_checkLzlImageIllegalEvent(lzl, res, msg, forceToConfirm, pos, length);
-			if (res)
-			{
-				m_operate->AddConfirm(Operation(forceToConfirm, pos, length, thread.title, 
-					std::make_unique<LzlInfo>(lzl)));
-				m_log->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
-					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
-				m_userCache->m_ignoredLZLID.insert(cid);
+				g_pUserCache->m_ignoredLZLID.insert(cid);
 			}
 		}
 	}
@@ -444,7 +353,7 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 	// 递归扫描上一页
 	if (!hasHistoryReply) // 如果有历史回复前面几页很可能被扫描过了，不递归
 	{
-		if (++ScanedCount < m_config->m_scanPageCount) // 没达到最大扫描页数
+		if (++ScanedCount < g_pTbmCoreConfig->m_scanPageCount) // 没达到最大扫描页数
 		{
 			if (--page < 2) // 扫描完
 				return TRUE;

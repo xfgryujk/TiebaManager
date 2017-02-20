@@ -26,21 +26,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class CTBMListeners final : public Singleton<CTBMListeners>
 {
 	DECL_SINGLETON(CTBMListeners);
-
 private:
 	CTBMListeners::CTBMListeners();
 	
 
 	// 扫描事件
-
-	static BOOL CheckIllegal(const CString& content, const CString& author, const CString& authorLevel, 
-		CString& msg, BOOL& forceToConfirm, int& pos, int& length);
-	static void OnCheckThreadIllegal(const ThreadInfo& thread, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
-	static void OnCheckPostIllegal(const PostInfo& post, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
-	static void OnCheckLzlIllegal(const LzlInfo& lzl, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
-	static void OnCheckThreadImageIllegal(const ThreadInfo& thread, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
-	static void OnCheckPostImageIllegal(const PostInfo& post, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
-	static void OnCheckLzlImageIllegal(const LzlInfo& lzl, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
 	
 	static void OnScanThreadStart(BOOL& pass);
 	static void OnScanThreadEnd();

@@ -18,36 +18,21 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include <TBMCoreGlobal.h>
-#include <mshtml.h>
-#include "explorer1.h"
+#include <Singleton.h>
+#include <TiebaClawer.h>
 
 
-class CExplorerLog : public ILog
+class CTBMCoreListeners final : public Singleton<CTBMCoreListeners>
 {
-protected:
-	CExplorer1& m_logExplorer;
-	HWND m_explorerHwnd = NULL;
-	CComPtr<IHTMLDocument2> m_logDocument;
+	DECL_SINGLETON(CTBMCoreListeners);
+private:
+	CTBMCoreListeners::CTBMCoreListeners();
 
-	SYSTEMTIME m_logStartTime;
+	
+	// 扫描事件
 
-	static WNDPROC s_oldExplorerWndProc;
+	template<class TbObj>
+	static void OnCheckIllegal(const TbObj& obj, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length);
 
-public:
-	CExplorerLog(CExplorer1& explorer) : m_logExplorer(explorer){ }
-
-	void Init();
-	void Release();
-	void Log(const CString& content);
-	void Clear();
-	void Save(const CString& folder);
-
-protected:
-	static BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lParam);
-	static LRESULT CALLBACK ExplorerWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-	void WriteDocument(const CString& content);
-
-	void DoLog(const CString* output);
+	static void OnPreScanThread(int threadID, const ThreadInfo& thread, BOOL& pass);
 };

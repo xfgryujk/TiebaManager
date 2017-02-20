@@ -5,6 +5,9 @@
 #include <afxwin.h>
 #include <afxdllx.h>
 
+void InitRules(); // 见TBMCoreRules.cpp
+#include "TBMCoreListeners.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -12,7 +15,6 @@
 static AFX_EXTENSION_MODULE TiebaManagerCoreDLL = { NULL, NULL };
 
 
-void InitRules(); // 见TBMCoreRules.cpp
 
 
 extern "C" int APIENTRY
@@ -44,6 +46,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 		new CDynLinkLibrary(TiebaManagerCoreDLL);
 
 		InitRules();
+		CTBMCoreListeners::GetInstance();
 	}
 	else if (dwReason == DLL_PROCESS_DETACH)
 	{

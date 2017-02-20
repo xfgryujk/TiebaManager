@@ -18,8 +18,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include "stdafx.h"
-#include <TBMCoreConfig.h>
+#include <TBMCoreGlobal.h>
 #include <TiebaClawerProxy.h>
+
+
+TBM_CORE_API CTBMCoreConfig* g_pTbmCoreConfig = NULL;
+TBM_CORE_API CUserCache* g_pUserCache = NULL;
+TBM_CORE_API ILog* g_pLog = NULL;
+TBM_CORE_API CTiebaOperate* g_pTiebaOperate = NULL;
 
 
 CTBMCoreConfig::CTBMCoreConfig(CStringA name) : CConfigBase(name),
@@ -39,7 +45,11 @@ CTBMCoreConfig::CTBMCoreConfig(CStringA name) : CConfigBase(name),
 	m_banTrigCount		("BanTrigCount",		1,		GreaterThan<int, 1>),
 	m_defriendTrigCount	("DefriendTrigCount",	5,		GreaterThan<int, 1>),
 	m_confirm			("Confirm",				TRUE),
-	m_banClientInterface("WapBanInterface",		FALSE)
+	m_banClientInterface("ClientBanInterface",  FALSE),
+
+	m_illegalRules      ("IllegalRules"),
+	m_trustedRules      ("TrustedRules"),
+	m_trustedThreads    ("TrustedThreads")
 {
 	m_options.push_back(&m_scanInterval);
 	m_options.push_back(&m_onlyScanTitle);
@@ -58,12 +68,23 @@ CTBMCoreConfig::CTBMCoreConfig(CStringA name) : CConfigBase(name),
 	m_options.push_back(&m_defriendTrigCount);
 	m_options.push_back(&m_confirm);
 	m_options.push_back(&m_banClientInterface);
+
+	m_options.push_back(&m_illegalRules);
+	m_options.push_back(&m_trustedRules);
+	m_options.push_back(&m_trustedThreads);
+}
+
+void CTBMCoreConfig::OnChange()
+{
+	m_optionsLock.lock();
 }
 
 void CTBMCoreConfig::PostChange()
 {
 	TiebaClawerProxy::GetInstance().m_interface = m_clawerInterface == 0 ? TIEBA_INTERFACE_WEB : TIEBA_INTERFACE_CLIENT;
+	m_optionsLock.unlock();
 }
+
 
 CUserCache::CUserCache() : CConfigBase("Cache"),
 	m_initIgnoredTID("IgnoredTID"),

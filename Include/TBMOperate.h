@@ -19,16 +19,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TiebaManagerCoreCommon.h"
-#include "TBMCoreConfig.h"
-#include "TiebaClawer.h"
-#include "TiebaOperate.h"
+#include "Singleton.h"
+#include "TBMCoreGlobal.h"
 #include "BlockingQueue.h"
 #include <memory>
 #include <thread>
 
 
-struct Operation
+class TBM_CORE_API Operation final
 {
+public:
 	BOOL forceToConfirm;	// 强制确认
 	int pos;				// 高亮位置
 	int length;				// 高亮长度
@@ -63,19 +63,13 @@ struct Operation
 	{ }
 };
 
-class TBM_CORE_API CTBMOperate
+class TBM_CORE_API CTBMOperate final : public Singleton<CTBMOperate>
 {
-public:
-	// 记得依赖注入哦
-	ILog* m_log = NULL;
-	CTBMCoreConfig* m_config = NULL;
-	CUserCache* m_userCache = NULL;
-	CTiebaOperate* m_tiebaOperate = NULL;
-
-
-	CTBMOperate(CTBMCoreConfig* config = NULL, CUserCache* userCache = NULL, CTiebaOperate* tiebaOperate = NULL, ILog* log = NULL);
+	DECL_SINGLETON(CTBMOperate);
+	CTBMOperate();
 	virtual ~CTBMOperate();
 
+public:
 	void AddConfirm(Operation&& op);
 	void AddOperation(Operation&& op);
 

@@ -19,12 +19,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include "TiebaManagerCoreCommon.h"
-#include "ConfigFile.h"
+#include "TBMCoreRules.h"
+#include <mutex>
+#include "TiebaOperate.h"
 
 
 class TBM_CORE_API CTBMCoreConfig : public CConfigBase
 {
 public:
+	std::mutex m_optionsLock; // 方案锁
+
 	COption<int>		m_scanInterval;			// 扫描间隔
 	COption<BOOL>		m_onlyScanTitle;		// 只扫描标题
 	COption<int>		m_scanPageCount;		// 扫描最后页数
@@ -43,7 +47,12 @@ public:
 	COption<BOOL>		m_confirm;				// 操作前提示
 	COption<BOOL>		m_banClientInterface;	// 封禁用客户端接口
 
+	COption<std::vector<CIllegalRule> >      m_illegalRules;      // 违规规则
+	COption<std::vector<CRule> >             m_trustedRules;      // 信任规则
+	COption<std::set<CString> >              m_trustedThreads;    // 信任主题
+
 	CTBMCoreConfig(CStringA name);
+	virtual void OnChange();
 	virtual void PostChange();
 };
 
@@ -68,10 +77,18 @@ public:
 	virtual void PostChange();
 };
 
-class ILog
+class TBM_CORE_API ILog
 {
 public:
 	virtual ~ILog() = default;
 
 	virtual void Log(const CString& content) = 0;
 };
+
+
+// 使用本模块前应先设置的全局变量
+
+extern TBM_CORE_API CTBMCoreConfig* g_pTbmCoreConfig;
+extern TBM_CORE_API CUserCache* g_pUserCache;
+extern TBM_CORE_API ILog* g_pLog;
+extern TBM_CORE_API CTiebaOperate* g_pTiebaOperate;

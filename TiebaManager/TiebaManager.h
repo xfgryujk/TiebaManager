@@ -35,7 +35,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMScan.h>
 #include <TBMOperate.h>
 #include "ConfigHelper.h"
-#include "ScanImage.h"
 #include "TBMListeners.h"
 #include "TiebaManagerDlg.h"
 
@@ -64,11 +63,8 @@ public:
 	std::unique_ptr<CUserCache> m_userCache;
 
 	std::unique_ptr<CTiebaOperate> m_tiebaOperate;
-	std::unique_ptr<CTBMScan> m_scan;
-	std::unique_ptr<CTBMOperate> m_operate;
 
 	std::unique_ptr<CConfigHelper> m_configHelper;
-	std::unique_ptr<CScanImage> m_scanImage;
 
 	std::unique_ptr<CTBMListeners> m_tbmListeners;
 

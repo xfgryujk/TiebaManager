@@ -105,16 +105,16 @@ CConditionParam* CKeywordCondition::ReadParam(const tinyxml2::XMLElement* option
 	auto* param = new CKeywordParam();
 
 	param->m_conditionName = m_name;
-	COption<int> range("Range");
-	COption<BOOL> not("Not");
-	COption<BOOL> include("Include");
+	COption<int> range("Range", ALL_CONTENT, InRange<int, KeywordRange::TITLE, KeywordRange::ALL_CONTENT>);
+	COption<BOOL> not("Not", FALSE);
+	COption<BOOL> include("Include", TRUE);
 	COption<RegexText> keyword("Keyword");
 	range.Read(*optionNode);
 	not.Read(*optionNode);
 	include.Read(*optionNode);
 	keyword.Read(*optionNode);
 
-	param->m_range = (0 <= range && range <= KeywordRange::ALL_CONTENT) ? KeywordRange(*range) : KeywordRange::ALL_CONTENT;
+	param->m_range = KeywordRange(*range);
 	param->m_not = not;
 	param->m_include = include;
 	param->m_keyword = keyword;
@@ -241,12 +241,12 @@ CConditionParam* CLevelCondition::ReadParam(const tinyxml2::XMLElement* optionNo
 	auto* param = new CLevelParam();
 
 	param->m_conditionName = m_name;
-	COption<int> op("Operator");
+	COption<int> op("Operator", LevelOperator::LESS, InRange<int, LevelOperator::LESS, LevelOperator::GREATER>);
 	COption<int> level("Level");
 	op.Read(*optionNode);
 	level.Read(*optionNode);
 
-	param->m_operator = (0 <= op && op <= LevelOperator::GREATER) ? LevelOperator(*op) : LevelOperator::LESS;
+	param->m_operator = LevelOperator(*op);
 	param->m_level = level;
 
 	return param;
@@ -273,6 +273,9 @@ BOOL CLevelCondition::MatchThread(const CConditionParam& _param, const ThreadInf
 BOOL CLevelCondition::MatchPost(const CConditionParam& _param, const PostInfo& post, int& pos, int& length)
 {
 	const auto& param = (CLevelParam&)_param;
+
+	if (post.authorLevel == _T(""))
+		return FALSE;
 
 	int level = _ttoi(post.authorLevel);
 	switch (param.m_operator)

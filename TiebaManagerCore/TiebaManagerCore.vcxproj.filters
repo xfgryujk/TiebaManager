@@ -36,9 +36,6 @@
     <ClCompile Include="TBMScan.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
-    <ClCompile Include="TBMCoreConfig.cpp">
-      <Filter>源文件\API</Filter>
-    </ClCompile>
     <ClCompile Include="TBMCoreEvents.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
@@ -46,6 +43,12 @@
       <Filter>源文件\API</Filter>
     </ClCompile>
     <ClCompile Include="TBMCoreRules.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMCoreListeners.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMCoreGlobal.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
   </ItemGroup>
@@ -64,9 +67,6 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\TBMCoreConfig.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\TBMOperate.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
@@ -83,6 +83,12 @@
       <Filter>头文件\API</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\TBMCoreRules.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="TBMCoreListeners.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TBMCoreGlobal.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>

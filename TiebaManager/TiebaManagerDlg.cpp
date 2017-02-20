@@ -232,8 +232,9 @@ void CTiebaManagerDlg::OnClose()
 		return;
 	m_isClosing = TRUE;
 
-	theApp.m_scan->StopScan();
-	while (theApp.m_scan->IsScanning())
+	auto& scan = CTBMScan::GetInstance();
+	scan.StopScan();
+	while (scan.IsScanning())
 		Delay(100);
 
 	//theApp.m_tbmApi->m_log = NULL;
@@ -439,9 +440,6 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 
 	SetWindowText(_T("贴吧管理器 - ") + tiebaOperate.GetUserName_());
 
-	// 加入信任用户
-	theApp.m_plan->m_whiteList->insert(tiebaOperate.GetUserName_());
-
 
 	m_stateStatic.SetWindowText(_T("待机中"));
 	m_startButton.EnableWindow(TRUE);
@@ -466,7 +464,7 @@ Error:
 // 开始
 void CTiebaManagerDlg::OnBnClickedButton2()
 {
-	if (theApp.m_plan->m_keywords->empty() && theApp.m_plan->m_images.empty() && theApp.m_plan->m_blackList->empty() && theApp.m_plan->m_illegalLevel <= 0)
+	if (theApp.m_plan->m_illegalRules->empty())
 	{
 		AfxMessageBox(_T("至少设置一个违规规则！"), MB_ICONERROR);
 		OnBnClickedButton5();
@@ -481,11 +479,11 @@ void CTiebaManagerDlg::OnBnClickedButton2()
 		tmp = _T("1");
 	}
 
-	theApp.m_scan->StartScan(tmp);
+	CTBMScan::GetInstance().StartScan(tmp);
 }
 
 // 停止
 void CTiebaManagerDlg::OnBnClickedButton3()
 {
-	theApp.m_scan->StopScan();
+	CTBMScan::GetInstance().StopScan();
 }

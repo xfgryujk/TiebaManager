@@ -27,8 +27,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <StringHelper.h>
 
 #include "TBMConfig.h"
-#include "GetImages.h"
-#include "ScanImage.h"
 #include <TiebaOperate.h>
 
 #include "TiebaManagerDlg.h"
@@ -40,13 +38,6 @@ using namespace std::placeholders;
 CTBMListeners::CTBMListeners()
 {
 	// 扫描事件
-
-	g_checkThreadIllegalEvent.AddListener(OnCheckThreadIllegal);
-	g_checkPostIllegalEvent.AddListener(OnCheckPostIllegal);
-	g_checkLzlIllegalEvent.AddListener(OnCheckLzlIllegal);
-	g_checkThreadImageIllegalEvent.AddListener(OnCheckThreadImageIllegal);
-	g_checkPostImageIllegalEvent.AddListener(OnCheckPostImageIllegal);
-	g_checkLzlImageIllegalEvent.AddListener(OnCheckLzlImageIllegal);
 
 	g_scanThreadStartEvent.AddListener(OnScanThreadStart);
 	g_scanThreadEndEvent.AddListener(OnScanThreadEnd);
@@ -68,96 +59,6 @@ CTBMListeners::CTBMListeners()
 	// UI事件
 
 	g_openLinkInLogEvent.AddListener(OnOpenLinkInLog);
-}
-
-
-// 扫描事件
-
-BOOL CTBMListeners::CheckIllegal(const CString& content, const CString& author, const CString& authorLevel,
-	CString& msg, BOOL& forceToConfirm, int& pos, int& length)
-{
-	theApp.m_plan->m_optionsLock.Lock();
-
-	// 信任用户
-	if (theApp.m_plan->m_whiteList->find(author) != theApp.m_plan->m_whiteList->end())
-	{
-		theApp.m_plan->m_optionsLock.Unlock();
-		return FALSE;
-	}
-
-	// 违规等级
-	if (theApp.m_plan->m_illegalLevel > 0 && authorLevel != _T("") && _ttoi(authorLevel) <= theApp.m_plan->m_illegalLevel)
-	{
-		pos = 0;
-		length = 0;
-		msg.Format(_T("<font color=red> 触发等级小于或等于 </font>%d"), *theApp.m_plan->m_illegalLevel);
-		theApp.m_plan->m_optionsLock.Unlock();
-		return TRUE;
-	}
-
-	// 屏蔽用户
-	for (const RegexText& blackList : *theApp.m_plan->m_blackList)
-	if (blackList.text != _T("") && StringMatchs(author, blackList))
-	{
-		pos = 0;
-		length = 0;
-		msg = _T("<font color=red> 触发屏蔽用户 </font>") + HTMLEscape(blackList.text);
-		theApp.m_plan->m_optionsLock.Unlock();
-		return TRUE;
-	}
-
-
-	// 信任内容
-	for (const RegexText& whiteContent : *theApp.m_plan->m_whiteContent)
-	if (whiteContent.text != _T("") && StringIncludes(content, whiteContent))
-	{
-		theApp.m_plan->m_optionsLock.Unlock();
-		return FALSE;
-	}
-
-	// 违规内容
-	for (CPlan::Keyword& keyword : *theApp.m_plan->m_keywords)
-	if (keyword.text != _T("") && StringIncludes(content, keyword, &pos, &length))
-	{
-		keyword.trigCount++;
-		forceToConfirm = keyword.forceToConfirm;
-		msg = _T("<font color=red> 触发违禁词 </font>") + HTMLEscape(keyword.text);
-		theApp.m_plan->m_optionsLock.Unlock();
-		return TRUE;
-	}
-
-	theApp.m_plan->m_optionsLock.Unlock();
-	return FALSE;
-}
-
-void CTBMListeners::OnCheckThreadIllegal(const ThreadInfo& thread, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
-{
-	res = CheckIllegal(thread.GetContent(), thread.author, _T(""), msg, forceToConfirm, pos, length);
-}
-
-void CTBMListeners::OnCheckPostIllegal(const PostInfo& post, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
-{
-	res = CheckIllegal(post.GetContent(), post.author, post.authorLevel, msg, forceToConfirm, pos, length);
-}
-
-void CTBMListeners::OnCheckLzlIllegal(const LzlInfo& lzl, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
-{
-	res = CheckIllegal(lzl.GetContent(), lzl.author, _T(""), msg, forceToConfirm, pos, length);
-}
-
-void CTBMListeners::OnCheckThreadImageIllegal(const ThreadInfo& thread, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
-{
-	res = theApp.m_scanImage->CheckImageIllegal(thread.author, CGetImages(thread), msg);
-}
-
-void CTBMListeners::OnCheckPostImageIllegal(const PostInfo& post, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
-{
-	res = theApp.m_scanImage->CheckImageIllegal(post.author, CGetImages(post), msg);
-}
-
-void CTBMListeners::OnCheckLzlImageIllegal(const LzlInfo& lzl, BOOL& res, CString& msg, BOOL& forceToConfirm, int& pos, int& length)
-{
-	res = theApp.m_scanImage->CheckImageIllegal(lzl.author, CGetImages(lzl), msg);
 }
 
 
@@ -208,15 +109,8 @@ void CTBMListeners::OnPreScanAllThreads(BOOL& pass)
 
 void CTBMListeners::OnPreScanThread(int threadID, const ThreadInfo& thread, BOOL& pass)
 {
-	// 检查信任主题
-	theApp.m_plan->m_optionsLock.Lock();
-	if (theApp.m_plan->m_trustedThread->find(thread.tid) != theApp.m_plan->m_trustedThread->end())
-	{
-		pass = FALSE;
-		theApp.m_plan->m_optionsLock.Unlock();
+	if (!pass)
 		return;
-	}
-	theApp.m_plan->m_optionsLock.Unlock();
 
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)theApp.m_pMainWnd;
 	m_stateListLock.Lock();

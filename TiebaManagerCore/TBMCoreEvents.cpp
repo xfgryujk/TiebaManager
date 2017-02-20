@@ -34,11 +34,8 @@ TBM_CORE_API DEF_VARIABLE(g_preDeleteEvent);
 TBM_CORE_API DEF_VARIABLE(g_postDeleteEvent);
 
 TBM_CORE_API DEF_VARIABLE(g_checkThreadIllegalEvent);
-TBM_CORE_API DEF_VARIABLE(g_checkThreadImageIllegalEvent);
 TBM_CORE_API DEF_VARIABLE(g_checkPostIllegalEvent);
-TBM_CORE_API DEF_VARIABLE(g_checkPostImageIllegalEvent);
 TBM_CORE_API DEF_VARIABLE(g_checkLzlIllegalEvent);
-TBM_CORE_API DEF_VARIABLE(g_checkLzlImageIllegalEvent);
 
 TBM_CORE_API DEF_VARIABLE(g_scanThreadStartEvent);
 TBM_CORE_API DEF_VARIABLE(g_scanThreadEndEvent);
@@ -66,11 +63,8 @@ TBM_CORE_API std::vector<EventBase*> g_tbmCoreEvents{
 	&g_postDeleteEvent,
 
 	&g_checkThreadIllegalEvent,
-	&g_checkThreadImageIllegalEvent,
 	&g_checkPostIllegalEvent,
-	&g_checkPostImageIllegalEvent,
 	&g_checkLzlIllegalEvent,
-	&g_checkLzlImageIllegalEvent,
 
 	&g_scanThreadStartEvent,
 	&g_scanThreadEndEvent,

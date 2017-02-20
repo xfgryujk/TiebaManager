@@ -27,8 +27,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TiebaManager.h"
 #include <TBMScan.h>
 
-#include "ScanImage.h"
-
 
 // CSettingDlg 对话框
 
@@ -39,11 +37,8 @@ CSettingDlg::CSettingDlg(CSettingDlg*& pThis, ILog& log, CWnd* pParent /*=NULL*/
 	m_log(log),
 	m_scanPage(new CScanPage()),
 	m_operatePage(new COperatePage()),
-	m_keywordsPage(new CKeywordsPage()),
-	m_imagePage(new CImagePage()),
-	m_blackListPage(new CBlackListPage()),
-	m_whiteListPage(new CNormalListPage(_T("用户名："))),
-	m_whiteContentPage(new CWhiteContentPage()),
+	m_illegalRulesPage(new CIllegalRulesPage(_T("违规规则"))),
+	m_trustedRulesPage(new CRulesPage(_T("信任规则"))),
 	m_trustedThreadPage(new CNormalListPage(_T("主题ID："))),
 	m_optionsPage(new COptionsPage()),
 	m_usersPage(new CUsersPage()),
@@ -52,8 +47,8 @@ CSettingDlg::CSettingDlg(CSettingDlg*& pThis, ILog& log, CWnd* pParent /*=NULL*/
 	// 初始化m_pages
 	m_pages.push_back(m_scanPage.get());
 	m_pages.push_back(m_operatePage.get());
-	m_pages.push_back(m_keywordsPage.get());
-	m_pages.push_back(m_whiteContentPage.get());
+	m_pages.push_back(m_illegalRulesPage.get());
+	m_pages.push_back(m_trustedRulesPage.get());
 	m_pages.push_back(m_trustedThreadPage.get());
 	m_pages.push_back(m_optionsPage.get());
 	m_pages.push_back(m_usersPage.get());
@@ -109,12 +104,8 @@ BOOL CSettingDlg::OnInitDialog()
 #define CREATE_PAGE(page) page->Create(page->IDD, this)
 	CREATE_PAGE(m_scanPage);
 	CREATE_PAGE(m_operatePage);
-	CREATE_PAGE(m_keywordsPage);
-	CREATE_PAGE(m_imagePage);
-	CREATE_PAGE(m_blackListPage);
-	CREATE_PAGE(m_whiteListPage);
-	m_whiteListPage->m_static.SetWindowText(_T("当被测文本等于文本时匹配(无正则)"));
-	CREATE_PAGE(m_whiteContentPage);
+	CREATE_PAGE(m_illegalRulesPage);
+	CREATE_PAGE(m_trustedRulesPage);
 	CREATE_PAGE(m_trustedThreadPage);
 	m_trustedThreadPage->m_static.SetWindowText(_T("添加的主题不会扫描，主题ID是网址中\"p/\"后面跟的数字"));
 	CREATE_PAGE(m_optionsPage);
@@ -218,131 +209,129 @@ void CSettingDlg::ShowAbout()
 // 显示当前设置
 void CSettingDlg::ShowPlan(const CPlan& plan)
 {
-	CString tmp;
+	//CString tmp;
 
-	tmp.Format(_T("%d"), *plan.m_scanInterval);
-	m_scanPage->m_scanIntervalEdit.SetWindowText(tmp);				    // 扫描间隔
-	m_scanPage->m_onlyScanTitleCheck.SetCheck(plan.m_onlyScanTitle);	// 只扫描标题
-	tmp.Format(_T("%d"), *plan.m_scanPageCount);
-	m_scanPage->m_scanPageCountEdit.SetWindowText(tmp);				    // 扫描最后页数
-	m_scanPage->m_briefLogCheck.SetCheck(plan.m_briefLog);			    // 只输出删帖封号
-	tmp.Format(_T("%d"), *plan.m_threadCount);						    
-	m_scanPage->m_threadCountEdit.SetWindowText(tmp);				    // 线程数
-	m_scanPage->m_autoSaveLogCheck.SetCheck(plan.m_autoSaveLog);		// 自动保存日志
-	tmp.Format(_T("%d"), *plan.m_illegalLevel);
-	m_scanPage->m_illegalLevelEdit.SetWindowText(tmp);				    // 违规等级
-	m_scanPage->m_clawerClientInterfaceCheck.SetCheck(plan.m_clawerInterface == 0 ? FALSE : TRUE); // 扫描接口
+	//tmp.Format(_T("%d"), *plan.m_scanInterval);
+	//m_scanPage->m_scanIntervalEdit.SetWindowText(tmp);				    // 扫描间隔
+	//m_scanPage->m_onlyScanTitleCheck.SetCheck(plan.m_onlyScanTitle);	// 只扫描标题
+	//tmp.Format(_T("%d"), *plan.m_scanPageCount);
+	//m_scanPage->m_scanPageCountEdit.SetWindowText(tmp);				    // 扫描最后页数
+	//m_scanPage->m_briefLogCheck.SetCheck(plan.m_briefLog);			    // 只输出删帖封号
+	//tmp.Format(_T("%d"), *plan.m_threadCount);						    
+	//m_scanPage->m_threadCountEdit.SetWindowText(tmp);				    // 线程数
+	//m_scanPage->m_autoSaveLogCheck.SetCheck(plan.m_autoSaveLog);		// 自动保存日志
+	//m_scanPage->m_clawerClientInterfaceCheck.SetCheck(plan.m_clawerInterface == 0 ? FALSE : TRUE); // 扫描接口
 
-	m_operatePage->m_deleteCheck.SetCheck(plan.m_delete);			    // 删帖
-	m_operatePage->m_banIDCheck.SetCheck(plan.m_banID);				    // 封ID
-	m_operatePage->OnBnClickedCheck1();
-	m_operatePage->m_defriendCheck.SetCheck(plan.m_defriend);		    // 拉黑
-	m_operatePage->OnBnClickedCheck3();
-	tmp.Format(_T("%g"), *plan.m_deleteInterval);
-	m_operatePage->m_deleteIntervalEdit.SetWindowText(tmp);			    // 删帖间隔
-	m_operatePage->m_banDurationCombo.SetCurSel(plan.m_banDuration == 1 ? 0 : (plan.m_banDuration == 3 ? 1 : 2)); // 封禁时长
-	m_operatePage->m_banReasonEdit.SetWindowText(*plan.m_banReason);	// 封禁原因
-	tmp.Format(_T("%d"), *plan.m_banTrigCount);
-	m_operatePage->m_banTrigCountEdit.SetWindowText(tmp);			    // 封禁违规次数
-	tmp.Format(_T("%d"), *plan.m_defriendTrigCount);
-	m_operatePage->m_defriendTrigCountEdit.SetWindowText(tmp);		    // 拉黑违规次数
-	m_operatePage->m_confirmCheck.SetCheck(plan.m_confirm);			    // 操作前提示
-	m_operatePage->m_banClientInterfaceCheck.SetCheck(plan.m_banClientInterface);	// 封禁使用客户端接口
+	//m_operatePage->m_deleteCheck.SetCheck(plan.m_delete);			    // 删帖
+	//m_operatePage->m_banIDCheck.SetCheck(plan.m_banID);				    // 封ID
+	//m_operatePage->OnBnClickedCheck1();
+	//m_operatePage->m_defriendCheck.SetCheck(plan.m_defriend);		    // 拉黑
+	//m_operatePage->OnBnClickedCheck3();
+	//tmp.Format(_T("%g"), *plan.m_deleteInterval);
+	//m_operatePage->m_deleteIntervalEdit.SetWindowText(tmp);			    // 删帖间隔
+	//m_operatePage->m_banDurationCombo.SetCurSel(plan.m_banDuration == 1 ? 0 : (plan.m_banDuration == 3 ? 1 : 2)); // 封禁时长
+	//m_operatePage->m_banReasonEdit.SetWindowText(*plan.m_banReason);	// 封禁原因
+	//tmp.Format(_T("%d"), *plan.m_banTrigCount);
+	//m_operatePage->m_banTrigCountEdit.SetWindowText(tmp);			    // 封禁违规次数
+	//tmp.Format(_T("%d"), *plan.m_defriendTrigCount);
+	//m_operatePage->m_defriendTrigCountEdit.SetWindowText(tmp);		    // 拉黑违规次数
+	//m_operatePage->m_confirmCheck.SetCheck(plan.m_confirm);			    // 操作前提示
+	//m_operatePage->m_banClientInterfaceCheck.SetCheck(plan.m_banClientInterface);	// 封禁使用客户端接口
 
-	m_imagePage->m_dirEdit.SetWindowText(*plan.m_imageDir);			    // 违规图片目录
-	tmp.Format(_T("%g"), *plan.m_SSIMThreshold);
-	m_imagePage->m_thresholdEdit.SetWindowText(tmp);					// 阈值
+	//m_imagePage->m_dirEdit.SetWindowText(*plan.m_imageDir);			    // 违规图片目录
+	//tmp.Format(_T("%g"), *plan.m_SSIMThreshold);
+	//m_imagePage->m_thresholdEdit.SetWindowText(tmp);					// 阈值
 
-	// 违规内容
-	m_keywordsPage->ShowList(plan.m_keywords);
+	//// 违规内容
+	//m_keywordsPage->ShowList(plan.m_keywords);
 
-	// 屏蔽用户
-	m_blackListPage->ShowList(plan.m_blackList);
+	//// 屏蔽用户
+	//m_blackListPage->ShowList(plan.m_blackList);
 
-	// 信任用户
-	m_whiteListPage->ShowList(plan.m_whiteList);
+	//// 信任用户
+	//m_whiteListPage->ShowList(plan.m_whiteList);
 
-	// 信任内容
-	m_whiteContentPage->ShowList(plan.m_whiteContent);
+	//// 信任内容
+	//m_whiteContentPage->ShowList(plan.m_whiteContent);
 
-	// 信任主题
-	m_trustedThreadPage->ShowList(plan.m_trustedThread);
+	//// 信任主题
+	//m_trustedThreadPage->ShowList(plan.m_trustedThread);
 }
 
 // 应用对话框中的设置
 void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 {
-	CString strBuf;
-	int intBuf;
-	plan.OnChange();
+	//CString strBuf;
+	//int intBuf;
+	//plan.OnChange();
 
-	m_scanPage->m_scanIntervalEdit.GetWindowText(strBuf);
-	*plan.m_scanInterval = _ttoi(strBuf);								// 扫描间隔
-	*plan.m_onlyScanTitle = m_scanPage->m_onlyScanTitleCheck.GetCheck(); // 只扫描标题
-	m_scanPage->m_scanPageCountEdit.GetWindowText(strBuf);
-	*plan.m_scanPageCount = _ttoi(strBuf);								// 扫描最后页数
-	*plan.m_briefLog = m_scanPage->m_briefLogCheck.GetCheck();			// 只输出删帖封号
-	m_scanPage->m_threadCountEdit.GetWindowText(strBuf);
-	*plan.m_threadCount = _ttoi(strBuf);								// 线程数
-	*plan.m_autoSaveLog = m_scanPage->m_autoSaveLogCheck.GetCheck();	// 自动保存日志
-	m_scanPage->m_illegalLevelEdit.GetWindowText(strBuf);
-	*plan.m_illegalLevel = _ttoi(strBuf);								// 违规等级
-	*plan.m_clawerInterface = m_scanPage->m_clawerClientInterfaceCheck.GetCheck() == FALSE ? 0 : 1; // 扫描接口
+	//m_scanPage->m_scanIntervalEdit.GetWindowText(strBuf);
+	//*plan.m_scanInterval = _ttoi(strBuf);								// 扫描间隔
+	//*plan.m_onlyScanTitle = m_scanPage->m_onlyScanTitleCheck.GetCheck(); // 只扫描标题
+	//m_scanPage->m_scanPageCountEdit.GetWindowText(strBuf);
+	//*plan.m_scanPageCount = _ttoi(strBuf);								// 扫描最后页数
+	//*plan.m_briefLog = m_scanPage->m_briefLogCheck.GetCheck();			// 只输出删帖封号
+	//m_scanPage->m_threadCountEdit.GetWindowText(strBuf);
+	//*plan.m_threadCount = _ttoi(strBuf);								// 线程数
+	//*plan.m_autoSaveLog = m_scanPage->m_autoSaveLogCheck.GetCheck();	// 自动保存日志
+	//m_scanPage->m_illegalLevelEdit.GetWindowText(strBuf);
+	//*plan.m_illegalLevel = _ttoi(strBuf);								// 违规等级
+	//*plan.m_clawerInterface = m_scanPage->m_clawerClientInterfaceCheck.GetCheck() == FALSE ? 0 : 1; // 扫描接口
 
-	*plan.m_delete = m_operatePage->m_deleteCheck.GetCheck();			// 删帖
-	*plan.m_banID = m_operatePage->m_banIDCheck.GetCheck();				// 封ID
-	*plan.m_defriend = m_operatePage->m_defriendCheck.GetCheck();		// 拉黑
-	m_operatePage->m_deleteIntervalEdit.GetWindowText(strBuf);
-	*plan.m_deleteInterval = (float)_ttof(strBuf);						// 删帖间隔
-	intBuf = m_operatePage->m_banDurationCombo.GetCurSel();
-	*plan.m_banDuration = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);		// 封禁时长
-	m_operatePage->m_banReasonEdit.GetWindowText(strBuf);
-	*plan.m_banReason = strBuf;											// 封禁原因
-	m_operatePage->m_banTrigCountEdit.GetWindowText(strBuf);
-	*plan.m_banTrigCount = _ttoi(strBuf);								// 封禁违规次数
-	m_operatePage->m_defriendTrigCountEdit.GetWindowText(strBuf);
-	*plan.m_defriendTrigCount = _ttoi(strBuf);							// 拉黑违规次数
-	*plan.m_confirm = m_operatePage->m_confirmCheck.GetCheck();			// 操作前提示
-	*plan.m_banClientInterface = m_operatePage->m_banClientInterfaceCheck.GetCheck();	// 封禁使用客户端接口
+	//*plan.m_delete = m_operatePage->m_deleteCheck.GetCheck();			// 删帖
+	//*plan.m_banID = m_operatePage->m_banIDCheck.GetCheck();				// 封ID
+	//*plan.m_defriend = m_operatePage->m_defriendCheck.GetCheck();		// 拉黑
+	//m_operatePage->m_deleteIntervalEdit.GetWindowText(strBuf);
+	//*plan.m_deleteInterval = (float)_ttof(strBuf);						// 删帖间隔
+	//intBuf = m_operatePage->m_banDurationCombo.GetCurSel();
+	//*plan.m_banDuration = intBuf == 0 ? 1 : (intBuf == 1 ? 3 : 10);		// 封禁时长
+	//m_operatePage->m_banReasonEdit.GetWindowText(strBuf);
+	//*plan.m_banReason = strBuf;											// 封禁原因
+	//m_operatePage->m_banTrigCountEdit.GetWindowText(strBuf);
+	//*plan.m_banTrigCount = _ttoi(strBuf);								// 封禁违规次数
+	//m_operatePage->m_defriendTrigCountEdit.GetWindowText(strBuf);
+	//*plan.m_defriendTrigCount = _ttoi(strBuf);							// 拉黑违规次数
+	//*plan.m_confirm = m_operatePage->m_confirmCheck.GetCheck();			// 操作前提示
+	//*plan.m_banClientInterface = m_operatePage->m_banClientInterfaceCheck.GetCheck();	// 封禁使用客户端接口
 
-	m_imagePage->m_dirEdit.GetWindowText(plan.m_imageDir);				// 违规图片目录
-	m_imagePage->m_thresholdEdit.GetWindowText(strBuf);
-	*plan.m_SSIMThreshold = _ttof(strBuf);								// 阈值
+	//m_imagePage->m_dirEdit.GetWindowText(plan.m_imageDir);				// 违规图片目录
+	//m_imagePage->m_thresholdEdit.GetWindowText(strBuf);
+	//*plan.m_SSIMThreshold = _ttof(strBuf);								// 阈值
 
-	// 违规内容
-	m_keywordsPage->ApplyList(plan.m_keywords);
+	//// 违规内容
+	//m_keywordsPage->ApplyList(plan.m_keywords);
 
-	// 屏蔽用户
-	m_blackListPage->ApplyList(plan.m_blackList);
+	//// 屏蔽用户
+	//m_blackListPage->ApplyList(plan.m_blackList);
 
-	// 信任用户
-	m_whiteListPage->ApplyList(plan.m_whiteList);
+	//// 信任用户
+	//m_whiteListPage->ApplyList(plan.m_whiteList);
 
-	// 信任内容
-	m_whiteContentPage->ApplyList(plan.m_whiteContent);
+	//// 信任内容
+	//m_whiteContentPage->ApplyList(plan.m_whiteContent);
 
-	// 信任主题
-	m_trustedThreadPage->ApplyList(plan.m_trustedThread);
+	//// 信任主题
+	//m_trustedThreadPage->ApplyList(plan.m_trustedThread);
 
-	// 违规图片
-	BOOL updateImage = &plan == theApp.m_plan.get() && plan.m_updateImage;
-	if (updateImage)
-		theApp.m_scanImage->ClearCache();
+	//// 违规图片
+	//BOOL updateImage = &plan == theApp.m_plan.get() && plan.m_updateImage;
+	//if (updateImage)
+	//	theApp.m_scanImage->ClearCache();
 
-	plan.PostChange();
+	//plan.PostChange();
 
-	if (updateImage)
-	{
-		strBuf.Format(_T("载入了%d张图片"), plan.m_images.size());
-		AfxMessageBox(strBuf, MB_ICONINFORMATION);
-	}
+	//if (updateImage)
+	//{
+	//	strBuf.Format(_T("载入了%d张图片"), plan.m_images.size());
+	//	AfxMessageBox(strBuf, MB_ICONINFORMATION);
+	//}
 
-	if (&plan == theApp.m_plan.get() && m_clearScanCache)
-	{
-		if (!plan.m_briefLog)
-			m_log.Log(_T("<font color=green>清除历史回复</font>"));
-		theApp.m_userCache->m_reply->clear();
-	}
+	//if (&plan == theApp.m_plan.get() && m_clearScanCache)
+	//{
+	//	if (!plan.m_briefLog)
+	//		m_log.Log(_T("<font color=green>清除历史回复</font>"));
+	//	theApp.m_userCache->m_reply->clear();
+	//}
 }
 
 // 显示文件中的设置
@@ -350,7 +339,6 @@ void CSettingDlg::ShowPlanInFile(const CString& path)
 {
 	CPlan tmp;
 	tmp.Load(path);
-	theApp.m_plan->m_updateImage = TRUE;
 	ShowPlan(tmp);
 }
 

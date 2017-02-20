@@ -88,7 +88,7 @@ BOOL CTiebaManagerApp::InitInstance()
 
 	CTiebaManagerDlg dlg;
 	m_pMainWnd = &dlg;
-	m_log = &dlg.m_log;
+	g_pLog = &dlg.m_log;
 
 	// 初始化
 	Init();
@@ -153,12 +153,12 @@ void CTiebaManagerApp::Init()
 
 	// 外部模块
 	m_tiebaOperate = std::make_unique<CTiebaOperate>(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason);
-	m_operate = std::make_unique<CTBMOperate>(m_plan.get(), m_userCache.get(), m_tiebaOperate.get(), m_log);
-	m_scan = std::make_unique<CTBMScan>(m_plan.get(), m_userCache.get(), m_operate.get(), m_log);
+	g_pTbmCoreConfig = m_plan.get();
+	g_pUserCache = m_userCache.get();
+	g_pTiebaOperate = m_tiebaOperate.get();
 
 	// 内部模块
 	m_configHelper = std::make_unique<CConfigHelper>();
-	m_scanImage = std::make_unique<CScanImage>();
 
 	// 内部Listeners
 	CTBMListeners::GetInstance();
@@ -172,10 +172,6 @@ int CTiebaManagerApp::ExitInstance()
 {
 	TRACE(_T("释放m_pluginManager\n"));
 	CPluginManager::GetInstance().Uninit();
-	TRACE(_T("释放m_scan\n"));
-	m_scan = nullptr;
-	TRACE(_T("释放m_operate\n"));
-	m_operate = nullptr;
 	TRACE(_T("释放m_plan\n"));
 	m_plan = nullptr;
 	TRACE(_T("退出程序\n"));

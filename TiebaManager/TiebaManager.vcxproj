@@ -125,16 +125,16 @@
     <ClInclude Include="..\Include\TBMEvents.h" />
     <ClInclude Include="..\Include\TiebaManagerCommon.h" />
     <ClInclude Include="AboutPage.h" />
-    <ClInclude Include="BlackListPage.h" />
     <ClInclude Include="ConfigHelper.h" />
     <ClInclude Include="GetImages.h" />
+    <ClInclude Include="IllegalRulesPage.h" />
     <ClInclude Include="InputKeywordDlg.h" />
     <ClInclude Include="ExplorerLog.h" />
     <ClInclude Include="PluginDlg.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="ImageViewDlg.h" />
     <ClInclude Include="OperatePage.h" />
-    <ClInclude Include="ScanImage.h" />
+    <ClInclude Include="RulesPage.h" />
     <ClInclude Include="ConfirmDlg.h" />
     <ClInclude Include="ExploreLzlPage.h" />
     <ClInclude Include="ExplorePostPage.h" />
@@ -142,8 +142,6 @@
     <ClInclude Include="ExplorerDlg.h" />
     <ClInclude Include="ExplorerPage.h" />
     <ClInclude Include="ExploreThreadPage.h" />
-    <ClInclude Include="ImagePage.h" />
-    <ClInclude Include="KeywordsPage.h" />
     <ClInclude Include="LoginDlg.h" />
     <ClInclude Include="OptionsPage.h" />
     <ClInclude Include="ScanPage.h" />
@@ -158,21 +156,20 @@
     <ClInclude Include="TiebaManager.h" />
     <ClInclude Include="TiebaManagerDlg.h" />
     <ClInclude Include="UsersPage.h" />
-    <ClInclude Include="WhiteContentPage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutPage.cpp" />
-    <ClCompile Include="BlackListPage.cpp" />
     <ClCompile Include="ConfigHelper.cpp" />
     <ClCompile Include="GetImages.cpp" />
+    <ClCompile Include="IllegalRulesPage.cpp" />
     <ClCompile Include="PluginDlg.cpp" />
+    <ClCompile Include="RulesPage.cpp" />
     <ClCompile Include="TBMAPI.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />
     <ClCompile Include="InputKeywordDlg.cpp" />
     <ClCompile Include="ExplorerLog.cpp" />
     <ClCompile Include="OperatePage.cpp" />
     <ClCompile Include="PluginManager.cpp" />
-    <ClCompile Include="ScanImage.cpp" />
     <ClCompile Include="ConfirmDlg.cpp" />
     <ClCompile Include="ExploreLzlPage.cpp" />
     <ClCompile Include="ExplorePostPage.cpp" />
@@ -180,8 +177,6 @@
     <ClCompile Include="ExplorerDlg.cpp" />
     <ClCompile Include="ExplorerPage.cpp" />
     <ClCompile Include="ExploreThreadPage.cpp" />
-    <ClCompile Include="ImagePage.cpp" />
-    <ClCompile Include="KeywordsPage.cpp" />
     <ClCompile Include="LoginDlg.cpp" />
     <ClCompile Include="OptionsPage.cpp" />
     <ClCompile Include="ScanPage.cpp" />
@@ -198,7 +193,6 @@
     <ClCompile Include="TiebaManager.cpp" />
     <ClCompile Include="TiebaManagerDlg.cpp" />
     <ClCompile Include="UsersPage.cpp" />
-    <ClCompile Include="WhiteContentPage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TiebaManager.rc" />
