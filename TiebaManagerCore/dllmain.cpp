@@ -11,6 +11,10 @@
 
 static AFX_EXTENSION_MODULE TiebaManagerCoreDLL = { NULL, NULL };
 
+
+void InitRules();
+
+
 extern "C" int APIENTRY
 DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
@@ -39,6 +43,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 
 		new CDynLinkLibrary(TiebaManagerCoreDLL);
 
+		InitRules();
 	}
 	else if (dwReason == DLL_PROCESS_DETACH)
 	{

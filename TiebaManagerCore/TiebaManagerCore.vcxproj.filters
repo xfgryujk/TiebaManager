@@ -42,6 +42,12 @@
     <ClCompile Include="TBMCoreEvents.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
+    <ClCompile Include="TBMCoreRule.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMCoreRules.cpp">
+      <Filter>源文件\API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\TiebaManagerCore.rc2">
@@ -71,6 +77,12 @@
       <Filter>头文件\API</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\TBMCoreEvents.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TBMCoreRule.h">
+      <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TBMCoreRules.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
   </ItemGroup>

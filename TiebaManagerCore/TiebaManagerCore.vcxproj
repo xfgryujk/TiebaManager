@@ -118,6 +118,8 @@
     </ClCompile>
     <ClCompile Include="TBMCoreConfig.cpp" />
     <ClCompile Include="TBMCoreEvents.cpp" />
+    <ClCompile Include="TBMCoreRule.cpp" />
+    <ClCompile Include="TBMCoreRules.cpp" />
     <ClCompile Include="TBMOperate.cpp" />
     <ClCompile Include="TiebaManagerCore.cpp" />
     <ClCompile Include="TBMScan.cpp" />
@@ -128,6 +130,8 @@
   <ItemGroup>
     <ClInclude Include="..\Include\TBMCoreConfig.h" />
     <ClInclude Include="..\Include\TBMCoreEvents.h" />
+    <ClInclude Include="..\Include\TBMCoreRule.h" />
+    <ClInclude Include="..\Include\TBMCoreRules.h" />
     <ClInclude Include="..\Include\TBMOperate.h" />
     <ClInclude Include="..\Include\TBMScan.h" />
     <ClInclude Include="..\Include\TiebaManagerCoreCommon.h" />
