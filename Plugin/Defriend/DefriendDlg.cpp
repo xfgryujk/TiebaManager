@@ -30,8 +30,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <MiscHelper.h>
 
 #include <TBMAPI.h>
-#include <TBMCoreConfig.h>
-#include <TiebaOperate.h>
 
 
 extern std::unique_ptr<CDefriend> g_defriend;

@@ -21,8 +21,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <functional>
 
 
-struct CPlugin
+class CPlugin
 {
+public:
 	CString m_path;
 	HMODULE m_module;
 	CString m_name;

@@ -33,8 +33,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 IMPLEMENT_DYNAMIC(CSettingDlg, CModelessDlg)
 
 // 构造函数
-CSettingDlg::CSettingDlg(CSettingDlg*& pThis, ILog& log, CWnd* pParent /*=NULL*/) : CModelessDlg(CSettingDlg::IDD, (CModelessDlg**)&pThis, pParent),
-	m_log(log),
+CSettingDlg::CSettingDlg(CSettingDlg*& pThis, CWnd* pParent /*=NULL*/) : CModelessDlg(CSettingDlg::IDD, (CModelessDlg**)&pThis, pParent),
 	m_scanPage(new CScanPage()),
 	m_operatePage(new COperatePage()),
 	m_illegalRulesPage(new CIllegalRulesPage(_T("违规规则"))),
@@ -128,10 +127,10 @@ BOOL CSettingDlg::OnInitDialog()
 	m_tree.SelectItem(m_tree.GetFirstVisibleItem());
 
 	// 显示配置
-	ShowPlan(*theApp.m_plan);
+	ShowPlan(g_plan);
 	m_clearScanCache = FALSE; // 在m_scanPage->m_scanPageCountEdit.SetWindowText后初始化
 
-	m_optionsPage->m_currentOptionStatic.SetWindowText(_T("当前方案：") + theApp.m_userConfig->m_plan); // 当前方案
+	m_optionsPage->m_currentOptionStatic.SetWindowText(_T("当前方案：") + g_userConfig.m_plan); // 当前方案
 	// 方案
 	CFileFind fileFind;
 	BOOL flag = fileFind.FindFile(OPTIONS_DIR_PATH + _T("*.xml"));
@@ -141,7 +140,7 @@ BOOL CSettingDlg::OnInitDialog()
 		m_optionsPage->m_list.AddString(fileFind.GetFileTitle());
 	}
 
-	m_usersPage->m_currentUserStatic.SetWindowText(_T("当前账号：") + theApp.m_globalConfig->m_currentUser); // 当前账号
+	m_usersPage->m_currentUserStatic.SetWindowText(_T("当前账号：") + g_globalConfig.m_currentUser); // 当前账号
 	// 账号
 	m_usersPage->m_list.AddString(_T("[NULL]"));
 	flag = fileFind.FindFile(USERS_DIR_PATH + _T("*"));
@@ -157,7 +156,7 @@ BOOL CSettingDlg::OnInitDialog()
 		}
 	}
 
-	m_aboutPage->m_autoCheckUpdateCheck.SetCheck(theApp.m_globalConfig->m_autoUpdate); // 自动更新
+	m_aboutPage->m_autoCheckUpdateCheck.SetCheck(g_globalConfig.m_autoUpdate); // 自动更新
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -353,17 +352,17 @@ void CSettingDlg::SavePlanInDlg(const CString& path)
 // 确认
 void CSettingDlg::OnOK()
 {
-	*theApp.m_globalConfig->m_autoUpdate = m_aboutPage->m_autoCheckUpdateCheck.GetCheck();
-	theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
+	*g_globalConfig.m_autoUpdate = m_aboutPage->m_autoCheckUpdateCheck.GetCheck();
+	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
 
 	CString tmp;
 	m_optionsPage->m_currentOptionStatic.GetWindowText(tmp);
-	*theApp.m_userConfig->m_plan = tmp.Right(tmp.GetLength() - 5); // "当前方案："
-	theApp.m_userConfig->Save(USER_CONFIG_PATH);
+	*g_userConfig.m_plan = tmp.Right(tmp.GetLength() - 5); // "当前方案："
+	g_userConfig.Save(USER_CONFIG_PATH);
 
 	CreateDir(OPTIONS_DIR_PATH);
-	SavePlanInDlg(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
-	ApplyPlanInDlg(*theApp.m_plan);
+	SavePlanInDlg(OPTIONS_DIR_PATH + g_userConfig.m_plan + _T(".xml"));
+	ApplyPlanInDlg(g_plan);
 
 	DestroyWindow();
 }

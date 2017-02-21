@@ -108,8 +108,9 @@ public:
 };
 
 
-struct AdditionalThreadInfo
+class AdditionalThreadInfo
 {
+public:
 	CString src;        // 主题源码
 	CString fid;        // 贴吧ID
 	CString pageCount;  // 页数

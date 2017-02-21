@@ -39,8 +39,9 @@ public:
 	typedef std::function<void(ArgTypes...)> FunctionType;
 
 private:
-	struct Listener
+	class Listener
 	{
+	public:
 		FunctionType m_function;
 		HMODULE m_module;
 	};

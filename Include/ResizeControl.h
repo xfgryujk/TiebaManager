@@ -24,8 +24,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 enum ResizeType{ RT_NULL, RT_KEEP_DIST_TO_LEFT, RT_KEEP_DIST_TO_TOP, RT_KEEP_DIST_TO_RIGHT, RT_KEEP_DIST_TO_BOTTOM };
 
-struct ResizeInfo
+class ResizeInfo
 {
+public:
 	CWnd* wnd;
 	ResizeType lType; ResizeType tType; ResizeType rType; ResizeType bType;
 	CWnd* lWnd; CWnd* tWnd; CWnd* rWnd; CWnd* bWnd;

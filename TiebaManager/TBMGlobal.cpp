@@ -18,61 +18,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #include "stdafx.h"
-#include <TBMAPI.h>
-
-#include "PluginManager.h"
 #include "TBMGlobal.h"
-#include "TBMConfigPath.h"
 
 
-TBM_API CPlugin* GetPlugin(HMODULE module)
-{
-	CPlugin* res = NULL;
-	auto& plugins = CPluginManager::GetInstance().GetPlugins();
-	for (auto& i : plugins)
-	{
-		if (i.m_module == module)
-		{
-			res = const_cast<CPlugin*>(&i);
-			break;
-		}
-	}
-	return res;
-}
+#define DEF_VARIABLE(name) decltype(name) name
 
+DEF_VARIABLE(g_globalConfig);
+DEF_VARIABLE(g_userConfig);
+DEF_VARIABLE(g_cookieConfig);
+DEF_VARIABLE(g_plan);
+DEF_VARIABLE(g_userCache);
 
-TBM_API ILog& GetLog()
-{
-	return *g_pLog;
-}
-
-TBM_API CUserCache& GetUserCache()
-{
-	return g_userCache;
-}
-
-TBM_API CTiebaOperate& GetTiebaOperate()
-{
-	return g_tiebaOperate;
-}
-
-TBM_API CTBMScan& GetScan()
-{
-	return CTBMScan::GetInstance();
-}
-
-TBM_API CTBMOperate& GetOperate()
-{
-	return CTBMOperate::GetInstance();
-}
-
-
-TBM_API CString GetCurrentUserDir()
-{
-	return CURRENT_USER_DIR_PATH;
-}
-
-TBM_API CString GetImgCacheDir()
-{
-	return IMG_CACHE_PATH;
-}
+DEF_VARIABLE(g_tiebaOperate)(g_cookieConfig.m_cookie, g_plan.m_banDuration, g_plan.m_banReason);

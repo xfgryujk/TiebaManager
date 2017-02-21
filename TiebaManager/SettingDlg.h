@@ -25,8 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <memory>
 #include <vector>
 
-#include <TBMCoreGlobal.h>
-#include "TBMConfig.h"
+#include "TBMGlobal.h"
 
 #include "ScanPage.h"
 #include "OperatePage.h"
@@ -44,7 +43,7 @@ class CSettingDlg : public CModelessDlg
 	DECLARE_DYNAMIC(CSettingDlg)
 
 public:
-	CSettingDlg(CSettingDlg*& pThis, ILog& log, CWnd* pParent = NULL);   // 标准构造函数
+	CSettingDlg(CSettingDlg*& pThis, CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CSettingDlg();
 
 // 对话框数据
@@ -83,8 +82,7 @@ public:
 	CButton m_cancelButton;
 
 	BOOL m_clearScanCache;
-protected:
-	ILog& m_log;
 
+protected:
 	std::vector<CWnd*> m_pages;
 };

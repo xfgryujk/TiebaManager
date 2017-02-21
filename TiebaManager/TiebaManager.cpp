@@ -27,8 +27,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TiebaManager.h"
 #include "TiebaManagerDlg.h"
 #include <Dbghelp.h>
+
 #include "TBMConfigPath.h"
 
+#include "TBMGlobal.h"
+#include "TBMListeners.h"
 #include "PluginManager.h"
 
 #ifdef _DEBUG
@@ -96,7 +99,7 @@ BOOL CTiebaManagerApp::InitInstance()
 	// 载入主窗口
 	dlg.DoModal();
 	m_pMainWnd = NULL;
-	m_log = NULL;
+	g_pLog = NULL;
 
 
 	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
@@ -144,21 +147,10 @@ void CTiebaManagerApp::Init()
 
 	// 初始化各模块 ////////////////////////////////////////////////////////////////
 
-	// 各种设置
-	m_globalConfig = std::make_unique<CGlobalConfig>();
-	m_userConfig = std::make_unique<CUserConfig>();
-	m_cookieConfig = std::make_unique<CCookieConfig>();
-	m_plan = std::make_unique<CPlan>();
-	m_userCache = std::make_unique<CUserCache>();
-
 	// 外部模块
-	m_tiebaOperate = std::make_unique<CTiebaOperate>(m_cookieConfig->m_cookie, m_plan->m_banDuration, m_plan->m_banReason);
-	g_pTbmCoreConfig = m_plan.get();
-	g_pUserCache = m_userCache.get();
-	g_pTiebaOperate = m_tiebaOperate.get();
-
-	// 内部模块
-	m_configHelper = std::make_unique<CConfigHelper>();
+	g_pTbmCoreConfig = &g_plan;
+	g_pUserCache = &g_userCache;
+	g_pTiebaOperate = &g_tiebaOperate;
 
 	// 内部Listeners
 	CTBMListeners::GetInstance();
@@ -172,8 +164,8 @@ int CTiebaManagerApp::ExitInstance()
 {
 	TRACE(_T("释放m_pluginManager\n"));
 	CPluginManager::GetInstance().Uninit();
-	TRACE(_T("释放m_plan\n"));
-	m_plan = nullptr;
+	//TRACE(_T("释放m_plan\n"));
+	//g_plan = nullptr;
 	TRACE(_T("退出程序\n"));
 
 	return CWinApp::ExitInstance();

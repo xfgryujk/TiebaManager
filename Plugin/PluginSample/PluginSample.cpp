@@ -25,7 +25,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <TBMAPI.h>
 #include <TBMEvents.h>
-#include <TBMCoreConfig.h>
 
 #include <TiebaOperate.h>
 

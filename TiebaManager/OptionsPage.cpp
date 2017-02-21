@@ -27,8 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <MiscHelper.h>
 
 #include "TBMConfigPath.h"
-#include "TBMConfig.h"
-#include "TiebaManager.h"
+#include "TBMGlobal.h"
 
 
 // COptionsPage 对话框
@@ -137,8 +136,8 @@ void COptionsPage::OnBnClickedButton2()
 	m_list.SetCurSel(index == 0 ? 0 : index - 1);
 	if (m_list.GetCurSel() == LB_ERR)
 	{
-		theApp.m_plan->UseDefault();
-		((CSettingDlg*)GetParent()->GetParent())->ShowPlan(*theApp.m_plan);
+		g_plan.UseDefault();
+		((CSettingDlg*)GetParent())->ShowPlan(g_plan);
 	}
 	else
 		OnBnClickedButton6();
@@ -164,9 +163,9 @@ void COptionsPage::OnBnClickedButton3()
 		AfxMessageBox(_T("重命名方案失败！"), MB_ICONERROR);
 		return;
 	}
-	if (theApp.m_userConfig->m_plan == name)
+	if (g_userConfig.m_plan == name)
 	{
-		*theApp.m_userConfig->m_plan = newName;
+		*g_userConfig.m_plan = newName;
 		m_currentOptionStatic.SetWindowText(_T("当前方案：") + newName);
 	}
 	m_list.DeleteString(index);
@@ -185,7 +184,7 @@ void COptionsPage::OnBnClickedButton6()
 	}
 	CString name;
 	m_list.GetText(index, name);
-	((CSettingDlg*)GetParent()->GetParent())->ShowPlanInFile(OPTIONS_DIR_PATH + name + _T(".xml"));
+	((CSettingDlg*)GetParent())->ShowPlanInFile(OPTIONS_DIR_PATH + name + _T(".xml"));
 	m_currentOptionStatic.SetWindowText(_T("当前方案：") + name);
 }
 
@@ -201,5 +200,5 @@ void COptionsPage::OnBnClickedButton4()
 	CreateDir(OPTIONS_DIR_PATH);
 	CString name;
 	m_list.GetText(index, name);
-	((CSettingDlg*)GetParent()->GetParent())->SavePlanInDlg(OPTIONS_DIR_PATH + name + _T(".xml"));
+	((CSettingDlg*)GetParent())->SavePlanInDlg(OPTIONS_DIR_PATH + name + _T(".xml"));
 }

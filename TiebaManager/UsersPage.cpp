@@ -26,10 +26,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <MiscHelper.h>
 
-#include "TBMConfig.h"
 #include "TBMConfigPath.h"
-#include <TiebaOperate.h>
-#include "TiebaManager.h"
+#include "TBMGlobal.h"
 
 #include "ConfigHelper.h"
 #include "LoginDlg.h"
@@ -82,7 +80,7 @@ BOOL CUsersPage::OnInitDialog()
 	m_resize.AddControl(&m_switchButton, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_list);
 
 	// 已确认贴吧
-	if (theApp.m_tiebaOperate->HasSetTieba())
+	if (g_tiebaOperate.HasSetTieba())
 		m_switchButton.EnableWindow(FALSE);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -107,14 +105,14 @@ void CUsersPage::OnBnClickedButton1()
 		AfxMessageBox(_T("保存账号失败！"), MB_ICONERROR);
 		return;
 	}
-	if (theApp.m_globalConfig->m_currentUser == loginDlg.m_userName)
-		*theApp.m_cookieConfig->m_cookie = loginDlg.m_cookie;
+	if (g_globalConfig.m_currentUser == loginDlg.m_userName)
+		*g_cookieConfig.m_cookie = loginDlg.m_cookie;
 
 	int index = m_list.FindStringExact(-1, loginDlg.m_userName);
 	if (index == LB_ERR)
 		index = m_list.AddString(loginDlg.m_userName);
 	m_list.SetCurSel(index);
-	if (theApp.m_globalConfig->m_currentUser == _T("[NULL]"))
+	if (g_globalConfig.m_currentUser == _T("[NULL]"))
 		OnBnClickedButton3();
 }
 
@@ -126,7 +124,7 @@ void CUsersPage::OnBnClickedButton2()
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	if (name == theApp.m_globalConfig->m_currentUser)
+	if (name == g_globalConfig.m_currentUser)
 	{
 		AfxMessageBox(_T("不能删除当前账号！"), MB_ICONERROR);
 		return;
@@ -148,11 +146,11 @@ void CUsersPage::OnBnClickedButton3()
 	if (index == LB_ERR)
 		return;
 	// 已确认贴吧
-	if (theApp.m_tiebaOperate->HasSetTieba())
+	if (g_tiebaOperate.HasSetTieba())
 		return;
 	CString name;
 	m_list.GetText(index, name);
-	theApp.m_configHelper->SetCurrentUser(name, TRUE);
-	((CSettingDlg*)GetParent()->GetParent())->ShowPlan(*theApp.m_plan);
-	m_currentUserStatic.SetWindowText(_T("当前账号：") + theApp.m_globalConfig->m_currentUser);
+	SetCurrentUser(name, TRUE);
+	((CSettingDlg*)GetParent())->ShowPlan(g_plan);
+	m_currentUserStatic.SetWindowText(_T("当前账号：") + g_globalConfig.m_currentUser);
 }

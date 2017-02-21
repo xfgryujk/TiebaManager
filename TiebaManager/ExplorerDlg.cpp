@@ -23,9 +23,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "ExplorerDlg.h"
 
-#include "TiebaManager.h"
+#include "TBMGlobal.h"
 #include <TBMAPI.h>
-#include "TBMConfig.h"
 #include <TiebaClawerProxy.h>
 #include <TiebaOperate.h>
 
@@ -156,7 +155,7 @@ void CExplorerDlg::OnBnClickedButton1()
 		ThreadInfo& thread = m_exploreThreadPage->m_threads[index];
 		code = GetTiebaOperate().DeleteThread(thread.tid);
 		if (code == _T("0"))
-			theApp.m_userCache->m_deletedTID.insert(_ttoi64(thread.tid));
+			g_userCache.m_deletedTID.insert(_ttoi64(thread.tid));
 	}
 	else if (tabIndex == 1) // 帖子
 		code = GetTiebaOperate().DeletePost(m_explorePostPage->m_tid, m_explorePostPage->m_posts[index].pid);
@@ -184,11 +183,11 @@ void CExplorerDlg::OnBnClickedButton2()
 	if (tabIndex == 0) // 主题
 	{
 		author = m_exploreThreadPage->m_threads[index].author;
-		if (!theApp.m_plan->m_banClientInterface/* || g_plan.m_banDuration != 1*/)
+		if (!g_plan.m_banClientInterface/* || g_plan.m_banDuration != 1*/)
 		{
 			std::vector<PostInfo> posts;
 			std::vector<LzlInfo> lzls;
-			TiebaClawerProxy::GetInstance().GetPosts(theApp.m_tiebaOperate->GetForumID(), m_exploreThreadPage->m_threads[index].tid, _T("1"), posts, lzls);
+			TiebaClawerProxy::GetInstance().GetPosts(g_tiebaOperate.GetForumID(), m_exploreThreadPage->m_threads[index].tid, _T("1"), posts, lzls);
 			if (posts.size() > 0)
 				pid = posts[0].pid;
 		}
@@ -196,13 +195,13 @@ void CExplorerDlg::OnBnClickedButton2()
 	else if (tabIndex == 1) // 帖子
 	{
 		author = m_explorePostPage->m_posts[index].author;
-		if (!theApp.m_plan->m_banClientInterface/* || g_plan.m_banDuration != 1*/)
+		if (!g_plan.m_banClientInterface/* || g_plan.m_banDuration != 1*/)
 			pid = m_explorePostPage->m_posts[index].pid;
 	}
 	else // 楼中楼
 	{
 		author = m_exploreLzlPage->m_lzls[index].author;
-		if (!theApp.m_plan->m_banClientInterface/* || g_plan.m_banDuration != 1*/)
+		if (!g_plan.m_banClientInterface/* || g_plan.m_banDuration != 1*/)
 			pid = m_exploreLzlPage->m_lzls[index].cid;
 	}
 

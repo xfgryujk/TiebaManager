@@ -27,10 +27,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include <TBMAPI.h>
 #include <TBMEvents.h>
-#include <TBMCoreConfig.h>
 #include <TiebaClawerWeb.h>
-#include <TiebaOperate.h>
-#include <TBMOperate.h>
+#include <TBMCoreGlobal.h>
 
 #include <Mmsystem.h>
 
@@ -157,7 +155,7 @@ void CLockThread::LockThreadThread()
 			{
 				sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
 				log.Log(_T("<font color=red>锁帖：删除 </font>") + post.floor + _T("楼"));
-				for (int i = 0; i < (int)(operate.m_config->m_deleteInterval * 10); i++)
+				for (int i = 0; i < (int)(g_pTbmCoreConfig->m_deleteInterval * 10); i++)
 				{
 					if (m_stopFlag)
 						break;

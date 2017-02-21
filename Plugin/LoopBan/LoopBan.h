@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "LoopBanDlg.h"
 #include <memory>
 #include <thread>
-struct Operation;
+class Operation;
 
 
 class CLoopBanConfig : public CConfigBase

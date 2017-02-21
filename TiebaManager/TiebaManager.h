@@ -28,15 +28,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #endif
 
 #include "resource.h"		// 主符号
-#include <memory>
-
-#include "TBMConfig.h"
-#include <TiebaOperate.h>
-#include <TBMScan.h>
-#include <TBMOperate.h>
-#include "ConfigHelper.h"
-#include "TBMListeners.h"
-#include "TiebaManagerDlg.h"
 
 
 // CTiebaManagerApp: 
@@ -54,20 +45,6 @@ public:
 	virtual int ExitInstance();
 
 // 实现
-	ILog* m_log = NULL;
-
-	std::unique_ptr<CGlobalConfig> m_globalConfig;
-	std::unique_ptr<CUserConfig> m_userConfig;
-	std::unique_ptr<CCookieConfig> m_cookieConfig;
-	std::unique_ptr<CPlan> m_plan;
-	std::unique_ptr<CUserCache> m_userCache;
-
-	std::unique_ptr<CTiebaOperate> m_tiebaOperate;
-
-	std::unique_ptr<CConfigHelper> m_configHelper;
-
-	std::unique_ptr<CTBMListeners> m_tbmListeners;
-
 private:
 	static LONG WINAPI ExceptionHandler(_EXCEPTION_POINTERS* ExceptionInfo);
 	void Init();

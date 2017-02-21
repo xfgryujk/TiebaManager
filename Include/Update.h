@@ -29,8 +29,9 @@ extern UPDATE_API const CString UPDATE_INFO_URL;
 class UPDATE_API CUpdateInfo : public CConfigBase
 {
 public:
-	struct FileInfo
+	class FileInfo
 	{
+	public:
 		CString dir;		// 所在文件夹
 		CString name;		// 文件名
 		CString url;		// 下载地址

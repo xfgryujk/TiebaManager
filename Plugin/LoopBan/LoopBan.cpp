@@ -32,9 +32,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <MiscHelper.h>
 
 #include <TiebaClawer.h>
-#include <TiebaOperate.h>
-#include <TBMCoreConfig.h>
-#include <TBMOperate.h>
+#include <TBMCoreGlobal.h>
 
 using namespace std::placeholders;
 
@@ -196,7 +194,7 @@ void CLoopBan::LoopBanThread()
 	for (UINT i = 0; i < config.m_userList->size(); i++)
 	{
 		CString code;
-		if (operate.m_config->m_banClientInterface)
+		if (g_pTbmCoreConfig->m_banClientInterface)
 			code = tiebaOperate.BanIDClient((*config.m_userList)[i]); // 用客户端接口封禁
 		else
 		{

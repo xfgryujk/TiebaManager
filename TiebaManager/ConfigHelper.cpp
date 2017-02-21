@@ -20,9 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "ConfigHelper.h"
 
-#include "TiebaManager.h"
+#include "TBMGlobal.h"
 
-#include <ImageHelper.h>
 #include <MiscHelper.h>
 
 #include "TBMConfigPath.h"
@@ -30,23 +29,23 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 // 保存当前账号配置
-void CConfigHelper::SaveCurrentUserConfig()
+void SaveCurrentUserConfig()
 {
 	// 创建目录
-	CreateDir(USERS_DIR_PATH + theApp.m_globalConfig->m_currentUser);
+	CreateDir(USERS_DIR_PATH + g_globalConfig.m_currentUser);
 
 	// 当前账号配置
-	theApp.m_userConfig->Save(USER_CONFIG_PATH);
+	g_userConfig.Save(USER_CONFIG_PATH);
 
 	// Cookie
-	theApp.m_cookieConfig->Save(COOKIE_PATH);
+	g_cookieConfig.Save(COOKIE_PATH);
 
 	// 历史回复、忽略ID等
-	theApp.m_userCache->Save(CACHE_PATH);
+	g_userCache.Save(CACHE_PATH);
 }
 
 // 设置当前账号
-void CConfigHelper::SetCurrentUser(const CString& userName, BOOL save)
+void SetCurrentUser(const CString& userName, BOOL save)
 {
 	BOOL pass = TRUE;
 	g_preSetCurrentUserEvent(userName, pass);
@@ -58,22 +57,22 @@ void CConfigHelper::SetCurrentUser(const CString& userName, BOOL save)
 		SaveCurrentUserConfig();
 
 	// 设置配置路径
-	*theApp.m_globalConfig->m_currentUser = userName;
+	*g_globalConfig.m_currentUser = userName;
 	CURRENT_USER_DIR_PATH = USERS_DIR_PATH + userName + _T("\\");
 	USER_CONFIG_PATH = CURRENT_USER_DIR_PATH + _T("options.xml");
 	COOKIE_PATH = CURRENT_USER_DIR_PATH + _T("ck.xml");
 	CACHE_PATH = CURRENT_USER_DIR_PATH + _T("cache.xml");
 
 	// 读取设置
-	theApp.m_userConfig->Load(USER_CONFIG_PATH);
+	g_userConfig.Load(USER_CONFIG_PATH);
 	// 方案
-	theApp.m_plan->Load(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
+	g_plan.Load(OPTIONS_DIR_PATH + g_userConfig.m_plan + _T(".xml"));
 
 	// Cookie
-	theApp.m_cookieConfig->Load(COOKIE_PATH);
+	g_cookieConfig.Load(COOKIE_PATH);
 
 	// 历史回复、忽略ID等
-	theApp.m_userCache->Load(CACHE_PATH);
+	g_userCache.Load(CACHE_PATH);
 
 	g_postSetCurrentUserEvent(userName);
 }

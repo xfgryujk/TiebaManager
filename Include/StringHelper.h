@@ -22,8 +22,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <regex>
 
 
-struct RegexText
+class RegexText
 {
+public:
 	BOOL isRegex;
 	CString text; // 为了避免忘记设置regexp要用Set方法赋值！！
 	std::wregex regexp;

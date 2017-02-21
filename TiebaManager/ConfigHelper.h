@@ -20,11 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 
 
-class CConfigHelper
-{
-public:
-	// 保存当前账号配置
-	static void SaveCurrentUserConfig();
-	// 设置当前账号
-	static void SetCurrentUser(const CString& userName, BOOL save);
-};
+// 保存当前账号配置
+void SaveCurrentUserConfig();
+// 设置当前账号
+void SetCurrentUser(const CString& userName, BOOL save);

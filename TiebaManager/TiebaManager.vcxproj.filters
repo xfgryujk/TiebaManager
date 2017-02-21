@@ -189,6 +189,9 @@
     <ClInclude Include="IllegalRulesPage.h">
       <Filter>头文件\GUI\UIHelper\ListPage</Filter>
     </ClInclude>
+    <ClInclude Include="TBMGlobal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -286,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="IllegalRulesPage.cpp">
       <Filter>源文件\GUI\UIHelper\ListPage</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMGlobal.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -20,15 +20,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "TBMListeners.h"
 
-#include "TiebaManager.h"
-#include <TBMScan.h>
+#include "TBMGlobal.h"
 #include <TBMEvents.h>
 
 #include <StringHelper.h>
 
-#include "TBMConfig.h"
-#include <TiebaOperate.h>
-
+#include "TiebaManager.h"
 #include "TiebaManagerDlg.h"
 #include "ConfirmDlg.h"
 
@@ -83,8 +80,8 @@ void CTBMListeners::OnScanOnceStart(BOOL& pass)
 {
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)theApp.m_pMainWnd;
 	dlg->m_stateStatic.SetWindowText(_T("扫描主题中"));
-	if (!theApp.m_plan->m_briefLog)
-		dlg->m_log.Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + theApp.m_userConfig->m_plan);
+	if (!g_plan.m_briefLog)
+		dlg->m_log.Log(_T("<font color=green>本轮扫描开始，使用方案：</font>") + g_userConfig.m_plan);
 }
 
 void CTBMListeners::OnScanOnceEnd()
@@ -101,7 +98,7 @@ void CTBMListeners::OnPreScanAllThreads(BOOL& pass)
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)theApp.m_pMainWnd;
 	dlg->m_stateStatic.SetWindowText(_T("扫描帖子中"));
 	m_stateListLock.Lock();
-	for (int i = 0; i < theApp.m_plan->m_threadCount; i++)
+	for (int i = 0; i < g_plan.m_threadCount; i++)
 		dlg->m_stateList.AddString(_T("准备中"));
 	m_stateListLock.Unlock();
 }
@@ -153,13 +150,12 @@ void CTBMListeners::OnConfirm(const Operation& op, BOOL& res)
 
 void CTBMListeners::OnOpenLinkInLog(const CString& url, BOOL& pass)
 {
-	CTiebaOperate& tiebaOperate = *theApp.m_tiebaOperate;
 	CTiebaManagerDlg* dlg = (CTiebaManagerDlg*)theApp.m_pMainWnd;
 
 	CString prefix = url.Left(3);
 	if (prefix == _T("dt:")) // 删主题
 	{
-		CString code = tiebaOperate.DeleteThread(url.Right(url.GetLength() - 3));
+		CString code = g_tiebaOperate.DeleteThread(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
 			dlg->m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
@@ -170,7 +166,7 @@ void CTBMListeners::OnOpenLinkInLog(const CString& url, BOOL& pass)
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = tiebaOperate.DeletePost(args[0], args[1]);
+		CString code = g_tiebaOperate.DeletePost(args[0], args[1]);
 		if (code == _T("0"))
 			dlg->m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
@@ -181,7 +177,7 @@ void CTBMListeners::OnOpenLinkInLog(const CString& url, BOOL& pass)
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = tiebaOperate.DeleteLZL(args[0], args[1]);
+		CString code = g_tiebaOperate.DeleteLZL(args[0], args[1]);
 		if (code == _T("0"))
 			dlg->m_log.Log(_T("<font color=green>删除成功！</font>"));
 		else
@@ -192,8 +188,8 @@ void CTBMListeners::OnOpenLinkInLog(const CString& url, BOOL& pass)
 	{
 		CStringArray args;
 		SplitString(args, url.Right(url.GetLength() - 3), _T(","));
-		CString code = (theApp.m_plan->m_banClientInterface /*|| theApp.m_plan->m_banDuration == 1*/ || args[1] == _T("")) ?
-			tiebaOperate.BanIDClient(args[0]) : tiebaOperate.BanID(args[0], args[1]);
+		CString code = (g_plan.m_banClientInterface /*|| g_plan.m_banDuration == 1*/ || args[1] == _T("")) ?
+			g_tiebaOperate.BanIDClient(args[0]) : g_tiebaOperate.BanID(args[0], args[1]);
 		if (code == _T("0"))
 			dlg->m_log.Log(_T("<font color=green>封禁成功！</font>"));
 		else
@@ -202,7 +198,7 @@ void CTBMListeners::OnOpenLinkInLog(const CString& url, BOOL& pass)
 	}
 	else if (prefix == _T("df:")) // 拉黑
 	{
-		CString code = tiebaOperate.Defriend(url.Right(url.GetLength() - 3));
+		CString code = g_tiebaOperate.Defriend(url.Right(url.GetLength() - 3));
 		if (code == _T("0"))
 			dlg->m_log.Log(_T("<font color=green>拉黑成功！</font>"));
 		else

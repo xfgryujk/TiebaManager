@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TiebaManagerDlg.h"
 #include <TBMEvents.h>
 #include <TBMAPI.h>
-#include "TiebaManager.h"
+#include "TBMGlobal.h"
 
 #include "SettingDlg.h"
 #include "ExplorerDlg.h"
@@ -30,12 +30,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <MiscHelper.h>
 #include <Update.h>
 
-#include "TBMConfig.h"
 #include "TBMConfigPath.h"
 #include "ConfigHelper.h"
-
-#include <TiebaOperate.h>
-#include <TBMScan.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -178,29 +174,29 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 
 	// 读取设置
 	g_postSetCurrentUserEvent.AddListener([this](const CString&) {
-		m_forumNameEdit.SetWindowText(*theApp.m_userConfig->m_forumName); // 显示贴吧名
+		m_forumNameEdit.SetWindowText(*g_userConfig.m_forumName); // 显示贴吧名
 	});
-	theApp.m_globalConfig->Load(GLOBAL_CONFIG_PATH);
-	theApp.m_configHelper->SetCurrentUser(theApp.m_globalConfig->m_currentUser, FALSE);
+	g_globalConfig.Load(GLOBAL_CONFIG_PATH);
+	SetCurrentUser(g_globalConfig.m_currentUser, FALSE);
 	
 	// 自动更新
-	if (theApp.m_globalConfig->m_autoUpdate)
+	if (g_globalConfig.m_autoUpdate)
 		std::thread(&CTiebaManagerDlg::AutoUpdateThread, this).detach();
 
 	// 初次运行先看关于
-	if (theApp.m_globalConfig->m_firstRun)
+	if (g_globalConfig.m_firstRun)
 	{
-		*theApp.m_globalConfig->m_firstRun = FALSE;
-		theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
+		*g_globalConfig.m_firstRun = FALSE;
+		g_globalConfig.Save(GLOBAL_CONFIG_PATH);
 		OnBnClickedButton5();
 		m_settingDlg->ShowAbout();
 	}
 
 
 	// 每24小时清除已封名单
-	theApp.m_userCache->m_bannedUser->clear(); // 临时解决方案，相当于不保存已封名单
+	g_userCache.m_bannedUser->clear(); // 临时解决方案，相当于不保存已封名单
 	SetTimer(0, 24 * 60 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD) {
-		theApp.m_userCache->m_bannedUser->clear();
+		g_userCache.m_bannedUser->clear();
 	});
 
 	// 每30分钟清除图片缓存
@@ -238,7 +234,7 @@ void CTiebaManagerDlg::OnClose()
 		Delay(100);
 
 	//theApp.m_tbmApi->m_log = NULL;
-	if (theApp.m_plan->m_autoSaveLog)
+	if (g_plan.m_autoSaveLog)
 		m_log.Save(_T("Log"));
 	m_log.Release();
 
@@ -250,9 +246,9 @@ void CTiebaManagerDlg::OnDestroy()
 {
 	CNormalDlg::OnDestroy();
 
-	theApp.m_configHelper->SaveCurrentUserConfig();
-	theApp.m_globalConfig->Save(GLOBAL_CONFIG_PATH);
-	theApp.m_plan->Save(OPTIONS_DIR_PATH + theApp.m_userConfig->m_plan + _T(".xml"));
+	SaveCurrentUserConfig();
+	g_globalConfig.Save(GLOBAL_CONFIG_PATH);
+	g_plan.Save(OPTIONS_DIR_PATH + g_userConfig.m_plan + _T(".xml"));
 
 	g_mainDialogDestroyEvent();
 
@@ -366,7 +362,7 @@ void CTiebaManagerDlg::OnBnClickedButton5()
 {
 	if (m_settingDlg == NULL)
 	{
-		m_settingDlg = new CSettingDlg(m_settingDlg, m_log);
+		m_settingDlg = new CSettingDlg(m_settingDlg);
 		m_settingDlg->Create(m_settingDlg->IDD, this);
 	}
 }
@@ -418,8 +414,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_stateStatic.SetWindowText(_T("验证贴吧中"));
 
 
-	CTiebaOperate& tiebaOperate = *theApp.m_tiebaOperate;
-	switch (tiebaOperate.SetTieba(forumName))
+	switch (g_tiebaOperate.SetTieba(forumName))
 	{
 	case CTiebaOperate::SET_TIEBA_TIMEOUT:
 		AfxMessageBox(_T("连接超时..."), MB_ICONERROR);
@@ -438,7 +433,7 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 		goto Error;
 	}
 
-	SetWindowText(_T("贴吧管理器 - ") + tiebaOperate.GetUserName_());
+	SetWindowText(_T("贴吧管理器 - ") + g_tiebaOperate.GetUserName_());
 
 
 	m_stateStatic.SetWindowText(_T("待机中"));
@@ -446,11 +441,11 @@ void CTiebaManagerDlg::OnBnClickedButton1()
 	m_pageEdit.EnableWindow(TRUE);
 	m_explorerButton.EnableWindow(TRUE);
 
-	*theApp.m_userConfig->m_forumName = tiebaOperate.GetForumName();
-	theApp.m_userConfig->Save(USER_CONFIG_PATH);
+	*g_userConfig.m_forumName = g_tiebaOperate.GetForumName();
+	g_userConfig.Save(USER_CONFIG_PATH);
 	
-	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + tiebaOperate.GetForumName()
-		+ _T("<font color=green> 吧，使用账号：</font>" + tiebaOperate.GetUserName_()));
+	m_log.Log(_T("<font color=green>确认监控贴吧：</font>") + g_tiebaOperate.GetForumName()
+		+ _T("<font color=green> 吧，使用账号：</font>" + g_tiebaOperate.GetUserName_()));
 
 	g_postSetTiebaEvent(forumName);
 	return;
@@ -464,7 +459,7 @@ Error:
 // 开始
 void CTiebaManagerDlg::OnBnClickedButton2()
 {
-	if (theApp.m_plan->m_illegalRules->empty())
+	if (g_plan.m_illegalRules->empty())
 	{
 		AfxMessageBox(_T("至少设置一个违规规则！"), MB_ICONERROR);
 		OnBnClickedButton5();
