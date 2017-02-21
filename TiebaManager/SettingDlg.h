@@ -73,7 +73,7 @@ public:
 	std::unique_ptr<CScanPage> m_scanPage;
 	std::unique_ptr<COperatePage> m_operatePage;
 	std::unique_ptr<CIllegalRulesPage> m_illegalRulesPage;
-	std::unique_ptr<CRulesPage> m_trustedRulesPage;
+	std::unique_ptr<CRulesPage<CRule> > m_trustedRulesPage;
 	std::unique_ptr<CNormalListPage> m_trustedThreadPage;
 	std::unique_ptr<COptionsPage> m_optionsPage;
 	std::unique_ptr<CUsersPage> m_usersPage;

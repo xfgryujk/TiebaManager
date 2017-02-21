@@ -47,8 +47,8 @@ public:
 	virtual void PostNcDestroy();
 	virtual void OnOK();
 
-	virtual void OnAdd(int index);
-	virtual void OnDelete(int index);
+	virtual void OnAdd(int index) override;
+	virtual void OnDelete(int index) override;
 
 
 public:

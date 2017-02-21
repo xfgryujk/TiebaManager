@@ -68,6 +68,7 @@ public:
 
 	virtual CConditionParam* ReadParam(const tinyxml2::XMLElement* optionNode) override;
 	virtual void WriteParam(const CConditionParam& param, tinyxml2::XMLElement* optionNode) override;
+	virtual CConditionParam* CloneParam(const CConditionParam& param) override;
 
 	virtual BOOL MatchThread(const CConditionParam& param, const ThreadInfo& thread, int& pos, int& length) override;
 	virtual BOOL MatchPost(const CConditionParam& param, const PostInfo& post, int& pos, int& length) override;
@@ -104,6 +105,7 @@ public:
 
 	virtual CConditionParam* ReadParam(const tinyxml2::XMLElement* optionNode) override;
 	virtual void WriteParam(const CConditionParam& param, tinyxml2::XMLElement* optionNode) override;
+	virtual CConditionParam* CloneParam(const CConditionParam& param) override;
 
 	virtual BOOL MatchThread(const CConditionParam& param, const ThreadInfo& thread, int& pos, int& length) override;
 	virtual BOOL MatchPost(const CConditionParam& param, const PostInfo& post, int& pos, int& length) override;

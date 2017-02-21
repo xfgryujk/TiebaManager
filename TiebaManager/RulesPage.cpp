@@ -19,41 +19,112 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "RulesPage.h"
+#include <TBMCoreRules.h>
 
 
-CRulesPage::CRulesPage(const CString& inputTitle, CWnd* pParent /*=NULL*/) :
+template class CRulesPage<CRule>;
+template class CRulesPage<CIllegalRule>;
+
+
+template<class RuleType>
+CRulesPage<RuleType>::CRulesPage(const CString& inputTitle, CWnd* pParent /*=NULL*/) :
 	CNormalListPage(inputTitle, pParent)
 {
 }
 
-CRulesPage::CRulesPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd /*=NULL*/) : 
+template<class RuleType>
+CRulesPage<RuleType>::CRulesPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd /*=NULL*/) :
 	CNormalListPage(inputTitle, nIDTemplate, pParentWnd)
 {
 }
 
 
-BOOL CRulesPage::SetItem(int index)
+template<class RuleType>
+BOOL CRulesPage<RuleType>::SetItem(int index)
 {
 	return TRUE;
 }
 
-BOOL CRulesPage::Export(const CString& path)
+template<class RuleType>
+void CRulesPage<RuleType>::OnAdd(int index)
 {
+	if (index >= 0)
+	{
+		if (m_rules.size() != m_list.GetItemCount()) // 添加
+			m_rules.insert(m_rules.begin() + index, RuleType());
+	}
+}
+
+template<class RuleType>
+void CRulesPage<RuleType>::OnDelete(int index)
+{
+	if (index >= 0)
+		m_rules.erase(m_rules.begin() + index);
+	else
+		m_rules.clear();
+}
+
+template<class RuleType>
+BOOL CRulesPage<RuleType>::Export(const CString& path)
+{
+	// 导出txt
+	if (path.Right(4).CompareNoCase(_T(".xml")) != 0)
+		return CListPage::Export(path);
+
+	// 导出xml
+	CRuleListFile tmp;
+	ApplyList(tmp.m_list);
+	return tmp.Save(path);
+}
+
+template<class RuleType>
+BOOL CRulesPage<RuleType>::Import(const CString& path)
+{
+	// 导入txt
+	if (path.Right(4).CompareNoCase(_T(".xml")) != 0)
+	{
+		if (CListPage::Import(path))
+		{
+			m_rules.clear();
+			int size = m_list.GetItemCount();
+			m_rules.resize(size);
+			for (int i = 0; i < size; ++i)
+				m_rules[i].m_name = m_list.GetItemText(i, 0);
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	// 导入xml
+	CRuleListFile tmp;
+	if (!tmp.Load(path))
+		return FALSE;
+	ShowList(std::move(tmp.m_list));
 	return TRUE;
 }
 
-BOOL CRulesPage::Import(const CString& path)
+template<class RuleType>
+void CRulesPage<RuleType>::ShowList(const std::vector<RuleType>& list)
 {
-	return TRUE;
+	m_rules = list;
+
+	m_list.DeleteAllItems();
+	for (UINT i = 0; i < list.size(); i++)
+		m_list.InsertItem(i, list[i].m_name);
 }
 
-void CRulesPage::ShowList(const std::vector<CRule>& list)
+template<class RuleType>
+void CRulesPage<RuleType>::ShowList(std::vector<RuleType>&& list)
 {
+	m_rules = std::move(list);
 
+	m_list.DeleteAllItems();
+	for (UINT i = 0; i < list.size(); i++)
+		m_list.InsertItem(i, list[i].m_name);
 }
 
-void CRulesPage::ApplyList(std::vector<CRule>& list)
+template<class RuleType>
+void CRulesPage<RuleType>::ApplyList(std::vector<RuleType>& list)
 {
-
+	list = m_rules;
 }
-

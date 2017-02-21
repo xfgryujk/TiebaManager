@@ -30,7 +30,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class CCondition;
 
 
-// 条件参数
+// 条件参数，逻辑由CCondition实现
 class TBM_CORE_API CConditionParam
 {
 public:
@@ -38,9 +38,12 @@ public:
 
 
 	virtual ~CConditionParam() = default;
+	CConditionParam& operator = (const CConditionParam&) const = delete;
 
 	CCondition& GetCondition();
 	CString GetDescription();
+
+	CConditionParam* Clone();
 
 	BOOL MatchThread(const ThreadInfo& thread, int& pos, int& length);
 	BOOL MatchPost(const PostInfo& post, int& pos, int& length);
@@ -68,6 +71,7 @@ public:
 
 	virtual CConditionParam* ReadParam(const tinyxml2::XMLElement* optionNode);
 	virtual void WriteParam(const CConditionParam& param, tinyxml2::XMLElement* optionNode);
+	virtual CConditionParam* CloneParam(const CConditionParam& param);
 
 	virtual BOOL MatchThread(const CConditionParam& param, const ThreadInfo& thread, int& pos, int& length);
 	virtual BOOL MatchPost(const CConditionParam& param, const PostInfo& post, int& pos, int& length);
@@ -83,6 +87,11 @@ public:
 	std::vector<std::shared_ptr<CConditionParam> > m_conditionParams;      // 条件参数
 
 
+	CRule() = default;
+	CRule(const CRule& other);
+	CRule(CRule&& other);
+	CRule& operator = (const CRule& other);
+	CRule& operator = (CRule&& other);
 	virtual ~CRule() = default;
 
 	BOOL Match(const ThreadInfo& thread, int& pos, int& length);

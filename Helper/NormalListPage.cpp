@@ -74,8 +74,7 @@ class CNormalListFile : public CConfigBase
 public:
 	COption<std::vector<CString> > m_list;
 
-	CNormalListFile()
-		: CConfigBase("NormalList"),
+	CNormalListFile() : CConfigBase("NormalList"),
 		m_list("NormalList")
 	{
 		m_options.push_back(&m_list);

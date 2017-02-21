@@ -113,14 +113,17 @@ void CListPage::OnClickedButton1()
 {
 	int index = m_list.GetSelectionMark() + 1;
 	index = m_list.InsertItem(index, _T(""));
+	OnAdd(index);
 	if (SetItem(index))
 	{
 		m_list.SetSelectionMark(index);
 		m_list.SetItemState(index, LVNI_FOCUSED | LVNI_SELECTED, LVNI_FOCUSED | LVNI_SELECTED);
-		OnAdd(index);
 	}
 	else
+	{
+		OnDelete(index);
 		m_list.DeleteItem(index);
+	}
 }
 
 // 删除

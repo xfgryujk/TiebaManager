@@ -36,24 +36,3 @@ BOOL CIllegalRulesPage::SetItem(int index)
 {
 	return TRUE;
 }
-
-BOOL CIllegalRulesPage::Export(const CString& path)
-{
-	return TRUE;
-}
-
-BOOL CIllegalRulesPage::Import(const CString& path)
-{
-	return TRUE;
-}
-
-void CIllegalRulesPage::ShowList(const std::vector<CIllegalRule>& list)
-{
-
-}
-
-void CIllegalRulesPage::ApplyList(std::vector<CIllegalRule>& list)
-{
-
-}
-

@@ -36,8 +36,8 @@ IMPLEMENT_DYNAMIC(CSettingDlg, CModelessDlg)
 CSettingDlg::CSettingDlg(CSettingDlg*& pThis, CWnd* pParent /*=NULL*/) : CModelessDlg(CSettingDlg::IDD, (CModelessDlg**)&pThis, pParent),
 	m_scanPage(new CScanPage()),
 	m_operatePage(new COperatePage()),
-	m_illegalRulesPage(new CIllegalRulesPage(_T("违规规则"))),
-	m_trustedRulesPage(new CRulesPage(_T("信任规则"))),
+	m_illegalRulesPage(new CIllegalRulesPage(_T("违规规则："))),
+	m_trustedRulesPage(new CRulesPage<CRule>(_T("信任规则："))),
 	m_trustedThreadPage(new CNormalListPage(_T("主题ID："))),
 	m_optionsPage(new COptionsPage()),
 	m_usersPage(new CUsersPage()),
@@ -104,7 +104,9 @@ BOOL CSettingDlg::OnInitDialog()
 	CREATE_PAGE(m_scanPage);
 	CREATE_PAGE(m_operatePage);
 	CREATE_PAGE(m_illegalRulesPage);
+	m_illegalRulesPage->m_static.SetWindowText(_T("匹配的帖子为违规帖"));
 	CREATE_PAGE(m_trustedRulesPage);
+	m_trustedRulesPage->m_static.SetWindowText(_T("匹配的帖子不会违规"));
 	CREATE_PAGE(m_trustedThreadPage);
 	m_trustedThreadPage->m_static.SetWindowText(_T("添加的主题不会扫描，主题ID是网址中\"p/\"后面跟的数字"));
 	CREATE_PAGE(m_optionsPage);
@@ -237,21 +239,11 @@ void CSettingDlg::ShowPlan(const CPlan& plan)
 	m_operatePage->m_confirmCheck.SetCheck(plan.m_confirm);			    // 操作前提示
 	m_operatePage->m_banClientInterfaceCheck.SetCheck(plan.m_banClientInterface);	// 封禁使用客户端接口
 
-	//m_imagePage->m_dirEdit.SetWindowText(*plan.m_imageDir);			    // 违规图片目录
-	//tmp.Format(_T("%g"), *plan.m_SSIMThreshold);
-	//m_imagePage->m_thresholdEdit.SetWindowText(tmp);					// 阈值
+	// 违规规则
+	m_illegalRulesPage->ShowList(plan.m_illegalRules);
 
-	//// 违规内容
-	//m_keywordsPage->ShowList(plan.m_keywords);
-
-	//// 屏蔽用户
-	//m_blackListPage->ShowList(plan.m_blackList);
-
-	//// 信任用户
-	//m_whiteListPage->ShowList(plan.m_whiteList);
-
-	//// 信任内容
-	//m_whiteContentPage->ShowList(plan.m_whiteContent);
+	// 信任规则
+	m_trustedRulesPage->ShowList(plan.m_trustedRules);
 
 	// 信任主题
 	m_trustedThreadPage->ShowList(plan.m_trustedThreads);
@@ -291,37 +283,16 @@ void CSettingDlg::ApplyPlanInDlg(CPlan& plan)
 	*plan.m_confirm = m_operatePage->m_confirmCheck.GetCheck();			// 操作前提示
 	*plan.m_banClientInterface = m_operatePage->m_banClientInterfaceCheck.GetCheck();	// 封禁使用客户端接口
 
-	//m_imagePage->m_dirEdit.GetWindowText(plan.m_imageDir);				// 违规图片目录
-	//m_imagePage->m_thresholdEdit.GetWindowText(strBuf);
-	//*plan.m_SSIMThreshold = _ttof(strBuf);								// 阈值
+	// 违规规则
+	m_illegalRulesPage->ApplyList(plan.m_illegalRules);
 
-	//// 违规内容
-	//m_keywordsPage->ApplyList(plan.m_keywords);
-
-	//// 屏蔽用户
-	//m_blackListPage->ApplyList(plan.m_blackList);
-
-	//// 信任用户
-	//m_whiteListPage->ApplyList(plan.m_whiteList);
-
-	//// 信任内容
-	//m_whiteContentPage->ApplyList(plan.m_whiteContent);
+	// 信任规则
+	m_trustedRulesPage->ApplyList(plan.m_trustedRules);
 
 	// 信任主题
 	m_trustedThreadPage->ApplyList(plan.m_trustedThreads);
 
-	//// 违规图片
-	//BOOL updateImage = &plan == theApp.m_plan.get() && plan.m_updateImage;
-	//if (updateImage)
-	//	theApp.m_scanImage->ClearCache();
-
 	plan.PostChange();
-
-	//if (updateImage)
-	//{
-	//	strBuf.Format(_T("载入了%d张图片"), plan.m_images.size());
-	//	AfxMessageBox(strBuf, MB_ICONINFORMATION);
-	//}
 
 	if (&plan == &g_plan && m_clearScanCache)
 	{

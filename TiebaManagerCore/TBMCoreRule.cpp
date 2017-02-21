@@ -35,6 +35,12 @@ CString CConditionParam::GetDescription()
 }
 
 
+CConditionParam* CConditionParam::Clone()
+{
+	return GetCondition().CloneParam(*this);
+}
+
+
 DECLEAR_READ(std::shared_ptr<CConditionParam>)
 {
 	const XMLElement* optionNode = root.FirstChildElement(m_name);
@@ -161,6 +167,17 @@ void CCondition::WriteParam(const CConditionParam& _param, XMLElement* optionNod
 	optionNode->Parent()->DeleteChild(optionNode);
 }
 
+CConditionParam* CCondition::CloneParam(const CConditionParam& _param)
+{
+	const auto& param = (CDefaultConditionParam&)_param;
+	CDefaultConditionParam* newParam = new CDefaultConditionParam();
+	
+	newParam->m_conditionName = param.m_conditionName;
+	DeepCloneXMLNode(param.m_doc.FirstChild(), &newParam->m_doc);
+
+	return newParam;
+}
+
 
 BOOL CCondition::MatchThread(const CConditionParam& param, const ThreadInfo& thread, int& pos, int& length)
 {
@@ -221,6 +238,36 @@ DECLEAR_WRITE(CRule)
 		*value = i;
 		value.Write(*item);
 	}
+}
+
+
+CRule::CRule(const CRule& other)
+{
+	*this = other;
+}
+
+CRule::CRule(CRule&& other)
+{
+	*this = std::move(other);
+}
+
+CRule& CRule::operator = (const CRule& other)
+{
+	m_name = other.m_name;
+
+	m_conditionParams.resize(other.m_conditionParams.size());
+	for (size_t i = 0; i < other.m_conditionParams.size(); ++i)
+		m_conditionParams[i].reset(other.m_conditionParams[i]->Clone());
+
+	return *this;
+}
+
+CRule& CRule::operator = (CRule&& other)
+{
+	m_name = std::move(other.m_name);
+	m_conditionParams = std::move(other.m_conditionParams);
+
+	return *this;
 }
 
 

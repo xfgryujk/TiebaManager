@@ -186,11 +186,11 @@
     <ClInclude Include="RulesPage.h">
       <Filter>头文件\GUI\UIHelper\ListPage</Filter>
     </ClInclude>
-    <ClInclude Include="IllegalRulesPage.h">
-      <Filter>头文件\GUI\UIHelper\ListPage</Filter>
-    </ClInclude>
     <ClInclude Include="TBMGlobal.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IllegalRulesPage.h">
+      <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -287,11 +287,11 @@
     <ClCompile Include="RulesPage.cpp">
       <Filter>源文件\GUI\UIHelper\ListPage</Filter>
     </ClCompile>
-    <ClCompile Include="IllegalRulesPage.cpp">
-      <Filter>源文件\GUI\UIHelper\ListPage</Filter>
-    </ClCompile>
     <ClCompile Include="TBMGlobal.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IllegalRulesPage.cpp">
+      <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

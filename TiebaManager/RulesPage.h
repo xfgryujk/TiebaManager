@@ -22,6 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMCoreRule.h>
 
 
+template<class RuleType>
 class CRulesPage : public CNormalListPage
 {
 public:
@@ -30,8 +31,26 @@ public:
 	virtual ~CRulesPage() = default;
 
 	virtual BOOL SetItem(int index) override;
+	virtual void OnAdd(int index) override;
+	virtual void OnDelete(int index) override;
 	virtual BOOL Export(const CString& path) override;
 	virtual BOOL Import(const CString& path) override;
-	virtual void ShowList(const std::vector<CRule>& list);
-	virtual void ApplyList(std::vector<CRule>& list);
+	virtual void ShowList(const std::vector<RuleType>& list);
+	virtual void ShowList(std::vector<RuleType>&& list);
+	virtual void ApplyList(std::vector<RuleType>& list);
+
+protected:
+	class CRuleListFile : public CConfigBase
+	{
+	public:
+		COption<std::vector<RuleType> > m_list;
+
+		CRuleListFile() : CConfigBase("RuleList"),
+			m_list("RuleList")
+		{
+			m_options.push_back(&m_list);
+		}
+	};
+
+	std::vector<RuleType> m_rules;
 };

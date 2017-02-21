@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMCoreRules.h>
 
 
-class CIllegalRulesPage : public CRulesPage
+class CIllegalRulesPage : public CRulesPage<CIllegalRule>
 {
 public:
 	CIllegalRulesPage(const CString& inputTitle, CWnd* pParent = NULL);   // 标准构造函数
@@ -30,8 +30,4 @@ public:
 	virtual ~CIllegalRulesPage() = default;
 
 	virtual BOOL SetItem(int index) override;
-	virtual BOOL Export(const CString& path) override;
-	virtual BOOL Import(const CString& path) override;
-	virtual void ShowList(const std::vector<CIllegalRule>& list);
-	virtual void ApplyList(std::vector<CIllegalRule>& list);
 };

@@ -81,7 +81,8 @@ void CTBMCoreConfig::OnChange()
 
 void CTBMCoreConfig::PostChange()
 {
-	TiebaClawerProxy::GetInstance().m_interface = m_clawerInterface == 0 ? TIEBA_INTERFACE_WEB : TIEBA_INTERFACE_CLIENT;
+	if (this == g_pTbmCoreConfig)
+		TiebaClawerProxy::GetInstance().m_interface = m_clawerInterface == 0 ? TIEBA_INTERFACE_WEB : TIEBA_INTERFACE_CLIENT;
 	m_optionsLock.unlock();
 }
 

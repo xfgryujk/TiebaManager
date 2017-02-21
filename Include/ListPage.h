@@ -52,8 +52,10 @@ public:
 	afx_msg virtual void OnClickedButton6();
 
 	virtual BOOL SetItem(int index) = 0;
-	virtual void OnAdd(int index) {}
-	virtual void OnDelete(int index) {}
+	// 导入时index = -1，修改时也会调用，可以比较列表项数和内部数组尺寸判断是添加还是修改
+	virtual void OnAdd(int index) { }
+	// 清除时index = -1，取消添加时也会调用
+	virtual void OnDelete(int index) { }
 	virtual BOOL Export(const CString& path);
 	virtual BOOL Import(const CString& path);
 

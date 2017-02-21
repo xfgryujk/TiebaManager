@@ -140,6 +140,12 @@ void CKeywordCondition::WriteParam(const CConditionParam& _param, tinyxml2::XMLE
 	keyword.Write(*optionNode);
 }
 
+CConditionParam* CKeywordCondition::CloneParam(const CConditionParam& _param)
+{
+	const auto& param = (CKeywordParam&)_param;
+	return new CKeywordParam(param);
+}
+
 
 BOOL CKeywordCondition::MatchContent(const CKeywordParam& param, const CString& content, int startPos, int& pos, int& length)
 {
@@ -262,6 +268,12 @@ void CLevelCondition::WriteParam(const CConditionParam& _param, tinyxml2::XMLEle
 	COption<int> level("Level");
 	*level = param.m_level;
 	level.Write(*optionNode);
+}
+
+CConditionParam* CLevelCondition::CloneParam(const CConditionParam& _param)
+{
+	const auto& param = (CLevelParam&)_param;
+	return new CLevelParam(param);
 }
 
 
