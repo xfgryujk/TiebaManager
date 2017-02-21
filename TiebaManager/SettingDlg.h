@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <memory>
 #include <vector>
 
-#include "TBMGlobal.h"
+#include "TBMConfig.h"
 
 #include "ScanPage.h"
 #include "OperatePage.h"

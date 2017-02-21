@@ -118,7 +118,12 @@ HELPER_API DECLEAR_READ(CString)
 		goto UseDefault;
 	LPCSTR value = content->ToText()->Value();
 
-	m_value = GBK2W(value);
+	// 历史问题，以后全改成UTF-8
+	const XMLDeclaration* decl = root.GetDocument()->FirstChild()->ToDeclaration();
+	if (decl != NULL && strstr(decl->Value(), "encoding=\"GBK\"") != NULL)
+		m_value = GBK2W(value);
+	else
+		m_value = UTF82W(value);
 	if (!IsValid(m_value))
 		UseDefault();
 }
@@ -176,7 +181,7 @@ HELPER_API DECLEAR_WRITE(CString)
 	XMLElement* optionNode = doc->NewElement(m_name);
 	root.LinkEndChild(optionNode);
 
-	optionNode->LinkEndChild(doc->NewText(W2GBK(m_value)));
+	optionNode->LinkEndChild(doc->NewText(W2UTF8(m_value)));
 }
 #pragma endregion
 
@@ -238,7 +243,7 @@ BOOL CConfigBase::Save(const CString& path) const
 		return FALSE;
 
 	tinyxml2::XMLDocument doc;
-	doc.LinkEndChild(doc.NewDeclaration("xml version=\"1.0\" encoding=\"GBK\""));
+	doc.LinkEndChild(doc.NewDeclaration("xml version=\"1.0\" encoding=\"UTF-8\""));
 	tinyxml2::XMLElement* root = doc.NewElement(m_name);
 	doc.LinkEndChild(root);
 
