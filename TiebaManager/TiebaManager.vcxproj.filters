@@ -144,9 +144,6 @@
     <ClInclude Include="OperatePage.h">
       <Filter>头文件\GUI\Setting</Filter>
     </ClInclude>
-    <ClInclude Include="InputKeywordDlg.h">
-      <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
-    </ClInclude>
     <ClInclude Include="TBMConfig.h">
       <Filter>头文件\Config</Filter>
     </ClInclude>
@@ -191,6 +188,12 @@
     </ClInclude>
     <ClInclude Include="IllegalRulesPage.h">
       <Filter>头文件\GUI\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="InputRuleDlg.h">
+      <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="InputIllegalRuleDlg.h">
+      <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -251,9 +254,6 @@
     <ClCompile Include="OperatePage.cpp">
       <Filter>源文件\GUI\Setting</Filter>
     </ClCompile>
-    <ClCompile Include="InputKeywordDlg.cpp">
-      <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
-    </ClCompile>
     <ClCompile Include="TBMConfig.cpp">
       <Filter>源文件\Config</Filter>
     </ClCompile>
@@ -292,6 +292,12 @@
     </ClCompile>
     <ClCompile Include="IllegalRulesPage.cpp">
       <Filter>源文件\GUI\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="InputRuleDlg.cpp">
+      <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="InputIllegalRuleDlg.cpp">
+      <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -29,5 +29,9 @@ public:
 	CIllegalRulesPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd = NULL);
 	virtual ~CIllegalRulesPage() = default;
 
+	virtual BOOL OnInitDialog();
+
 	virtual BOOL SetItem(int index) override;
+	virtual BOOL Import(const CString& path) override;
+	virtual void OnUpdateRule(int index) override;
 };

@@ -79,8 +79,6 @@ BOOL CLoopBanDlg::OnInitDialog()
 	m_resize.AddControl(&m_okButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
 	m_resize.AddControl(&m_cancelButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, this);
 
-	CString currentUserDir = GetCurrentUserDir();
-
 	// 显示配置
 	CString tmp;
 	ShowList(m_config.m_userList);							// 用户名

@@ -19,6 +19,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "stdafx.h"
 #include "IllegalRulesPage.h"
+#include "SettingDlg.h"
+#include "InputIllegalRuleDlg.h"
 
 
 CIllegalRulesPage::CIllegalRulesPage(const CString& inputTitle, CWnd* pParent /*=NULL*/) :
@@ -32,7 +34,47 @@ CIllegalRulesPage::CIllegalRulesPage(const CString& inputTitle, UINT nIDTemplate
 }
 
 
+BOOL CIllegalRulesPage::OnInitDialog()
+{
+	CRulesPage::OnInitDialog();
+
+	m_list.DeleteColumn(0);
+	m_list.ModifyStyle(LVS_NOCOLUMNHEADER, 0);
+	int i = 0;
+	m_list.InsertColumn(i++, _T("规则名"), LVCFMT_LEFT, 350);
+	m_list.InsertColumn(i++, _T("强制确认"), LVCFMT_LEFT, 80);
+	m_list.InsertColumn(i++, _T("触发次数"), LVCFMT_LEFT, 80);
+
+	m_static.SetWindowText(_T("匹配的帖子为违规帖"));
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常:  OCX 属性页应返回 FALSE
+}
+
 BOOL CIllegalRulesPage::SetItem(int index)
 {
-	return TRUE;
+	CInputIllegalRuleDlg dlg(m_rules[index], CInputIllegalRuleDlg::IDD, this);
+	if (dlg.DoModal() == IDOK)
+	{
+		m_list.SetItemText(index, 0, m_rules[index].m_name);
+		OnUpdateRule(index);
+
+		((CSettingDlg*)GetParent())->m_clearScanCache = TRUE;
+		return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL CIllegalRulesPage::Import(const CString& path)
+{
+	if (CRulesPage::Import(path))
+		((CSettingDlg*)GetParent())->m_clearScanCache = TRUE;
+}
+
+void CIllegalRulesPage::OnUpdateRule(int index)
+{
+	m_list.SetItemText(index, 1, m_rules[index].m_forceToConfirm ? _T("是") : _T("否"));
+	CString tmp;
+	tmp.Format(_T("%d"), m_rules[index].m_trigCount);
+	m_list.SetItemText(index, 2, tmp);
 }

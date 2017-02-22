@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "RulesPage.h"
 #include <TBMCoreRules.h>
+#include "InputRuleDlg.h"
 
 
 template class CRulesPage<CRule>;
@@ -42,7 +43,14 @@ CRulesPage<RuleType>::CRulesPage(const CString& inputTitle, UINT nIDTemplate, CW
 template<class RuleType>
 BOOL CRulesPage<RuleType>::SetItem(int index)
 {
-	return TRUE;
+	CInputRuleDlg<RuleType> dlg(m_rules[index], CInputRuleDlg<RuleType>::IDD, this);
+	if (dlg.DoModal() == IDOK)
+	{
+		m_list.SetItemText(index, 0, m_rules[index].m_name);
+		OnUpdateRule(index);
+		return TRUE;
+	}
+	return FALSE;
 }
 
 template<class RuleType>
@@ -89,7 +97,10 @@ BOOL CRulesPage<RuleType>::Import(const CString& path)
 			int size = m_list.GetItemCount();
 			m_rules.resize(size);
 			for (int i = 0; i < size; ++i)
+			{
 				m_rules[i].m_name = m_list.GetItemText(i, 0);
+				OnUpdateRule(i);
+			}
 			return TRUE;
 		}
 		return FALSE;
@@ -109,8 +120,11 @@ void CRulesPage<RuleType>::ShowList(const std::vector<RuleType>& list)
 	m_rules = list;
 
 	m_list.DeleteAllItems();
-	for (UINT i = 0; i < list.size(); i++)
-		m_list.InsertItem(i, list[i].m_name);
+	for (UINT i = 0; i < m_rules.size(); i++)
+	{
+		m_list.InsertItem(i, m_rules[i].m_name);
+		OnUpdateRule(i);
+	}
 }
 
 template<class RuleType>
@@ -119,8 +133,11 @@ void CRulesPage<RuleType>::ShowList(std::vector<RuleType>&& list)
 	m_rules = std::move(list);
 
 	m_list.DeleteAllItems();
-	for (UINT i = 0; i < list.size(); i++)
-		m_list.InsertItem(i, list[i].m_name);
+	for (UINT i = 0; i < m_rules.size(); i++)
+	{
+		m_list.InsertItem(i, m_rules[i].m_name);
+		OnUpdateRule(i);
+	}
 }
 
 template<class RuleType>

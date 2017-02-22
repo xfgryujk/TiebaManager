@@ -18,23 +18,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include "afxwin.h"
-#include "InputDlg.h"
-#include "resource.h"
+#include "InputRuleDlg.h"
+#include <TBMCoreRules.h>
 
 
-// CInputKeywordDlg 对话框
+// CInputIllegalRuleDlg 对话框
 
-class CInputKeywordDlg : public CInputDlg
+class CInputIllegalRuleDlg : public CInputRuleDlg<CIllegalRule>
 {
-	DECLARE_DYNAMIC(CInputKeywordDlg)
-
 public:
-	CInputKeywordDlg(const CString& title, CString& content, BOOL* isRegex = NULL, BOOL* forceToConfirm = NULL, CWnd* pParent = NULL);   // 标准构造函数
-	virtual ~CInputKeywordDlg();
+	CInputIllegalRuleDlg(CIllegalRule& rule, UINT nIDTemplate, CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CInputIllegalRuleDlg();
 
 	// 对话框数据
-	enum { IDD = IDD_INPUT_KEYWORD_DIALOG };
+	enum { IDD = IDD_INPUT_ILLEGAL_RULE_DIALOG };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
@@ -44,9 +41,11 @@ public:
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 
+	virtual BOOL SetItem(int index) override;
+	virtual void ShowList(const CIllegalRule& list) override;
+	virtual void ShowList(CIllegalRule&& list) override;
+
 
 public:
-	CButton m_forceToConfirmCheck;
-
-	BOOL* m_forceToConfirm;
+	CButton m_forceToComfirmCheck;
 };

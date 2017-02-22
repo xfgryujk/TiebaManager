@@ -103,12 +103,13 @@ BOOL CSettingDlg::OnInitDialog()
 #define CREATE_PAGE(page) page->Create(page->IDD, this)
 	CREATE_PAGE(m_scanPage);
 	CREATE_PAGE(m_operatePage);
+	AfxSetResourceHandle(GetModuleHandle(_T("Helper.dll"))); // 资源ID冲突....
 	CREATE_PAGE(m_illegalRulesPage);
-	m_illegalRulesPage->m_static.SetWindowText(_T("匹配的帖子为违规帖"));
 	CREATE_PAGE(m_trustedRulesPage);
 	m_trustedRulesPage->m_static.SetWindowText(_T("匹配的帖子不会违规"));
 	CREATE_PAGE(m_trustedThreadPage);
 	m_trustedThreadPage->m_static.SetWindowText(_T("添加的主题不会扫描，主题ID是网址中\"p/\"后面跟的数字"));
+	AfxSetResourceHandle(theApp.m_hInstance);
 	CREATE_PAGE(m_optionsPage);
 	CREATE_PAGE(m_usersPage);
 	CREATE_PAGE(m_aboutPage);

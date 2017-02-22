@@ -128,8 +128,9 @@
     <ClInclude Include="ConfigHelper.h" />
     <ClInclude Include="GetImages.h" />
     <ClInclude Include="IllegalRulesPage.h" />
-    <ClInclude Include="InputKeywordDlg.h" />
     <ClInclude Include="ExplorerLog.h" />
+    <ClInclude Include="InputIllegalRuleDlg.h" />
+    <ClInclude Include="InputRuleDlg.h" />
     <ClInclude Include="PluginDlg.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="ImageViewDlg.h" />
@@ -163,11 +164,12 @@
     <ClCompile Include="ConfigHelper.cpp" />
     <ClCompile Include="GetImages.cpp" />
     <ClCompile Include="IllegalRulesPage.cpp" />
+    <ClCompile Include="InputIllegalRuleDlg.cpp" />
+    <ClCompile Include="InputRuleDlg.cpp" />
     <ClCompile Include="PluginDlg.cpp" />
     <ClCompile Include="RulesPage.cpp" />
     <ClCompile Include="TBMAPI.cpp" />
     <ClCompile Include="ImageViewDlg.cpp" />
-    <ClCompile Include="InputKeywordDlg.cpp" />
     <ClCompile Include="ExplorerLog.cpp" />
     <ClCompile Include="OperatePage.cpp" />
     <ClCompile Include="PluginManager.cpp" />

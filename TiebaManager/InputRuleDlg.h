@@ -19,40 +19,59 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #pragma once
 #include <NormalListPage.h>
+#include "resource.h"
 #include <TBMCoreRule.h>
 
 
+// CInputRuleDlg 对话框
+
 template<class RuleType>
-class CRulesPage : public CNormalListPage
+class CInputRuleDlg : public CNormalListPage
 {
 public:
-	CRulesPage(const CString& inputTitle, CWnd* pParent = NULL);   // 标准构造函数
-	CRulesPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd = NULL);
-	virtual ~CRulesPage() = default;
+	CInputRuleDlg(RuleType& rule, UINT nIDTemplate, CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CInputRuleDlg();
+
+	// 对话框数据
+	enum { IDD = IDD_INPUT_RULE_DIALOG };
+
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
+
+	DECLARE_MESSAGE_MAP()
+public:
+	virtual BOOL OnInitDialog();
+	virtual void OnCancel();
+	virtual void OnOK();
+	afx_msg void OnClose();
 
 	virtual BOOL SetItem(int index) override;
 	virtual void OnAdd(int index) override;
 	virtual void OnDelete(int index) override;
 	virtual BOOL Export(const CString& path) override;
 	virtual BOOL Import(const CString& path) override;
-	virtual void ShowList(const std::vector<RuleType>& list);
-	virtual void ShowList(std::vector<RuleType>&& list);
-	virtual void ApplyList(std::vector<RuleType>& list);
-	// 在这里更新列表中显示的内容
-	virtual void OnUpdateRule(int index) { }
+	virtual void ShowList(const RuleType& list);
+	virtual void ShowList(RuleType&& list);
+
+
+public:
+	CEdit m_ruleNameEdit;
+	CButton m_okButton;
+	CButton m_cancelButton;
 
 protected:
-	class CRuleListFile : public CConfigBase
+	class CRuleFile : public CConfigBase
 	{
 	public:
-		COption<std::vector<RuleType> > m_list;
+		COption<RuleType> m_list;
 
-		CRuleListFile() : CConfigBase("RuleList"),
-			m_list("RuleList")
+		CRuleFile() : CConfigBase("Rule"),
+			m_list("Rule")
 		{
 			m_options.push_back(&m_list);
 		}
 	};
 
-	std::vector<RuleType> m_rules;
+	RuleType& m_rule;
+	RuleType m_ruleCopy;
 };

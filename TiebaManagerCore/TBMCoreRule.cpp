@@ -122,7 +122,7 @@ BOOL CCondition::AddCondition(CCondition& condition)
 
 CString CCondition::GetDescription(const CConditionParam& param)
 {
-	return _T("");
+	return _T("未知条件：") + param.m_conditionName;
 }
 
 
