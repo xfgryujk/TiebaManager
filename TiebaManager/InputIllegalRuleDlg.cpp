@@ -62,7 +62,11 @@ BOOL CInputIllegalRuleDlg::OnInitDialog()
 
 BOOL CInputIllegalRuleDlg::SetItem(int index)
 {
-	// TODO 输入条件
+	if (CInputRuleDlg::SetItem(index))
+	{
+		m_ruleCopy.m_trigCount = 0;
+		return TRUE;
+	}
 	return FALSE;
 }
 
@@ -75,7 +79,7 @@ void CInputIllegalRuleDlg::ShowList(const CIllegalRule& list)
 
 void CInputIllegalRuleDlg::ShowList(CIllegalRule&& list)
 {
-	CInputRuleDlg::ShowList(std::move(m_ruleCopy));
+	CInputRuleDlg::ShowList(std::move(list));
 
 	m_forceToComfirmCheck.SetCheck(m_ruleCopy.m_forceToConfirm);
 }
@@ -85,7 +89,6 @@ void CInputIllegalRuleDlg::ShowList(CIllegalRule&& list)
 void CInputIllegalRuleDlg::OnOK()
 {
 	m_ruleCopy.m_forceToConfirm = m_forceToComfirmCheck.GetCheck();
-	m_ruleCopy.m_trigCount = 0;
 
 	CInputRuleDlg::OnOK();
 }

@@ -37,6 +37,7 @@ public:
 	CString m_conditionName;       // 条件ID
 
 
+	CConditionParam(const CString& conditionName) : m_conditionName(conditionName) { }
 	virtual ~CConditionParam() = default;
 	CConditionParam& operator = (const CConditionParam&) const = delete;
 

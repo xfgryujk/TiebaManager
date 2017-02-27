@@ -23,6 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "PluginManager.h"
 #include "TBMGlobal.h"
 #include "TBMConfigPath.h"
+#include "ConditionGUI.h"
 
 
 TBM_API CPlugin* GetPlugin(HMODULE module)
@@ -75,4 +76,10 @@ TBM_API CString GetCurrentUserDir()
 TBM_API CString GetImgCacheDir()
 {
 	return IMG_CACHE_PATH;
+}
+
+
+TBM_API BOOL AddConditionGUI(const CString& conditionName, std::function<CConditionParam*(CConditionParam*)> onSetCondition)
+{
+	return CConditionGUIManager::GetInstance().AddConditionGUI(conditionName, onSetCondition);
 }

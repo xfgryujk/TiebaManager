@@ -87,7 +87,7 @@ HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL 
 		}
 		catch (...)
 		{
-			AfxMessageBox(_T("正则表达式错误！"), MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误：") + content, MB_ICONERROR);
 			return FALSE;
 		}
 	}
@@ -108,7 +108,7 @@ HELPER_API BOOL StringIncludes(const CString& str, const RegexText& content, int
 		}
 		catch (...)
 		{
-			AfxMessageBox(_T("正则表达式错误！"), MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误：") + content.text, MB_ICONERROR);
 			return FALSE;
 		}
 
@@ -143,7 +143,7 @@ HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL is
 		}
 		catch (...)
 		{
-			AfxMessageBox(_T("正则表达式错误！"), MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误：") + content, MB_ICONERROR);
 			return FALSE;
 		}
 	}
@@ -162,7 +162,7 @@ HELPER_API BOOL StringMatchs(const CString& str, const RegexText& content)
 		}
 		catch (...)
 		{
-			AfxMessageBox(_T("正则表达式错误！"), MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误：" + content.text), MB_ICONERROR);
 			return FALSE;
 		}
 	}

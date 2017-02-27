@@ -23,13 +23,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "InputIllegalRuleDlg.h"
 
 
-CIllegalRulesPage::CIllegalRulesPage(const CString& inputTitle, CWnd* pParent /*=NULL*/) :
-	CRulesPage(inputTitle, pParent)
+CIllegalRulesPage::CIllegalRulesPage(CWnd* pParent /*=NULL*/) :
+	CRulesPage(pParent)
 {
 }
 
-CIllegalRulesPage::CIllegalRulesPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd /*=NULL*/) : 
-	CRulesPage(inputTitle, nIDTemplate, pParentWnd)
+CIllegalRulesPage::CIllegalRulesPage(UINT nIDTemplate, CWnd* pParentWnd /*=NULL*/) : 
+	CRulesPage(nIDTemplate, pParentWnd)
 {
 }
 
@@ -68,12 +68,16 @@ BOOL CIllegalRulesPage::SetItem(int index)
 BOOL CIllegalRulesPage::Import(const CString& path)
 {
 	if (CRulesPage::Import(path))
+	{
 		((CSettingDlg*)GetParent())->m_clearScanCache = TRUE;
+		return TRUE;
+	}
+	return FALSE;
 }
 
 void CIllegalRulesPage::OnUpdateRule(int index)
 {
-	m_list.SetItemText(index, 1, m_rules[index].m_forceToConfirm ? _T("是") : _T("否"));
+	m_list.SetItemText(index, 1, m_rules[index].m_forceToConfirm ? _T("√") : _T(""));
 	CString tmp;
 	tmp.Format(_T("%d"), m_rules[index].m_trigCount);
 	m_list.SetItemText(index, 2, tmp);

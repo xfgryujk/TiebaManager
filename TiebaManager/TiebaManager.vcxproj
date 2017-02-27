@@ -125,11 +125,14 @@
     <ClInclude Include="..\Include\TBMEvents.h" />
     <ClInclude Include="..\Include\TiebaManagerCommon.h" />
     <ClInclude Include="AboutPage.h" />
+    <ClInclude Include="ConditionGUI.h" />
     <ClInclude Include="ConfigHelper.h" />
     <ClInclude Include="GetImages.h" />
     <ClInclude Include="IllegalRulesPage.h" />
     <ClInclude Include="ExplorerLog.h" />
     <ClInclude Include="InputIllegalRuleDlg.h" />
+    <ClInclude Include="InputKeywordDlg.h" />
+    <ClInclude Include="InputLevelDlg.h" />
     <ClInclude Include="InputRuleDlg.h" />
     <ClInclude Include="PluginDlg.h" />
     <ClInclude Include="PluginManager.h" />
@@ -161,10 +164,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutPage.cpp" />
+    <ClCompile Include="ConditionGUI.cpp" />
     <ClCompile Include="ConfigHelper.cpp" />
     <ClCompile Include="GetImages.cpp" />
     <ClCompile Include="IllegalRulesPage.cpp" />
     <ClCompile Include="InputIllegalRuleDlg.cpp" />
+    <ClCompile Include="InputKeywordDlg.cpp" />
+    <ClCompile Include="InputLevelDlg.cpp" />
     <ClCompile Include="InputRuleDlg.cpp" />
     <ClCompile Include="PluginDlg.cpp" />
     <ClCompile Include="RulesPage.cpp" />

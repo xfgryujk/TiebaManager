@@ -66,19 +66,6 @@ END_MESSAGE_MAP()
 
 // COperatePage 消息处理程序
 
-BOOL COperatePage::OnInitDialog()
-{
-	CNormalDlg::OnInitDialog();
-
-	// 初始化封禁时长
-	m_banDurationCombo.AddString(_T("1"));
-	m_banDurationCombo.AddString(_T("3"));
-	m_banDurationCombo.AddString(_T("10"));
-
-	return TRUE;  // return TRUE unless you set the focus to a control
-	// 异常:  OCX 属性页应返回 FALSE
-}
-
 // 封ID
 void COperatePage::OnBnClickedCheck1()
 {

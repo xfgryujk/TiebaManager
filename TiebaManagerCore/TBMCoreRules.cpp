@@ -34,8 +34,8 @@ DECLEAR_READ(CIllegalRule)
 	}
 
 	COption<CRule> rule(m_name);
-	COption<BOOL> forceToConfirm("ForceToConfirm");
-	COption<int> trigCount("TrigCount");
+	COption<BOOL> forceToConfirm("ForceToConfirm", FALSE);
+	COption<int> trigCount("TrigCount", 0);
 	rule.Read(root);
 	forceToConfirm.Read(*optionNode);
 	trigCount.Read(*optionNode);
@@ -151,16 +151,22 @@ BOOL CKeywordCondition::MatchContent(const CKeywordParam& param, const CString& 
 {
 	// 判断匹配
 	BOOL res;
+	int _pos, _length;
 	if (param.m_include)
 	{
-		res = StringIncludes(content, param.m_keyword, &pos, &length);
-		pos += startPos;
+		res = StringIncludes(content, param.m_keyword, &_pos, &_length);
+		_pos += startPos;
 	}
 	else
 	{
 		res = StringMatchs(content, param.m_keyword);
-		pos = 0;
-		length = content.GetLength();
+		_pos = 0;
+		_length = content.GetLength();
+	}
+	if (!param.m_not)
+	{
+		pos = _pos;
+		length = _length;
 	}
 
 	// 取FALSE
@@ -248,7 +254,7 @@ CConditionParam* CLevelCondition::ReadParam(const tinyxml2::XMLElement* optionNo
 
 	param->m_conditionName = m_name;
 	COption<int> op("Operator", LevelOperator::LESS, InRange<int, LevelOperator::LESS, LevelOperator::GREATER>);
-	COption<int> level("Level");
+	COption<int> level("Level", 1, InRange<int, 1, 18>);
 	op.Read(*optionNode);
 	level.Read(*optionNode);
 

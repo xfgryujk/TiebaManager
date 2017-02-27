@@ -104,6 +104,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComboDlg.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\BlockingQueue.h" />
+    <ClInclude Include="..\Include\ComboDlg.h" />
     <ClInclude Include="..\Include\ConfigFile.h" />
     <ClInclude Include="..\Include\EventHelper.h" />
     <ClInclude Include="..\Include\HelperCommon.h" />
@@ -164,4 +166,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="Helper.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

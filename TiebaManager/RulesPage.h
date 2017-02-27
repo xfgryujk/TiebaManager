@@ -26,8 +26,8 @@ template<class RuleType>
 class CRulesPage : public CNormalListPage
 {
 public:
-	CRulesPage(const CString& inputTitle, CWnd* pParent = NULL);   // 标准构造函数
-	CRulesPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd = NULL);
+	CRulesPage(CWnd* pParent = NULL);   // 标准构造函数
+	CRulesPage(UINT nIDTemplate, CWnd* pParentWnd = NULL);
 	virtual ~CRulesPage() = default;
 
 	virtual BOOL SetItem(int index) override;

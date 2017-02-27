@@ -32,10 +32,6 @@ TBM_API DEF_VARIABLE(g_postSetCurrentUserEvent);
 TBM_API DEF_VARIABLE(g_preSetTiebaEvent);
 TBM_API DEF_VARIABLE(g_postSetTiebaEvent);
 
-TBM_API DEF_VARIABLE(g_getThreadImagesEvent);
-TBM_API DEF_VARIABLE(g_getPostImagesEvent);
-TBM_API DEF_VARIABLE(g_getLzlImagesEvent);
-
 TBM_API DEF_VARIABLE(g_openLinkInLogEvent);
 
 
@@ -49,10 +45,6 @@ TBM_API std::vector<EventBase*> g_tbmEvents{
 	&g_postSetCurrentUserEvent,
 	&g_preSetTiebaEvent,
 	&g_postSetTiebaEvent,
-
-	&g_getThreadImagesEvent,
-	&g_getPostImagesEvent,
-	&g_getLzlImagesEvent,
 
 	&g_openLinkInLogEvent
 };

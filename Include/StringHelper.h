@@ -25,7 +25,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class RegexText
 {
 public:
-	BOOL isRegex;
+	BOOL isRegex = FALSE;
 	CString text; // 为了避免忘记设置regexp要用Set方法赋值！！
 	std::wregex regexp;
 
@@ -40,7 +40,7 @@ public:
 		catch (...)
 		{
 			Set(FALSE, _T(""));
-			AfxMessageBox(_T("正则表达式错误！"), MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误：") + _text, MB_ICONERROR);
 		}
 	}
 };

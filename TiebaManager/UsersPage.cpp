@@ -126,7 +126,7 @@ void CUsersPage::OnBnClickedButton2()
 	m_list.GetText(index, name);
 	if (name == g_globalConfig.m_currentUser)
 	{
-		AfxMessageBox(_T("不能删除当前账号！"), MB_ICONERROR);
+		AfxMessageBox(_T("不能删除当前账号！请重启程序后先切换到[NULL]账号"), MB_ICONERROR);
 		return;
 	}
 	CString path = USERS_DIR_PATH + name + _T("\\");

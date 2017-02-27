@@ -28,14 +28,14 @@ template class CRulesPage<CIllegalRule>;
 
 
 template<class RuleType>
-CRulesPage<RuleType>::CRulesPage(const CString& inputTitle, CWnd* pParent /*=NULL*/) :
-	CNormalListPage(inputTitle, pParent)
+CRulesPage<RuleType>::CRulesPage(CWnd* pParent /*=NULL*/) :
+	CNormalListPage(_T(""), pParent)
 {
 }
 
 template<class RuleType>
-CRulesPage<RuleType>::CRulesPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd /*=NULL*/) :
-	CNormalListPage(inputTitle, nIDTemplate, pParentWnd)
+CRulesPage<RuleType>::CRulesPage(UINT nIDTemplate, CWnd* pParentWnd /*=NULL*/) :
+	CNormalListPage(_T(""), nIDTemplate, pParentWnd)
 {
 }
 

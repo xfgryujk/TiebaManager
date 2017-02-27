@@ -79,6 +79,12 @@
     <Filter Include="源文件\GUI\UIHelper\ListPage">
       <UniqueIdentifier>{ba310af7-f0b5-4a37-b59a-2cab3bfdd951}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\GUI\Setting\Condition">
+      <UniqueIdentifier>{279e3694-c7e8-4313-bd7a-87bd9c8f32a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GUI\Setting\Condition">
+      <UniqueIdentifier>{99fe32b2-817a-4fff-9d38-ad0e994ed846}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TiebaManager.h">
@@ -195,6 +201,15 @@
     <ClInclude Include="InputIllegalRuleDlg.h">
       <Filter>头文件\GUI\UIHelper\InputDlg</Filter>
     </ClInclude>
+    <ClInclude Include="ConditionGUI.h">
+      <Filter>头文件\GUI\Setting\Condition</Filter>
+    </ClInclude>
+    <ClInclude Include="InputLevelDlg.h">
+      <Filter>头文件\GUI\Setting\Condition</Filter>
+    </ClInclude>
+    <ClInclude Include="InputKeywordDlg.h">
+      <Filter>头文件\GUI\Setting\Condition</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -298,6 +313,15 @@
     </ClCompile>
     <ClCompile Include="InputIllegalRuleDlg.cpp">
       <Filter>源文件\GUI\UIHelper\InputDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="ConditionGUI.cpp">
+      <Filter>源文件\GUI\Setting\Condition</Filter>
+    </ClCompile>
+    <ClCompile Include="InputLevelDlg.cpp">
+      <Filter>源文件\GUI\Setting\Condition</Filter>
+    </ClCompile>
+    <ClCompile Include="InputKeywordDlg.cpp">
+      <Filter>源文件\GUI\Setting\Condition</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

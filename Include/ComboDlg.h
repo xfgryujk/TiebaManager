@@ -18,24 +18,39 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include "TiebaManagerCommon.h"
-#include "Plugin.h"
-#include "TBMCoreGlobal.h"
-#include "TBMScan.h"
-#include "TBMOperate.h"
-#include <functional>
+#include "HelperCommon.h"
+#include "afxwin.h"
+#include <vector>
 
 
-TBM_API CPlugin* GetPlugin(HMODULE module);
+// CComboDlg 对话框
 
-TBM_API ILog& GetLog();
-TBM_API CUserCache& GetUserCache();
-TBM_API CTiebaOperate& GetTiebaOperate();
-TBM_API CTBMScan& GetScan();
-TBM_API CTBMOperate& GetOperate();
+class HELPER_API CComboDlg : public CDialog
+{
+	DECLARE_DYNAMIC(CComboDlg)
 
-TBM_API CString GetCurrentUserDir();
-TBM_API CString GetImgCacheDir();
+public:
+	CComboDlg(const CString& title, const std::vector<CString>& list, int& select, UINT nIDTemplate = IDD, CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CComboDlg();
 
-// 设置条件时回调onSetCondition，如果参数为nullptr则需要分配内存。返回设置好的条件，如果用户取消了则返回nullptr
-TBM_API BOOL AddConditionGUI(const CString& conditionName, std::function<CConditionParam*(CConditionParam*)> onSetCondition);
+// 对话框数据
+	static const UINT IDD;
+
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
+
+	DECLARE_MESSAGE_MAP()
+public:
+	virtual BOOL OnInitDialog();
+	virtual void OnOK();
+
+
+public:
+	CComboBox m_combo;
+
+	int& m_select;
+
+protected:
+	const CString m_title;
+	const std::vector<CString>& m_list;
+};

@@ -18,24 +18,43 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include "TiebaManagerCommon.h"
-#include "Plugin.h"
-#include "TBMCoreGlobal.h"
-#include "TBMScan.h"
-#include "TBMOperate.h"
-#include <functional>
+#include "resource.h"
+#include <TBMCoreRules.h>
 
 
-TBM_API CPlugin* GetPlugin(HMODULE module);
+// CInputKeywordDlg 对话框
 
-TBM_API ILog& GetLog();
-TBM_API CUserCache& GetUserCache();
-TBM_API CTiebaOperate& GetTiebaOperate();
-TBM_API CTBMScan& GetScan();
-TBM_API CTBMOperate& GetOperate();
+class CInputKeywordDlg : public CDialog
+{
+	DECLARE_DYNAMIC(CInputKeywordDlg)
 
-TBM_API CString GetCurrentUserDir();
-TBM_API CString GetImgCacheDir();
+public:
+	CInputKeywordDlg(CKeywordParam* param, CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CInputKeywordDlg();
 
-// 设置条件时回调onSetCondition，如果参数为nullptr则需要分配内存。返回设置好的条件，如果用户取消了则返回nullptr
-TBM_API BOOL AddConditionGUI(const CString& conditionName, std::function<CConditionParam*(CConditionParam*)> onSetCondition);
+// 对话框数据
+	enum { IDD = IDD_INPUT_KEYWORD_DIALOG };
+
+protected:
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
+
+	DECLARE_MESSAGE_MAP()
+public:
+	virtual BOOL OnInitDialog();
+	virtual void OnOK();
+	afx_msg void OnBnClickedButton7();
+
+	static CConditionParam* SetKeywordCondition(CConditionParam* param);
+
+
+public:
+	CComboBox m_rangeCombo;
+	CButton m_notCheck;
+	CComboBox m_includeCombo;
+	CButton m_regexCheck;
+	CEdit m_contentEdit;
+	CEdit m_testEdit;
+
+protected:
+	CKeywordParam* m_param;
+};

@@ -25,8 +25,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 class CIllegalRulesPage : public CRulesPage<CIllegalRule>
 {
 public:
-	CIllegalRulesPage(const CString& inputTitle, CWnd* pParent = NULL);   // 标准构造函数
-	CIllegalRulesPage(const CString& inputTitle, UINT nIDTemplate, CWnd* pParentWnd = NULL);
+	CIllegalRulesPage(CWnd* pParent = NULL);   // 标准构造函数
+	CIllegalRulesPage(UINT nIDTemplate, CWnd* pParentWnd = NULL);
 	virtual ~CIllegalRulesPage() = default;
 
 	virtual BOOL OnInitDialog();

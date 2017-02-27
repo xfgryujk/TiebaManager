@@ -96,6 +96,9 @@
     <ClCompile Include="ModelessDlg.cpp">
       <Filter>源文件\API\UI\DlgBase</Filter>
     </ClCompile>
+    <ClCompile Include="ComboDlg.cpp">
+      <Filter>源文件\API\UI\InputDlg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\Helper.rc2">
@@ -165,6 +168,9 @@
     </ClInclude>
     <ClInclude Include="..\Include\Singleton.h">
       <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\ComboDlg.h">
+      <Filter>头文件\API\UI\InputDlg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

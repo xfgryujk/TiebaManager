@@ -132,9 +132,12 @@ CCondition::CCondition(const CString& name) :
 }
 
 
-class CDefaultConditionParam : public CConditionParam
+class CDefaultConditionParam final : public CConditionParam
 {
 public:
+	CDefaultConditionParam() : CConditionParam(_T("")) { }
+
+
 	tinyxml2::XMLDocument m_doc;   // 保存未知条件用
 };
 
@@ -156,6 +159,9 @@ static XMLNode* DeepCloneXMLNode(const XMLNode* node, XMLNode* newParent)
 CConditionParam* CCondition::ReadParam(const XMLElement* optionNode)
 {
 	CDefaultConditionParam* param = new CDefaultConditionParam();
+	COption<CString> name("Name");
+	name.Read(*optionNode);
+	param->m_conditionName = name;
 	DeepCloneXMLNode(optionNode, &param->m_doc);
 	return param;
 }
@@ -163,6 +169,9 @@ CConditionParam* CCondition::ReadParam(const XMLElement* optionNode)
 void CCondition::WriteParam(const CConditionParam& _param, XMLElement* optionNode)
 {
 	const auto& param = (CDefaultConditionParam&)_param;
+	COption<CString> name("Name");
+	*name = param.m_conditionName;
+	name.Write(*optionNode);
 	DeepCloneXMLNode(&param.m_doc, optionNode->Parent());
 	optionNode->Parent()->DeleteChild(optionNode);
 }
@@ -234,7 +243,7 @@ DECLEAR_WRITE(CRule)
 	for (const auto& i : m_value.m_conditionParams)
 	{
 		XMLElement* item = doc->NewElement("item");
-		optionNode->LinkEndChild(item);
+		conditionsNode->LinkEndChild(item);
 		*value = i;
 		value.Write(*item);
 	}

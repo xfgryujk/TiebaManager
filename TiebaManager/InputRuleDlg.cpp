@@ -23,6 +23,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "InputRuleDlg.h"
 #include <TBMCoreRules.h>
+#include "ConditionGUI.h"
+#include <ComboDlg.h>
 
 
 template class CInputRuleDlg<CRule>;
@@ -93,8 +95,35 @@ BOOL CInputRuleDlg<RuleType>::OnInitDialog()
 template<class RuleType>
 BOOL CInputRuleDlg<RuleType>::SetItem(int index)
 {
-	// TODO 输入条件
-	return FALSE;
+	auto& conditionGUIManager = CConditionGUIManager::GetInstance();
+
+	int iConditionGUI;
+	if (m_ruleCopy.m_conditionParams[index] == nullptr) // 刚添加，需要选择条件类型
+	{
+		// 选择条件类型
+		std::vector<CString> conditions;
+		conditionGUIManager.GetConditionGUINames(conditions);
+		iConditionGUI = 0;
+		CComboDlg dlg(_T("条件类型："), conditions, iConditionGUI);
+		if (dlg.DoModal() != IDOK)
+			return FALSE;
+	}
+	else
+	{
+		// 寻找回调
+		iConditionGUI = conditionGUIManager.GetConditionGUIIndex(m_ruleCopy.m_conditionParams[index]->m_conditionName);
+		if (iConditionGUI == -1)
+			return FALSE;
+	}
+
+	// 设置条件
+	CConditionParam* param = conditionGUIManager.GetOnSetCondition(iConditionGUI)(m_ruleCopy.m_conditionParams[index].get());
+	if (param == nullptr)
+		return FALSE;
+	if (param != m_ruleCopy.m_conditionParams[index].get())
+		m_ruleCopy.m_conditionParams[index].reset(param);
+	m_list.SetItemText(index, 0, param->GetDescription());
+	return TRUE;
 }
 
 // 添加
@@ -127,6 +156,7 @@ BOOL CInputRuleDlg<RuleType>::Export(const CString& path)
 
 	// 导出xml
 	CRuleFile tmp;
+	m_ruleNameEdit.GetWindowText(m_ruleCopy.m_name);
 	*tmp.m_list = m_ruleCopy;
 	return tmp.Save(path);
 }
@@ -161,7 +191,7 @@ void CInputRuleDlg<RuleType>::ShowList(const RuleType& list)
 template<class RuleType>
 void CInputRuleDlg<RuleType>::ShowList(RuleType&& list)
 {
-	m_ruleCopy = std::move(m_ruleCopy);
+	m_ruleCopy = std::move(list);
 
 	m_ruleNameEdit.SetWindowText(m_ruleCopy.m_name);
 

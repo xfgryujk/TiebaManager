@@ -33,6 +33,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TBMGlobal.h"
 #include "TBMListeners.h"
 #include "PluginManager.h"
+#include "ConditionGUI.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -152,8 +153,9 @@ void CTiebaManagerApp::Init()
 	g_pUserCache = &g_userCache;
 	g_pTiebaOperate = &g_tiebaOperate;
 
-	// 内部Listeners
+	// 内部模块
 	CTBMListeners::GetInstance();
+	CConditionGUIManager::GetInstance();
 
 	// 插件
 	CPluginManager::GetInstance();
@@ -162,10 +164,13 @@ void CTiebaManagerApp::Init()
 // 释放
 int CTiebaManagerApp::ExitInstance()
 {
-	TRACE(_T("释放m_pluginManager\n"));
+	TRACE(_T("释放g_plan\n"));
+	g_plan.m_illegalRules->clear();
+	g_plan.m_trustedRules->clear();
+	TRACE(_T("释放CConditionGUIManager\n"));
+	CConditionGUIManager::GetInstance().Uninit();
+	TRACE(_T("释放PluginManager\n"));
 	CPluginManager::GetInstance().Uninit();
-	//TRACE(_T("释放m_plan\n"));
-	//g_plan = nullptr;
 	TRACE(_T("退出程序\n"));
 
 	return CWinApp::ExitInstance();

@@ -51,10 +51,13 @@ enum KeywordRange
 class TBM_CORE_API CKeywordParam final : public CConditionParam
 {
 public:
-	KeywordRange m_range;      // 搜索范围
-	BOOL m_not;                // 结果取FALSE
-	BOOL m_include;            // TRUE为包含，FALSE为匹配
-	RegexText m_keyword;       // 关键词
+	CKeywordParam() : CConditionParam(_T("关键词条件")) { }
+
+
+	KeywordRange m_range = ALL_CONTENT;      // 搜索范围
+	BOOL m_not = FALSE;                      // 结果取FALSE
+	BOOL m_include = TRUE;                   // TRUE为包含，FALSE为匹配
+	RegexText m_keyword;                     // 关键词
 };
 
 class TBM_CORE_API CKeywordCondition final : public CCondition, public Singleton<CKeywordCondition>
@@ -90,8 +93,11 @@ enum LevelOperator
 class TBM_CORE_API CLevelParam final : public CConditionParam
 {
 public:
-	LevelOperator m_operator;  // 操作符
-	int m_level;               // 等级
+	CLevelParam() : CConditionParam(_T("等级条件")) { }
+
+
+	LevelOperator m_operator = LESS;  // 操作符
+	int m_level = 1;                  // 等级
 };
 
 class TBM_CORE_API CLevelCondition final : public CCondition, public Singleton<CLevelCondition>

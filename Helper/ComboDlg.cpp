@@ -17,72 +17,66 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-// InputDlg.cpp : 实现文件
+// ComboDlg.cpp : 实现文件
 //
 
 #include "stdafx.h"
-#include <InputDlg.h>
+#include <ComboDlg.h>
 #include "resource.h"
 
 
-// CInputDlg 对话框
+// CComboDlg 对话框
 
-const UINT CInputDlg::IDD = IDD_INPUT_DIALOG;
+const UINT CComboDlg::IDD = IDD_COMBO_DIALOG;
 
 
-IMPLEMENT_DYNAMIC(CInputDlg, CDialog)
+IMPLEMENT_DYNAMIC(CComboDlg, CDialog)
 
-CInputDlg::CInputDlg(const CString& title, CString& content, BOOL* isRegex, BOOL showRegexCheck, UINT nIDTemplate, CWnd* pParent /*=NULL*/)
-	: CDialog(nIDTemplate, pParent), 
+CComboDlg::CComboDlg(const CString& title, const std::vector<CString>& list, int& select, UINT nIDTemplate, CWnd* pParent /*=NULL*/) :
+	CDialog(nIDTemplate, pParent), 
 	m_title(title), 
-	m_content(content),
-	m_isRegex(isRegex),
-	m_showRegexCheck(showRegexCheck)
+	m_list(list), 
+	m_select(select)
 {
 }
 
-CInputDlg::~CInputDlg()
+CComboDlg::~CComboDlg()
 {
 }
 
-void CInputDlg::DoDataExchange(CDataExchange* pDX)
+void CComboDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_EDIT1, m_edit);
-	DDX_Control(pDX, IDC_CHECK1, m_regexCheck);
+	DDX_Control(pDX, IDC_COMBO1, m_combo);
 }
 
 
-BEGIN_MESSAGE_MAP(CInputDlg, CDialog)
+BEGIN_MESSAGE_MAP(CComboDlg, CDialog)
 END_MESSAGE_MAP()
 
 
-// CInputDlg 消息处理程序
+// CComboDlg 消息处理程序
 
 // 初始化
-BOOL CInputDlg::OnInitDialog()
+BOOL CComboDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
 	SetWindowText(m_title);
 
-	m_edit.SetWindowText(m_content);
-	if (m_isRegex != NULL)
-		m_regexCheck.SetCheck(*m_isRegex);
+	for (const auto& i : m_list)
+		m_combo.AddString(i);
 
-	if (m_showRegexCheck)
-		m_regexCheck.ShowWindow(SW_NORMAL);
+	m_combo.SetCurSel(m_select);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
 
 // 确定
-void CInputDlg::OnOK()
+void CComboDlg::OnOK()
 {
-	m_edit.GetWindowText(m_content);
-	if (m_isRegex != NULL)
-		*m_isRegex = m_regexCheck.GetCheck();
+	m_select = m_combo.GetCurSel();
 
 	CDialog::OnOK();
 }
