@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="GBK"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 修复客户端接口某些小尾巴导致崩溃的问题</UpdateLog>
+    <UpdateLog>注意：此版本和以前的配置文件不兼容，请备份好以前的关键词等配置！
+
+1. 支持多条件同时成立（目前有关键词、等级条件）
+2. 修复客户端接口某个崩溃的BUG
+3. 配置文件使用UTF-8编码</UpdateLog>
     <Files>
         <item>
             <value>
