@@ -168,12 +168,10 @@ CConditionParam* CCondition::ReadParam(const XMLElement* optionNode)
 
 void CCondition::WriteParam(const CConditionParam& _param, XMLElement* optionNode)
 {
+	XMLNode* parent = optionNode->Parent();
+	parent->DeleteChild(optionNode);
 	const auto& param = (CDefaultConditionParam&)_param;
-	COption<CString> name("Name");
-	*name = param.m_conditionName;
-	name.Write(*optionNode);
-	DeepCloneXMLNode(&param.m_doc, optionNode->Parent());
-	optionNode->Parent()->DeleteChild(optionNode);
+	DeepCloneXMLNode(param.m_doc.FirstChild(), parent);
 }
 
 CConditionParam* CCondition::CloneParam(const CConditionParam& _param)
