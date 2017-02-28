@@ -48,6 +48,7 @@ protected:
 	std::vector<ThreadInfo> m_threads; // 当前扫描的主题列表
 	int m_threadIndex; // 下个要扫描的主题索引
 	std::mutex m_threadIndexLock;
+	BOOL m_noNewReply; // 无新回复
 
 
 	void ScanThreadImage();

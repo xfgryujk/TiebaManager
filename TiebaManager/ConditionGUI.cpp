@@ -47,6 +47,8 @@ void CConditionGUIManager::Uninit()
 
 BOOL CConditionGUIManager::AddConditionGUI(const CString& conditionName, std::function<CConditionParam*(CConditionParam*)> onSetCondition)
 {
+	if (&CCondition::GetCondition(conditionName) == &CCondition::s_defaultCondition)
+		return FALSE;
 	if (GetConditionGUIIndex(conditionName) != -1)
 		return FALSE;
 

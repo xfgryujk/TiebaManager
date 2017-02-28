@@ -353,7 +353,7 @@ void CTiebaManagerDlg::OnBnClickedButton4()
 	if (m_pluginDlg == NULL)
 	{
 		m_pluginDlg = new CPluginDlg(m_pluginDlg);
-		m_pluginDlg->Create(m_pluginDlg->IDD, this);
+		m_pluginDlg->Create(m_pluginDlg->IDD, GetDesktopWindow());
 	}
 }
 
@@ -363,7 +363,7 @@ void CTiebaManagerDlg::OnBnClickedButton5()
 	if (m_settingDlg == NULL)
 	{
 		m_settingDlg = new CSettingDlg(m_settingDlg);
-		m_settingDlg->Create(m_settingDlg->IDD, this);
+		m_settingDlg->Create(m_settingDlg->IDD, this); // 父窗口为this，防止设置条件时操作条件列表
 	}
 }
 #pragma endregion

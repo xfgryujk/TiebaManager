@@ -125,6 +125,7 @@ void CTBMScan::ScanThread(CString sPage)
 			}
 
 			// 扫描帖子
+			m_noNewReply = TRUE;
 			if (!g_pTbmCoreConfig->m_onlyScanTitle)
 			{
 				pass = TRUE;
@@ -149,7 +150,8 @@ void CTBMScan::ScanThread(CString sPage)
 			{
 				CString content;
 #pragma warning(suppress: 28159)
-				content.Format(_T("<font color=green>本轮扫描结束，用时%.3f秒</font>"), (float)(GetTickCount() - startTime) / 1000.0f);
+				content.Format(_T("<font color=green>本轮扫描结束，用时%.3f秒%s</font>"), float(GetTickCount() - startTime) / 1000.0f, 
+					m_noNewReply ? _T("，没有发现新帖子") : _T(""));
 				g_pLog->Log(content);
 			}
 
@@ -217,6 +219,7 @@ void CTBMScan::ScanPostThread(int threadID)
 					goto Next;
 				}
 			}
+			m_noNewReply = FALSE;
 
 			pass = TRUE;
 			g_preScanThreadEvent(threadID, thread, pass);
