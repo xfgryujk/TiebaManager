@@ -52,8 +52,11 @@ CTBMOperate::~CTBMOperate()
 // 添加确认
 void CTBMOperate::AddConfirm(Operation&& op)
 {
-	m_confirmQueue.push(std::move(op));
-}	
+	if (g_pTbmCoreConfig->m_confirm || op.forceToConfirm)
+		m_confirmQueue.push(std::move(op));
+	else
+		AddOperation(std::move(op));
+}
 
 // 确认线程
 void CTBMOperate::ConfirmThread()

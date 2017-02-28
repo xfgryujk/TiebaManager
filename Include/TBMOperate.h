@@ -70,6 +70,7 @@ class TBM_CORE_API CTBMOperate final : public Singleton<CTBMOperate>
 	virtual ~CTBMOperate();
 
 public:
+	// 如果不需要确认则AddOperation
 	void AddConfirm(Operation&& op);
 	void AddOperation(Operation&& op);
 
