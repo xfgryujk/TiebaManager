@@ -94,8 +94,8 @@ BOOL CSettingDlg::OnInitDialog()
 	m_tree.SetItemData(m_tree.InsertItem(_T("违规规则"), item), i++);
 	m_tree.SetItemData(m_tree.InsertItem(_T("信任规则"), item), i++);
 	m_tree.SetItemData(m_tree.InsertItem(_T("忽略主题"), item), i++);
-	m_tree.SetItemData(m_tree.InsertItem(_T("方案"), item), i++);
 	m_tree.Expand(item, TVE_EXPAND);
+	m_tree.SetItemData(m_tree.InsertItem(_T("方案")), i++);
 	m_tree.SetItemData(m_tree.InsertItem(_T("账号管理")), i++);
 	m_tree.SetItemData(m_tree.InsertItem(_T("关于&更新")), i++);
 

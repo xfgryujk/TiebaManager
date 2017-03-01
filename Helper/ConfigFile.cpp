@@ -118,12 +118,15 @@ HELPER_API DECLEAR_READ(CString)
 		goto UseDefault;
 	LPCSTR value = content->ToText()->Value();
 
-	// 历史问题，以后全改成UTF-8
+	CString encoding;
 	const XMLDeclaration* decl = root.GetDocument()->FirstChild()->ToDeclaration();
-	if (decl != NULL && strstr(decl->Value(), "encoding=\"GBK\"") != NULL)
+	if (decl != NULL)
+		encoding = CString(decl->Value()).MakeLower();
+	if (encoding == _T("gbk") || encoding == _T("gb2312"))
 		m_value = GBK2W(value);
 	else
 		m_value = UTF82W(value);
+
 	if (!IsValid(m_value))
 		UseDefault();
 }

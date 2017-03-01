@@ -30,6 +30,8 @@ CTBMCoreListeners::CTBMCoreListeners()
 	g_checkThreadIllegalEvent.AddListener(OnCheckIllegal<ThreadInfo>);
 	g_checkPostIllegalEvent.AddListener(OnCheckIllegal<PostInfo>);
 	g_checkLzlIllegalEvent.AddListener(OnCheckIllegal<LzlInfo>);
+
+	g_preScanThreadEvent.AddListener(OnPreScanThread);
 }
 
 template<class TbObj>

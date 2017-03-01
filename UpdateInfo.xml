@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="GBK"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>注意：此版本和以前的配置文件不兼容，请备份好以前的关键词等配置！
-
-1. 支持多条件同时成立（目前有关键词、等级条件）
-2. 修复客户端接口某个崩溃的BUG
-3. 配置文件使用UTF-8编码</UpdateLog>
+    <UpdateLog>1. 纭鎿嶄綔涓嶉樆濉炰笉闇�瑕佺‘璁ょ殑鎿嶄綔
+2. 淇蹇界暐涓婚鏃犳晥鐨凚UG</UpdateLog>
     <Files>
         <item>
             <value>
