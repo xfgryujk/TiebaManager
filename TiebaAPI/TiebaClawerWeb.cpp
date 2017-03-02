@@ -57,6 +57,8 @@ const TCHAR POST_AUTHOR_PORTRAIT_LEFT2[]        = _T(R"(src=")");
 const TCHAR POST_AUTHOR_PORTRAIT_RIGHT2[]       = _T("\"");
 const TCHAR POST_AUTHOR_LEVEL_LEFT[]            = _T(R"(<div class="d_badge_lv">)");
 const TCHAR POST_AUTHOR_LEVEL_RIGHT[]           = _T("</div>");
+const TCHAR POST_TIME_LEFT[]                    = _T(R"(楼</span><span class="tail-info">)");
+const TCHAR POST_TIME_RIGHT[]                   = _T("</span>");
 const TCHAR POST_CONTENT_LEFT[]                 = _T("<cc>");
 const TCHAR POST_CONTENT_RIGHT[]                = _T("</cc>");
 const TCHAR POST_SIGN_LEFT[]                    = _T(R"(<img class="j_user_sign")");
@@ -100,6 +102,7 @@ BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreT
 		thread.author = dataField[L"author_name"].GetString();
 		thread.authorID = GetStringBetween(rawThread, THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
 		thread.authorPortraitUrl = _T("");
+		thread.timestamp = 0;
 		thread.reply.Format(_T("%u"), dataField[L"reply_num"].GetUint());
 		thread.title = HTMLUnescape(GetStringBetween(rawThread, THREAD_TITLE_LEFT, THREAD_TITLE_RIGHT));
 		thread.preview = HTMLUnescape(GetStringBetween(rawThread, THREAD_PREVIEW_LEFT, THREAD_PREVIEW_RIGHT).Trim())
@@ -175,6 +178,19 @@ TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const C
 		post.authorPortraitUrl = GetStringBetween(rawPost, POST_AUTHOR_PORTRAIT_LEFT1, POST_AUTHOR_PORTRAIT_RIGHT1);
 		if (post.authorPortraitUrl == _T(""))
 			post.authorPortraitUrl = GetStringBetween(rawPost, POST_AUTHOR_PORTRAIT_LEFT2, POST_AUTHOR_PORTRAIT_RIGHT2);
+
+		tm time; // 本地时间（假设为北京时间），应该没有人把系统时区设置为其他的吧...
+		if (_stscanf_s(GetStringBetween(rawPost, POST_TIME_LEFT, POST_TIME_RIGHT), _T("%d-%d-%d %d:%d"),
+			&time.tm_year, &time.tm_mon, &time.tm_mday, &time.tm_hour, &time.tm_min) != 5)
+			post.timestamp = 0;
+		else
+		{
+			time.tm_sec = 0;
+			time.tm_year -= 1900;
+			time.tm_mon -= 1;
+			post.timestamp = mktime(&time);
+		}
+
 		post.pid.Format(_T("%I64u"), dataField[L"content"][L"post_id"].GetUint64());
 		post.floor.Format(_T("%u"), dataField[L"content"][L"post_no"].GetUint());
 		post.authorLevel = GetStringBetween(rawPost, POST_AUTHOR_LEVEL_LEFT, POST_AUTHOR_LEVEL_RIGHT);
@@ -272,6 +288,7 @@ void TiebaClawerWeb::GetLzls(const CString& fid, const CString& tid, const CStri
 			lzl.author = comment[L"username"].GetString();
 			lzl.authorID = comment[L"user_id"].GetString();
 			lzl.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + userList[(LPCWSTR)lzl.authorID][L"portrait"].GetString();
+			lzl.timestamp = comment[L"now_time"].GetInt64();
 			lzl.cid = comment[L"comment_id"].GetString();
 			lzl.floor = floor;
 			lzl.content = comment[L"content"].GetString();

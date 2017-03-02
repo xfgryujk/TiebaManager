@@ -64,6 +64,7 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 		thread.author = rawThread[L"author"][L"name"].GetString();
 		thread.authorID = rawThread[L"author"][L"id"].GetString();
 		thread.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + rawThread[L"author"][L"portrait"].GetString();
+		thread.timestamp = _ttoi64(rawThread[L"create_time"].GetString());
 		thread.reply = rawThread[L"reply_num"].GetString();
 		thread.title = rawThread[L"title"].GetString();
 
@@ -148,6 +149,7 @@ static void GetLzls(const CString& tid, const GenericDocument<UTF16<> >& documen
 			const auto& user = userList[userIndex[lzl.authorID]];
 			lzl.author = user[L"name"].GetString();
 			lzl.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + user[L"portrait"].GetString();
+			lzl.timestamp = _ttoi64(subPost[L"time"].GetString());
 			lzl.cid = subPost[L"id"].GetString();
 			lzl.floor = post[L"floor"].GetString();
 
@@ -222,6 +224,7 @@ TiebaClawer::GetPostsResult TiebaClawerClient::GetPosts(const CString& fid, cons
 		post.floor = rawPost[L"floor"].GetString();
 		post.authorLevel = user[L"level_id"].GetString();
 		post.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + user[L"portrait"].GetString();
+		post.timestamp = _ttoi64(rawPost[L"time"].GetString());
 
 		post.content = _T("");
 		for (const auto& content : rawPost[L"content"].GetArray())

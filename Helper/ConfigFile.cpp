@@ -121,7 +121,7 @@ HELPER_API DECLEAR_READ(CString)
 	CString encoding;
 	const XMLDeclaration* decl = root.GetDocument()->FirstChild()->ToDeclaration();
 	if (decl != NULL)
-		encoding = CString(decl->Value()).MakeLower();
+		encoding = GetStringBetween(CString(decl->Value()), _T("encoding=\""), _T("\"")).MakeLower();
 	if (encoding == _T("gbk") || encoding == _T("gb2312"))
 		m_value = GBK2W(value);
 	else

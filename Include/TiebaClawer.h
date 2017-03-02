@@ -41,13 +41,14 @@ class TIEBA_API_API TBObject
 {
 public:
 	enum TBObjectType { THREAD, POST, LZL };
-	TBObjectType m_type;
+	const TBObjectType m_type;
 	
 	CString rawData;
 	CString tid;		          // 主题ID
 	CString author;		          // 作者
 	CString authorID;	          // 作者ID
-	CString authorPortraitUrl;	  // 作者头像URL
+	CString authorPortraitUrl;	  // 作者头像URL。对于Web接口主题为空
+	time_t timestamp;             // 创建时间，Unix时间戳(UTC)。对于Web接口主题为0
 
 	
 	TBObject(TBObjectType type) : m_type(type) { }
