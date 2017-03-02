@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ConditionGUI.h"
 #include "InputKeywordDlg.h"
 #include "InputLevelDlg.h"
+#include "InputTimeDlg.h"
 
 
 CConditionGUIManager::CConditionGUIManager()
@@ -33,10 +34,31 @@ CConditionGUIManager::~CConditionGUIManager()
 	Uninit();
 }
 
+template<class ParamType, class EditDlg>
+static CConditionParam* SetCondition(CConditionParam* _param)
+{
+	auto param = (ParamType*)_param;
+	BOOL release = FALSE;
+	if (param == nullptr)
+	{
+		param = new ParamType();
+		release = TRUE;
+	}
+
+	EditDlg dlg(param);
+	if (dlg.DoModal() == IDOK)
+		return param;
+
+	if (release)
+		delete param;
+	return nullptr;
+}
+
 void CConditionGUIManager::Init()
 {
-	AddConditionGUI(_T("关键词条件"), CInputKeywordDlg::SetKeywordCondition);
-	AddConditionGUI(_T("等级条件"), CInputLevelDlg::SetLevelCondition);
+	AddConditionGUI(_T("关键词条件"), SetCondition<CKeywordParam, CInputKeywordDlg>);
+	AddConditionGUI(_T("等级条件"), SetCondition<CLevelParam, CInputLevelDlg>);
+	AddConditionGUI(_T("时间条件"), SetCondition<CTimeParam, CInputTimeDlg>);
 }
 
 void CConditionGUIManager::Uninit()

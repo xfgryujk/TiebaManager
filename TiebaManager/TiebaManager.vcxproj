@@ -134,6 +134,7 @@
     <ClInclude Include="InputKeywordDlg.h" />
     <ClInclude Include="InputLevelDlg.h" />
     <ClInclude Include="InputRuleDlg.h" />
+    <ClInclude Include="InputTimeDlg.h" />
     <ClInclude Include="PluginDlg.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="ImageViewDlg.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="InputKeywordDlg.cpp" />
     <ClCompile Include="InputLevelDlg.cpp" />
     <ClCompile Include="InputRuleDlg.cpp" />
+    <ClCompile Include="InputTimeDlg.cpp" />
     <ClCompile Include="PluginDlg.cpp" />
     <ClCompile Include="RulesPage.cpp" />
     <ClCompile Include="TBMAPI.cpp" />

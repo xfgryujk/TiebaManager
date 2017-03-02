@@ -313,4 +313,3 @@ BOOL CRule::Match(const LzlInfo& lzl, int& pos, int& length)
 	}
 	return TRUE;
 }
-

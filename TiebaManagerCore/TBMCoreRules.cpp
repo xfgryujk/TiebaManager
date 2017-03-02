@@ -72,6 +72,7 @@ void InitRules()
 {
 	CCondition::AddCondition(CKeywordCondition::GetInstance());
 	CCondition::AddCondition(CLevelCondition::GetInstance());
+	CCondition::AddCondition(CTimeCondition::GetInstance());
 }
 
 
@@ -253,12 +254,12 @@ CConditionParam* CLevelCondition::ReadParam(const tinyxml2::XMLElement* optionNo
 	auto* param = new CLevelParam();
 
 	param->m_conditionName = m_name;
-	COption<int> op("Operator", LevelOperator::LESS, InRange<int, LevelOperator::LESS, LevelOperator::GREATER>);
+	COption<int> op("Operator", CLevelParam::LESS, InRange<int, CLevelParam::LESS, CLevelParam::GREATER>);
 	COption<int> level("Level", 1, InRange<int, 1, 18>);
 	op.Read(*optionNode);
 	level.Read(*optionNode);
 
-	param->m_operator = LevelOperator(*op);
+	param->m_operator = CLevelParam::Operator(*op);
 	param->m_level = level;
 
 	return param;
@@ -299,12 +300,95 @@ BOOL CLevelCondition::MatchPost(const CConditionParam& _param, const PostInfo& p
 	switch (param.m_operator)
 	{
 	default: return FALSE;
-	case LevelOperator::LESS:       return level <= param.m_level;
-	case LevelOperator::GREATER:    return level >= param.m_level;
+	case CLevelParam::LESS:       return level <= param.m_level;
+	case CLevelParam::GREATER:    return level >= param.m_level;
 	}
 }
 
 BOOL CLevelCondition::MatchLzl(const CConditionParam& _param, const LzlInfo& lzl, int& pos, int& length)
 {
 	return FALSE;
+}
+
+
+// 时间条件
+
+CString CTimeCondition::GetDescription(const CConditionParam& _param)
+{
+	const auto& param = (CTimeParam&)_param;
+	static LPCTSTR operatorDesc[] = {
+		_T("时间 <= "),
+		_T("时间 >= ")
+	};
+
+	tm timeInfo;
+	localtime_s(&timeInfo, &param.m_time);
+	CString time;
+	_tcsftime(time.GetBuffer(100), 100, _T("%Y-%m-%d %X"), &timeInfo);
+	time.ReleaseBuffer();
+	return operatorDesc[param.m_operator] + time;
+}
+
+
+CConditionParam* CTimeCondition::ReadParam(const tinyxml2::XMLElement* optionNode)
+{
+	auto* param = new CTimeParam();
+
+	param->m_conditionName = m_name;
+	COption<int> op("Operator", CTimeParam::GREATER, InRange<int, CTimeParam::LESS, CTimeParam::GREATER>);
+	COption<time_t> time("Time", 0LL);
+	op.Read(*optionNode);
+	time.Read(*optionNode);
+
+	param->m_operator = CTimeParam::Operator(*op);
+	param->m_time = time;
+
+	return param;
+}
+
+void CTimeCondition::WriteParam(const CConditionParam& _param, tinyxml2::XMLElement* optionNode)
+{
+	const auto& param = (CTimeParam&)_param;
+
+	COption<int> op("Operator");
+	*op = param.m_operator;
+	op.Write(*optionNode);
+	COption<time_t> time("Time");
+	*time = param.m_time;
+	time.Write(*optionNode);
+}
+
+CConditionParam* CTimeCondition::CloneParam(const CConditionParam& _param)
+{
+	const auto& param = (CTimeParam&)_param;
+	return new CTimeParam(param);
+}
+
+
+BOOL CTimeCondition::Match(const CTimeParam& param, const TBObject& obj)
+{
+	if (obj.timestamp == 0)
+		return FALSE;
+
+	switch (param.m_operator)
+	{
+	default: return FALSE;
+	case CTimeParam::LESS:       return obj.timestamp <= param.m_time;
+	case CTimeParam::GREATER:    return obj.timestamp >= param.m_time;
+	}
+}
+
+BOOL CTimeCondition::MatchThread(const CConditionParam& _param, const ThreadInfo& thread, int& pos, int& length)
+{
+	return Match((CTimeParam&)_param, thread);
+}
+
+BOOL CTimeCondition::MatchPost(const CConditionParam& _param, const PostInfo& post, int& pos, int& length)
+{
+	return Match((CTimeParam&)_param, post);
+}
+
+BOOL CTimeCondition::MatchLzl(const CConditionParam& _param, const LzlInfo& lzl, int& pos, int& length)
+{
+	return Match((CTimeParam&)_param, lzl);
 }

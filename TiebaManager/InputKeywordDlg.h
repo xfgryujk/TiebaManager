@@ -44,8 +44,6 @@ public:
 	virtual void OnOK();
 	afx_msg void OnBnClickedButton7();
 
-	static CConditionParam* SetKeywordCondition(CConditionParam* param);
-
 
 public:
 	CComboBox m_rangeCombo;

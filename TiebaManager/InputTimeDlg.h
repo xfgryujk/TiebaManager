@@ -20,20 +20,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "resource.h"
 #include <TBMCoreRules.h>
+#include "afxwin.h"
+#include "afxdtctl.h"
 
 
-// CInputLevelDlg 对话框
+// CInputTimeDlg 对话框
 
-class CInputLevelDlg : public CDialog
+class CInputTimeDlg : public CDialog
 {
-	DECLARE_DYNAMIC(CInputLevelDlg)
+	DECLARE_DYNAMIC(CInputTimeDlg)
 
 public:
-	CInputLevelDlg(CLevelParam* param, CWnd* pParent = NULL);   // 标准构造函数
-	virtual ~CInputLevelDlg();
+	CInputTimeDlg(CTimeParam* param, CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~CInputTimeDlg();
 
 // 对话框数据
-	enum { IDD = IDD_INPUT_LEVEL_DIALOG };
+	enum { IDD = IDD_TIME_DIALOG };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
@@ -46,8 +48,8 @@ public:
 
 public:
 	CComboBox m_operatorCombo;
-	CEdit m_levelEdit;
+	CDateTimeCtrl m_timeCtrl;
 
 protected:
-	CLevelParam* m_param;
+	CTimeParam* m_param;
 };

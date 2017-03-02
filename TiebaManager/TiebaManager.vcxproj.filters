@@ -210,6 +210,9 @@
     <ClInclude Include="InputKeywordDlg.h">
       <Filter>头文件\GUI\Setting\Condition</Filter>
     </ClInclude>
+    <ClInclude Include="InputTimeDlg.h">
+      <Filter>头文件\GUI\Setting\Condition</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -321,6 +324,9 @@
       <Filter>源文件\GUI\Setting\Condition</Filter>
     </ClCompile>
     <ClCompile Include="InputKeywordDlg.cpp">
+      <Filter>源文件\GUI\Setting\Condition</Filter>
+    </ClCompile>
+    <ClCompile Include="InputTimeDlg.cpp">
       <Filter>源文件\GUI\Setting\Condition</Filter>
     </ClCompile>
   </ItemGroup>

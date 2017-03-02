@@ -17,66 +17,62 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-// InputLevelDlg.cpp : 实现文件
+// InputTimeDlg.cpp : 实现文件
 //
 
 #include "stdafx.h"
 #include "TiebaManager.h"
-#include "InputLevelDlg.h"
+#include "InputTimeDlg.h"
 
 
-// CInputLevelDlg 对话框
+// CInputTimeDlg 对话框
 
-IMPLEMENT_DYNAMIC(CInputLevelDlg, CDialog)
+IMPLEMENT_DYNAMIC(CInputTimeDlg, CDialog)
 
-CInputLevelDlg::CInputLevelDlg(CLevelParam* param, CWnd* pParent /*=NULL*/) : 
-	CDialog(CInputLevelDlg::IDD, pParent), 
+CInputTimeDlg::CInputTimeDlg(CTimeParam* param, CWnd* pParent /*=NULL*/) :
+	CDialog(CInputTimeDlg::IDD, pParent), 
 	m_param(param)
 {
 }
 
-CInputLevelDlg::~CInputLevelDlg()
+CInputTimeDlg::~CInputTimeDlg()
 {
 }
 
-void CInputLevelDlg::DoDataExchange(CDataExchange* pDX)
+void CInputTimeDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO2, m_operatorCombo);
-	DDX_Control(pDX, IDC_EDIT1, m_levelEdit);
+	DDX_Control(pDX, IDC_DATETIMEPICKER1, m_timeCtrl);
 }
 
 
-BEGIN_MESSAGE_MAP(CInputLevelDlg, CDialog)
+BEGIN_MESSAGE_MAP(CInputTimeDlg, CDialog)
 END_MESSAGE_MAP()
 
 
-// CInputLevelDlg 消息处理程序
+// CInputTimeDlg 消息处理程序
 
-BOOL CInputLevelDlg::OnInitDialog()
+
+BOOL CInputTimeDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
 	m_operatorCombo.SetCurSel(m_param->m_operator);
-	CString tmp;
-	tmp.Format(_T("%d"), m_param->m_level);
-	m_levelEdit.SetWindowText(tmp);
+	m_timeCtrl.SetFormat(_T("yyyy-MM-dd HH:mm:ss"));
+	CTime time(m_param->m_time);
+	m_timeCtrl.SetTime(&time);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
 }
 
-void CInputLevelDlg::OnOK()
+void CInputTimeDlg::OnOK()
 {
-	m_param->m_operator = CLevelParam::Operator(m_operatorCombo.GetCurSel());
-	CString tmp;
-	m_levelEdit.GetWindowText(tmp);
-	m_param->m_level = _ttoi(tmp);
-	if (m_param->m_level < 1 || m_param->m_level > 18)
-	{
-		AfxMessageBox(_T("等级范围1到18"), MB_ICONERROR);
-		return;
-	}
+	m_param->m_operator = CTimeParam::Operator(m_operatorCombo.GetCurSel());
+	CTime time;
+	m_timeCtrl.GetTime(time);
+	m_param->m_time = time.GetTime();
 
 	CDialog::OnOK();
 }

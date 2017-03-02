@@ -102,22 +102,3 @@ void CInputKeywordDlg::OnBnClickedButton7()
 
 	AfxMessageBox(res ? _T("匹配成功") : _T("匹配失败"));
 }
-
-CConditionParam* CInputKeywordDlg::SetKeywordCondition(CConditionParam* _param)
-{
-	auto param = (CKeywordParam*)_param;
-	BOOL release = FALSE;
-	if (param == nullptr)
-	{
-		param = new CKeywordParam();
-		release = TRUE;
-	}
-
-	CInputKeywordDlg dlg(param);
-	if (dlg.DoModal() == IDOK)
-		return param;
-
-	if (release)
-		delete param;
-	return nullptr;
-}

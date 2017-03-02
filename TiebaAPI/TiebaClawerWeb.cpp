@@ -293,7 +293,7 @@ void TiebaClawerWeb::GetLzls(const CString& fid, const CString& tid, const CStri
 			lzl.floor = floor;
 			lzl.content = comment[L"content"].GetString();
 			// 语音贴
-			if (comment[L"ptype"].GetInt() == 1)
+			if (comment.HasMember(L"ptype") && comment[L"ptype"].GetInt() == 1)
 			{
 				CString tmp;
 				tmp.Format(_T("\r\n") _T(R"(<div class="voice_player voice_player_mini voice_player_lzl"><a class="voice_player_inner" href="#"><span class="before">&nbsp;</span><span class="middle"><span class="speaker speaker_animate">&nbsp;</span><span class="time" style="width: 65px;"><span class="second">%u</span>"</span></span><span class="after">&nbsp;</span></a></div>)"), 

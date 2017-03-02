@@ -84,20 +84,21 @@ private:
 
 // 等级条件
 
-enum LevelOperator
-{
-	LESS,             // <=
-	GREATER           // >=
-};
-
 class TBM_CORE_API CLevelParam final : public CConditionParam
 {
 public:
+	enum Operator
+	{
+		LESS,             // <=
+		GREATER           // >=
+	};
+
+
 	CLevelParam() : CConditionParam(_T("等级条件")) { }
 
 
-	LevelOperator m_operator = LESS;  // 操作符
-	int m_level = 1;                  // 等级
+	Operator m_operator = LESS;  // 操作符
+	int m_level = 1;             // 等级
 };
 
 class TBM_CORE_API CLevelCondition final : public CCondition, public Singleton<CLevelCondition>
@@ -116,4 +117,45 @@ public:
 	virtual BOOL MatchThread(const CConditionParam& param, const ThreadInfo& thread, int& pos, int& length) override;
 	virtual BOOL MatchPost(const CConditionParam& param, const PostInfo& post, int& pos, int& length) override;
 	virtual BOOL MatchLzl(const CConditionParam& param, const LzlInfo& lzl, int& pos, int& length) override;
+};
+
+
+// 时间条件
+
+class TBM_CORE_API CTimeParam final : public CConditionParam
+{
+public:
+	enum Operator
+	{
+		LESS,             // <=
+		GREATER           // >=
+	};
+
+
+	CTimeParam() : CConditionParam(_T("时间条件")) { }
+
+
+	Operator m_operator = GREATER;  // 操作符
+	time_t m_time = time(NULL);     // Unix时间戳
+};
+
+class TBM_CORE_API CTimeCondition final : public CCondition, public Singleton<CTimeCondition>
+{
+	DECL_SINGLETON(CTimeCondition);
+private:
+	CTimeCondition() : CCondition(_T("时间条件")) { };
+
+public:
+	virtual CString GetDescription(const CConditionParam& param) override;
+
+	virtual CConditionParam* ReadParam(const tinyxml2::XMLElement* optionNode) override;
+	virtual void WriteParam(const CConditionParam& param, tinyxml2::XMLElement* optionNode) override;
+	virtual CConditionParam* CloneParam(const CConditionParam& param) override;
+
+	virtual BOOL MatchThread(const CConditionParam& param, const ThreadInfo& thread, int& pos, int& length) override;
+	virtual BOOL MatchPost(const CConditionParam& param, const PostInfo& post, int& pos, int& length) override;
+	virtual BOOL MatchLzl(const CConditionParam& param, const LzlInfo& lzl, int& pos, int& length) override;
+
+private:
+	BOOL Match(const CTimeParam& param, const TBObject& obj);
 };
