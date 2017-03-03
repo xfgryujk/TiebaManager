@@ -73,6 +73,7 @@ void InitRules()
 	CCondition::AddCondition(CKeywordCondition::GetInstance());
 	CCondition::AddCondition(CLevelCondition::GetInstance());
 	CCondition::AddCondition(CTimeCondition::GetInstance());
+	CCondition::AddCondition(CImageCondition::GetInstance());
 }
 
 
@@ -105,8 +106,7 @@ CConditionParam* CKeywordCondition::ReadParam(const tinyxml2::XMLElement* option
 {
 	auto* param = new CKeywordParam();
 
-	param->m_conditionName = m_name;
-	COption<int> range("Range", ALL_CONTENT, InRange<int, KeywordRange::TITLE, KeywordRange::ALL_CONTENT>);
+	COption<int> range("Range", CKeywordParam::ALL_CONTENT, InRange<int, CKeywordParam::TITLE, CKeywordParam::ALL_CONTENT>);
 	COption<BOOL> not("Not", FALSE);
 	COption<BOOL> include("Include", TRUE);
 	COption<RegexText> keyword("Keyword");
@@ -115,7 +115,7 @@ CConditionParam* CKeywordCondition::ReadParam(const tinyxml2::XMLElement* option
 	include.Read(*optionNode);
 	keyword.Read(*optionNode);
 
-	param->m_range = KeywordRange(*range);
+	param->m_range = CKeywordParam::KeywordRange(*range);
 	param->m_not = not;
 	param->m_include = include;
 	param->m_keyword = keyword;
@@ -148,7 +148,7 @@ CConditionParam* CKeywordCondition::CloneParam(const CConditionParam& _param)
 }
 
 
-BOOL CKeywordCondition::MatchContent(const CKeywordParam& param, const CString& content, int startPos, int& pos, int& length)
+BOOL CKeywordCondition::Match(const CKeywordParam& param, const CString& content, int startPos, int& pos, int& length)
 {
 	// 判断匹配
 	BOOL res;
@@ -187,13 +187,13 @@ BOOL CKeywordCondition::MatchThread(const CConditionParam& _param, const ThreadI
 	switch (param.m_range)
 	{
 	default: return FALSE;
-	case KeywordRange::TITLE:           startPos = 0;                                    content = thread.title;         break;
-	case KeywordRange::PREVIEW:         startPos = thread.title.GetLength() + 2;         content = thread.preview;       break;
-	case KeywordRange::AUTHOR:          startPos = thread.GetContent().GetLength() + 7;  content = thread.author;        break;
-	case KeywordRange::ALL_CONTENT:     startPos = 0;                                    content = thread.GetContent();  break;
+	case CKeywordParam::TITLE:           startPos = 0;                                    content = thread.title;         break;
+	case CKeywordParam::PREVIEW:         startPos = thread.title.GetLength() + 2;         content = thread.preview;       break;
+	case CKeywordParam::AUTHOR:          startPos = thread.GetContent().GetLength() + 7;  content = thread.author;        break;
+	case CKeywordParam::ALL_CONTENT:     startPos = 0;                                    content = thread.GetContent();  break;
 	}
 
-	return MatchContent(param, content, startPos, pos, length);
+	return Match(param, content, startPos, pos, length);
 }
 
 BOOL CKeywordCondition::MatchPost(const CConditionParam& _param, const PostInfo& post, int& pos, int& length)
@@ -206,12 +206,12 @@ BOOL CKeywordCondition::MatchPost(const CConditionParam& _param, const PostInfo&
 	switch (param.m_range)
 	{
 	default: return FALSE;
-	case KeywordRange::POST_CONTENT:    startPos = 0;                                    content = post.content;         break;
-	case KeywordRange::AUTHOR:          startPos = post.GetContent().GetLength() + 7;    content = post.author;          break;
-	case KeywordRange::ALL_CONTENT:     startPos = 0;                                    content = post.GetContent();    break;
+	case CKeywordParam::POST_CONTENT:    startPos = 0;                                    content = post.content;         break;
+	case CKeywordParam::AUTHOR:          startPos = post.GetContent().GetLength() + 7;    content = post.author;          break;
+	case CKeywordParam::ALL_CONTENT:     startPos = 0;                                    content = post.GetContent();    break;
 	}
 
-	return MatchContent(param, content, startPos, pos, length);
+	return Match(param, content, startPos, pos, length);
 }
 
 BOOL CKeywordCondition::MatchLzl(const CConditionParam& _param, const LzlInfo& lzl, int& pos, int& length)
@@ -224,12 +224,12 @@ BOOL CKeywordCondition::MatchLzl(const CConditionParam& _param, const LzlInfo& l
 	switch (param.m_range)
 	{
 	default: return FALSE;
-	case KeywordRange::LZL_CONTENT:     startPos = 0;                                    content = lzl.content;          break;
-	case KeywordRange::AUTHOR:          startPos = lzl.GetContent().GetLength() + 7;     content = lzl.author;           break;
-	case KeywordRange::ALL_CONTENT:     startPos = 0;                                    content = lzl.GetContent();     break;
+	case CKeywordParam::LZL_CONTENT:     startPos = 0;                                    content = lzl.content;          break;
+	case CKeywordParam::AUTHOR:          startPos = lzl.GetContent().GetLength() + 7;     content = lzl.author;           break;
+	case CKeywordParam::ALL_CONTENT:     startPos = 0;                                    content = lzl.GetContent();     break;
 	}
 
-	return MatchContent(param, content, startPos, pos, length);
+	return Match(param, content, startPos, pos, length);
 }
 
 
@@ -253,7 +253,6 @@ CConditionParam* CLevelCondition::ReadParam(const tinyxml2::XMLElement* optionNo
 {
 	auto* param = new CLevelParam();
 
-	param->m_conditionName = m_name;
 	COption<int> op("Operator", CLevelParam::LESS, InRange<int, CLevelParam::LESS, CLevelParam::GREATER>);
 	COption<int> level("Level", 1, InRange<int, 1, 18>);
 	op.Read(*optionNode);
@@ -334,7 +333,6 @@ CConditionParam* CTimeCondition::ReadParam(const tinyxml2::XMLElement* optionNod
 {
 	auto* param = new CTimeParam();
 
-	param->m_conditionName = m_name;
 	COption<int> op("Operator", CTimeParam::GREATER, InRange<int, CTimeParam::LESS, CTimeParam::GREATER>);
 	COption<time_t> time("Time", 0LL);
 	op.Read(*optionNode);

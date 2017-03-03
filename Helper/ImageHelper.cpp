@@ -31,7 +31,10 @@ static BOOL CImageToMat(const CImage& image, cv::Mat& img)
 	// 支持24位、32位图
 	int bpp = image.GetBPP() / 8;
 	if (bpp < 3)
+	{
+		img.release();
 		return FALSE;
+	}
 	for (int y = 0; y < image.GetHeight(); y++)
 	{
 		BYTE* src = (BYTE*)image.GetPixelAddress(0, y);
@@ -59,7 +62,10 @@ HELPER_API BOOL ReadImage(const CString& path, cv::Mat& img)
 	CImage image;
 	image.Load(path);
 	if (image.IsNull())
+	{
+		img.release();
 		return FALSE;
+	}
 
 	return CImageToMat(image, img);
 }
@@ -112,10 +118,10 @@ HELPER_API BOOL ReadImage(const BYTE* buffer, ULONG size, cv::Mat& img)
 }
 
 // 从图片地址取图片名
-HELPER_API CString GetImageName(const CString& img)
+HELPER_API CString GetImageName(const CString& imgUrl)
 {
-	LPTSTR pos = StrRChr(img, NULL, _T('/'));
-	CString imgName = (pos == NULL ? img : pos + 1);
+	LPTSTR pos = StrRChr(imgUrl, NULL, _T('/'));
+	CString imgName = (pos == NULL ? imgUrl : pos + 1);
 	int right = imgName.Find(_T("?"));
 	if (right != -1)
 		imgName = imgName.Left(right);

@@ -19,6 +19,12 @@
     <Filter Include="源文件\API">
       <UniqueIdentifier>{a1327302-0bd6-4bdc-8794-464b07d84c3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\API\Rule">
+      <UniqueIdentifier>{adf78608-bcab-4868-9803-cb2641a9cec1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\API\Rule">
+      <UniqueIdentifier>{ba6a34c5-0dfa-4341-8e6f-2cc61d5b76af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManagerCore.cpp">
@@ -39,17 +45,20 @@
     <ClCompile Include="TBMCoreEvents.cpp">
       <Filter>源文件\API</Filter>
     </ClCompile>
-    <ClCompile Include="TBMCoreRule.cpp">
-      <Filter>源文件\API</Filter>
-    </ClCompile>
-    <ClCompile Include="TBMCoreRules.cpp">
-      <Filter>源文件\API</Filter>
-    </ClCompile>
     <ClCompile Include="TBMCoreListeners.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="TBMCoreGlobal.cpp">
       <Filter>源文件\API</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMCoreRule.cpp">
+      <Filter>源文件\API\Rule</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMCoreRules.cpp">
+      <Filter>源文件\API\Rule</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageCondition.cpp">
+      <Filter>源文件\API\Rule</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -79,17 +88,17 @@
     <ClInclude Include="..\Include\TBMCoreEvents.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\TBMCoreRule.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\TBMCoreRules.h">
-      <Filter>头文件\API</Filter>
-    </ClInclude>
     <ClInclude Include="TBMCoreListeners.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\TBMCoreGlobal.h">
       <Filter>头文件\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TBMCoreRule.h">
+      <Filter>头文件\API\Rule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TBMCoreRules.h">
+      <Filter>头文件\API\Rule</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

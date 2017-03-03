@@ -22,6 +22,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "TBMCoreRule.h"
 #include "Singleton.h"
 #include "StringHelper.h"
+#pragma warning(disable:4819) // OpenCV头文件包含Unicode字符
+#include <opencv2\core\mat.hpp>
 
 
 // 规则
@@ -38,19 +40,20 @@ public:
 
 // 关键词条件
 
-enum KeywordRange
-{
-	TITLE,            // 主题标题
-	PREVIEW,          // 主题预览
-	POST_CONTENT,     // 帖子内容
-	LZL_CONTENT,      // 楼中楼内容
-	AUTHOR,           // 作者名
-	ALL_CONTENT       // 所有内容（包括主题标题、主题预览、帖子内容、楼中楼内容）
-};
-
 class TBM_CORE_API CKeywordParam final : public CConditionParam
 {
 public:
+	enum KeywordRange
+	{
+		TITLE,            // 主题标题
+		PREVIEW,          // 主题预览
+		POST_CONTENT,     // 帖子内容
+		LZL_CONTENT,      // 楼中楼内容
+		AUTHOR,           // 作者名
+		ALL_CONTENT       // 所有内容（包括主题标题、主题预览、帖子内容、楼中楼内容）
+	};
+
+
 	CKeywordParam() : CConditionParam(_T("关键词条件")) { }
 
 
@@ -78,7 +81,7 @@ public:
 	virtual BOOL MatchLzl(const CConditionParam& param, const LzlInfo& lzl, int& pos, int& length) override;
 
 private:
-	BOOL MatchContent(const CKeywordParam& param, const CString& content, int startPos, int& pos, int& length);
+	BOOL Match(const CKeywordParam& param, const CString& content, int startPos, int& pos, int& length);
 };
 
 
@@ -158,4 +161,53 @@ public:
 
 private:
 	BOOL Match(const CTimeParam& param, const TBObject& obj);
+};
+
+
+// 图片条件
+
+class TBM_CORE_API CImageParam final : public CConditionParam
+{
+public:
+	enum Algorithm
+	{
+		EQUAL,            // RGB完全相等
+		PSNR,
+		SSIM,
+		MATCH_TEMPLATE    // 模板匹配，计算使用归一化平方差
+	};
+
+
+	CImageParam() : CConditionParam(_T("图片条件")) { }
+
+
+	CString m_imagePath;             // 图片路径
+	Algorithm m_algorithm = PSNR;    // 比较算法
+	BOOL m_ignoreSize = FALSE;       // 比较不同尺寸图片前缩放，用于PSNR、SSIM
+	double m_threshold = 35.0;       // 阈值，用于PSNR、SSIM、模板匹配
+						     
+	cv::Mat m_image;                 // 图片数据，改变m_imagePath或m_algorithm后应立即调用CImageCondition::UpdateImage
+};
+
+class TBM_CORE_API CImageCondition final : public CCondition, public Singleton<CImageCondition>
+{
+	DECL_SINGLETON(CImageCondition);
+private:
+	CImageCondition() : CCondition(_T("图片条件")) { };
+
+public:
+	virtual CString GetDescription(const CConditionParam& param) override;
+
+	virtual CConditionParam* ReadParam(const tinyxml2::XMLElement* optionNode) override;
+	virtual void WriteParam(const CConditionParam& param, tinyxml2::XMLElement* optionNode) override;
+	virtual CConditionParam* CloneParam(const CConditionParam& param) override;
+	// 读取图片数据、预处理
+	void UpdateImage(CImageParam& param);
+
+	virtual BOOL MatchThread(const CConditionParam& param, const ThreadInfo& thread, int& pos, int& length) override;
+	virtual BOOL MatchPost(const CConditionParam& param, const PostInfo& post, int& pos, int& length) override;
+	virtual BOOL MatchLzl(const CConditionParam& param, const LzlInfo& lzl, int& pos, int& length) override;
+
+private:
+	BOOL Match(const CImageParam& param, const TBObject& obj);
 };

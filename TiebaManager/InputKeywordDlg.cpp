@@ -77,7 +77,7 @@ BOOL CInputKeywordDlg::OnInitDialog()
 
 void CInputKeywordDlg::OnOK()
 {
-	m_param->m_range = KeywordRange(m_rangeCombo.GetCurSel());
+	m_param->m_range = CKeywordParam::KeywordRange(m_rangeCombo.GetCurSel());
 	m_param->m_not = m_notCheck.GetCheck();
 	m_param->m_include = m_includeCombo.GetCurSel() == 0;
 	CString content;
