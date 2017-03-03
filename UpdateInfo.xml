@@ -79,7 +79,23 @@
         <item>
             <value>
                 <Dir></Dir>
-                <Name>opencv_world300.dll</Name>
+                <Name>opencv_core320.dll</Name>
+                <URL></URL>
+                <MD5></MD5>
+            </value>
+        </item>
+        <item>
+            <value>
+                <Dir></Dir>
+                <Name>opencv_imgcodecs320.dll</Name>
+                <URL></URL>
+                <MD5></MD5>
+            </value>
+        </item>
+        <item>
+            <value>
+                <Dir></Dir>
+                <Name>opencv_imgproc320.dll</Name>
                 <URL></URL>
                 <MD5></MD5>
             </value>

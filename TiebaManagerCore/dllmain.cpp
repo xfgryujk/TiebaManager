@@ -14,9 +14,6 @@ void InitRules(); // 见TBMCoreRules.cpp
 
 static AFX_EXTENSION_MODULE TiebaManagerCoreDLL = { NULL, NULL };
 
-
-
-
 extern "C" int APIENTRY
 DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {

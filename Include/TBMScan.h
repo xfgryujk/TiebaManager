@@ -51,7 +51,6 @@ protected:
 	BOOL m_noNewReply; // 无新回复
 
 
-	void ScanThreadImage();
 	void ScanThread(CString sPage);
 	void ScanPostThread(int threadID);
 	BOOL ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryReply,
