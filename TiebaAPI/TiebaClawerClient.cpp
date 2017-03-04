@@ -64,11 +64,14 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 		thread.author = rawThread[L"author"][L"name"].GetString();
 		thread.authorID = rawThread[L"author"][L"id"].GetString();
 		thread.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + rawThread[L"author"][L"portrait"].GetString();
-		thread.timestamp = _ttoi64(rawThread[L"create_time"].GetString());
+		if (rawThread.HasMember(L"create_time")) // 直播贴没有create_time
+			thread.timestamp = _ttoi64(rawThread[L"create_time"].GetString());
+		else
+			thread.timestamp = 0;
 		thread.reply = rawThread[L"reply_num"].GetString();
 		thread.title = rawThread[L"title"].GetString();
 
-		if (rawThread[L"abstract"][0].HasMember(L"text"))
+		if (!rawThread[L"abstract"].Empty() && rawThread[L"abstract"][0].HasMember(L"text"))
 			thread.preview = rawThread[L"abstract"][0][L"text"].GetString();
 		else
 			thread.preview = _T("");
