@@ -63,7 +63,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Dbghelp.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core320d.lib;Dbghelp.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
@@ -97,7 +97,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Dbghelp.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core320.lib;Dbghelp.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Midl>
@@ -130,6 +130,7 @@
     <ClInclude Include="IllegalRulesPage.h" />
     <ClInclude Include="ExplorerLog.h" />
     <ClInclude Include="InputIllegalRuleDlg.h" />
+    <ClInclude Include="InputImageDlg.h" />
     <ClInclude Include="InputKeywordDlg.h" />
     <ClInclude Include="InputLevelDlg.h" />
     <ClInclude Include="InputRuleDlg.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="ConfigHelper.cpp" />
     <ClCompile Include="IllegalRulesPage.cpp" />
     <ClCompile Include="InputIllegalRuleDlg.cpp" />
+    <ClCompile Include="InputImageDlg.cpp" />
     <ClCompile Include="InputKeywordDlg.cpp" />
     <ClCompile Include="InputLevelDlg.cpp" />
     <ClCompile Include="InputRuleDlg.cpp" />

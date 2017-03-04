@@ -173,7 +173,7 @@ public:
 	{
 		EQUAL,            // RGB完全相等
 		PSNR,
-		SSIM,
+		SSIM,             // 其实是MSSIM...
 		MATCH_TEMPLATE    // 模板匹配，计算使用归一化平方差
 	};
 
@@ -207,6 +207,9 @@ public:
 	virtual BOOL MatchThread(const CConditionParam& param, const ThreadInfo& thread, int& pos, int& length) override;
 	virtual BOOL MatchPost(const CConditionParam& param, const PostInfo& post, int& pos, int& length) override;
 	virtual BOOL MatchLzl(const CConditionParam& param, const LzlInfo& lzl, int& pos, int& length) override;
+
+	// 特殊情况返回负值
+	double CompareImage(const CImageParam& param, const cv::Mat& img);
 
 private:
 	BOOL Match(const CImageParam& param, const TBObject& obj);

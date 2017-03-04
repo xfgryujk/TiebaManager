@@ -22,6 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "InputKeywordDlg.h"
 #include "InputLevelDlg.h"
 #include "InputTimeDlg.h"
+#include "InputImageDlg.h"
 
 
 CConditionGUIManager::CConditionGUIManager()
@@ -59,6 +60,7 @@ void CConditionGUIManager::Init()
 	AddConditionGUI(_T("关键词条件"), SetCondition<CKeywordParam, CInputKeywordDlg>);
 	AddConditionGUI(_T("等级条件"), SetCondition<CLevelParam, CInputLevelDlg>);
 	AddConditionGUI(_T("时间条件"), SetCondition<CTimeParam, CInputTimeDlg>);
+	AddConditionGUI(_T("图片条件"), SetCondition<CImageParam, CInputImageDlg>);
 }
 
 void CConditionGUIManager::Uninit()

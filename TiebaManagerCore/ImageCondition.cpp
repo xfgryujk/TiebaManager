@@ -35,9 +35,9 @@ CString CImageCondition::GetDescription(const CConditionParam& _param)
 	switch (param.m_algorithm)
 	{
 	case CImageParam::EQUAL:           tmp = _T("完全相等"); break;
-	case CImageParam::PSNR:            tmp.Format(_T("PSNR > %.3lf%s"), param.m_threshold, param.m_ignoreSize ? _T("，忽略尺寸") : _T("")); break;
-	case CImageParam::SSIM:            tmp.Format(_T("SSIM > %.3lf%s"), param.m_threshold, param.m_ignoreSize ? _T("，忽略尺寸") : _T("")); break;
-	case CImageParam::MATCH_TEMPLATE:  tmp.Format(_T("模板匹配最小差异 < %.3lf"), param.m_threshold); break;
+	case CImageParam::PSNR:            tmp.Format(_T("PSNR > %.5lf%s"), param.m_threshold, param.m_ignoreSize ? _T("，忽略尺寸") : _T("")); break;
+	case CImageParam::SSIM:            tmp.Format(_T("SSIM > %.5lf%s"), param.m_threshold, param.m_ignoreSize ? _T("，忽略尺寸") : _T("")); break;
+	case CImageParam::MATCH_TEMPLATE:  tmp.Format(_T("模板匹配最小差异 < %.5lf"), param.m_threshold); break;
 	}
 	res += tmp;
 	return res;
@@ -144,6 +144,9 @@ static BOOL ImageEquals(const cv::Mat& I1, const cv::Mat& I2)
 // I1、I2先转为灰度图
 static double GetPSNR(const cv::Mat& I1, const cv::Mat& I2)
 {
+	if (I1.cols != I2.cols || I1.rows != I2.rows)
+		return 0.0;
+
 	cv::Mat s1;
 	cv::absdiff(I1, I2, s1);   // |I1 - I2|
 	s1.convertTo(s1, CV_32F);  // cannot make a square on 8 bits
@@ -153,8 +156,8 @@ static double GetPSNR(const cv::Mat& I1, const cv::Mat& I2)
 
 	double sse = s.val[0]; // sum channels
 
-	if (sse <= 1e-10) // for small values return zero
-		return 0;
+	if (sse <= 1e-10) // for small values return a big number
+		return 999999.0;
 
 	double mse = sse / (double)(I1.channels() * I1.total());
 	double psnr = 10.0 * log10((255 * 255) / mse);
@@ -164,6 +167,9 @@ static double GetPSNR(const cv::Mat& I1, const cv::Mat& I2)
 // I1、I2先转为灰度图
 static double GetMSSIM(const cv::Mat& i1, const cv::Mat& i2)
 {
+	if (i1.cols != i2.cols || i1.rows != i2.rows)
+		return 0.0;
+
 	static const double C1 = 6.5025, C2 = 58.5225;
 	/***************************** INITS **********************************/
 	static const int d = CV_32F;
@@ -227,15 +233,18 @@ static double GetMSSIM(const cv::Mat& i1, const cv::Mat& i2)
 	}
 	catch (...) // GaussianBlur创建Mat时可能抛出异常-215？
 	{
-		return 0;
+		return 0.0;
 	}
 }
 
 // I1中寻找I2，I1、I2先转为灰度图，返回最小归一化平方差
 static double TemplateMatch(const cv::Mat& image, const cv::Mat& templ)
 {
+	if (image.cols < templ.cols || image.rows < templ.rows)
+		return 999999.0;
+
 	cv::Mat res;
-	cv::matchTemplate(image, templ, res, cv::TM_CCOEFF_NORMED);
+	cv::matchTemplate(image, templ, res, cv::TM_SQDIFF_NORMED);
 	double minVal;
 	cv::minMaxLoc(res, &minVal);
 	return minVal;
@@ -255,24 +264,61 @@ BOOL CImageCondition::Match(const CImageParam& param, const TBObject& obj)
 		if (!imageCache.GetImage(i, img))
 			continue;
 
+		double cmpRes = CompareImage(param, img);
+		if (cmpRes < 0.0)
+			continue;
+
 		BOOL res;
-		if (param.m_algorithm == CImageParam::EQUAL)
-			res = ImageEquals(img, param.m_image);
-		else
+		switch (param.m_algorithm)
 		{
-			cv::Mat grayImg;
-			cv::cvtColor(img, grayImg, CV_BGR2GRAY);
-			switch (param.m_algorithm)
-			{
-			default: res = FALSE; break;
-			case CImageParam::PSNR:            res = GetPSNR(grayImg, param.m_image) > param.m_threshold;        break;
-			case CImageParam::SSIM:            res = GetMSSIM(grayImg, param.m_image) > param.m_threshold;       break;
-			case CImageParam::MATCH_TEMPLATE:  res = TemplateMatch(grayImg, param.m_image) < param.m_threshold;  break;
-			}
+		case CImageParam::EQUAL:
+			res = cmpRes > 0.99;
+			break;
+		case CImageParam::PSNR:
+		case CImageParam::SSIM:
+			res = cmpRes > param.m_threshold;
+			break;
+		case CImageParam::MATCH_TEMPLATE:
+			res = cmpRes < param.m_threshold;
+			break;
+		default:
+			res = FALSE;
+			break;
 		}
 		if (res)
 			return TRUE;
 	}
-
 	return FALSE;
+}
+
+double CImageCondition::CompareImage(const CImageParam& param, const cv::Mat& img)
+{
+	if (param.m_image.empty() || img.empty())
+		return -1.0;
+
+	if (param.m_algorithm == CImageParam::EQUAL)
+		return ImageEquals(img, param.m_image) ? 1.0 : 0.0;
+
+	if (param.m_image.cols < 30 || img.cols < 30) // 信息量太小
+		return -2.0;
+
+	cv::Mat grayImg;
+	cv::cvtColor(img, grayImg, CV_BGR2GRAY);
+
+	cv::Mat resizedParamImg = param.m_image;
+	if (param.m_ignoreSize && (param.m_algorithm == CImageParam::PSNR || param.m_algorithm == CImageParam::SSIM))
+	{
+		if (param.m_image.total() < grayImg.total())
+			cv::resize(grayImg, grayImg, param.m_image.size());
+		else
+			cv::resize(param.m_image, resizedParamImg, param.m_image.size());
+	}
+
+	switch (param.m_algorithm)
+	{
+	case CImageParam::PSNR:            return GetPSNR(grayImg, resizedParamImg);
+	case CImageParam::SSIM:            return GetMSSIM(grayImg, resizedParamImg);
+	case CImageParam::MATCH_TEMPLATE:  return TemplateMatch(grayImg, param.m_image);
+	default: return -3.0;
+	}
 }
