@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 确认操作不阻塞不需要确认的操作
-2. 修复忽略主题无效的BUG</UpdateLog>
+    <UpdateLog>1. 添加图片条件（测试中）
+2. 添加时间条件</UpdateLog>
     <Files>
         <item>
             <value>
