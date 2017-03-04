@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <TBMCoreRules.h>
 #include <ImageHelper.h>
 #include <opencv2\imgproc.hpp>
+#include <TBMCoreImageHelper.h>
 
 
 // 图片条件
@@ -108,12 +109,6 @@ void CImageCondition::UpdateImage(CImageParam& param)
 }
 
 
-BOOL CImageCondition::Match(const CImageParam& param, const TBObject& obj)
-{
-	// 未完成
-	return FALSE;
-}
-
 BOOL CImageCondition::MatchThread(const CConditionParam& _param, const ThreadInfo& thread, int& pos, int& length)
 {
 	return Match((CImageParam&)_param, thread);
@@ -129,3 +124,155 @@ BOOL CImageCondition::MatchLzl(const CConditionParam& _param, const LzlInfo& lzl
 	return Match((CImageParam&)_param, lzl);
 }
 
+
+static BOOL ImageEquals(const cv::Mat& I1, const cv::Mat& I2)
+{
+	int depth = I1.depth();
+	if (I1.cols != I2.cols || I1.rows != I2.rows || depth != I2.depth())
+		return FALSE;
+
+	for (int y = 0; y < I1.rows; y++)
+	{
+		auto* p1 = I1.ptr<BYTE>(y);
+		auto* p2 = I2.ptr<BYTE>(y);
+		if (memcmp(p1, p2, I1.cols * depth) != 0)
+			return FALSE;
+	}
+	return TRUE;
+}
+
+// I1、I2先转为灰度图
+static double GetPSNR(const cv::Mat& I1, const cv::Mat& I2)
+{
+	cv::Mat s1;
+	cv::absdiff(I1, I2, s1);   // |I1 - I2|
+	s1.convertTo(s1, CV_32F);  // cannot make a square on 8 bits
+	s1 = s1.mul(s1);           // |I1 - I2|^2
+
+	cv::Scalar s = sum(s1);    // sum elements per channel
+
+	double sse = s.val[0]; // sum channels
+
+	if (sse <= 1e-10) // for small values return zero
+		return 0;
+
+	double mse = sse / (double)(I1.channels() * I1.total());
+	double psnr = 10.0 * log10((255 * 255) / mse);
+	return psnr;
+}
+
+// I1、I2先转为灰度图
+static double GetMSSIM(const cv::Mat& i1, const cv::Mat& i2)
+{
+	static const double C1 = 6.5025, C2 = 58.5225;
+	/***************************** INITS **********************************/
+	static const int d = CV_32F;
+	try
+	{
+		cv::Mat I1, I2;
+		i1.convertTo(I1, d);           // cannot calculate on one byte large values
+		i2.convertTo(I2, d);
+
+		cv::Mat I2_2 = I2.mul(I2);        // I2^2
+		cv::Mat I1_2 = I1.mul(I1);        // I1^2
+		cv::Mat I1_I2 = I1.mul(I2);       // I1 * I2
+
+		/*************************** END INITS **********************************/
+
+		cv::Mat mu1, mu2;   // PRELIMINARY COMPUTING
+		cv::GaussianBlur(I1, mu1, cv::Size(11, 11), 1.5);
+		I1.release();
+		cv::GaussianBlur(I2, mu2, cv::Size(11, 11), 1.5);
+		I2.release();
+
+		cv::Mat mu1_2 = mu1.mul(mu1);
+		cv::Mat mu2_2 = mu2.mul(mu2);
+		cv::Mat mu1_mu2 = mu1.mul(mu2);
+		mu1.release();
+		mu2.release();
+
+		cv::Mat sigma1_2, sigma2_2, sigma12;
+
+		cv::GaussianBlur(I1_2, sigma1_2, cv::Size(11, 11), 1.5);
+		I1_2.release();
+		sigma1_2 -= mu1_2;
+
+		cv::GaussianBlur(I2_2, sigma2_2, cv::Size(11, 11), 1.5);
+		I2_2.release();
+		sigma2_2 -= mu2_2;
+
+		cv::GaussianBlur(I1_I2, sigma12, cv::Size(11, 11), 1.5);
+		I1_I2.release();
+		sigma12 -= mu1_mu2;
+
+		///////////////////////////////// FORMULA ////////////////////////////////
+		cv::Mat t1, t2, t3;
+
+		t1 = 2 * mu1_mu2 + C1;
+		t2 = 2 * sigma12 + C2;
+		t3 = t1.mul(t2);               // t3 = ((2*mu1_mu2 + C1).*(2*sigma12 + C2))
+
+		t1 = mu1_2 + mu2_2 + C1;
+		t2 = sigma1_2 + sigma2_2 + C2;
+		t1 = t1.mul(t2);               // t1 =((mu1_2 + mu2_2 + C1).*(sigma1_2 + sigma2_2 + C2))
+		t2.release();
+
+		cv::Mat ssim_map;
+		cv::divide(t3, t1, ssim_map);  // ssim_map =  t3./t1;
+		t1.release();
+		t3.release();
+
+		cv::Scalar mssim = cv::mean(ssim_map); // mssim = average of ssim map
+		return mssim.val[0];
+	}
+	catch (...) // GaussianBlur创建Mat时可能抛出异常-215？
+	{
+		return 0;
+	}
+}
+
+// I1中寻找I2，I1、I2先转为灰度图，返回最小归一化平方差
+static double TemplateMatch(const cv::Mat& image, const cv::Mat& templ)
+{
+	cv::Mat res;
+	cv::matchTemplate(image, templ, res, cv::TM_CCOEFF_NORMED);
+	double minVal;
+	cv::minMaxLoc(res, &minVal);
+	return minVal;
+}
+
+BOOL CImageCondition::Match(const CImageParam& param, const TBObject& obj)
+{
+	if (param.m_image.empty())
+		return FALSE;
+
+	auto& imageCache = CImageCache::GetInstance();
+	std::vector<CString> urls;
+	GetImageUrls(obj, urls);
+	for (const auto& i : urls)
+	{
+		cv::Mat img;
+		if (!imageCache.GetImage(i, img))
+			continue;
+
+		BOOL res;
+		if (param.m_algorithm == CImageParam::EQUAL)
+			res = ImageEquals(img, param.m_image);
+		else
+		{
+			cv::Mat grayImg;
+			cv::cvtColor(img, grayImg, CV_BGR2GRAY);
+			switch (param.m_algorithm)
+			{
+			default: res = FALSE; break;
+			case CImageParam::PSNR:            res = GetPSNR(grayImg, param.m_image) > param.m_threshold;        break;
+			case CImageParam::SSIM:            res = GetMSSIM(grayImg, param.m_image) > param.m_threshold;       break;
+			case CImageParam::MATCH_TEMPLATE:  res = TemplateMatch(grayImg, param.m_image) < param.m_threshold;  break;
+			}
+		}
+		if (res)
+			return TRUE;
+	}
+
+	return FALSE;
+}

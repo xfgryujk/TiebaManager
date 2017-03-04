@@ -23,7 +23,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // 配置文件路径
 CString OPTIONS_DIR_PATH = _T("Option\\");
-CString IMG_CACHE_PATH = _T("ImageCache\\");
 CString PLUGIN_PATH = _T("Plugin\\");
 
 CString GLOBAL_CONFIG_PATH = _T("\\options.xml");	// 程序初始化时初始化

@@ -171,9 +171,6 @@
     <ClInclude Include="TBMListeners.h">
       <Filter>头文件\Event</Filter>
     </ClInclude>
-    <ClInclude Include="GetImages.h">
-      <Filter>头文件\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\TBMAPI.h">
       <Filter>头文件\API</Filter>
     </ClInclude>
@@ -295,9 +292,6 @@
     </ClCompile>
     <ClCompile Include="TBMListeners.cpp">
       <Filter>源文件\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="GetImages.cpp">
-      <Filter>源文件\Helper</Filter>
     </ClCompile>
     <ClCompile Include="TBMEvents.cpp">
       <Filter>源文件\API</Filter>

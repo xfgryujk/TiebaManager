@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "ConfirmDlg.h"
 #include "ImageViewDlg.h"
-#include "GetImages.h"
+#include <TBMCoreImageHelper.h>
 
 
 // CConfirmDlg 对话框
@@ -95,7 +95,7 @@ BOOL CConfirmDlg::OnInitDialog()
 		m_contentEdit.SetSel(m_operation->pos, m_operation->pos + m_operation->length);
 
 		auto img = std::make_unique<std::vector<CString> >();
-		CGetImages(*m_operation->object)(*img);
+		GetImageUrls(*m_operation->object, *img);
 		if (!img->empty())
 		{
 			m_imageViewDlg = new CImageViewDlg(m_imageViewDlg, this);

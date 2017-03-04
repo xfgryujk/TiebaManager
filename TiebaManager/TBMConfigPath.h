@@ -22,7 +22,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // 配置文件路径
 extern CString OPTIONS_DIR_PATH;
-extern CString IMG_CACHE_PATH;
 extern CString PLUGIN_PATH;
 
 extern CString GLOBAL_CONFIG_PATH;		// 程序初始化时初始化

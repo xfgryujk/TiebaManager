@@ -112,6 +112,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TBMCoreImageHelper.cpp" />
     <ClCompile Include="ImageCondition.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -130,6 +131,7 @@
     <None Include="res\TiebaManagerCore.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Include\TBMCoreImageHelper.h" />
     <ClInclude Include="..\Include\TBMCoreGlobal.h" />
     <ClInclude Include="..\Include\TBMCoreEvents.h" />
     <ClInclude Include="..\Include\TBMCoreRule.h" />

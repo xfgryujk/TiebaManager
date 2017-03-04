@@ -23,6 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "PluginManager.h"
 #include "TBMGlobal.h"
 #include "TBMConfigPath.h"
+#include <TBMCoreImageHelper.h>
 #include "ConditionGUI.h"
 
 
@@ -75,7 +76,7 @@ TBM_API CString GetCurrentUserDir()
 
 TBM_API CString GetImgCacheDir()
 {
-	return IMG_CACHE_PATH;
+	return CImageCache::CACHE_PATH;
 }
 
 

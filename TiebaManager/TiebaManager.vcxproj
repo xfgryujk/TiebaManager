@@ -127,7 +127,6 @@
     <ClInclude Include="AboutPage.h" />
     <ClInclude Include="ConditionGUI.h" />
     <ClInclude Include="ConfigHelper.h" />
-    <ClInclude Include="GetImages.h" />
     <ClInclude Include="IllegalRulesPage.h" />
     <ClInclude Include="ExplorerLog.h" />
     <ClInclude Include="InputIllegalRuleDlg.h" />
@@ -167,7 +166,6 @@
     <ClCompile Include="AboutPage.cpp" />
     <ClCompile Include="ConditionGUI.cpp" />
     <ClCompile Include="ConfigHelper.cpp" />
-    <ClCompile Include="GetImages.cpp" />
     <ClCompile Include="IllegalRulesPage.cpp" />
     <ClCompile Include="InputIllegalRuleDlg.cpp" />
     <ClCompile Include="InputKeywordDlg.cpp" />

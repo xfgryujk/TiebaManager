@@ -199,17 +199,6 @@ BOOL CTiebaManagerDlg::OnInitDialog()
 		g_userCache.m_bannedUser->clear();
 	});
 
-	// 每30分钟清除图片缓存
-	SetTimer(1, 30 * 60 * 1000, [](HWND, UINT, UINT_PTR, DWORD) {
-		CFileFind fileFind;
-		BOOL found = fileFind.FindFile(IMG_CACHE_PATH + _T("*"));
-		while (found)
-		{
-			found = fileFind.FindNextFile();
-			DeleteFile(fileFind.GetFilePath());
-		}
-	});
-
 
 	g_mainDialogPostInitEvent();
 

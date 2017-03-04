@@ -23,9 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "stdafx.h"
 #include "ImageViewDlg.h"
 #include <ImageHelper.h>
-#include "TBMConfigPath.h"
-#include <NetworkHelper.h>
-#include <MiscHelper.h>
+#include <TBMCoreImageHelper.h>
 #include "InputDlg.h"
 
 
@@ -144,32 +142,9 @@ void CImageViewDlg::SetImages(std::unique_ptr<std::vector<CString> > imageURL)
 	m_image.resize(m_imageURL->size());
 
 	// 读取图片到m_image
+	auto& imageCache = CImageCache::GetInstance();
 	for (UINT i = 0; i < m_imageURL->size(); i++)
-	{
-		CString imgName = GetImageName((*m_imageURL)[i]);
-		if (PathFileExists(IMG_CACHE_PATH + imgName))
-		{
-			// 读取图片缓存
-			if (!m_image[i].IsNull())
-				m_image[i].Destroy();
-			m_image[i].Load(IMG_CACHE_PATH + imgName);
-		}
-		else
-		{
-			// 下载图片
-			std::unique_ptr<BYTE[]> buffer;
-			ULONG size;
-			if (HTTPGetRaw((*m_imageURL)[i], &buffer, &size) == NET_SUCCESS)
-			{
-				ReadImage(buffer.get(), size, m_image[i]);
-
-				CreateDir(IMG_CACHE_PATH);
-				CFile file;
-				if (file.Open(IMG_CACHE_PATH + imgName, CFile::modeCreate | CFile::modeWrite))
-					file.Write(buffer.get(), size);
-			}
-		}
-	}
+		imageCache.GetImage((*m_imageURL)[i], m_image[i]);
 
 	UpdateScrollRange();
 }

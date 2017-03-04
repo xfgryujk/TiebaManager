@@ -18,15 +18,40 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 #pragma once
-#include <TiebaClawer.h>
+#include "TiebaManagerCoreCommon.h"
+
+#include "TiebaClawer.h"
+
+#include "Singleton.h"
+#pragma warning(disable:4819) // OpenCV头文件包含Unicode字符
+#include <opencv2\core\mat.hpp>
+using std::min; // 用于GDI+的头文件
+using std::max;
+#include <atlimage.h>
+#include <memory>
+#include <thread>
 
 
-class CGetImages
+TBM_CORE_API void GetImageUrls(const TBObject& object, std::vector<CString>& urls);
+
+
+class TBM_CORE_API CImageCache final : public Singleton<CImageCache>
 {
-public:
-	const TBObject& m_object;
+	DECL_SINGLETON(CImageCache);
+private:
+	CImageCache();
+	~CImageCache();
 
-	CGetImages(const TBObject& object);
-	virtual ~CGetImages() = default;
-	virtual void operator () (std::vector<CString>& img);
+public:
+	static CString CACHE_PATH;
+
+
+	BOOL GetImage(CString imgUrl, cv::Mat& mat);
+	BOOL GetImage(CString imgUrl, CImage& img);
+
+private:
+	volatile BOOL m_stopFlag = FALSE;
+	std::unique_ptr<std::thread> m_cleanThread;
+
+	void CleanThread();
 };

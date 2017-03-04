@@ -26,7 +26,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "ExplorerDlg.h"
 
 #include <TiebaClawerProxy.h>
-#include "GetImages.h"
+#include <TBMCoreImageHelper.h>
 
 
 // CExplorePostPage 对话框
@@ -127,7 +127,7 @@ void CExplorePostPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 		explorerDlg->m_edit.SetWindowText(m_posts[pNMLV->iItem].content + 
 			_T("\r\n\r\n") + m_posts[pNMLV->iItem].author);
 		auto img = std::make_unique<std::vector<CString> >();
-		CGetImages(m_posts[pNMLV->iItem]).operator()(*img);
+		GetImageUrls(m_posts[pNMLV->iItem], *img);
 		explorerDlg->ViewImages(std::move(img));
 	}
 

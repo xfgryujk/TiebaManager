@@ -25,6 +25,12 @@
     <Filter Include="源文件\API\Rule">
       <UniqueIdentifier>{ba6a34c5-0dfa-4341-8e6f-2cc61d5b76af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\API\Helper">
+      <UniqueIdentifier>{969e7dd3-a220-4c48-9739-f98288c89b16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\API\Helper">
+      <UniqueIdentifier>{3e119549-c8f9-492b-8e30-68d56d1db007}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManagerCore.cpp">
@@ -59,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="ImageCondition.cpp">
       <Filter>源文件\API\Rule</Filter>
+    </ClCompile>
+    <ClCompile Include="TBMCoreImageHelper.cpp">
+      <Filter>源文件\API\Helper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +108,9 @@
     </ClInclude>
     <ClInclude Include="..\Include\TBMCoreRules.h">
       <Filter>头文件\API\Rule</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\TBMCoreImageHelper.h">
+      <Filter>头文件\API\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
