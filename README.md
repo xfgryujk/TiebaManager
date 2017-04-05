@@ -8,7 +8,7 @@ TiebaManager
 * 支持插件开发
 * 通过GPLv2协议开源
 
-![截图](https://github.com/xfgryujk/TiebaManager/blob/master/.wiki/image/snapshot.png)
+![截图](https://raw.githubusercontent.com/wiki/xfgryujk/TiebaManager/images/snapshot.png)
 
 
 依赖

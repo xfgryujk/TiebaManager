@@ -69,7 +69,7 @@ BOOL CAboutPage::OnInitDialog()
 	m_resize.AddControl(&m_autoCheckUpdateCheck, RT_NULL, NULL, RT_KEEP_DIST_TO_BOTTOM, &m_edit);
 	m_resize.AddControl(&m_authorStatic, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_edit);
 
-	m_edit.SetWindowText(_T("软件介绍帖：http://tieba.baidu.com/p/4577833688\r\n")
+	m_edit.SetWindowText(_T("软件介绍帖：https://tieba.baidu.com/p/5010576625\r\n")
 		                 _T("详细教程：https://github.com/xfgryujk/TiebaManager/wiki\r\n")
 						 _T("对更新日志感兴趣的话看这里：https://github.com/xfgryujk/TiebaManager/commits/master\r\n")
 						 _T("此程序通过GPLv2协议开源，你可以在https://github.com/xfgryujk/TiebaManager得到源码，求star，欢迎发pull request\r\n")
