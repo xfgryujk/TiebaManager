@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 添加图片条件（测试中）
-2. 添加时间条件</UpdateLog>
+    <UpdateLog>1. 兼容百度更新，修复无法登录的问题</UpdateLog>
     <Files>
         <item>
             <value>

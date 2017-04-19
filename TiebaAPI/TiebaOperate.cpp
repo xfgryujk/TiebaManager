@@ -60,8 +60,7 @@ CTiebaOperate::SetTiebaResult CTiebaOperate::SetTieba(const CString& forumName)
 	m_encodedForumName = EncodeURI(m_forumName);
 
 	// 取用户名
-	if (std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData.user"), _T("}"))), res, USER_NAME_REG)
-		|| std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData"), _T("}"))), res, USER_NAME_REG))
+	if (std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData.user"), _T("}"))), res, USER_NAME_REG))
 		m_userName = JSUnescape(res[3].str().c_str());
 	if (m_userName == _T(""))
 	{

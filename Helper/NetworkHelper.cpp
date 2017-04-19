@@ -114,6 +114,7 @@ static HTTPRequestResult HTTPRequestBase(std::unique_ptr<BYTE[]>* buffer, ULONG*
 		headerBuf.Read(headers.GetBuffer(headersSize), headersSize);
 		headers.ReleaseBuffer(headersSize);
 		ReceiveCookie(CString(headers), *cookie);
+		//TRACE(_T("%s\n%s\n"), (LPCTSTR)URL, (LPCTSTR)*cookie);
 	}
 
 	// 重定向

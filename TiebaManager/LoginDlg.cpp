@@ -89,7 +89,9 @@ BOOL CLoginDlg::OnInitDialog()
 
 	// 删除Cookie
 	InternetSetCookieEx(_T("http://tieba.baidu.com/"), NULL,
-		_T("BDUSS=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=baidu.com;"), INTERNET_COOKIE_HTTPONLY, NULL);
+		_T("BDUSS=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=baidu.com;")
+		_T("STOKEN=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=tieba.baidu.com;"),
+		INTERNET_COOKIE_HTTPONLY, NULL);
 	m_explorer.Navigate(_T("https://passport.baidu.com/v2/?login"), NULL, NULL, NULL, NULL);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -103,13 +105,22 @@ void CLoginDlg::OnDestroy()
 
 	// 删除Cookie
 	InternetSetCookieEx(_T("http://tieba.baidu.com/"), NULL,
-		_T("BDUSS=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=baidu.com;"), INTERNET_COOKIE_HTTPONLY, NULL);
+		_T("BDUSS=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=baidu.com;")
+		_T("STOKEN=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=tieba.baidu.com;"),
+		INTERNET_COOKIE_HTTPONLY, NULL);
 }
 
 // 浏览器导航完毕
 void CLoginDlg::NavigateComplete2Explorer1(LPDISPATCH pDisp, VARIANT* URL)
 {
-	Login(FALSE);
+	CString url = _bstr_t(URL->bstrVal);
+	if (StringIncludes(url, _T("passport.baidu.com/center"))) // 登录完毕，进入个人中心
+	{
+		GetSingleCookie(m_cookie, _T("BDUSS"));
+		m_explorer.Navigate(_T("http://tieba.baidu.com/"), NULL, NULL, NULL, NULL); // 获取tieba.baidu.com域的STOKEN
+	}
+	else if (StringIncludes(url, _T("tieba.baidu.com"))) // 获取tieba.baidu.com域的STOKEN
+		Login(FALSE);
 }
 
 // 登录
@@ -154,24 +165,42 @@ void CLoginDlg::Login(BOOL prompt)
 	EndDialog(IDOK);
 }
 
-HRESULT CLoginDlg::GetCookie(CString& cookie)
+HRESULT CLoginDlg::GetSingleCookie(CString& cookie, const CString& name)
 {
 	DWORD size = 0;
-	InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), NULL,
+	InternetGetCookieEx(_T("http://tieba.baidu.com/"), name, NULL,
 		&size, INTERNET_COOKIE_HTTPONLY, NULL); // size为字节数
-	BOOL result = InternetGetCookieEx(_T("http://tieba.baidu.com/"), _T("BDUSS"), cookie.GetBuffer(size),
+	BOOL result = InternetGetCookieEx(_T("http://tieba.baidu.com/"), name, cookie.GetBuffer(size),
 		&size, INTERNET_COOKIE_HTTPONLY, NULL); // BUG：size在XP下单位是字节，在win10是字符数，XP下传字符数会返回缓冲不够
 	HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
 	cookie.ReleaseBuffer();
 
 	if (result)
 	{
-		if (cookie.GetLength() < 100 || !StringIncludes(cookie, _T("BDUSS=")))
-			return HRESULT_FROM_WIN32(ERROR_INVALID_DATA); // 无效的Cookie
 		cookie += _T(";");
-		return S_OK; // 成功
+		return S_OK;
 	}
 	return hr;
+}
+
+HRESULT CLoginDlg::GetCookie(CString& cookie)
+{
+	cookie = _T("");
+	
+	static const TCHAR* names[] = { _T("BDUSS"), _T("STOKEN") };
+	for (auto& i : names)
+	{
+		CString singleCookie;
+		HRESULT hr = GetSingleCookie(singleCookie, i);
+		if (FAILED(hr))
+			return hr;
+		if (singleCookie.GetLength() < 50)
+			return HRESULT_FROM_WIN32(ERROR_INVALID_DATA); // 无效的Cookie
+
+		cookie += singleCookie;
+	}
+
+	return S_OK;
 }
 
 // 取用户名

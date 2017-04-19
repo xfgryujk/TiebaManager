@@ -51,6 +51,7 @@ public:
 	void NavigateComplete2Explorer1(LPDISPATCH pDisp, VARIANT* URL);
 protected:
 	void Login(BOOL prompt);
+	HRESULT GetSingleCookie(CString& cookie, const CString& name);
 	HRESULT GetCookie(CString& cookie);
 	void GetLoginUserName();
 
