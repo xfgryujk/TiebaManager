@@ -115,10 +115,7 @@ void CLoginDlg::NavigateComplete2Explorer1(LPDISPATCH pDisp, VARIANT* URL)
 {
 	CString url = _bstr_t(URL->bstrVal);
 	if (StringIncludes(url, _T("passport.baidu.com/center"))) // 登录完毕，进入个人中心
-	{
-		GetSingleCookie(m_cookie, _T("BDUSS"));
 		m_explorer.Navigate(_T("http://tieba.baidu.com/"), NULL, NULL, NULL, NULL); // 获取tieba.baidu.com域的STOKEN
-	}
 	else if (StringIncludes(url, _T("tieba.baidu.com"))) // 获取tieba.baidu.com域的STOKEN
 		Login(FALSE);
 }
