@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 兼容百度更新，修复无法登录的问题</UpdateLog>
+    <UpdateLog>1. 扫描多吧发布的主题</UpdateLog>
     <Files>
         <item>
             <value>

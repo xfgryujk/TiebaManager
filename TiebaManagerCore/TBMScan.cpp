@@ -243,8 +243,9 @@ void CTBMScan::ScanPostThread(int threadID)
 			}
 
 			// 判断贴吧ID，避免百度乱插其他吧的帖子
-			if (addition.fid != g_pTiebaOperate->GetForumID())
-				goto Next;
+			// 多吧发帖又可以操作了...
+			/*if (addition.fid != g_pTiebaOperate->GetForumID())
+				goto Next;*/
 
 			// 扫描帖子页
 			int iPageCount = _ttoi(addition.pageCount);
