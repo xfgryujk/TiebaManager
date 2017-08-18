@@ -214,3 +214,45 @@ public:
 private:
 	BOOL Match(const CImageParam& param, const TBObject& obj);
 };
+
+
+// 楼层条件
+
+class TBM_CORE_API CFloorParam final : public CConditionParam
+{
+public:
+	enum Operator
+	{
+		LESS,             // <=
+		EQUAL,            // ==
+		GREATER           // >=
+	};
+
+
+	CFloorParam() : CConditionParam(_T("楼层条件")) { }
+
+
+	Operator m_operator = LESS;  // 操作符
+	int m_floor = 2;             // 楼层
+};
+
+class TBM_CORE_API CFloorCondition final : public CCondition, public Singleton<CFloorCondition>
+{
+	DECL_SINGLETON(CFloorCondition);
+private:
+	CFloorCondition() : CCondition(_T("楼层条件")) { };
+
+public:
+	virtual CString GetDescription(const CConditionParam& param) override;
+
+	virtual CConditionParam* ReadParam(const tinyxml2::XMLElement* optionNode) override;
+	virtual void WriteParam(const CConditionParam& param, tinyxml2::XMLElement* optionNode) override;
+	virtual CConditionParam* CloneParam(const CConditionParam& param) override;
+
+	virtual BOOL MatchThread(const CConditionParam& param, const ThreadInfo& thread, int& pos, int& length) override;
+	virtual BOOL MatchPost(const CConditionParam& param, const PostInfo& post, int& pos, int& length) override;
+	virtual BOOL MatchLzl(const CConditionParam& param, const LzlInfo& lzl, int& pos, int& length) override;
+
+private:
+	BOOL Match(const CConditionParam& param, const CString& floor);
+};

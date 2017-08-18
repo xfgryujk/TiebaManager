@@ -95,6 +95,6 @@ void CPluginDlg::OnBnClickedButton1()
 	if (index == LB_ERR)
 		return;
 	auto& plugin = CPluginManager::GetInstance().GetPlugins()[index];
-	if (!plugin.m_onConfig._Empty())
+	if (plugin.m_onConfig)
 		plugin.m_onConfig();
 }

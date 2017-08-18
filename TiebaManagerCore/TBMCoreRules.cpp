@@ -74,6 +74,7 @@ void InitRules()
 	CCondition::AddCondition(CLevelCondition::GetInstance());
 	CCondition::AddCondition(CTimeCondition::GetInstance());
 	CCondition::AddCondition(CImageCondition::GetInstance());
+	CCondition::AddCondition(CFloorCondition::GetInstance());
 }
 
 
@@ -389,4 +390,88 @@ BOOL CTimeCondition::MatchPost(const CConditionParam& _param, const PostInfo& po
 BOOL CTimeCondition::MatchLzl(const CConditionParam& _param, const LzlInfo& lzl, int& pos, int& length)
 {
 	return Match((CTimeParam&)_param, lzl);
+}
+
+
+// 楼层条件
+
+CString CFloorCondition::GetDescription(const CConditionParam& _param)
+{
+	const auto& param = (CFloorParam&)_param;
+	static LPCTSTR operatorDesc[] = {
+		_T("楼层 <= "),
+		_T("楼层 = "),
+		_T("楼层 >= ")
+	};
+
+	CString res;
+	res.Format(_T("%s%d"), operatorDesc[param.m_operator], param.m_floor);
+	return res;
+}
+
+
+CConditionParam* CFloorCondition::ReadParam(const tinyxml2::XMLElement* optionNode)
+{
+	auto* param = new CFloorParam();
+
+	COption<int> op("Operator", CFloorParam::LESS, InRange<int, CFloorParam::LESS, CFloorParam::GREATER>);
+	COption<int> floor("Floor", 2, GreaterThan<int, 1>);
+	op.Read(*optionNode);
+	floor.Read(*optionNode);
+
+	param->m_operator = CFloorParam::Operator(*op);
+	param->m_floor = floor;
+
+	return param;
+}
+
+void CFloorCondition::WriteParam(const CConditionParam& _param, tinyxml2::XMLElement* optionNode)
+{
+	const auto& param = (CFloorParam&)_param;
+
+	COption<int> op("Operator");
+	*op = param.m_operator;
+	op.Write(*optionNode);
+	COption<int> floor("Floor");
+	*floor = param.m_floor;
+	floor.Write(*optionNode);
+}
+
+CConditionParam* CFloorCondition::CloneParam(const CConditionParam& _param)
+{
+	const auto& param = (CFloorParam&)_param;
+	return new CFloorParam(param);
+}
+
+
+BOOL CFloorCondition::Match(const CConditionParam& _param, const CString& floor)
+{
+	const auto& param = (CFloorParam&)_param;
+
+	if (floor == _T(""))
+		return FALSE;
+
+	int iFloor = _ttoi(floor);
+	switch (param.m_operator)
+	{
+	default: return FALSE;
+	case CFloorParam::LESS:       return iFloor <= param.m_floor;
+	case CFloorParam::EQUAL:      return iFloor == param.m_floor;
+	case CFloorParam::GREATER:    return iFloor >= param.m_floor;
+	}
+}
+
+BOOL CFloorCondition::MatchThread(const CConditionParam& _param, const ThreadInfo& thread, int& pos, int& length)
+{
+	return FALSE;
+}
+
+BOOL CFloorCondition::MatchPost(const CConditionParam& _param, const PostInfo& post, int& pos, int& length)
+{
+	return Match(_param, post.floor);
+}
+
+BOOL CFloorCondition::MatchLzl(const CConditionParam& _param, const LzlInfo& lzl, int& pos, int& length)
+{
+	return Match(_param, lzl.floor);
 }
