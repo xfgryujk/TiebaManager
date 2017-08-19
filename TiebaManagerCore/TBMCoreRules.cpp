@@ -162,7 +162,7 @@ BOOL CKeywordCondition::Match(const CKeywordParam& param, const CString& content
 	else
 	{
 		res = StringMatchs(content, param.m_keyword);
-		_pos = 0;
+		_pos = startPos;
 		_length = content.GetLength();
 	}
 	if (!param.m_not)

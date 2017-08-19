@@ -91,7 +91,25 @@ BOOL CConfirmDlg::OnInitDialog()
 	if (m_operation != NULL)
 	{
 		SetWindowText(m_operation->title);
-		m_contentEdit.SetWindowText(m_operation->object->GetContent() + _T("\r\n\r\n作者：") + m_operation->object->author);
+		CString content = m_operation->object->GetContent() + _T("\r\n\r\n作者：") + m_operation->object->author;
+		switch (m_operation->object->m_type)
+		{
+		case TBObject::POST:
+		{
+			const PostInfo& post = (PostInfo&)*m_operation->object;
+			content += _T("\r\n等级：") + post.authorLevel
+					 + _T("\r\n楼层：") + post.floor;
+			break;
+		}
+		case TBObject::LZL:
+		{
+			const LzlInfo& lzl = (LzlInfo&)*m_operation->object;
+			content += _T("\r\n回复楼层：") + lzl.floor;
+			break;
+		}
+		}
+		m_contentEdit.SetWindowText(content);
+
 		m_contentEdit.SetSel(m_operation->pos, m_operation->pos + m_operation->length);
 
 		auto img = std::make_unique<std::vector<CString> >();
