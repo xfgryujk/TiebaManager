@@ -3,165 +3,25 @@
     <Version></Version>
     <UpdateLog>1. 扫描多吧发布的主题</UpdateLog>
     <Files>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>mfc120u.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>msvcp120.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>msvcr120.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>libcurl.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>libeay32.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>libidn-11.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>ssleay32.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>zlib1.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>tinyxml2.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>opencv_core320.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>opencv_imgcodecs320.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>opencv_imgproc320.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>Helper.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>TiebaAPI.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>TiebaManagerCore.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>TiebaManager.exe</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir>Plugin\</Dir>
-                <Name>LoopBan.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir>Plugin\</Dir>
-                <Name>Defriend.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir>Plugin\</Dir>
-                <Name>LockThread.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
-        <item>
-            <value>
-                <Dir></Dir>
-                <Name>Update.dll</Name>
-                <URL></URL>
-                <MD5></MD5>
-            </value>
-        </item>
+        <item><value><Dir /><Name>mfc120u.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>msvcp120.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>msvcr120.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>libcurl.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>libeay32.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>libidn-11.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>ssleay32.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>zlib1.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>tinyxml2.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>opencv_core320.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>opencv_imgcodecs320.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>opencv_imgproc320.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>Helper.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>TiebaAPI.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>TiebaManagerCore.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>TiebaManager.exe<URL /><MD5 /></value></item>
+        <item><value><Dir>Plugin\</Dir><Name>LoopBan.dll<URL /><MD5 /></value></item>
+        <item><value><Dir>Plugin\</Dir><Name>Defriend.dll<URL /><MD5 /></value></item>
+        <item><value><Dir>Plugin\</Dir><Name>LockThread.dll<URL /><MD5 /></value></item>
+        <item><value><Dir /><Name>Update.dll<URL /><MD5 /></value></item>
     </Files>
 </UpdateInfo>
