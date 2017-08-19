@@ -28,6 +28,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // CConfirmDlg 对话框
 
+DWORD CConfirmDlg::lastTime = 0;
+
+
 IMPLEMENT_DYNAMIC(CConfirmDlg, CDialog)
 
 CConfirmDlg::CConfirmDlg(CWnd* pParent /*=NULL*/)
@@ -63,6 +66,7 @@ void CConfirmDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CConfirmDlg, CDialog)
 	ON_WM_SIZE()
 	ON_BN_CLICKED(IDC_BUTTON1, &CConfirmDlg::OnBnClickedButton1)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 #pragma endregion
 
@@ -109,7 +113,6 @@ BOOL CConfirmDlg::OnInitDialog()
 		}
 		}
 		m_contentEdit.SetWindowText(content);
-
 		m_contentEdit.SetSel(m_operation->pos, m_operation->pos + m_operation->length);
 
 		auto img = std::make_unique<std::vector<CString> >();
@@ -120,11 +123,32 @@ BOOL CConfirmDlg::OnInitDialog()
 			m_imageViewDlg->Create(m_imageViewDlg->IDD, this);
 			m_imageViewDlg->SetImages(std::move(img));
 		}
+
+		DWORD curTime = GetTickCount();
+		if (curTime - lastTime > 10 * 1000) // 10秒未确认则禁止确认一段时间防止误操作
+		{
+			m_yesButton.EnableWindow(FALSE);
+			m_noButton.EnableWindow(FALSE);
+			SetTimer(0, 1000, NULL);
+		}
+		lastTime = curTime;
 	}
 	MessageBeep(MB_ICONQUESTION);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
+}
+
+void CConfirmDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	if (nIDEvent == 0)
+	{
+		KillTimer(0);
+		m_yesButton.EnableWindow(TRUE);
+		m_noButton.EnableWindow(TRUE);
+	}
+
+	CDialog::OnTimer(nIDEvent);
 }
 
 // 浏览器
