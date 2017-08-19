@@ -48,5 +48,5 @@ TiebaClawer& TiebaClawerProxy::GetImplement()
 	case TIEBA_INTERFACE_WEB:       return TiebaClawerWeb::GetInstance();
 	case TIEBA_INTERFACE_CLIENT:    return TiebaClawerClient::GetInstance();
 	}
-	throw std::bad_exception("Not implemented");
+	throw std::invalid_argument("No interface");
 }

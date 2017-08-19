@@ -45,6 +45,7 @@ protected:
 public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	virtual BOOL OnInitDialog();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnBnClickedButton1();
 
 
@@ -61,4 +62,7 @@ protected:
 	CResizeControl m_resize;
 
 	const Operation* m_operation;
+
+	// 上次确认的时间
+	static DWORD lastTime;
 };

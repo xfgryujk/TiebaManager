@@ -23,6 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "InputLevelDlg.h"
 #include "InputTimeDlg.h"
 #include "InputImageDlg.h"
+#include "InputFloorDlg.h"
 
 
 CConditionGUIManager::CConditionGUIManager()
@@ -61,6 +62,7 @@ void CConditionGUIManager::Init()
 	AddConditionGUI(_T("等级条件"), SetCondition<CLevelParam, CInputLevelDlg>);
 	AddConditionGUI(_T("时间条件"), SetCondition<CTimeParam, CInputTimeDlg>);
 	AddConditionGUI(_T("图片条件"), SetCondition<CImageParam, CInputImageDlg>);
+	AddConditionGUI(_T("楼层条件"), SetCondition<CFloorParam, CInputFloorDlg>);
 }
 
 void CConditionGUIManager::Uninit()

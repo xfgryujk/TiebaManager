@@ -85,9 +85,9 @@ HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL 
 			std::wregex reg(content);
 			return std::regex_search((LPCWSTR)str, reg);
 		}
-		catch (...)
+		catch (std::regex_error& e)
 		{
-			AfxMessageBox(_T("正则表达式错误：") + content, MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误：") + content + _T("\r\n") + e.what(), MB_ICONERROR);
 			return FALSE;
 		}
 	}
@@ -106,9 +106,9 @@ HELPER_API BOOL StringIncludes(const CString& str, const RegexText& content, int
 		{
 			result = std::regex_search((LPCWSTR)str, res, content.regexp);
 		}
-		catch (...)
+		catch (std::regex_error& e)
 		{
-			AfxMessageBox(_T("正则表达式错误：") + content.text, MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误：") + content.text + _T("\r\n") + e.what(), MB_ICONERROR);
 			return FALSE;
 		}
 
@@ -141,9 +141,9 @@ HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL is
 			std::wregex reg(content);
 			return std::regex_match((LPCWSTR)str, reg);
 		}
-		catch (...)
+		catch (std::regex_error& e)
 		{
-			AfxMessageBox(_T("正则表达式错误：") + content, MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误：") + content + _T("\r\n") + e.what(), MB_ICONERROR);
 			return FALSE;
 		}
 	}
@@ -160,9 +160,9 @@ HELPER_API BOOL StringMatchs(const CString& str, const RegexText& content)
 		{
 			return std::regex_match((LPCWSTR)str, content.regexp);
 		}
-		catch (...)
+		catch (std::regex_error& e)
 		{
-			AfxMessageBox(_T("正则表达式错误：" + content.text), MB_ICONERROR);
+			AfxMessageBox(_T("正则表达式错误：") + content.text + _T("\r\n") + e.what(), MB_ICONERROR);
 			return FALSE;
 		}
 	}

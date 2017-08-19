@@ -213,6 +213,9 @@
     <ClInclude Include="InputImageDlg.h">
       <Filter>头文件\GUI\Setting\Condition</Filter>
     </ClInclude>
+    <ClInclude Include="InputFloorDlg.h">
+      <Filter>头文件\GUI\Setting\Condition</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TiebaManager.cpp">
@@ -327,6 +330,9 @@
       <Filter>源文件\GUI\Setting\Condition</Filter>
     </ClCompile>
     <ClCompile Include="InputImageDlg.cpp">
+      <Filter>源文件\GUI\Setting\Condition</Filter>
+    </ClCompile>
+    <ClCompile Include="InputFloorDlg.cpp">
       <Filter>源文件\GUI\Setting\Condition</Filter>
     </ClCompile>
   </ItemGroup>

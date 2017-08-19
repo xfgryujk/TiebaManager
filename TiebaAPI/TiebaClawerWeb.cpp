@@ -99,7 +99,10 @@ BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreT
 		auto& thread = threads[iThreads];
 		thread.rawData = rawThread;
 		thread.tid.Format(_T("%I64u"), dataField[L"id"].GetUint64());
-		thread.author = dataField[L"author_name"].GetString();
+		if (dataField[L"author_name"].IsString()) // 远古时期的IP发帖作者为null
+			thread.author = dataField[L"author_name"].GetString();
+		else
+			thread.author = _T("");
 		thread.authorID = GetStringBetween(rawThread, THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
 		thread.authorPortraitUrl = _T("");
 		thread.timestamp = 0;
@@ -174,7 +177,10 @@ TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const C
 		post.rawData = rawPost;
 		post.tid = tid;
 		post.author = dataField[L"author"][L"user_name"].GetString();
-		post.authorID.Format(_T("%I64u"), dataField[L"author"][L"user_id"].GetUint64());
+		if (dataField[L"author"].HasMember(L"user_id"))
+			post.authorID.Format(_T("%I64u"), dataField[L"author"][L"user_id"].GetUint64());
+		else
+			post.authorID = _T("null");
 		post.authorPortraitUrl = GetStringBetween(rawPost, POST_AUTHOR_PORTRAIT_LEFT1, POST_AUTHOR_PORTRAIT_RIGHT1);
 		if (post.authorPortraitUrl == _T(""))
 			post.authorPortraitUrl = GetStringBetween(rawPost, POST_AUTHOR_PORTRAIT_LEFT2, POST_AUTHOR_PORTRAIT_RIGHT2);
