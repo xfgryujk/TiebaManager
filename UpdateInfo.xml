@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 扫描多吧发布的主题</UpdateLog>
+    <UpdateLog>1. 添加楼层条件
+2. 确认时显示等级和楼层，突然弹窗时会锁定按钮一秒防止误操作</UpdateLog>
     <Files>
         <item><value><Dir/><Name>mfc120u.dll</Name><URL/><MD5/></value></item>
         <item><value><Dir/><Name>msvcp120.dll</Name><URL/><MD5/></value></item>
