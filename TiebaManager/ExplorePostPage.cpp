@@ -102,7 +102,7 @@ void CExplorePostPage::OnBnClickedButton1()
 		int index = m_list.GetItemCount();
 		m_list.InsertItem(index, i.floor);
 		m_list.SetItemText(index, 1, i.content);
-		m_list.SetItemText(index, 2, i.author);
+		m_list.SetItemText(index, 2, i.authorShowName);
 	}
 	exploreLzlPage.m_list.DeleteAllItems();
 	for (const LzlInfo& i : exploreLzlPage.m_lzls)
@@ -110,7 +110,7 @@ void CExplorePostPage::OnBnClickedButton1()
 		int index = exploreLzlPage.m_list.GetItemCount();
 		exploreLzlPage.m_list.InsertItem(index, i.floor);
 		exploreLzlPage.m_list.SetItemText(index, 1, i.content);
-		exploreLzlPage.m_list.SetItemText(index, 2, i.author);
+		exploreLzlPage.m_list.SetItemText(index, 2, i.authorShowName);
 	}
 
 	m_gotoButton.EnableWindow(TRUE);
@@ -125,7 +125,7 @@ void CExplorePostPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 	{
 		CExplorerDlg* explorerDlg = (CExplorerDlg*)GetParent()->GetParent();
 		explorerDlg->m_edit.SetWindowText(m_posts[pNMLV->iItem].content + 
-			_T("\r\n\r\n") + m_posts[pNMLV->iItem].author);
+			_T("\r\n\r\n") + m_posts[pNMLV->iItem].authorShowName);
 		auto img = std::make_unique<std::vector<CString> >();
 		GetImageUrls(m_posts[pNMLV->iItem], *img);
 		explorerDlg->ViewImages(std::move(img));

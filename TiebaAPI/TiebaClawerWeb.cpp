@@ -36,6 +36,8 @@ const TCHAR THREAD_SPLIT[]                      = _T(R"(<li class=" j_thread_lis
 const TCHAR THREAD_END[]                        = _T(R"(<div class="thread_list_bottom)");
 const TCHAR THREAD_DATA_FIELD_LEFT[]            = _T("data-field='");
 const TCHAR THREAD_DATA_FIELD_RIGHT[]           = _T("'");
+const TCHAR THREAD_AUTHOR_SHOW_NAME_LEFT[]      = _T(R"( title="主题作者: )");
+const TCHAR THREAD_AUTHOR_SHOW_NAME_RIGHT[]     = _T("\"");
 const TCHAR THREAD_AUTHOR_ID_LEFT[]             = _T("&quot;user_id&quot;:");
 const TCHAR THREAD_AUTHOR_ID_RIGHT[]            = _T("}");
 const TCHAR THREAD_TITLE_LEFT[]                 = _T(R"(class="j_th_tit ">)");
@@ -51,6 +53,10 @@ const TCHAR THREAD_LAST_AUTHOR_RIGHT[]          = _T("\"");
 const TCHAR POST_SPLIT[]                        = _T(R"(<div class="l_post)");
 const TCHAR POST_DATA_FIELD_LEFT[]              = _T("data-field='");
 const TCHAR POST_DATA_FIELD_RIGHT[]             = _T("'");
+const TCHAR POST_AUTHOR_SHOW_NAME_LEFT1[]       = _T(R"(class="p_author_name)");
+const TCHAR POST_AUTHOR_SHOW_NAME_RIGHT1[]      = _T("</li>");
+const TCHAR POST_AUTHOR_SHOW_NAME_LEFT2[]       = _T(R"( target="_blank">)");
+const TCHAR POST_AUTHOR_SHOW_NAME_RIGHT2[]      = _T("</a>");
 const TCHAR POST_AUTHOR_PORTRAIT_LEFT1[]        = _T(R"(data-tb-lazyload=")");
 const TCHAR POST_AUTHOR_PORTRAIT_RIGHT1[]       = _T("\"");
 const TCHAR POST_AUTHOR_PORTRAIT_LEFT2[]        = _T(R"(src=")");
@@ -103,6 +109,7 @@ BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreT
 			thread.author = dataField[L"author_name"].GetString();
 		else
 			thread.author = _T("");
+		thread.authorShowName = GetStringBetween(rawThread, THREAD_AUTHOR_SHOW_NAME_LEFT, THREAD_AUTHOR_SHOW_NAME_RIGHT);
 		thread.authorID = GetStringBetween(rawThread, THREAD_AUTHOR_ID_LEFT, THREAD_AUTHOR_ID_RIGHT);
 		thread.authorPortraitUrl = _T("");
 		thread.timestamp = 0;
@@ -123,7 +130,7 @@ BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreT
 TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& fid, const CString& tid, const CString& page,
 	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition)
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
+	CString src = HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page + _T("&fid=") + fid);
 	if (src == NET_TIMEOUT_TEXT)
 		return GET_POSTS_TIMEOUT;
 	return GetPosts(fid, tid, page, src, posts, lzls, addition);
@@ -154,6 +161,7 @@ TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const C
 TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const CString& page, const CString& src, 
 	std::vector<PostInfo>& posts, AdditionalThreadInfo* addition)
 {
+	//WriteString(src, _T("thread.txt"));
 	CStringArray rawPosts;
 	SplitString(rawPosts, src, POST_SPLIT);
 	if (rawPosts.GetSize() < 2)
@@ -177,6 +185,8 @@ TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const C
 		post.rawData = rawPost;
 		post.tid = tid;
 		post.author = dataField[L"author"][L"user_name"].GetString();
+		post.authorShowName = GetStringBetween(rawPost, POST_AUTHOR_SHOW_NAME_LEFT1, POST_AUTHOR_SHOW_NAME_RIGHT1);
+		post.authorShowName = GetStringBetween(post.authorShowName, POST_AUTHOR_SHOW_NAME_LEFT2, POST_AUTHOR_SHOW_NAME_RIGHT2);
 		if (dataField[L"author"].HasMember(L"user_id"))
 			post.authorID.Format(_T("%I64u"), dataField[L"author"][L"user_id"].GetUint64());
 		else
@@ -251,6 +261,7 @@ void TiebaClawerWeb::GetLzls(const CString& fid, const CString& tid, const CStri
 	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), 
 		timestamp, (LPCTSTR)tid, (LPCTSTR)fid, (LPCTSTR)page);
 	CString src = HTTPGet(url);
+	WriteString(src, _T("lzl.txt"));
 
 	lzls.clear();
 	GenericDocument<UTF16<> > document;
@@ -293,7 +304,9 @@ void TiebaClawerWeb::GetLzls(const CString& fid, const CString& tid, const CStri
 			lzl.tid = tid;
 			lzl.author = comment[L"username"].GetString();
 			lzl.authorID = comment[L"user_id"].GetString();
-			lzl.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + userList[(LPCWSTR)lzl.authorID][L"portrait"].GetString();
+			const auto& user = userList[(LPCWSTR)lzl.authorID];
+			lzl.authorShowName = user[L"nickname"].GetString();
+			lzl.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + user[L"portrait"].GetString();
 			lzl.timestamp = comment[L"now_time"].GetInt64();
 			lzl.cid = comment[L"comment_id"].GetString();
 			lzl.floor = floor;

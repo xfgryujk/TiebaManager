@@ -198,7 +198,7 @@ void CTBMOperate::OperateThread()
 					}
 
 					if (pid == _T(""))
-						g_pLog->Log(_T("<font color=red>封禁 </font>") + op.object->author + _T("<font color=red> 失败！(获取帖子ID失败)</font>"));
+						g_pLog->Log(_T("<font color=red>封禁 </font>") + op.object->authorShowName + _T("<font color=red> 失败！(获取帖子ID失败)</font>"));
 				}
 
 				CString code = (g_pTbmCoreConfig->m_banClientInterface || pid == _T("")) ?
@@ -207,7 +207,7 @@ void CTBMOperate::OperateThread()
 				{
 					CString content;
 					content.Format(_T("<font color=red>封禁 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
-						_T("\"bd:%s,%s\">重试</a>"), (LPCTSTR)op.object->author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code),
+						_T("\"bd:%s,%s\">重试</a>"), (LPCTSTR)op.object->authorShowName, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code),
 						(LPCTSTR)op.object->author, (LPCTSTR)pid);
 					g_pLog->Log(content);
 				}
@@ -216,7 +216,7 @@ void CTBMOperate::OperateThread()
 					result = TRUE;
 					sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
 					g_pUserCache->m_bannedUser->insert(op.object->author);
-					g_pLog->Log(_T("<font color=red>封禁 </font>") + op.object->author);
+					g_pLog->Log(_T("<font color=red>封禁 </font>") + op.object->authorShowName);
 				}
 
 				g_postBanEvent(op, result);
@@ -237,7 +237,7 @@ void CTBMOperate::OperateThread()
 				{
 					CString content;
 					content.Format(_T("<font color=red>拉黑 </font>%s<font color=red> 失败！错误代码：%s(%s)</font><a href=")
-						_T("\"df:%s\">重试</a>"), (LPCTSTR)op.object->author, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code),
+						_T("\"df:%s\">重试</a>"), (LPCTSTR)op.object->authorShowName, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code),
 						(LPCTSTR)op.object->authorID);
 					g_pLog->Log(content);
 				}
@@ -246,7 +246,7 @@ void CTBMOperate::OperateThread()
 					result = TRUE;
 					sndPlaySound(_T("封号.wav"), SND_ASYNC | SND_NODEFAULT);
 					g_pUserCache->m_defriendedUser->insert(op.object->author);
-					g_pLog->Log(_T("<font color=red>拉黑 </font>") + op.object->author);
+					g_pLog->Log(_T("<font color=red>拉黑 </font>") + op.object->authorShowName);
 				}
 
 				g_postDefriendEvent(op, result);

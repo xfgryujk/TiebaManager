@@ -49,8 +49,8 @@ public:
 	virtual void ApplyList(std::vector<RegexText>& list);
 protected:
 	virtual BOOL CheckMatchTooMuch(const CString& text, BOOL isRegex){ return FALSE; };
-	virtual BOOL TestMatch(int index);
-	virtual BOOL TestMatch(const CString& test, const CString& text, BOOL isRegex) = 0;
+	virtual BOOL TestMatch(int index) override;
+	virtual BOOL TestMatch(const CString& test, const CString& text, BOOL isRegex, BOOL ignoreCase) = 0;
 
 
 protected:
