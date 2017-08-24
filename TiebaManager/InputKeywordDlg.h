@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #pragma once
 #include "resource.h"
 #include <TBMCoreRules.h>
+#include "afxwin.h"
 
 
 // CInputKeywordDlg 对话框
@@ -50,6 +51,7 @@ public:
 	CButton m_notCheck;
 	CComboBox m_includeCombo;
 	CButton m_regexCheck;
+	CButton m_ignoreCaseCheck;
 	CEdit m_contentEdit;
 	CEdit m_testEdit;
 

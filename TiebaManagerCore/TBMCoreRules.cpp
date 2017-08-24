@@ -99,6 +99,8 @@ CString CKeywordCondition::GetDescription(const CConditionParam& _param)
 	res += param.m_keyword.isRegex ? _T("正则表达式\"") : _T("\"");
 	res += param.m_keyword.text;
 	res += _T("\"");
+	if (param.m_keyword.ignoreCase)
+		res += _T("，忽略大小写");
 	return res;
 }
 

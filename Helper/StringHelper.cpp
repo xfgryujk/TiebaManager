@@ -24,6 +24,25 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 using namespace tinyxml2;
 
 
+void RegexText::Set(const CString& _text, BOOL _isRegex, BOOL _ignoreCase)
+{
+	isRegex = _isRegex;
+	ignoreCase = _ignoreCase;
+	text = _text;
+	textLower = text;
+	textLower.MakeLower();
+	try
+	{
+		regexp.assign(isRegex ? text : _T(""), std::regex_constants::syntax_option_type(std::wregex::ECMAScript
+			| (ignoreCase ? std::wregex::icase : 0)));
+	}
+	catch (std::regex_error& e)
+	{
+		Set(_T(""), FALSE, FALSE);
+		AfxMessageBox(_T("正则表达式错误：") + _text + _T("\r\n") + e.what(), MB_ICONERROR);
+	}
+}
+
 HELPER_API DECLEAR_READ(RegexText)
 {
 	const XMLElement* optionNode = root.FirstChildElement(m_name);
@@ -34,11 +53,13 @@ HELPER_API DECLEAR_READ(RegexText)
 	}
 
 	COption<BOOL> isRegex("IsRegex");
+	COption<BOOL> ignoreCase("IgnoreCase");
 	COption<CString> text("Text");
 	isRegex.Read(*optionNode);
+	ignoreCase.Read(*optionNode);
 	text.Read(*optionNode);
 
-	m_value.Set(isRegex, text);
+	m_value.Set(text, isRegex, ignoreCase);
 
 	if (!IsValid(m_value))
 		UseDefault();
@@ -53,6 +74,9 @@ HELPER_API DECLEAR_WRITE(RegexText)
 	COption<BOOL> isRegex("IsRegex");
 	*isRegex = m_value.isRegex;
 	isRegex.Write(*optionNode);
+	COption<BOOL> ignoreCase("IgnoreCase");
+	*ignoreCase = m_value.ignoreCase;
+	ignoreCase.Write(*optionNode);
 	COption<CString> text("Text");
 	*text = m_value.text;
 	text.Write(*optionNode);
@@ -76,13 +100,14 @@ HELPER_API void SplitString(CStringArray& dst, const CString& src, const CString
 
 
 // 字符串包含
-HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL isRegex)
+HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL isRegex, BOOL ignoreCase)
 {
 	if (isRegex)
 	{
 		try
 		{
-			std::wregex reg(content);
+			std::wregex reg(content, std::regex_constants::syntax_option_type(std::wregex::ECMAScript
+				| (ignoreCase ? std::wregex::icase : 0)));
 			return std::regex_search((LPCWSTR)str, reg);
 		}
 		catch (std::regex_error& e)
@@ -92,7 +117,17 @@ HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL 
 		}
 	}
 	else
-		return StringIncludes(str, content);
+	{
+		if (ignoreCase)
+		{
+			CString strLower = str, contentLower = content;
+			strLower.MakeLower();
+			contentLower.MakeLower();
+			return StringIncludes(strLower, contentLower);
+		}
+		else
+			return StringIncludes(str, content);
+	}
 }
 
 // 字符串包含
@@ -120,7 +155,15 @@ HELPER_API BOOL StringIncludes(const CString& str, const RegexText& content, int
 	}
 	else
 	{
-		int pos = str.Find(content.text);
+		int pos;
+		if (content.ignoreCase)
+		{
+			CString strLower = str;
+			strLower.MakeLower();
+			pos = strLower.Find(content.textLower);
+		}
+		else
+			pos = str.Find(content.text);
 		result = pos != -1;
 		if (result && _pos != NULL && length != NULL)
 		{
@@ -132,13 +175,14 @@ HELPER_API BOOL StringIncludes(const CString& str, const RegexText& content, int
 }
 
 // 字符串匹配
-HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL isRegex)
+HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL isRegex, BOOL ignoreCase)
 {
 	if (isRegex)
 	{
 		try
 		{
-			std::wregex reg(content);
+			std::wregex reg(content, std::regex_constants::syntax_option_type(std::wregex::ECMAScript
+				| (ignoreCase ? std::wregex::icase : 0)));
 			return std::regex_match((LPCWSTR)str, reg);
 		}
 		catch (std::regex_error& e)
@@ -148,7 +192,7 @@ HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL is
 		}
 	}
 	else
-		return str == content;
+		return ignoreCase ? str.CompareNoCase(content) == 0 : str == content;
 }
 
 // 字符串匹配
@@ -167,7 +211,7 @@ HELPER_API BOOL StringMatchs(const CString& str, const RegexText& content)
 		}
 	}
 	else
-		return str == content.text;
+		return content.ignoreCase ? str.CompareNoCase(content.text) == 0 : str == content.text;
 }
 
 

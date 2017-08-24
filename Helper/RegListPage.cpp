@@ -58,8 +58,9 @@ BOOL CRegListPage::OnInitDialog()
 	CListTestPage::OnInitDialog();
 
 	int i = 0;
-	m_list.InsertColumn(i++, _T("内容"), LVCFMT_LEFT, 500);
+	m_list.InsertColumn(i++, _T("内容"), LVCFMT_LEFT, 450);
 	m_list.InsertColumn(i++, _T("正则"), LVCFMT_LEFT, 50);
+	m_list.InsertColumn(i++, _T("忽略大小写"), LVCFMT_LEFT, 50);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常:  OCX 属性页应返回 FALSE
@@ -125,9 +126,10 @@ BOOL CRegListPage::TestMatch(int index)
 {
 	CString test;
 	m_testEdit.GetWindowText(test);
-	BOOL isRegex = m_list.GetItemText(index, 1) == IS_REGEX_TEXT;
 	CString text = m_list.GetItemText(index, 0);
-	return TestMatch(test, text, isRegex);
+	BOOL isRegex = m_list.GetItemText(index, 1) == IS_REGEX_TEXT;
+	BOOL ignoreCase = m_list.GetItemText(index, 2) == IS_REGEX_TEXT;
+	return TestMatch(test, text, isRegex, ignoreCase);
 }
 
 void CRegListPage::ShowList(const std::vector<RegexText>& list)
@@ -145,5 +147,5 @@ void CRegListPage::ApplyList(std::vector<RegexText>& list)
 	int size = m_list.GetItemCount();
 	list.resize(size);
 	for (int i = 0; i < size; i++)
-		list[i].Set(m_list.GetItemText(i, 1) == IS_REGEX_TEXT, m_list.GetItemText(i, 0));
+		list[i].Set(m_list.GetItemText(i, 0), m_list.GetItemText(i, 1) == IS_REGEX_TEXT, m_list.GetItemText(i, 2) == IS_REGEX_TEXT);
 }

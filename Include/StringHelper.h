@@ -22,27 +22,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <regex>
 
 
-class RegexText
+class HELPER_API RegexText
 {
 public:
 	BOOL isRegex = FALSE;
+	BOOL ignoreCase = FALSE;
 	CString text; // 为了避免忘记设置regexp要用Set方法赋值！！
 	std::wregex regexp;
+	CString textLower;
 
-	void Set(BOOL _isRegex, const CString& _text)
-	{
-		isRegex = _isRegex;
-		text = _text;
-		try
-		{
-			regexp = isRegex ? text : _T("");
-		}
-		catch (...)
-		{
-			Set(FALSE, _T(""));
-			AfxMessageBox(_T("正则表达式错误：") + _text, MB_ICONERROR);
-		}
-	}
+	void Set(const CString& _text, BOOL _isRegex = FALSE, BOOL _ignoreCase = FALSE);
 };
 
 
@@ -52,11 +41,11 @@ HELPER_API void SplitString(CStringArray& dst, const CString& src, const CString
 // 字符串包含
 inline BOOL StringIncludes(const CString& str, const CString& content) { return str.Find(content) != -1; }
 // 字符串包含
-HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL isRegex);
+HELPER_API BOOL StringIncludes(const CString& str, const CString& content, BOOL isRegex, BOOL ignoreCase);
 // 字符串包含
 HELPER_API BOOL StringIncludes(const CString& str, const RegexText& content, int* _pos = NULL, int* length = NULL);
 // 字符串匹配
-HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL isRegex);
+HELPER_API BOOL StringMatchs(const CString& str, const CString& content, BOOL isRegex, BOOL ignoreCase);
 // 字符串匹配
 HELPER_API BOOL StringMatchs(const CString& str, const RegexText& content);
 

@@ -49,6 +49,7 @@ void CInputKeywordDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK3, m_regexCheck);
 	DDX_Control(pDX, IDC_EDIT1, m_contentEdit);
 	DDX_Control(pDX, IDC_EDIT3, m_testEdit);
+	DDX_Control(pDX, IDC_CHECK4, m_ignoreCaseCheck);
 }
 
 
@@ -67,6 +68,7 @@ BOOL CInputKeywordDlg::OnInitDialog()
 	m_notCheck.SetCheck(m_param->m_not);
 	m_includeCombo.SetCurSel(m_param->m_include ? 0 : 1);
 	m_regexCheck.SetCheck(m_param->m_keyword.isRegex);
+	m_ignoreCaseCheck.SetCheck(m_param->m_keyword.ignoreCase);
 	m_contentEdit.SetWindowText(m_param->m_keyword.text);
 
 	m_testEdit.SetWindowText(_T("欲测试文本"));
@@ -82,7 +84,7 @@ void CInputKeywordDlg::OnOK()
 	m_param->m_include = m_includeCombo.GetCurSel() == 0;
 	CString content;
 	m_contentEdit.GetWindowText(content);
-	m_param->m_keyword.Set(m_regexCheck.GetCheck(), content);
+	m_param->m_keyword.Set(content, m_regexCheck.GetCheck(), m_ignoreCaseCheck.GetCheck());
 
 	CDialog::OnOK();
 }
@@ -96,9 +98,9 @@ void CInputKeywordDlg::OnBnClickedButton7()
 
 	BOOL res;
 	if (m_includeCombo.GetCurSel() == 0)
-		res = StringIncludes(test, content, m_regexCheck.GetCheck());
+		res = StringIncludes(test, content, m_regexCheck.GetCheck(), m_ignoreCaseCheck.GetCheck());
 	else
-		res = StringMatchs(test, content, m_regexCheck.GetCheck());
+		res = StringMatchs(test, content, m_regexCheck.GetCheck(), m_ignoreCaseCheck.GetCheck());
 
 	AfxMessageBox(res ? _T("匹配成功") : _T("匹配失败"));
 }
