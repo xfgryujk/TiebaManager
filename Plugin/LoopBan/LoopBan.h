@@ -38,7 +38,7 @@ public:
 	CLoopBanConfig() : CConfigBase("LoopBan"),
 		m_enable("Enable", TRUE),
 		m_log("Log"),
-		m_banInterval("BanInterval", 0.0f, [](const float& value){ return 0.0f <= value && value <= 60.0f; }/*InRange<float, 0.0f, 60.0f>*/),
+		m_banInterval("BanInterval", 2.0f, [](const float& value){ return 0.0f <= value && value <= 60.0f; }/*InRange<float, 0.0f, 60.0f>*/),
 		m_userList("Name"),
 		m_pidList("PID"),
 		m_autoLoopBan("AutoLoopBan", FALSE)

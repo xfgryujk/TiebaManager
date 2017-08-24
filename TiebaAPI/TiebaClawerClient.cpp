@@ -62,6 +62,7 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 
 		thread.tid = rawThread[L"tid"].GetString();
 		thread.author = rawThread[L"author"][L"name"].GetString();
+		thread.authorShowName = rawThread[L"author"][L"name_show"].GetString();
 		thread.authorID = rawThread[L"author"][L"id"].GetString();
 		thread.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + rawThread[L"author"][L"portrait"].GetString();
 		if (rawThread.HasMember(L"create_time")) // 直播贴没有create_time
@@ -151,6 +152,7 @@ static void GetLzls(const CString& tid, const GenericDocument<UTF16<> >& documen
 			lzl.authorID = subPost[L"author_id"].GetString();
 			const auto& user = userList[userIndex[lzl.authorID]];
 			lzl.author = user[L"name"].GetString();
+			lzl.authorShowName = user[L"name_show"].GetString();
 			lzl.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + user[L"portrait"].GetString();
 			lzl.timestamp = _ttoi64(subPost[L"time"].GetString());
 			lzl.cid = subPost[L"id"].GetString();
@@ -223,6 +225,7 @@ TiebaClawer::GetPostsResult TiebaClawerClient::GetPosts(const CString& fid, cons
 		post.authorID = rawPost[L"author_id"].GetString();
 		const auto& user = userList[userIndex[post.authorID]];
 		post.author = user[L"name"].GetString();
+		post.authorShowName = user[L"name_show"].GetString();
 		post.pid = rawPost[L"id"].GetString();
 		post.floor = rawPost[L"floor"].GetString();
 		post.authorLevel = user[L"level_id"].GetString();

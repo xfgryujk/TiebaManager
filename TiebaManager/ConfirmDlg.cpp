@@ -95,7 +95,7 @@ BOOL CConfirmDlg::OnInitDialog()
 	if (m_operation != NULL)
 	{
 		SetWindowText(m_operation->title);
-		CString content = m_operation->object->GetContent() + _T("\r\n\r\n作者：") + m_operation->object->author;
+		CString content = m_operation->object->GetContent() + _T("\r\n\r\n作者：") + m_operation->object->authorShowName;
 		switch (m_operation->object->m_type)
 		{
 		case TBObject::POST:

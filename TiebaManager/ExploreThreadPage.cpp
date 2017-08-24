@@ -103,7 +103,7 @@ void CExploreThreadPage::OnBnClickedButton1()
 		int index = m_list.GetItemCount();
 		m_list.InsertItem(index, i.reply);
 		m_list.SetItemText(index, 1, i.title);
-		m_list.SetItemText(index, 2, i.author);
+		m_list.SetItemText(index, 2, i.authorShowName);
 	}
 
 	m_gotoButton.EnableWindow(TRUE);
@@ -118,7 +118,7 @@ void CExploreThreadPage::OnItemchangedList1(NMHDR *pNMHDR, LRESULT *pResult)
 	{
 		CExplorerDlg* explorerDlg = (CExplorerDlg*)GetParent()->GetParent();
 		explorerDlg->m_edit.SetWindowText(m_threads[pNMLV->iItem].title + _T("\r\n") 
-			+ m_threads[pNMLV->iItem].preview + _T("\r\n\r\n") + m_threads[pNMLV->iItem].author);
+			+ m_threads[pNMLV->iItem].preview + _T("\r\n\r\n") + m_threads[pNMLV->iItem].authorShowName);
 		auto img = std::make_unique<std::vector<CString> >();
 		GetImageUrls(m_threads[pNMLV->iItem], *img);
 		explorerDlg->ViewImages(std::move(img));
