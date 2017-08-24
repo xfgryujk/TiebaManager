@@ -130,7 +130,7 @@ BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreT
 TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& fid, const CString& tid, const CString& page,
 	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition)
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
+	CString src = HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page + _T("&fid=") + fid);
 	if (src == NET_TIMEOUT_TEXT)
 		return GET_POSTS_TIMEOUT;
 	return GetPosts(fid, tid, page, src, posts, lzls, addition);
