@@ -146,6 +146,7 @@ void CConfirmDlg::OnTimer(UINT_PTR nIDEvent)
 		KillTimer(0);
 		m_yesButton.EnableWindow(TRUE);
 		m_noButton.EnableWindow(TRUE);
+		m_yesButton.SetFocus();
 	}
 
 	CDialog::OnTimer(nIDEvent);

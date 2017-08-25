@@ -224,11 +224,17 @@ TiebaClawer::GetPostsResult TiebaClawerClient::GetPosts(const CString& fid, cons
 		post.tid = tid;
 		post.authorID = rawPost[L"author_id"].GetString();
 		const auto& user = userList[userIndex[post.authorID]];
-		post.author = user[L"name"].GetString();
+		if (user.HasMember(L"name")) // 远古时期的IP发帖作者
+			post.author = user[L"name"].GetString();
+		else
+			post.author = _T("");
 		post.authorShowName = user[L"name_show"].GetString();
 		post.pid = rawPost[L"id"].GetString();
 		post.floor = rawPost[L"floor"].GetString();
-		post.authorLevel = user[L"level_id"].GetString();
+		if (user.HasMember(L"level_id")) // 远古时期的IP发帖作者
+			post.authorLevel = user[L"level_id"].GetString();
+		else
+			post.authorLevel = _T("1");
 		post.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + user[L"portrait"].GetString();
 		post.timestamp = _ttoi64(rawPost[L"time"].GetString());
 
