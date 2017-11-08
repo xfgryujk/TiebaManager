@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 兼容百度的强制HTTPS</UpdateLog>
+    <UpdateLog>1. 兼容百度的强制HTTPS
+2. 兼容部分不是HTTPS的贴吧</UpdateLog>
     <Files>
         <item><value><Dir/><Name>mfc120u.dll</Name><URL/><MD5/></value></item>
         <item><value><Dir/><Name>msvcp120.dll</Name><URL/><MD5/></value></item>

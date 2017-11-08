@@ -22,9 +22,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <memory>
 
 
-enum HTTPRequestResult { NET_SUCCESS, NET_FAILED_TO_CREATE_INSTANCE, NET_TIMEOUT };
+enum HTTPRequestResult { NET_SUCCESS, NET_FAILED_TO_CREATE_INSTANCE, NET_TIMEOUT, NET_FAILED_TO_REDIRECT };
 const TCHAR NET_FAILED_TO_CREATE_INSTANCE_TEXT[] = _T("failed to create instance");
 const TCHAR NET_TIMEOUT_TEXT[] = _T("timeout");
+const TCHAR NET_FAILED_TO_REDIRECT_TEXT[] = _T("failed to redirect");
 
 HELPER_API CString HTTPGet(const CString& URL, CString* cookie = NULL);
 HELPER_API CString HTTPPost(const CString& URL, const CString& data, CString* cookie = NULL);
