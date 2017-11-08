@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 	CString data;
 	data.Format(_T("_client_type=2&_client_version=5.7.0&from=tieba&kw=%s&net_type=1&pn=%d&q_type=2&rn=50&st_type=tb_forumlist&with_group=0"), 
 		(LPCTSTR)forumName, _ttoi(ignoreThread) / 50 + 1);
-	CString src = TiebaClientHTTPPost(_T("http://c.tieba.baidu.com/c/f/frs/page"), data);
+	CString src = TiebaClientHTTPPost(_T("https://c.tieba.baidu.com/c/f/frs/page"), data);
 	//WriteString(src, _T("forum.txt"));
 	
 	threads.clear();
@@ -82,6 +82,8 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 		{
 			for (const auto& media : rawThread[L"media"].GetArray())
 			{
+				if (!media.HasMember(L"type"))
+					continue;
 				CString tmp;
 				switch (_ttoi(media[L"type"].GetString()))
 				{
@@ -116,7 +118,7 @@ TiebaClawer::GetPostsResult TiebaClawerClient::GetPosts(const CString& fid, cons
 	CString data;
 	data.Format(_T("_client_type=2&_client_version=7.0.0&back=0&floor_rn=3&from=tieba&kz=%s&mark=0&net_type=1&pn=%s&rn=30&st_type=tb_bookmarklist&with_floor=1"), 
 		(LPCTSTR)tid, (LPCTSTR)page);
-	CString src = TiebaClientHTTPPost(_T("http://c.tieba.baidu.com/c/f/pb/page"), data);
+	CString src = TiebaClientHTTPPost(_T("https://c.tieba.baidu.com/c/f/pb/page"), data);
 	if (src == NET_TIMEOUT_TEXT)
 		return GET_POSTS_TIMEOUT;
 	//WriteString(src, _T("thread.txt"));
@@ -224,11 +226,17 @@ TiebaClawer::GetPostsResult TiebaClawerClient::GetPosts(const CString& fid, cons
 		post.tid = tid;
 		post.authorID = rawPost[L"author_id"].GetString();
 		const auto& user = userList[userIndex[post.authorID]];
-		post.author = user[L"name"].GetString();
+		if (user.HasMember(L"name")) // 远古时期的IP发帖作者
+			post.author = user[L"name"].GetString();
+		else
+			post.author = _T("");
 		post.authorShowName = user[L"name_show"].GetString();
 		post.pid = rawPost[L"id"].GetString();
 		post.floor = rawPost[L"floor"].GetString();
-		post.authorLevel = user[L"level_id"].GetString();
+		if (user.HasMember(L"level_id")) // 远古时期的IP发帖作者
+			post.authorLevel = user[L"level_id"].GetString();
+		else
+			post.authorLevel = _T("1");
 		post.authorPortraitUrl = CString(_T("http://tb.himg.baidu.com/sys/portrait/item/")) + user[L"portrait"].GetString();
 		post.timestamp = _ttoi64(rawPost[L"time"].GetString());
 

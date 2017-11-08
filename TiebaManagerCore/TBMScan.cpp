@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ void CTBMScan::ScanThread(CString sPage)
 					{
 						CTBMOperate::GetInstance().AddConfirm(Operation(forceToConfirm, pos, length, thread.title,
 							std::make_unique<ThreadInfo>(thread)));
-						g_pLog->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">")
+						g_pLog->Log(_T("<a href=\"https://tieba.baidu.com/p/") + thread.tid + _T("\">")
 							+ HTMLEscape(thread.title) + _T("</a>") + msg);
 						g_pUserCache->m_ignoredTID.insert(tid);
 					}
@@ -235,7 +235,7 @@ void CTBMScan::ScanPostThread(int threadID)
 				{
 					if (!g_pTbmCoreConfig->m_briefLog)
 					{
-						g_pLog->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
+						g_pLog->Log(_T("<a href=\"https://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
 							+ _T("</a> <font color=red>获取贴子列表失败，暂时跳过</font>"));
 					}
 					goto Next;
@@ -298,7 +298,7 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 	{
 	case TiebaClawer::GET_POSTS_TIMEOUT:
 	case TiebaClawer::GET_POSTS_DELETED:
-		g_pLog->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
+		g_pLog->Log(_T("<a href=\"https://tieba.baidu.com/p/") + thread.tid + _T("\">") + thread.title
 			+ _T("</a> <font color=red>获取贴子列表失败(") + (res == TiebaClawer::GET_POSTS_TIMEOUT ? _T("超时") :
 			_T("可能已被删")) + _T(")，暂时跳过</font>"));
 		return FALSE;
@@ -323,7 +323,7 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 			{
 				operate.AddConfirm(Operation(forceToConfirm, pos, length, thread.title,
 					std::make_unique<PostInfo>(post)));
-				g_pLog->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
+				g_pLog->Log(_T("<a href=\"https://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + post.floor + _T("楼") + msg);
 				g_pUserCache->m_ignoredPID.insert(pid);
 			}
@@ -347,7 +347,7 @@ BOOL CTBMScan::ScanPostPage(const ThreadInfo& thread, int page, BOOL hasHistoryR
 			{
 				operate.AddConfirm(Operation(forceToConfirm, pos, length, thread.title,
 					std::make_unique<LzlInfo>(lzl)));
-				g_pLog->Log(_T("<a href=\"http://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
+				g_pLog->Log(_T("<a href=\"https://tieba.baidu.com/p/") + thread.tid + _T("\">") + HTMLEscape(thread.title) +
 					_T("</a> ") + lzl.floor + _T("楼回复") + msg);
 				g_pUserCache->m_ignoredLZLID.insert(cid);
 			}

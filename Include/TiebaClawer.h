@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,15 +25,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 // 采集贴吧用的常量
 #pragma region 用户信息
-// 3是fid，7是贴吧名
-const std::wregex FORUM_ID_NAME_REG(_T("id('|\")?:\\s*('|\")?(\\d+)('|\")?,")
-							   _T(".*?name('|\")?:\\s*('|\")(.*?)('|\")"));
-// 3是用户名
-const std::wregex USER_NAME_REG(_T("name('|\")?:\\s*('|\")(.*?)('|\")"));
+// 1是fid，2是贴吧名
+const std::wregex FORUM_ID_NAME_REG(LR"#(id['"]:\s*['"]?(\d+)['"]?,.*?)#"
+							        LR"#(name['"]:\s*['"](.*?)['"])#");
+// 1是用户名
+const std::wregex USER_NAME_REG(LR"#(name['"]:\s*['"](.*?)['"])#");
 const TCHAR _TBS_LEFT[] = _T("PageData.tbs = \"");
 const TCHAR _TBS_RIGHT[] = _T("\"");
-// 3是tbs
-const std::wregex TBS_REG(_T("tbs('|\")?:\\s*('|\")(.*?)('|\")"));
+// 1是tbs
+const std::wregex TBS_REG(LR"#(tbs['"]:\s*['"](.*?)['"])#");
 #pragma endregion
 
 

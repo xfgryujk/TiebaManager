@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -228,7 +228,7 @@ void CExplorerDlg::OnBnClickedButton3()
 		if (pos == NULL)
 			return;
 		int index = m_exploreThreadPage->m_list.GetNextSelectedItem(pos);
-		url = _T("http://tieba.baidu.com/p/") + m_exploreThreadPage->m_threads[index].tid;
+		url = _T("https://tieba.baidu.com/p/") + m_exploreThreadPage->m_threads[index].tid;
 	}
 	else
 	{
@@ -238,7 +238,7 @@ void CExplorerDlg::OnBnClickedButton3()
 		int index = m_exploreThreadPage->m_list.GetNextSelectedItem(pos);
 		CString page;
 		m_exploreThreadPage->m_edit.GetWindowText(page);
-		url = _T("http://tieba.baidu.com/p/") + m_explorePostPage->m_tid + _T("?pn=") + page;
+		url = _T("https://tieba.baidu.com/p/") + m_explorePostPage->m_tid + _T("?pn=") + page;
 	}
 	ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
 }

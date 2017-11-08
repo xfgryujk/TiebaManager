@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ protected:
 	CString m_userName;			// 用户名，确认贴吧时初始化
 	CString& m_cookie;
 	CString m_bduss;			// Cookie中的BDUSS，确认贴吧时初始化，用于客户端接口
-	CString m_tbs;				// 口令号，估计是防止CSRF用的，确认贴吧时初始化，备用获取tbs地址：http://tieba.baidu.com/dc/common/tbs
+	CString m_tbs;				// 口令号，估计是防止CSRF用的，确认贴吧时初始化，备用获取tbs地址：https://tieba.baidu.com/dc/common/tbs
 
 	const int& m_banDuration;	// 封禁时长
 	const CString& m_banReason; // 封禁原因

@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -102,5 +102,5 @@ void CAboutPage::OnStnClickedStatic1()
 // 关于作者
 void CAboutPage::OnStnClickedStatic2()
 {
-	ShellExecute(NULL, _T("open"), _T("http://tieba.baidu.com/home/main?id=a51ab5c1ced2d4adbac5b5c4c3bb4a388507"), NULL, NULL, SW_SHOWNORMAL);
+	ShellExecute(NULL, _T("open"), _T("https://tieba.baidu.com/home/main?id=a51ab5c1ced2d4adbac5b5c4c3bb4a388507"), NULL, NULL, SW_SHOWNORMAL);
 }

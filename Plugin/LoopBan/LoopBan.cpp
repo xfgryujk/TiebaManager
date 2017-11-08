@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -140,7 +140,7 @@ void CLoopBan::OnPostBan(const Operation& op, BOOL succeeded)
 // 取用户发的帖子ID
 static CString GetPIDFromUser(const CString& userName)
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + GetTiebaOperate().GetEncodedForumName() 
+	CString src = HTTPGet(_T("https://tieba.baidu.com/f/search/ures?ie=utf-8&kw=") + GetTiebaOperate().GetEncodedForumName() 
 		+ _T("&qw=&rn=10&un=") + userName + _T("&only_thread=&sm=1&sd=&ed=&pn=1"));
 	if (src == NET_TIMEOUT_TEXT)
 		return NET_TIMEOUT_TEXT;

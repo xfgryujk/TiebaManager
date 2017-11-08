@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ BOOL CLoginDlg::OnInitDialog()
 	m_resize.AddControl(&m_cancelButton, RT_KEEP_DIST_TO_RIGHT, this, RT_KEEP_DIST_TO_BOTTOM, &m_explorer);
 
 	// 删除Cookie
-	InternetSetCookieEx(_T("http://tieba.baidu.com/"), NULL,
+	InternetSetCookieEx(_T("https://tieba.baidu.com/"), NULL,
 		_T("BDUSS=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=baidu.com;")
 		_T("STOKEN=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=tieba.baidu.com;"),
 		INTERNET_COOKIE_HTTPONLY, NULL);
@@ -104,7 +104,7 @@ void CLoginDlg::OnDestroy()
 	CNormalDlg::OnDestroy();
 
 	// 删除Cookie
-	InternetSetCookieEx(_T("http://tieba.baidu.com/"), NULL,
+	InternetSetCookieEx(_T("https://tieba.baidu.com/"), NULL,
 		_T("BDUSS=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=baidu.com;")
 		_T("STOKEN=; expires=Thu, 01-Jan-1900 00:00:01 GMT; path=/; domain=tieba.baidu.com;"),
 		INTERNET_COOKIE_HTTPONLY, NULL);
@@ -115,7 +115,7 @@ void CLoginDlg::NavigateComplete2Explorer1(LPDISPATCH pDisp, VARIANT* URL)
 {
 	CString url = _bstr_t(URL->bstrVal);
 	if (StringIncludes(url, _T("passport.baidu.com/center"))) // 登录完毕，进入个人中心
-		m_explorer.Navigate(_T("http://tieba.baidu.com/"), NULL, NULL, NULL, NULL); // 获取tieba.baidu.com域的STOKEN
+		m_explorer.Navigate(_T("https://tieba.baidu.com/"), NULL, NULL, NULL, NULL); // 获取tieba.baidu.com域的STOKEN
 	else if (StringIncludes(url, _T("tieba.baidu.com"))) // 获取tieba.baidu.com域的STOKEN
 		Login(FALSE);
 }
@@ -165,9 +165,9 @@ void CLoginDlg::Login(BOOL prompt)
 HRESULT CLoginDlg::GetSingleCookie(CString& cookie, const CString& name)
 {
 	DWORD size = 0;
-	InternetGetCookieEx(_T("http://tieba.baidu.com/"), name, NULL,
+	InternetGetCookieEx(_T("https://tieba.baidu.com/"), name, NULL,
 		&size, INTERNET_COOKIE_HTTPONLY, NULL); // size为字节数
-	BOOL result = InternetGetCookieEx(_T("http://tieba.baidu.com/"), name, cookie.GetBuffer(size),
+	BOOL result = InternetGetCookieEx(_T("https://tieba.baidu.com/"), name, cookie.GetBuffer(size),
 		&size, INTERNET_COOKIE_HTTPONLY, NULL); // BUG：size在XP下单位是字节，在win10是字符数，XP下传字符数会返回缓冲不够
 	HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
 	cookie.ReleaseBuffer();
@@ -203,12 +203,12 @@ HRESULT CLoginDlg::GetCookie(CString& cookie)
 // 取用户名
 void CLoginDlg::GetLoginUserName()
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=utf-8&kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0")
+	CString src = HTTPGet(_T("https://tieba.baidu.com/f?ie=utf-8&kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0")
 						  _T("xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD"), &m_cookie);
 	CString tmp;
 	std::wcmatch res;
 	if (std::regex_search((LPCTSTR)(tmp = GetStringBetween(src, _T("PageData.user"), _T("}"))), res, USER_NAME_REG))
-		m_userName = JSUnescape(res[3].str().c_str());
+		m_userName = JSUnescape(res[1].str().c_str());
 	if (m_userName == _T(""))
 		WriteString(src, _T("login_forum.txt"));
 }

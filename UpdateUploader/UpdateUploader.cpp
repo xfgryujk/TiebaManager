@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 static const CString UPDATE_INFO_PATH = _T("..\\UpdateInfo.xml");
-static const CString REMOTE_ROOT = _T("http://sinacloud.net/xfgryujk/TiebaManager/");
+static const CString REMOTE_ROOT = _T("https://sinacloud.net/xfgryujk/TiebaManager/");
 
 static void Upload();
 
@@ -161,7 +161,7 @@ void Upload()
 	for (const auto& fileInfo : uploadFiles)
 	{
 		// 调用上传脚本上传文件，里面有秘钥所以不公开此文件
-		_tsystem(_T("Upload.py \"") + fileInfo.dir + fileInfo.name + _T("\" \"") + fileInfo.url + _T("\""));
+		_tsystem(_T("F:\\Anaconda3\\envs\\py2\\python.exe Upload.py \"") + fileInfo.dir + fileInfo.name + _T("\" \"") + fileInfo.url + _T("\""));
 	}
 
 	// 删除临时文件

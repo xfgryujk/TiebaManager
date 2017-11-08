@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -118,7 +118,7 @@ void CDefriend::DefriendThread(CString startPage, CString endPage, BOOL defriend
 		if (defriendNewUsers)
 		{
 			CString url;
-			url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s"), (LPCTSTR)tiebaOperate.GetEncodedForumName());
+			url.Format(_T("https://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s"), (LPCTSTR)tiebaOperate.GetEncodedForumName());
 			CString src = tiebaOperate.HTTPGet(url);
 			CString totalPage = GetStringBetween(src, _T(R"(class="tbui_total_page">共)"), _T("页"));
 			if (totalPage == _T(""))
@@ -177,7 +177,7 @@ void CDefriend::DoDefriend(int startPage, int endPage)
 		if (m_defriendDlg != NULL)
 			m_defriendDlg->m_stateStatic.SetWindowText(state);
 		CString url;
-		url.Format(_T("http://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), (LPCTSTR)tiebaOperate.GetEncodedForumName(), page);
+		url.Format(_T("https://tieba.baidu.com/bawu2/platform/listMember?ie=utf-8&word=%s&pn=%d"), (LPCTSTR)tiebaOperate.GetEncodedForumName(), page);
 		CString src = tiebaOperate.HTTPGet(url);
 		if (m_stopFlag)
 			break;
