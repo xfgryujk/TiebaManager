@@ -120,10 +120,12 @@ static HTTPRequestResult HTTPRequestBase(std::unique_ptr<BYTE[]>* buffer, ULONG*
 	// 重定向
 	long status = 200;
 	curl_easy_getinfo(easyHandle.get(), CURLINFO_RESPONSE_CODE, &status);
-	if (status == 302)
+	if (300 <= status && status < 400)
 	{
 		char* location = NULL;
 		curl_easy_getinfo(easyHandle.get(), CURLINFO_REDIRECT_URL, &location);
+		if (location == NULL)
+			return NET_FAILED_TO_REDIRECT;
 		return HTTPRequestBase(buffer, size, postMethod, CString(location), data, cookie, charset);
 	}
 
@@ -177,6 +179,9 @@ static CString HTTPRequestBase_Convert(BOOL postMethod, const CString& URL, cons
 			break;
 		case NET_TIMEOUT:
 			result = NET_TIMEOUT_TEXT;
+			break;
+		case NET_FAILED_TO_REDIRECT:
+			result = NET_FAILED_TO_REDIRECT_TEXT;
 			break;
 		}
 		return result;
