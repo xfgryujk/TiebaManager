@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,10 +27,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 
 // 当前版本，每次更新后修改，也可以不是日期
-UPDATE_API const CString UPDATE_CURRENT_VERSION = _T("17-08-24");
+UPDATE_API const CString UPDATE_CURRENT_VERSION = _T("17-11-08");
 
-static const CString MANUALLY_UPDATE_URL = _T("http://sinacloud.net/xfgryujk/TiebaManager/贴吧管理器.zip");
-UPDATE_API const CString UPDATE_INFO_URL = _T("http://sinacloud.net/xfgryujk/TiebaManager/UpdateInfo.xml");
+static const CString MANUALLY_UPDATE_URL = _T("https://sinacloud.net/xfgryujk/TiebaManager/贴吧管理器.zip");
+UPDATE_API const CString UPDATE_INFO_URL = _T("https://sinacloud.net/xfgryujk/TiebaManager/UpdateInfo.xml");
 
 static const CString UPDATE_DIR_PATH = _T("Update\\"); // 只能是一级目录，因为批处理里用了相对路径
 static const CString UPDATE_BAT_NAME = _T("Update.bat");

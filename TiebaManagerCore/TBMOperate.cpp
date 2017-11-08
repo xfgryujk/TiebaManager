@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -91,7 +91,7 @@ void CTBMOperate::ConfirmThread()
 				{
 					ThreadInfo* thread = (ThreadInfo*)op.object.get();
 					g_pUserCache->m_initIgnoredTID->insert(_ttoi64(thread->tid));
-					g_pLog->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + thread->tid
+					g_pLog->Log(_T("<font color=green>忽略 </font><a href=\"https://tieba.baidu.com/p/") + thread->tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
 					break;
 				}
@@ -99,7 +99,7 @@ void CTBMOperate::ConfirmThread()
 				{
 					PostInfo* post = (PostInfo*)op.object.get();
 					g_pUserCache->m_initIgnoredPID->insert(_ttoi64(post->pid));
-					g_pLog->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + post->tid
+					g_pLog->Log(_T("<font color=green>忽略 </font><a href=\"https://tieba.baidu.com/p/") + post->tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + post->floor + _T("楼"));
 					break;
 				}
@@ -107,7 +107,7 @@ void CTBMOperate::ConfirmThread()
 				{
 					LzlInfo* lzl = (LzlInfo*)op.object.get();
 					g_pUserCache->m_initIgnoredLZLID->insert(_ttoi64(lzl->cid));
-					g_pLog->Log(_T("<font color=green>忽略 </font><a href=\"http://tieba.baidu.com/p/") + lzl->tid
+					g_pLog->Log(_T("<font color=green>忽略 </font><a href=\"https://tieba.baidu.com/p/") + lzl->tid
 						+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + lzl->floor + _T("楼回复"));
 					break;
 				}
@@ -273,7 +273,7 @@ void CTBMOperate::OperateThread()
 					if (code != _T("0"))
 					{
 						CString content;
-						content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a><font color=red> 删除失败！错误代码：%s(%s)</font><a href=")
+						content.Format(_T("<a href=\"https://tieba.baidu.com/p/%s\">%s</a><font color=red> 删除失败！错误代码：%s(%s)</font><a href=")
 							_T("\"dt:%s\">重试</a>"), (LPCTSTR)op.object->tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)code,
 							(LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.object->tid);
 						g_pLog->Log(content);
@@ -283,7 +283,7 @@ void CTBMOperate::OperateThread()
 						result = TRUE;
 						sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
 						g_pUserCache->m_deletedTID.insert(_ttoi64(op.object->tid));
-						g_pLog->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.object->tid
+						g_pLog->Log(_T("<font color=red>删除 </font><a href=\"https://tieba.baidu.com/p/") + op.object->tid
 							+ _T("\">") + HTMLEscape(op.title) + _T("</a>"));
 						Sleep((DWORD)(g_pTbmCoreConfig->m_deleteInterval * 1000));
 					}
@@ -298,7 +298,7 @@ void CTBMOperate::OperateThread()
 					if (code != _T("0"))
 					{
 						CString content;
-						content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼<font color=red> 删除失败！错误代码：%s(%s)</font>")
+						content.Format(_T("<a href=\"https://tieba.baidu.com/p/%s\">%s</a> %s楼<font color=red> 删除失败！错误代码：%s(%s)</font>")
 							_T("<a href=\"dp:%s,%s\">重试</a>"), (LPCTSTR)op.object->tid, (LPCTSTR)HTMLEscape(op.title), (LPCTSTR)post->floor,
 							(LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)op.object->tid, (LPCTSTR)post->pid);
 						g_pLog->Log(content);
@@ -307,7 +307,7 @@ void CTBMOperate::OperateThread()
 					{
 						result = TRUE;
 						sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
-						g_pLog->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + op.object->tid
+						g_pLog->Log(_T("<font color=red>删除 </font><a href=\"https://tieba.baidu.com/p/") + op.object->tid
 							+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + post->floor + _T("楼"));
 						Sleep((DWORD)(g_pTbmCoreConfig->m_deleteInterval * 1000));
 					}
@@ -319,7 +319,7 @@ void CTBMOperate::OperateThread()
 					if (code != _T("0"))
 					{
 						CString content;
-						content.Format(_T("<a href=\"http://tieba.baidu.com/p/%s\">%s</a> %s楼回复<font color=red> 删除失败！错误代码：")
+						content.Format(_T("<a href=\"https://tieba.baidu.com/p/%s\">%s</a> %s楼回复<font color=red> 删除失败！错误代码：")
 							_T("%s(%s)</font><a href=\"dl:%s,%s\">重试</a>"), (LPCTSTR)lzl->tid, (LPCTSTR)HTMLEscape(op.title),
 							(LPCTSTR)lzl->floor, (LPCTSTR)code, (LPCTSTR)GetTiebaErrorText(code), (LPCTSTR)lzl->tid, (LPCTSTR)lzl->cid);
 						g_pLog->Log(content);
@@ -328,7 +328,7 @@ void CTBMOperate::OperateThread()
 					{
 						result = TRUE;
 						sndPlaySound(_T("删贴.wav"), SND_ASYNC | SND_NODEFAULT);
-						g_pLog->Log(_T("<font color=red>删除 </font><a href=\"http://tieba.baidu.com/p/") + lzl->tid
+						g_pLog->Log(_T("<font color=red>删除 </font><a href=\"https://tieba.baidu.com/p/") + lzl->tid
 							+ _T("\">") + HTMLEscape(op.title) + _T("</a> ") + lzl->floor + _T("楼回复"));
 						Sleep((DWORD)(g_pTbmCoreConfig->m_deleteInterval * 1000));
 					}

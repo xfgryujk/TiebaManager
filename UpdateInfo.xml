@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <UpdateInfo>
     <Version></Version>
-    <UpdateLog>1. 扫描昵称
-2. 多吧发帖可获取等级
-3. 关键词支持忽略大小写</UpdateLog>
+    <UpdateLog>1. 兼容百度的强制HTTPS</UpdateLog>
     <Files>
         <item><value><Dir/><Name>mfc120u.dll</Name><URL/><MD5/></value></item>
         <item><value><Dir/><Name>msvcp120.dll</Name><URL/><MD5/></value></item>

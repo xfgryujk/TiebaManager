@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -160,17 +160,17 @@ void CConfirmDlg::OnBnClickedButton1()
 
 	CString url;
 	if (m_operation->object->m_type == TBObject::THREAD) // 主题
-		url = _T("http://tieba.baidu.com/p/") + m_operation->object->tid;
+		url = _T("https://tieba.baidu.com/p/") + m_operation->object->tid;
 	else if (m_operation->object->m_type == TBObject::POST) // 帖子
 	{
 		PostInfo* post = (PostInfo*)m_operation->object.get();
-		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s#%s"), (LPCTSTR)post->tid,
+		url.Format(_T("https://tieba.baidu.com/p/%s?pid=%s#%s"), (LPCTSTR)post->tid,
 			(LPCTSTR)post->pid, (LPCTSTR)post->pid);
 	}
 	else if (m_operation->object->m_type == TBObject::LZL) // 楼中楼
 	{
 		LzlInfo* lzl = (LzlInfo*)m_operation->object.get();
-		url.Format(_T("http://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), (LPCTSTR)lzl->tid, 
+		url.Format(_T("https://tieba.baidu.com/p/%s?pid=%s&cid=%s#%s"), (LPCTSTR)lzl->tid, 
 			(LPCTSTR)lzl->cid, (LPCTSTR)lzl->cid, (LPCTSTR)lzl->cid);
 	}
 

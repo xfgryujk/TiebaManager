@@ -1,6 +1,6 @@
 ﻿/*
 Copyright (C) 2011-2017  xfgryujk
-http://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
+https://tieba.baidu.com/f?kw=%D2%BB%B8%F6%BC%AB%C6%E4%D2%FE%C3%D8%D6%BB%D3%D0xfgryujk%D6%AA%B5%C0%B5%C4%B5%D8%B7%BD
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ const TCHAR ADDITION_THREAD_PAGE_COUNT_RIGHT[]  = _T("}");
 
 BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreThread, std::vector<ThreadInfo>& threads)
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/f?ie=UTF-8&kw=") + EncodeURI(forumName)
+	CString src = HTTPGet(_T("https://tieba.baidu.com/f?ie=UTF-8&kw=") + EncodeURI(forumName)
 		+ _T("&pn=") + ignoreThread);
 
 	CStringArray rawThreads;
@@ -130,7 +130,7 @@ BOOL TiebaClawerWeb::GetThreads(const CString& forumName, const CString& ignoreT
 TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& fid, const CString& tid, const CString& page,
 	std::vector<PostInfo>& posts, std::vector<LzlInfo>& lzls, AdditionalThreadInfo* addition)
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page + _T("&fid=") + fid);
+	CString src = HTTPGet(_T("https://tieba.baidu.com/p/") + tid + _T("?pn=") + page + _T("&fid=") + fid);
 	if (src == NET_TIMEOUT_TEXT)
 		return GET_POSTS_TIMEOUT;
 	return GetPosts(fid, tid, page, src, posts, lzls, addition);
@@ -152,7 +152,7 @@ TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& fid, const C
 TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const CString& page, 
 	std::vector<PostInfo>& posts, AdditionalThreadInfo* addition)
 {
-	CString src = HTTPGet(_T("http://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
+	CString src = HTTPGet(_T("https://tieba.baidu.com/p/") + tid + _T("?pn=") + page);
 	if (src == NET_TIMEOUT_TEXT)
 		return GET_POSTS_TIMEOUT;
 	return GetPosts(tid, page, src, posts, addition);
@@ -245,7 +245,7 @@ TiebaClawer::GetPostsResult TiebaClawerWeb::GetPosts(const CString& tid, const C
 		tmp.Replace(_T("\r\n"), _T(""));
 		std::wcmatch res;
 		if (std::regex_search((LPCTSTR)tmp, res, FORUM_ID_NAME_REG))
-			addition->fid = res[3].str().c_str();
+			addition->fid = res[1].str().c_str();
 
 		addition->pageCount = GetStringBetween(src, ADDITION_THREAD_PAGE_COUNT_LEFT, ADDITION_THREAD_PAGE_COUNT_RIGHT);
 	}
@@ -258,7 +258,7 @@ void TiebaClawerWeb::GetLzls(const CString& fid, const CString& tid, const CStri
 	time_t timestamp;
 	time(&timestamp);
 	CString url;
-	url.Format(_T("http://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), 
+	url.Format(_T("https://tieba.baidu.com/p/totalComment?t=%I64d&tid=%s&fid=%s&pn=%s&see_lz=0"), 
 		timestamp, (LPCTSTR)tid, (LPCTSTR)fid, (LPCTSTR)page);
 	CString src = HTTPGet(url);
 	WriteString(src, _T("lzl.txt"));
