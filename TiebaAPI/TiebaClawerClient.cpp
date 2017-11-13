@@ -82,7 +82,7 @@ BOOL TiebaClawerClient::GetThreads(const CString& forumName, const CString& igno
 		{
 			for (const auto& media : rawThread[L"media"].GetArray())
 			{
-				if (!media.HasMember(L"type"))
+				if (!media.IsObject() || !media.HasMember(L"type"))
 					continue;
 				CString tmp;
 				switch (_ttoi(media[L"type"].GetString()))
